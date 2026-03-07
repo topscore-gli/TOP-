@@ -272,7 +272,7 @@ function getInput(id) {
 
 function submitForm(e) {
     e.preventDefault();
-    saveRec(getInput('email_field'), getInput('phone_field'));
+    saveRec(getInput('email'), getInput('phone'));
     document.getElementById("myform").reset();
 }
 function saveRec(email, phone) {
