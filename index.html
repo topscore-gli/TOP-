@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maintenance • Back Soon</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
 
         :root {
             --bg: #e0e5ec;
@@ -19,7 +19,7 @@
 
         body {
             background: var(--bg);
-            font-family: 'Inter', system_ui, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
             color: #2c3e50;
             display: flex;
             align-items: center;
@@ -35,7 +35,6 @@
             text-align: center;
         }
 
-        /* Neumorphism Image Container with 3D Tilt */
         .image-wrapper {
             width: 320px;
             height: 320px;
@@ -74,7 +73,6 @@
             transition: transform 0.3s ease;
         }
 
-        /* Text */
         .title {
             font-family: 'Space Grotesk', sans-serif;
             font-size: 2.8rem;
@@ -96,7 +94,6 @@
             font-weight: 600;
         }
 
-        /* Neumorphism Form Card */
         .form-card {
             background: var(--bg);
             border-radius: 32px;
@@ -148,7 +145,6 @@
                 inset -4px -4px 8px #ffffff;
         }
 
-        /* Neumorphism Button */
         .neu-btn {
             width: 100%;
             padding: 18px;
@@ -179,7 +175,6 @@
             transform: scale(0.98);
         }
 
-        /* Success Message */
         #success {
             display: none;
             margin-top: 30px;
@@ -193,7 +188,6 @@
             font-weight: 500;
         }
 
-        /* Footer note */
         .footer-note {
             margin-top: 50px;
             font-size: 0.9rem;
@@ -210,20 +204,17 @@
 </head>
 <body>
     <div class="container">
-        <!-- 3D Neumorphic Image -->
         <div id="image-wrapper" class="image-wrapper">
             <div id="image-inner" class="image-inner">
                 <div class="icon">🚧</div>
             </div>
         </div>
 
-        <!-- Text -->
         <h1 class="title">This site is under maintenance</h1>
         <p class="subtitle">
             and will be back online on <strong>12th March 2026</strong>
         </p>
 
-        <!-- Form -->
         <div class="form-card">
             <h2 class="form-title">Get notified when we’re live</h2>
             
@@ -251,9 +242,9 @@
         </p>
     </div>
 
-    <!-- Firebase SDK (v10 compat) -->
+    <!-- Firebase SDK – Realtime Database only -->
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 
     <script>
         // ============== 3D TILT EFFECT ==============
@@ -265,7 +256,7 @@
             const x = (e.clientX - rect.left) / rect.width;
             const y = (e.clientY - rect.top) / rect.height;
 
-            const rotateX = (y - 0.5) * -30;   // -15 to +15
+            const rotateX = (y - 0.5) * -30;
             const rotateY = (x - 0.5) * 30;
 
             inner.style.transform = `rotateX(\( {rotateX}deg) rotateY( \){rotateY}deg) scale(1.05)`;
@@ -275,99 +266,86 @@
             inner.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
         });
 
-        // ============== FORM + FIREBASE ==============
+        // ============== FORM + FIREBASE REALTIME DATABASE ==============
         const form = document.getElementById('subscribe-form');
         const successDiv = document.getElementById('success');
 
-        // 🔥 REPLACE WITH YOUR OWN FIREBASE CONFIG (from Firebase Console → Project Settings)
-        
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyA3WD52stfzLzO5895D4HsspaV5tKcCt7o",
-  authDomain: "jamb-b6a95.firebaseapp.com",
-  databaseURL: "https://jamb-b6a95-default-rtdb.firebaseio.com",
-  projectId: "jamb-b6a95",
-  storageBucket: "jamb-b6a95.firebasestorage.app",
-  messagingSenderId: "794234514415",
-  appId: "1:794234514415:web:4d1e36ff7f392f8e39241a",
-  measurementId: "G-ZP65BGBGHB"
-};
-  
-        let db = null;
+        // Your Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyA3WD52stfzLzO5895D4HsspaV5tKcCt7o",
+            authDomain: "jamb-b6a95.firebaseapp.com",
+            databaseURL: "https://jamb-b6a95-default-rtdb.firebaseio.com",
+            projectId: "jamb-b6a95",
+            storageBucket: "jamb-b6a95.firebasestorage.app",
+            messagingSenderId: "794234514415",
+            appId: "1:794234514415:web:4d1e36ff7f392f8e39241a",
+            measurementId: "G-ZP65BGBGHB"
+        };
 
-        // Initialize Firebase only if config is provided
-        function initFirebase() {
-            if (firebaseConfig.apiKey === "AIzaSyA3WD52stfzLzO5895D4HsspaV5tKcCt7o") {
-                console.log('%cFirebase not configured yet. Form will still work in demo mode.', 'color:#f39c12; font-weight:600');
-                return false;
-            }
-            try {
-                firebase.initializeApp(firebaseConfig);
-                db = firebase.firestore();
-                console.log('%c✅ Firebase connected successfully!', 'color:#2ecc71');
-                return true;
-            } catch (err) {
-                console.error("Firebase init failed:", err);
-                return false;
-            }
+        let database = null;
+
+        // Initialize Firebase
+        try {
+            firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            console.log('%c✅ Connected to Firebase Realtime Database', 'color:#2ecc71; font-weight:bold');
+        } catch (err) {
+            console.error("Firebase initialization failed:", err);
         }
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
+            const phone  = document.getElementById('phone').value.trim();
 
             if (!email || !phone) {
                 alert("Please fill in both email and phone number");
                 return;
             }
 
-            // Show loading state on button
             const btn = form.querySelector('button');
             const originalText = btn.textContent;
             btn.textContent = "Saving...";
             btn.disabled = true;
 
-            const isFirebaseReady = initFirebase();
-
             try {
-                if (isFirebaseReady && db) {
-                    await db.collection("maintenance_subscribers").add({
+                if (database) {
+                    await database.ref("maintenance_subscribers").push({
                         email: email,
                         phone: phone,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        createdAt: firebase.database.ServerValue.TIMESTAMP,
                         notified: false
                     });
+                    console.log("Subscriber saved successfully");
                 } else {
-                    // Demo mode - just log to console
-                    console.log("📧 Demo submission:", { email, phone });
+                    console.log("Demo mode (no database connection):", { email, phone });
                 }
 
-                // Success animation
                 successDiv.style.display = 'block';
                 form.reset();
 
-                // Auto hide success after 6 seconds
                 setTimeout(() => {
                     successDiv.style.display = 'none';
                 }, 6000);
 
             } catch (error) {
-                console.error("Error saving:", error);
-                alert("Something went wrong. Please try again later.");
+                console.error("Error saving to database:", error);
+                alert("Sorry, something went wrong. Please try again.");
             } finally {
                 btn.textContent = originalText;
                 btn.disabled = false;
             }
         });
 
-        // Optional: Press Enter on phone field also submits
+        // Submit on Enter in phone field
         document.getElementById('phone').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') form.dispatchEvent(new Event('submit'));
+            if (e.key === 'Enter') {
+                form.dispatchEvent(new Event('submit'));
+            }
         });
 
-        // Keyboard accessibility: ESC clears form
+        // ESC = reset form
         document.addEventListener('keydown', (e) => {
             if (e.key === "Escape") {
                 form.reset();
@@ -375,7 +353,7 @@ const firebaseConfig = {
             }
         });
 
-        console.log('%c🚧 Maintenance page ready! Replace the Firebase config to start collecting emails & phone numbers.', 'color:#3498db; font-size:13px');
+        console.log('%c🚧 Maintenance page ready • Now saving to Firebase Realtime Database', 'color:#3498db; font-size:13px');
     </script>
 </body>
 </html>
