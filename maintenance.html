@@ -219,7 +219,7 @@
         <div class="form-card">
             <h2 class="form-title">Get notified when we’re live</h2>
             
-            <form id="subscribe-form">
+            <form id="myform">
                 <div class="input-group">
                     <label for="email">Email Address</label>
                     <input type="email" id="email" class="neu-input" placeholder="you@example.com" required>
@@ -247,10 +247,10 @@
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
-    <script>
-        // Your real Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyA3WD52stfzLzO5895D4HsspaV5tKcCt7o",
+
+<script>
+var config = {
+        apiKey: "AIzaSyA3WD52stfzLzO5895D4HsspaV5tKcCt7o",
             authDomain: "jamb-b6a95.firebaseapp.com",
             databaseURL: "https://jamb-b6a95-default-rtdb.firebaseio.com",
             projectId: "jamb-b6a95",
@@ -259,18 +259,31 @@
             appId: "1:794234514415:web:4d1e36ff7f392f8e39241a",
             measurementId: "G-ZP65BGBGHB"
         };
+firebase.initializeApp(config);
+window.onload = function () {
+    document.getElementById('myform').addEventListener("submit", submitForm);
+}
 
-        // Initialize Firebase
-        let db;
-        try {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.firestore();
-            console.log("%cFirebase initialized successfully", "color:#2ecc71; font-weight:bold");
-        } catch (err) {
-            console.error("Firebase initialization failed:", err);
-        }
+var db_ref = firebase.database().ref('records');
 
-        const form = document.getElementById('subscribe-form');
+function getInput(id) {
+    return document.getElementById(id).value;
+}
+
+function submitForm(e) {
+    e.preventDefault();
+    saveRec(getInput('email_field'), getInput('phone_field'));
+    document.getElementById("myform").reset();
+}
+function saveRec(email, phone) {
+    var newRec = db_ref.push();
+    newRec.set({
+        email: email,
+        phone: phone
+    });
+}
+
+        const form = document.getElementById('myform');
         const successDiv = document.getElementById('success');
 
         form.addEventListener('submit', async (e) => {
