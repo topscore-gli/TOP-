@@ -1,4 +1,11 @@
 {
+  "exam_config": {
+    "title": "JAMB Mock CBT 2026",
+    "startAt": "2026-03-23T08:00:00",
+    "endAt": "2026-12-31T23:59:59",
+    "durationMinutes": 120,
+    "accessCodeLength": 8
+  },
   "quiz_access_codes": {
     "AB12CD34": {
       "quizId": "jamb-cbt-2026",
@@ -9,14 +16,46 @@
       "lastSeenAt": null,
       "expiresAt": null,
       "ownerName": "Candidate 1"
+    },
+    "ZX98YT76": {
+      "quizId": "jamb-cbt-2026",
+      "accessCode": "ZX98YT76",
+      "status": "unused",
+      "deviceToken": null,
+      "activatedAt": null,
+      "lastSeenAt": null,
+      "expiresAt": null,
+      "ownerName": "Candidate 2"
+    },
+    "MN45PQ21": {
+      "quizId": "jamb-cbt-2026",
+      "accessCode": "MN45PQ21",
+      "status": "unused",
+      "deviceToken": null,
+      "activatedAt": null,
+      "lastSeenAt": null,
+      "expiresAt": null,
+      "ownerName": "Candidate 3"
+    },
+    "JK56LM78": {
+      "quizId": "jamb-cbt-2026",
+      "accessCode": "JK56LM78",
+      "status": "unused",
+      "deviceToken": null,
+      "activatedAt": null,
+      "lastSeenAt": null,
+      "expiresAt": null,
+      "ownerName": "Candidate 4"
+    },
+    "PQ34RS90": {
+      "quizId": "jamb-cbt-2026",
+      "accessCode": "PQ34RS90",
+      "status": "unused",
+      "deviceToken": null,
+      "activatedAt": null,
+      "lastSeenAt": null,
+      "expiresAt": null,
+      "ownerName": "Candidate 5"
     }
-  },
-  "exam_config": {
-    "title": "JAMB Mock CBT 2026",
-    "startAt": "2026-03-23T08:00:00",
-    "endAt": "2026-03-30T23:59:59",
-    "durationMinutes": 120,
-    "accessCodeLength": 8
   }
 }
-
