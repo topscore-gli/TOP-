@@ -1,0 +1,14 @@
+{
+  "quiz_access_codes": {
+    "AB12CD34": {
+      "quizId": "jamb-cbt-2026",
+      "accessCode": "AB12CD34",
+      "status": "unused",
+      "deviceToken": null,
+      "activatedAt": null,
+      "lastSeenAt": null,
+      "expiresAt": null,
+      "ownerName": "Candidate 1"
+    }
+  }
+}
