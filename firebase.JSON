@@ -1,0 +1,54 @@
+{
+  "quiz_access_codes": {
+    "AB12CD34": {
+      "quizId": "jamb-physics-motion",
+      "accessCode": "AB12CD34",
+      "status": "unused",
+      "deviceToken": null,
+      "activatedAt": null,
+      "lastSeenAt": null,
+      "expiresAt": null,
+      "ownerName": "TopScore User 1"
+    },
+    "ZX98YT76": {
+      "quizId": "jamb-physics-motion",
+      "accessCode": "ZX98YT76",
+      "status": "unused",
+      "deviceToken": null,
+      "activatedAt": null,
+      "lastSeenAt": null,
+      "expiresAt": null,
+      "ownerName": "TopScore User 2"
+    },
+    "MN45PQ21": {
+      "quizId": "jamb-physics-motion",
+      "accessCode": "MN45PQ21",
+      "status": "unused",
+      "deviceToken": null,
+      "activatedAt": null,
+      "lastSeenAt": null,
+      "expiresAt": null,
+      "ownerName": "TopScore User 3"
+    },
+    "LK73WR90": {
+      "quizId": "jamb-physics-motion",
+      "accessCode": "LK73WR90",
+      "status": "unused",
+      "deviceToken": null,
+      "activatedAt": null,
+      "lastSeenAt": null,
+      "expiresAt": null,
+      "ownerName": "TopScore User 4"
+    },
+    "QP56NM12": {
+      "quizId": "jamb-physics-motion",
+      "accessCode": "QP56NM12",
+      "status": "unused",
+      "deviceToken": null,
+      "activatedAt": null,
+      "lastSeenAt": null,
+      "expiresAt": null,
+      "ownerName": "TopScore User 5"
+    }
+  }
+}
