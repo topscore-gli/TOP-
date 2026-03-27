@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIOLOGY - Soil</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    :root {
+      --background: #1e1e2f;
+      --shadow-in: #171723;
+      --shadow-out: #25253b;
+      --text-primary: #f0f0ff;
+      --text-secondary: #c0c0e0;
+      --accent: #1db954;
+      --card-bg: #2a2a3f;
+    }
+
+    body.light {
+      --background: #e0e0e0;
+      --shadow-in: #bebebe;
+      --shadow-out: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #444;
+      --accent: #1db954;
+      --card-bg: #f8f8f8;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      background: var(--background);
+      border-radius: 20px;
+      box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out);
+      overflow: hidden;
+      min-height: 100vh;
+      position: relative;
+      padding-top: 70px;
+      padding-bottom: 80px;
+    }
+
+    .neumorphic {
+      background: var(--background);
+      box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out);
+      border-radius: 15px;
+    }
+
+    .neumorphic-btn {
+      background: var(--background);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      cursor: pointer;
+      color: var(--text-primary);
+      font-size: 18px;
+    }
+
+    .neumorphic-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 5px 10px var(--shadow-in);
+      z-index: 20;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .top-bar .header {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+
+    .top-bar .right-icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-bar .profile-upload {
+      position: relative;
+    }
+
+    .top-bar .profile-upload input {
+      opacity: 0;
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 20px 16px;
+      line-height: 1.6;
+    }
+
+    .main-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .main-header h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .main-header p.subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .section {
+      background: var(--card-bg);
+      padding: 24px 20px;
+      border-radius: 20px;
+      box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out);
+      margin-bottom: 30px;
+    }
+
+    .section h2 {
+      font-size: 22px;
+      margin: 0 0 16px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .section h3 {
+      font-size: 18px;
+      margin: 24px 0 12px;
+      color: var(--accent);
+    }
+
+    .section p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .section ul, .section ol {
+      padding-left: 24px;
+      margin: 16px 0;
+    }
+
+    .section li {
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .section .highlight {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .diagram-img {
+      width: 100%;
+      border-radius: 12px;
+      margin: 16px 0 8px;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -5px 10px var(--shadow-in);
+      z-index: 20;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .nav-bar .nav-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .nav-bar .nav-item button {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.center button {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      background: var(--accent);
+      box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      color: #000;
+    }
+
+    .nav-bar .nav-item p {
+      display: none;
+      font-size: 12px;
+      margin-top: 5px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.active p {
+      display: block;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <!-- Top Fixed Bar -->
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn profile-upload">
+          📷
+          <input type="file" accept="image/*" id="profile-upload">
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+      <div class="main-header">
+        <h1>Level Up Your Biology Knowledge! 🚀</h1>
+        <p class="subtitle">– JAMB Topic: Soil</p>
+      </div>
+
+      <div class="section">
+        
+        <h2>Characteristics of Different Soil Types</h2>
+        <p>Soils are classified based on particle size: <strong>sandy</strong> (large particles), <strong>clayey</strong> (small particles), and <strong>loamy</strong> (a balanced mix). Each has unique properties like structure (how particles clump together), porosity (spaces between particles for air/water), capillarity (how water rises through soil), and humus content (organic matter from decayed plants/animals).</p>
+
+        <h3>Sandy Soil</h3>
+        <ul>
+          <li><strong>Particles:</strong> Large, coarse (0.05–2 mm), gritty feel</li>
+          <li><strong>Structure:</strong> Loose, non-sticky, falls apart easily</li>
+          <li><strong>Porosity:</strong> High (large air spaces)</li>
+          <li><strong>Capillarity:</strong> Low (water rises poorly)</li>
+          <li><strong>Water retention:</strong> Low (drains quickly)</li>
+          <li><strong>Humus content:</strong> Low (nutrients leach easily)</li>
+          <li><strong>Advantages:</strong> Good aeration, easy tillage</li>
+          <li><strong>Disadvantages:</strong> Dries fast, low fertility</li>
+          <li><strong>Suitable crops:</strong> Carrots, groundnuts, cowpea</li>
+        </ul>
+
+<grok:render card_id="deab75" card_type="image_card" type="render_searched_image"><argument name="image_id">0</argument><argument name="size">"LARGE"</argument></grok:render>
+
+        <h3>Clayey Soil</h3>
+        <ul>
+          <li><strong>Particles:</strong> Very small (<0.002 mm), smooth/sticky feel</li>
+          <li><strong>Structure:</strong> Compact, sticky when wet, hard/cracked when dry</li>
+          <li><strong>Porosity:</strong> Low (small pores)</li>
+          <li><strong>Capillarity:</strong> High (water rises well)</li>
+          <li><strong>Water retention:</strong> High (holds water, prone to waterlogging)</li>
+          <li><strong>Humus content:</strong> Variable, holds nutrients well</li>
+          <li><strong>Advantages:</strong> High nutrient retention</li>
+          <li><strong>Disadvantages:</strong> Poor drainage, poor aeration, hard to till</li>
+          <li><strong>Suitable crops:</strong> Rice, wheat (with good management)</li>
+        </ul>
+
+<grok:render card_id="1d2fc1" card_type="image_card" type="render_searched_image"><argument name="image_id">0</argument><argument name="size">"LARGE"</argument></grok:render>
+
+        <h3>Loamy Soil</h3>
+        <ul>
+          <li><strong>Particles:</strong> Balanced mix (sand + silt + clay)</li>
+          <li><strong>Structure:</strong> Crumbly, good tilth, holds shape but breaks easily</li>
+          <li><strong>Porosity:</strong> Medium (balanced air spaces)</li>
+          <li><strong>Capillarity:</strong> Moderate</li>
+          <li><strong>Water retention:</strong> Moderate (retains enough, drains excess)</li>
+          <li><strong>Humus content:</strong> Usually high</li>
+          <li><strong>Advantages:</strong> Ideal fertility, good drainage & aeration</li>
+          <li><strong>Disadvantages:</strong> Few (best overall soil)</li>
+          <li><strong>Suitable crops:</strong> Most crops – maize, vegetables, yam, cassava</li>
+        </ul>
+
+<grok:render card_id="843770" card_type="image_card" type="render_searched_image"><argument name="image_id">1</argument><argument name="size">"LARGE"</argument></grok:render>
+
+        <h2>Step 2: Simple Identification & Experiments</h2>
+        <ul>
+          <li><strong>Hand feel test:</strong> Gritty = sandy; Sticky = clay; Crumbly = loam</li>
+          <li><strong>Jar settling test:</strong> Sand settles first, clay last</li>
+          <li><strong>Funnel/percolation test:</strong> Sandy drains fastest, clay slowest</li>
+          <li><strong>Capillarity test:</strong> Water rises highest in clay</li>
+          <li><strong>Humus/air:</strong> Dark color = more humus; Displacement can for air</li>
+        </ul>
+
+<grok:render card_id="65b0a3" card_type="image_card" type="render_searched_image"><argument name="image_id">3</argument><argument name="size">"LARGE"</argument></grok:render>
+
+        <h2>Step 3: Components of Soil (Typical Ideal Composition)</h2>
+        <ul>
+          <li><strong>Inorganic (minerals/particles):</strong> \~45% – sand, silt, clay, nutrients (N, P, K, Ca)</li>
+          <li><strong>Organic (humus + roots):</strong> \~5% – decayed matter, improves structure & water holding</li>
+          <li><strong>Soil organisms:</strong> Bacteria, fungi, earthworms – decompose, fix nitrogen, aerate</li>
+          <li><strong>Soil air:</strong> \~25% – oxygen for root respiration</li>
+          <li><strong>Soil water:</strong> \~25% – dissolves & transports nutrients</li>
+        </ul>
+        <p><strong>Relation to Plant Growth:</strong> Balanced components → good root penetration, nutrient uptake, respiration. Excess water → root rot (poor air). Low humus/nutrients → stunted growth, deficiency symptoms. Good organisms → better nutrient cycling.</p>
+
+<grok:render card_id="f12519" card_type="image_card" type="render_searched_image"><argument name="image_id">2</argument><argument name="size">"LARGE"</argument></grok:render>
+
+        <h2>Step 4: Soil Fertility</h2>
+        <h3>i. Loss of Soil Fertility</h3>
+        <ul>
+          <li><strong>Leaching</strong> – soluble nutrients washed away (esp. sandy soil/heavy rain)</li>
+          <li><strong>Erosion</strong> – topsoil removed by wind/water</li>
+          <li><strong>Compaction</strong> – pores crushed (machinery, overgrazing), poor air/water</li>
+          <li><strong>Repeated monocropping</strong> – exhausts specific nutrients</li>
+          <li><strong>Loss of organic/inorganic matter</strong> – reduces humus & minerals</li>
+        </ul>
+
+<grok:render card_id="44770b" card_type="image_card" type="render_searched_image"><argument name="image_id">4</argument><argument name="size">"LARGE"</argument></grok:render>
+
+        <h3>ii. Renewal & Maintenance of Soil Fertility (Conservation Practices)</h3>
+        <ul>
+          <li><strong>Crop rotation</strong> – alternates crops to restore nutrients (e.g., legumes fix N after cereals)</li>
+          <li><strong>Advantages of crop rotation</strong> 🍃</li>
+          <li><strong>Contour ridging</strong> – ridges along contours on slopes to trap water & reduce erosion</li>
+          <li><strong>Terracing</strong> – steps on steep slopes to prevent runoff & erosion</li>
+          <li><strong>Mulching</strong> – cover soil with leaves/straw (or plastic) to retain moisture, add humus, suppress weeds</li>
+          <li><strong>Poly-cropping / Strip-cropping</strong> – multiple crops or strips to protect soil & use nutrients better</li>
+          <li><strong>Organic fertilizers</strong> – manure, compost → adds humus & slow-release nutrients</li>
+          <li><strong>Inorganic fertilizers</strong> – NPK → quick nutrient supply</li>
+          <li><strong>Shifting cultivation</strong> – farm then allow fallow for natural recovery</li>
+        </ul>
+
+<grok:render card_id="423a82,cf375a,2001db,620d71,05dd64" card_type="image_card_group"></grok:render>
+
+        <h2>Exam Key Points</h2>
+        <ul>
+          <li>Link: Soil type → characteristics (structure, porosity, capillarity, humus) → components → fertility loss → conservation methods → healthy plant growth</li>
+          <li>Loamy = best soil overall</li>
+          <li>Memorize examples, simple experiments, and conservation practices</li>
+        </ul>
+
+        <p>Revise with these visuals and practice questions. Good luck, TopScore! 🚀</p>
+      </div>
+
+      <p style="text-align: center; font-size: 17px; margin: 40px 0; font-weight: bold; color: var(--accent);">
+        Great job 🌟 You now master JAMB Topic: Soil!
+      </p>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="nav-bar">
+      <div class="nav-item">
+        <button class="neumorphic-btn">🔍</button>
+        <p>Search</p>
+      </div>
+      <div class="nav-item center">
+        <button class="neumorphic-btn">⭐</button>
+        <p>Favorite</p>
+      </div>
+      <div class="nav-item">
+        <button class="neumorphic-btn">📚</button>
+        <p>Library</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    // Profile Upload placeholder
+    document.getElementById('profile-upload').addEventListener('change', (e) => {
+      if (e.target.files[0]) console.log('Profile picture selected!');
+    });
+  </script>
+</body>
+</html>

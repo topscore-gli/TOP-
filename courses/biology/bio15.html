@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIOLOGY  - Natural Habitats</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    :root {
+      --background: #1e1e2f;
+      --shadow-in: #171723;
+      --shadow-out: #25253b;
+      --text-primary: #f0f0ff;
+      --text-secondary: #c0c0e0;
+      --accent: #1db954;
+      --card-bg: #2a2a3f;
+    }
+
+    body.light {
+      --background: #e0e0e0;
+      --shadow-in: #bebebe;
+      --shadow-out: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #444;
+      --accent: #1db954;
+      --card-bg: #f8f8f8;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      border-radius: 20px;
+      box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out);
+      overflow: hidden;
+      position: relative;
+      height: 700px;
+      overflow-y: auto;
+      padding-top: 70px;
+      padding-bottom: 70px;
+    }
+
+    .neumorphic {
+      background: var(--background);
+      box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out);
+      border-radius: 15px;
+    }
+
+    .neumorphic-btn {
+      background: var(--background);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      cursor: pointer;
+      color: var(--text-primary);
+      font-size: 18px;
+    }
+
+    .neumorphic-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 5px 10px var(--shadow-in);
+      z-index: 20;
+    }
+
+    .top-bar .header {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+
+    .top-bar .right-icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-bar .profile-upload {
+      position: relative;
+    }
+
+    .top-bar .profile-upload input {
+      opacity: 0;
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 20px 16px;
+      line-height: 1.6;
+    }
+
+    .main-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .main-header h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .main-header p.subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .welcome-note {
+      background: var(--card-bg);
+      padding: 28px 20px;
+      border-radius: 20px;
+      box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out);
+      margin-bottom: 30px;
+    }
+
+    .welcome-note h2 {
+      font-size: 22px;
+      margin: 32px 0 16px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .welcome-note h3 {
+      font-size: 18px;
+      margin: 24px 0 12px;
+      color: var(--accent);
+    }
+
+    .welcome-note p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .welcome-note ul, .welcome-note ol {
+      padding-left: 24px;
+      margin: 16px 0;
+    }
+
+    .welcome-note li {
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .welcome-note .highlight {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .diagram-img {
+      width: 100%;
+      border-radius: 12px;
+      margin: 16px 0 8px;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    /* ─── Sliding tables ─── */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 16px 0;
+      -webkit-overflow-scrolling: touch; /* smooth on iOS */
+    }
+
+    .welcome-note table {
+      width: 100%;
+      min-width: 580px;               /* forces horizontal scroll on phones */
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .welcome-note th,
+    .welcome-note td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 14px;
+      white-space: nowrap;            /* prevents ugly wrapping inside cells */
+    }
+
+    .welcome-note th {
+      background: rgba(29, 185, 84, 0.2);
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .welcome-note tr:last-child td {
+      border-bottom: none;
+    }
+
+    .explore-btn {
+      background: var(--accent);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      color: #000;
+      cursor: pointer;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      font-size: 16px;
+      margin: 24px auto 0;
+      display: block;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .explore-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -5px 10px var(--shadow-in);
+      z-index: 20;
+    }
+
+    .nav-bar .nav-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .nav-bar .nav-item button {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.center button {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      background: var(--accent);
+      box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      color: #000;
+    }
+
+    .nav-bar .nav-item.active button {
+      background: var(--accent);
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .nav-bar .nav-item p {
+      display: none;
+      font-size: 12px;
+      margin-top: 5px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.active p {
+      display: block;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <!-- Top Fixed Bar -->
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn profile-upload">
+          📷
+          <input type="file" accept="image/*" id="profile-upload">
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+      <div class="main-header">
+        <h1>Level Up Your Biology Knowledge! 🚀</h1>
+        <p class="subtitle">– JAMB Topic 3: Natural Habitats</p>
+      </div>
+
+      <div class="welcome-note neumorphic">
+        <h2>1. What are Natural Habitats?</h2>
+        <p>A <strong>habitat</strong> is the natural home or environment where an organism lives and obtains everything it needs (food, water, shelter, mates).</p>
+        <p>JAMB divides habitats into two main types:</p>
+        <ul>
+          <li><strong>Aquatic</strong> (water-based): ponds, streams, lakes, seashores, mangrove swamps</li>
+          <li><strong>Terrestrial / Arboreal</strong> (land/tree-based): tree-tops, abandoned farmland, dry grassy savanna field, burrow or hole</li>
+        </ul>
+        <p>You must know:</p>
+        <ul>
+          <li>Typical plants and animals in each habitat</li>
+          <li><strong>Adaptive features</strong> that help them survive there</li>
+        </ul>
+
+        <h2>2. Aquatic Habitats</h2>
+
+        <h3>Types & Examples</h3>
+        <ul>
+          <li>Freshwater: ponds, streams, lakes</li>
+          <li>Brackish / Marine: seashores, mangrove swamps</li>
+        </ul>
+
+        <h3>Organisms & Adaptive Features</h3>
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Organism</th>
+              <th>Typical Habitat</th>
+              <th>Key Adaptive Features</th>
+            </tr>
+            <tr>
+              <td>Water lily / Water lettuce</td>
+              <td>Ponds, lakes</td>
+              <td>Floating leaves with air-filled tissues, stomata on upper surface, flexible petioles</td>
+            </tr>
+            <tr>
+              <td>Tilapia, Catfish</td>
+              <td>Streams, ponds, lakes</td>
+              <td>Gills with large surface area, streamlined body, lateral line system</td>
+            </tr>
+            <tr>
+              <td>Red mangrove</td>
+              <td>Mangrove swamps</td>
+              <td><strong>Prop roots & pneumatophores</strong> for support & oxygen in anaerobic mud, salt glands</td>
+            </tr>
+            <tr>
+              <td>Mudskipper, Fiddler crab</td>
+              <td>Mangrove swamps / seashores</td>
+              <td>Modified gills + skin breathing, strong pectoral fins for walking, burrowing</td>
+            </tr>
+          </table>
+        </div>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Mangrove_swamp.jpg/800px-Mangrove_swamp.jpg" alt="Mangrove swamp habitat – shows prop roots and muddy environment" class="diagram-img">
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Nymphaea.jpg/800px-Nymphaea.jpg" alt="Water lily – floating leaves with air spaces" class="diagram-img">
+
+        <h2>3. Terrestrial / Arboreal Habitats</h2>
+
+        <h3>Types & Examples</h3>
+        <ul>
+          <li>Tree-tops (arboreal)</li>
+          <li>Abandoned farmland / dry grassy savanna field</li>
+          <li>Burrow or hole in soil</li>
+        </ul>
+
+        <h3>Organisms & Adaptive Features</h3>
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Organism</th>
+              <th>Typical Habitat</th>
+              <th>Key Adaptive Features</th>
+            </tr>
+            <tr>
+              <td>Oil palm, Iroko, Mahogany</td>
+              <td>Tree-tops / forest</td>
+              <td>Tall straight trunk, broad leaves for light capture, deep tap roots</td>
+            </tr>
+            <tr>
+              <td>Monkey, Parrot, Chameleon</td>
+              <td>Tree-tops</td>
+              <td>Prehensile tail / grasping hands/feet, strong claws, binocular vision</td>
+            </tr>
+            <tr>
+              <td>Elephant grass, Guinea grass</td>
+              <td>Savanna field / abandoned farmland</td>
+              <td>Deep fibrous roots, fire-resistant base, rapid regrowth after burning</td>
+            </tr>
+            <tr>
+              <td>Antelope, Grasshopper, Lizard</td>
+              <td>Dry grassy savanna</td>
+              <td>Camouflage colour, long legs for speed/jumping, large eyes for spotting predators</td>
+            </tr>
+            <tr>
+              <td>Earthworm, Termite, Burrowing rodent (rat)</td>
+              <td>Burrow / soil hole</td>
+              <td>Moist permeable skin, strong setae/claws for digging, nocturnal activity</td>
+            </tr>
+          </table>
+        </div>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Savanna_in_Nigeria.jpg/800px-Savanna_in_Nigeria.jpg" alt="Dry grassy savanna field with scattered trees – typical Nigerian savanna" class="diagram-img">
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Monkey_in_tree.jpg/800px-Monkey_in_tree.jpg" alt="Monkey in tree-top habitat – shows arboreal adaptations" class="diagram-img">
+
+        <h2>4. Quick Comparison Table – Habitats & Adaptations (JAMB Favourite)</h2>
+
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Habitat</th>
+              <th>Typical Plants</th>
+              <th>Typical Animals</th>
+              <th>Most Important Adaptation</th>
+            </tr>
+            <tr>
+              <td>Freshwater (ponds/lakes)</td>
+              <td>Water lily, Water hyacinth</td>
+              <td>Tilapia, Frogs</td>
+              <td>Floating leaves / gills</td>
+            </tr>
+            <tr>
+              <td>Mangrove swamp</td>
+              <td>Red mangrove</td>
+              <td>Mudskipper, Crabs</td>
+              <td>Pneumatophores / air-breathing</td>
+            </tr>
+            <tr>
+              <td>Tree-tops</td>
+              <td>Oil palm, Iroko</td>
+              <td>Monkey, Parrot</td>
+              <td>Grasping limbs / prehensile tail</td>
+            </tr>
+            <tr>
+              <td>Savanna field</td>
+              <td>Elephant grass</td>
+              <td>Antelope, Grasshopper</td>
+              <td>Speed / camouflage</td>
+            </tr>
+            <tr>
+              <td>Burrow / hole</td>
+              <td>—</td>
+              <td>Rat, Earthworm</td>
+              <td>Digging claws / moist skin</td>
+            </tr>
+          </table>
+        </div>
+
+        <p style="text-align: center; font-size: 17px; margin: 32px 0; font-weight: bold;">
+          Great job 🌟 You now master JAMB Topic 3: Natural Habitats!
+        </p>
+
+        <p style="text-align: center; margin: 20px 0;">Access JAMB questions related to this passage</p>
+        <button class="explore-btn" onclick="window.location.href='question.html'">Start JAMB Quiz Now!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Nav Bar -->
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    // Profile Upload placeholder
+    document.getElementById('profile-upload').addEventListener('change', (e) => {
+      if (e.target.files[0]) {
+        console.log('Profile picture selected!');
+      }
+    });
+  </script>
+</body>
+</html>

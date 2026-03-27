@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Ecology of Populations</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 500px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 820px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+    .comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+    .comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+    .comparison-card li { margin-bottom: 4px; font-size: 12px; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+    .image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+  </style>
+</head>
+  
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">BIOLOGY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>📈 Chapter 17: Ecology of Populations</h1>
+    <p class="subtitle">Population density + competition + population factors + succession (JAMB-ready)</p>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="section-card">
+    <h2>🎯 Overview</h2>
+    <p><strong>Population ecology</strong> studies how population size, density, and distribution change over time, and what factors affect them.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Population_growth_rate.png" alt="Population growth concept" class="diagram-img">
+    <p class="image-caption">Population size changes with births, deaths, immigration, and emigration</p>
+
+    <div class="quick-facts">
+      <h4>Key JAMB Targets</h4>
+      <ul>
+        <li>Calculate population density</li>
+        <li>Explain overcrowding + effects</li>
+        <li>Differentiate intra- vs inter-specific competition</li>
+        <li>Relate competition to succession and niche differentiation</li>
+        <li>Explain biotic + abiotic factors affecting population size</li>
+        <li>Trace primary vs secondary succession to climax community</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 1. POPULATION DENSITY -->
+  <div class="section-card">
+    <h2>1️⃣ Population Density & Overcrowding</h2>
+
+    <h3>Population Density</h3>
+    <p><strong>Definition:</strong> Population density is the number of organisms per unit area (or per unit volume in aquatic habitats).</p>
+
+    <div class="highlight-box">
+      <p><strong>Formula:</strong> Population density = Number of organisms ÷ Unit area (or volume)</p>
+      <p><strong>Example:</strong> Density = Total number / Area (per m² or km²)</p>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Quadrat_sampling.png" alt="Quadrat sampling" class="diagram-img">
+    <p class="image-caption">Quadrat method: used to estimate population density in plants/small organisms</p>
+
+    <h3>Overcrowding</h3>
+    <p><strong>Definition:</strong> Overcrowding occurs when population density becomes too high, leading to limited resources (food, space, water) and stronger competition.</p>
+
+    <div class="quick-facts">
+      <h4>Effects of Overcrowding</h4>
+      <ul>
+        <li>Food shortage</li>
+        <li>Competition and stress</li>
+        <li>Faster spread of diseases (e.g., cholera, malaria)</li>
+        <li>High death rate and migration</li>
+        <li>Environmental degradation (deforestation, pollution)</li>
+      </ul>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>🇳🇬 JAMB Focus (Nigeria/Africa)</h4>
+      <ul>
+        <li><strong>Reasons for rapid human population growth:</strong> high birth rate, improved healthcare, reduced infant mortality, cultural factors</li>
+        <li><strong>Consequences:</strong> unemployment, slums, disease outbreaks, food shortage, pollution</li>
+      </ul>
+    </div>
+
+    <h3>Example Calculation</h3>
+    <div class="highlight-box">
+      <p><strong>Question:</strong> If 500 tilapia fish are in a 250 m² pond, find density.</p>
+      <p><strong>Solution:</strong> Density = 500 ÷ 250 = <strong>2 fish per m²</strong>.</p>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Tilapia_in_pond.jpg" alt="Tilapia pond" class="diagram-img">
+    <p class="image-caption">High fish density can lead to overcrowding and reduced oxygen/food</p>
+  </div>
+
+  <!-- 2. ADAPTATION & COMPETITION -->
+  <div class="section-card">
+    <h2>2️⃣ Adaptation for Survival (Competition)</h2>
+    <p><strong>Definition (Adaptation):</strong> Adaptation is any structural, physiological, or behavioral feature that increases an organism’s chance of survival and reproduction in its environment.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5d/African_lion_and_hyena.jpg" alt="Lion and hyena competition" class="diagram-img">
+    <p class="image-caption">Competition example: lions and hyenas may compete for food</p>
+
+    <h3>(i) Factors that bring about competition</h3>
+    <div class="quick-facts">
+      <h4>Limited Resources</h4>
+      <ul>
+        <li>Food and water</li>
+        <li>Space/territory</li>
+        <li>Mates</li>
+        <li>Shelter</li>
+        <li>Light (plants)</li>
+        <li>Nutrients (plants)</li>
+      </ul>
+    </div>
+
+    <h3>(ii) Intra-specific vs Inter-specific Competition</h3>
+    <div class="comparison-grid">
+      <div class="comparison-card">
+        <h5>Intra-specific</h5>
+        <ul>
+          <li><strong>Meaning:</strong> competition within the same species</li>
+          <li><strong>Examples:</strong> male lions fighting; maize plants competing for nutrients</li>
+        </ul>
+      </div>
+      <div class="comparison-card">
+        <h5>Inter-specific</h5>
+        <ul>
+          <li><strong>Meaning:</strong> competition between different species</li>
+          <li><strong>Examples:</strong> lions vs hyenas; grasses vs weeds</li>
+        </ul>
+      </div>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/34/Maize_field.jpg" alt="Maize plants competition" class="diagram-img">
+    <p class="image-caption">Intra-specific competition: maize plants compete for light, water, nutrients</p>
+
+    <h3>(iii) Relationship between competition and succession</h3>
+    <p><strong>Key idea:</strong> Competition helps drive <strong>ecological succession</strong>. Early species change the environment, allowing other species to replace them over time until a stable climax community forms.</p>
+
+    <div class="highlight-box">
+      <p><strong>Succession logic (simple):</strong> Pioneers arrive → change habitat → later species outcompete them → climax community.</p>
+    </div>
+
+    <h3>Niche differentiation (Key JAMB point)</h3>
+    <p><strong>Definition:</strong> Niche differentiation is when species use resources differently (different food, time, space, or method) to reduce competition.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Woodpecker_feeding.jpg" alt="Bird feeding niche" class="diagram-img">
+    <p class="image-caption">Niche example: birds feed in different parts of trees to reduce competition</p>
+
+    <div class="jamb-alert">
+      <h4>✅ JAMB Objectives Covered</h4>
+      <ul>
+        <li>Link high population → shortage of food/space → competition</li>
+        <li>Differentiate intra- and inter-specific competition</li>
+        <li>Explain niche differentiation as a way to reduce competition</li>
+        <li>Relate competition to succession</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 3. FACTORS AFFECTING POPULATION SIZE -->
+  <div class="section-card">
+    <h2>3️⃣ Factors Affecting Population Sizes</h2>
+    <p><strong>Definition:</strong> Population size changes due to births, deaths, immigration, and emigration — and factors that influence them.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Population_dynamics_diagram.png" alt="Population dynamics diagram" class="diagram-img">
+    <p class="image-caption">Population size is affected by: births, deaths, immigration, emigration</p>
+
+    <h3>(i) Biotic factors (Living)</h3>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Food availability:</strong> more food → higher survival/reproduction</li>
+        <li><strong>Predation:</strong> predators reduce prey numbers</li>
+        <li><strong>Disease & pests:</strong> kill/weaken organisms</li>
+        <li><strong>Competition:</strong> reduces survival/reproduction</li>
+        <li><strong>Reproductive ability:</strong> high fertility → faster growth</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Cheetah_hunting.jpg" alt="Predation example" class="diagram-img">
+    <p class="image-caption">Predation is a biotic factor that controls population size</p>
+
+    <h3>(ii) Abiotic factors (Non-living)</h3>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Temperature:</strong> extremes reduce survival</li>
+        <li><strong>Rainfall/water:</strong> drought → food shortage</li>
+        <li><strong>Light:</strong> affects photosynthesis</li>
+        <li><strong>Space/territory:</strong> limits growth</li>
+        <li><strong>Topography:</strong> altitude/slope affects oxygen/temperature</li>
+        <li><strong>pH:</strong> affects nutrient uptake</li>
+        <li><strong>Pressure:</strong> deep water/high altitude effects</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Drought_in_Africa.jpg" alt="Drought" class="diagram-img">
+    <p class="image-caption">Drought (abiotic) can trigger food shortage and migration (biotic effects)</p>
+
+    <h3>Interactions example (JAMB loves this)</h3>
+    <div class="highlight-box">
+      <p><strong>Chain reaction:</strong> Drought → plants die → food shortage → animals starve/migrate → overcrowding in remaining areas → competition ↑ → disease ↑.</p>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>✅ JAMB Objective</h4>
+      <ul>
+        <li>Deduce effects of biotic/abiotic factors on population size</li>
+        <li>Explain interactions between biotic and abiotic factors</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 4. ECOLOGICAL SUCCESSION -->
+  <div class="section-card">
+    <h2>4️⃣ Ecological Succession</h2>
+    <p><strong>Definition:</strong> Ecological succession is the gradual, orderly change in a community over time from a bare area to a stable <strong>climax community</strong>.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/Ecological_succession_diagram.jpg" alt="Succession stages" class="diagram-img">
+    <p class="image-caption">Succession: pioneer species → shrubs → trees → climax community</p>
+
+    <h3>(i) Primary succession</h3>
+    <p><strong>Definition:</strong> Primary succession starts on a lifeless surface with <strong>no soil</strong> (e.g., bare rock, new sand dune, lava flow).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Lichen_on_rock.jpg" alt="Lichen pioneer species" class="diagram-img">
+    <p class="image-caption">Pioneer species (lichens) help break rocks to form soil</p>
+
+    <div class="quick-facts">
+      <h4>Typical Sequence</h4>
+      <ul>
+        <li>Lichens/mosses (pioneers) → thin soil formation</li>
+        <li>Small herbs/grasses</li>
+        <li>Shrubs</li>
+        <li>Small trees</li>
+        <li>Forest (climax)</li>
+      </ul>
+    </div>
+
+    <h3>(ii) Secondary succession</h3>
+    <p><strong>Definition:</strong> Secondary succession starts where <strong>soil already exists</strong> but the community was removed (bush fire, abandoned farmland, logging). It is faster than primary succession.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Old_field_succession.jpg" alt="Secondary succession old field" class="diagram-img">
+    <p class="image-caption">Secondary succession: soil remains, so recovery is faster</p>
+
+    <div class="highlight-box">
+      <p><strong>Sequence:</strong> grasses → shrubs → young trees → mature forest (climax).</p>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>🎓 Climax Community (Definition)</h4>
+      <ul>
+        <li>Stable, self-perpetuating community</li>
+        <li>Maximum biomass and diversity</li>
+        <li>Little change unless disturbed</li>
+      </ul>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>✅ JAMB Objective</h4>
+      <ul>
+        <li>Trace the sequence in succession to the climax stage</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- QUICK REVISION SUMMARY -->
+  <div class="section-card">
+    <h2>📋 Quick Revision Summary Table</h2>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Section</th>
+          <th>Key Points</th>
+          <th>JAMB Hotspot / Question Type</th>
+        </tr>
+        <tr>
+          <td><strong>Population Density</strong></td>
+          <td>No. organisms / area; overcrowding effects</td>
+          <td>Calculate density; consequences of human overcrowding</td>
+        </tr>
+        <tr>
+          <td><strong>Competition</strong></td>
+          <td>Intra vs inter; niche differentiation; link to succession</td>
+          <td>Identify type; explain how niche reduces competition</td>
+        </tr>
+        <tr>
+          <td><strong>Factors Affecting Size</strong></td>
+          <td>Biotic (food, predation, disease) & abiotic (temp, rainfall)</td>
+          <td>Deduce effects; explain interactions (drought → disease)</td>
+        </tr>
+        <tr>
+          <td><strong>Succession</strong></td>
+          <td>Primary (no soil) vs secondary (soil present); climax</td>
+          <td>Sequence from pioneer → climax</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="memory-tip">
+      <strong>🧠 QUICK MEMORY LINES:</strong>
+      <p>"Density = Divide by area" | "Intra = same, Inter = different" | "Primary = no soil, Secondary = soil"</p>
+    </div>
+  </div>
+
+  <div class="jamb-alert">
+    <h4>⚠️ Study Tip (High Scoring)</h4>
+    <ul>
+      <li>Draw succession stages and label them</li>
+      <li>Practice density calculations</li>
+      <li>Memorize examples for intra vs inter competition</li>
+      <li>This topic can appear in multiple questions — don’t skip it</li>
+    </ul>
+  </div>
+
+  <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+    🌟 If you can calculate density + explain competition + trace succession, Chapter 17 becomes easy marks. 🌟
+  </p>
+
+  <button class="explore-btn" onclick="alert('Practice JAMB past questions on Ecology of Populations (Chapter 17)!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

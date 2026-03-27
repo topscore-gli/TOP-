@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Variation in Population</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+.table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+.table-container::-webkit-scrollbar { height: 6px; }
+.table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+.table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+.summary-table { width: 100%; min-width: 520px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+.summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+.summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+.summary-table tr:last-child td { border-bottom: none; }
+.summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+.summary-table.wide { min-width: 980px; }
+.table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+
+.quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+.quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+.quick-facts ul { margin: 0; padding-left: 18px; }
+.quick-facts li { margin-bottom: 6px; font-size: 13px; }
+
+.memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+.memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+.memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+
+.comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+.comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+.comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+.comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+.comparison-card li { margin-bottom: 4px; font-size: 12px; }
+
+.diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+.image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+
+.jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+.jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+.jamb-alert ul { margin: 0; padding-left: 18px; }
+.jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+
+.highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+
+.nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+.nav-bar .nav-item { text-align: center; position: relative; }
+.nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+.nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+.nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+.nav-bar .nav-item.active p { display: block; }
+
+.progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+.progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+
+.explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+.explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">BIOLOGY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>👨‍👩‍👧‍👦 Chapter 20: Variation in Population</h1>
+    <p class="subtitle">Morphological vs physiological variation + continuous vs discontinuous + blood and blood groups</p>
+  </div>
+
+  <!-- INTRO -->
+  <div class="section-card">
+    <h2>🌟 Meaning of Variation</h2>
+    <p><strong>Variation</strong> refers to the differences that exist among individuals of the same species (population). No two organisms are exactly alike (even identical twins can differ due to environment).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Variation_in_humans.jpg" alt="Human variation" class="diagram-img">
+    <p class="image-caption">Variation exists in size, colour, and many body features</p>
+
+    <div class="quick-facts">
+      <h4>Main Causes of Variation</h4>
+      <ul>
+        <li><strong>Genetic constitution</strong> (inherited genes from parents)</li>
+        <li><strong>Environmental conditions</strong> (nutrition, climate, habitat, light, etc.)</li>
+        <li><strong>Often both</strong> (especially for continuous traits)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 1. MORPHOLOGICAL -->
+  <div class="section-card">
+    <h2>1️⃣ Morphological Variations</h2>
+    <p><strong>Definition:</strong> Differences in physical appearance (outward structure/looks).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Human_height_variation.jpg" alt="Height variation" class="diagram-img">
+    <p class="image-caption">Morphological variation example: height and body size</p>
+
+    <div class="quick-facts">
+      <h4>Examples (JAMB)</h4>
+      <ul>
+        <li><strong>Size:</strong> height, weight</li>
+        <li><strong>Colour:</strong> skin, eye, hair; coat colour in animals; feathers/scales</li>
+        <li><strong>Fingerprints:</strong> unique patterns (arches, loops, whorls)</li>
+      </ul>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>🔑 Key Point</h4>
+      <ul>
+        <li>Most morphological variations are <strong>continuous</strong>.</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Fingerprint_patterns.svg" alt="Fingerprint patterns" class="diagram-img">
+    <p class="image-caption">Fingerprint types: arch, loop, whorl (used for identification)</p>
+  </div>
+
+  <!-- 2. PHYSIOLOGICAL -->
+  <div class="section-card">
+    <h2>2️⃣ Physiological Variations</h2>
+    <p><strong>Definition:</strong> Differences in how the body functions or reacts (not always visible externally).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Tongue_rolling.jpg" alt="Tongue rolling" class="diagram-img">
+    <p class="image-caption">Physiological variation example: tongue rolling (yes/no)</p>
+
+    <div class="quick-facts">
+      <h4>Examples (JAMB)</h4>
+      <ul>
+        <li>Ability to roll the tongue</li>
+        <li>Ability to taste PTC (taster vs non-taster)</li>
+        <li><strong>Blood groups</strong> (ABO and Rhesus factor)</li>
+      </ul>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>🔑 Key Point</h4>
+      <ul>
+        <li>Most physiological variations in humans are <strong>discontinuous</strong> (clear groups).</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/PTC_taste_test_paper.jpg" alt="PTC taste test paper" class="diagram-img">
+    <p class="image-caption">PTC tasting: taster vs non-taster (genetic)</p>
+  </div>
+
+  <!-- CONTINUOUS vs DISCONTINUOUS -->
+  <div class="section-card">
+    <h2>📊 Continuous vs Discontinuous Variation</h2>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Feature</th>
+          <th>Continuous Variation</th>
+          <th>Discontinuous Variation</th>
+        </tr>
+        <tr>
+          <td><strong>Definition</strong></td>
+          <td>Smooth range between extremes; no clear groups</td>
+          <td>Distinct categories; no intermediates</td>
+        </tr>
+        <tr>
+          <td><strong>Data type</strong></td>
+          <td>Quantitative (measured)</td>
+          <td>Qualitative (counted)</td>
+        </tr>
+        <tr>
+          <td><strong>Graph</strong></td>
+          <td>Histogram (often bell-shaped)</td>
+          <td>Bar chart (separate bars)</td>
+        </tr>
+        <tr>
+          <td><strong>Cause</strong></td>
+          <td>Many genes + environment (polygenic)</td>
+          <td>One/few genes; little environment effect</td>
+        </tr>
+        <tr>
+          <td><strong>Examples</strong></td>
+          <td>Height, weight, skin colour shade</td>
+          <td>ABO blood groups, tongue rolling, PTC tasting</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Normal_distribution.svg" alt="Normal distribution bell curve" class="diagram-img">
+    <p class="image-caption">Continuous traits often form a bell-shaped curve (normal distribution)</p>
+
+    <div class="memory-tip">
+      <strong>🧠 Easy Memory:</strong>
+      <p>Continuous = can be measured and graded | Discontinuous = either/or categories</p>
+    </div>
+  </div>
+
+  <!-- BLOOD (MORE DETAIL) -->
+  <div class="section-card">
+    <h2>🩸 Blood (Extra Detail for JAMB)</h2>
+    <p><strong>Definition (Blood):</strong> Blood is a liquid connective tissue that circulates in blood vessels and transports substances around the body.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Blood_components_diagram_en.svg" alt="Blood components" class="diagram-img">
+    <p class="image-caption">Blood is made of plasma + red cells + white cells + platelets</p>
+
+    <h3>Components of Blood</h3>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Component</th>
+          <th>Main Features</th>
+          <th>Functions</th>
+        </tr>
+        <tr>
+          <td><strong>Plasma</strong></td>
+          <td>Straw-coloured fluid (mostly water)</td>
+          <td>Transports nutrients, hormones, CO₂, urea; distributes heat</td>
+        </tr>
+        <tr>
+          <td><strong>Red blood cells (RBC)</strong></td>
+          <td>Contain haemoglobin; biconcave; no nucleus (in mammals)</td>
+          <td>Transport oxygen (and some CO₂)</td>
+        </tr>
+        <tr>
+          <td><strong>White blood cells (WBC)</strong></td>
+          <td>Have nucleus; different types</td>
+          <td>Defend body (immunity): destroy pathogens, make antibodies</td>
+        </tr>
+        <tr>
+          <td><strong>Platelets</strong></td>
+          <td>Cell fragments</td>
+          <td>Blood clotting (prevents bleeding)</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <h3>Functions of Blood (Quick List)</h3>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Transport:</strong> O₂, CO₂, digested food, hormones, wastes</li>
+        <li><strong>Protection:</strong> WBC fight infection; antibodies</li>
+        <li><strong>Clotting:</strong> platelets + clotting factors stop bleeding</li>
+        <li><strong>Temperature regulation:</strong> distributes heat around the body</li>
+      </ul>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>⚠️ Common JAMB Trap</h4>
+      <ul>
+        <li>RBC carry oxygen using <strong>haemoglobin</strong> (not WBC).</li>
+        <li>Platelets are for <strong>clotting</strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- BLOOD GROUPS (EXTRA DETAIL) -->
+  <div class="section-card">
+    <h2>🧪 Blood Groups (ABO & Rhesus)</h2>
+    <p><strong>Definition (Blood group):</strong> A classification of blood based on the presence or absence of specific antigens on the surface of red blood cells.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5b/ABO_blood_group_system.svg" alt="ABO blood group system" class="diagram-img">
+    <p class="image-caption">ABO groups depend on A and B antigens on red blood cells</p>
+
+    <h3>ABO System: Antigens and Antibodies</h3>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Blood Group</th>
+          <th>Antigen on RBC</th>
+          <th>Antibody in Plasma</th>
+          <th>Notes</th>
+        </tr>
+        <tr>
+          <td><strong>A</strong></td>
+          <td>A antigen</td>
+          <td>Anti-B</td>
+          <td>Cannot receive B/AB (risk of agglutination)</td>
+        </tr>
+        <tr>
+          <td><strong>B</strong></td>
+          <td>B antigen</td>
+          <td>Anti-A</td>
+          <td>Cannot receive A/AB</td>
+        </tr>
+        <tr>
+          <td><strong>AB</strong></td>
+          <td>A and B antigens</td>
+          <td>No anti-A/anti-B</td>
+          <td><strong>Universal recipient</strong> (ABO only)</td>
+        </tr>
+        <tr>
+          <td><strong>O</strong></td>
+          <td>No A/B antigens</td>
+          <td>Anti-A and Anti-B</td>
+          <td><strong>Universal donor</strong> (ABO only)</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="memory-tip">
+      <strong>🧠 Super Simple:</strong>
+      <p>Antigen = “ID card” on RBC | Antibody = “security” in plasma</p>
+    </div>
+
+    <h3>ABO Transfusion Compatibility (Basic)</h3>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Recipient</th>
+          <th>Can Receive From</th>
+          <th>Cannot Receive From</th>
+        </tr>
+        <tr>
+          <td><strong>A</strong></td>
+          <td>A, O</td>
+          <td>B, AB</td>
+        </tr>
+        <tr>
+          <td><strong>B</strong></td>
+          <td>B, O</td>
+          <td>A, AB</td>
+        </tr>
+        <tr>
+          <td><strong>AB</strong></td>
+          <td>A, B, AB, O</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>O</strong></td>
+          <td>O</td>
+          <td>A, B, AB</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <h3>Rhesus (Rh) Factor</h3>
+    <p><strong>Definition:</strong> Rh factor depends on whether the <strong>D antigen</strong> is present on RBC.</p>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Rh positive (Rh+):</strong> D antigen present</li>
+        <li><strong>Rh negative (Rh-):</strong> D antigen absent</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Rh_factor_pregnancy_en.svg" alt="Rhesus factor pregnancy" class="diagram-img">
+    <p class="image-caption">Rh incompatibility in pregnancy: Rh- mother and Rh+ baby can cause problems</p>
+
+    <div class="jamb-alert">
+      <h4>⚠️ Rh in Pregnancy (JAMB loves this)</h4>
+      <ul>
+        <li>If an <strong>Rh- mother</strong> carries an <strong>Rh+ fetus</strong>, she may form anti-Rh antibodies after exposure to fetal blood.</li>
+        <li>These antibodies can affect a future Rh+ baby (haemolytic disease of newborn).</li>
+        <li>Prevention: anti-D injection (Rh immunoglobulin) after birth/miscarriage.</li>
+      </ul>
+    </div>
+
+    <h3>Agglutination (Why mismatching is dangerous)</h3>
+    <p><strong>Definition:</strong> Agglutination is the clumping of red blood cells when antibodies react with incompatible antigens (can block blood vessels and cause serious reactions).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Agglutination.svg" alt="Agglutination" class="diagram-img">
+    <p class="image-caption">Agglutination happens when blood groups are mismatched</p>
+  </div>
+
+  <!-- APPLICATIONS -->
+  <div class="section-card">
+    <h2>🎯 Applications of Discontinuous Variation (JAMB)</h2>
+
+    <h3>1) Crime detection (Forensics)</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Fingerprint_lifting_powder.jpg" alt="Fingerprint forensics" class="diagram-img">
+    <p class="image-caption">Fingerprints are unique and used to identify suspects/victims</p>
+    <div class="quick-facts">
+      <ul>
+        <li>Fingerprints: identify individuals</li>
+        <li>Blood group/DNA: can link a suspect to a crime scene</li>
+      </ul>
+    </div>
+
+    <h3>2) Blood transfusion</h3>
+    <div class="highlight-box">
+      <p><strong>Rule:</strong> Match ABO and Rh to prevent agglutination.</p>
+      <p><strong>ABO shortcuts:</strong> O = universal donor; AB = universal recipient (ABO only).</p>
+    </div>
+
+    <h3>3) Paternity determination (Blood group logic)</h3>
+    <p><strong>Key idea:</strong> Blood groups can <strong>exclude</strong> a person (not prove 100%). DNA is more accurate, but JAMB tests ABO reasoning.</p>
+    <div class="quick-facts">
+      <ul>
+        <li>If child is <strong>AB</strong>, parents cannot both be <strong>O</strong>.</li>
+        <li>AB requires A allele and B allele.</li>
+      </ul>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>⚠️ JAMB Tip</h4>
+      <ul>
+        <li>Know ABO compatibility and simple inheritance logic — common MCQs.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- OBJECTIVES -->
+  <div class="section-card">
+    <h2>✅ What JAMB Expects You To Do</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Differentiate continuous vs discontinuous with examples</li>
+        <li>Explain gene + environment causes of variation</li>
+        <li>Measure height/weight and record data</li>
+        <li>Plot frequency distribution graphs (histogram → bell curve)</li>
+        <li>Observe colour patterns in plants/animals</li>
+        <li>Identify physiological traits (tongue rolling, PTC, blood groups)</li>
+        <li>Apply blood groups to transfusion and paternity</li>
+        <li>Use discontinuous variation in crime detection</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Quick Revision:</strong>
+      <p>Continuous = height/weight | Discontinuous = blood group/tongue rolling</p>
+    </div>
+  </div>
+
+  <div class="jamb-alert">
+    <h4>📌 Quick Revision Tips</h4>
+    <ul>
+      <li>Memorize: continuous (many genes + environment) vs discontinuous (few genes)</li>
+      <li>Practice plotting heights in class intervals → bell-shaped histogram</li>
+      <li>Master ABO + Rh tables (transfusion and pregnancy questions)</li>
+    </ul>
+  </div>
+
+  <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+    🌟 Master variation + blood groups, and you’ll score strongly in JAMB genetics/ecology questions. 🌟
+  </p>
+
+  <button class="explore-btn" onclick="alert('Practice JAMB questions on Variation in Population (Chapter 20)!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

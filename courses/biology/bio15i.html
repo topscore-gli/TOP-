@@ -1,0 +1,444 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Natural Habitats</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 500px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 850px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+    .comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+    .comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+    .comparison-card li { margin-bottom: 4px; font-size: 12px; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+    .image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+  </style>
+</head>
+  
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">BIOLOGY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>🌿 Chapter 15: Natural Habitats</h1>
+    <p class="subtitle">Aquatic + Terrestrial habitats with organisms and adaptive features</p>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="section-card">
+    <h2>📚 Overview of Habitats</h2>
+    <p><strong>Definition (Habitat):</strong> A habitat is the natural environment where an organism lives. It provides food, water, shelter, and suitable conditions for survival and reproduction.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Biomes_of_the_world.png" alt="World habitats/biomes" class="diagram-img">
+    <p class="image-caption">Different habitats support different communities of organisms</p>
+
+    <div class="quick-facts">
+      <h4>Two Main Categories</h4>
+      <ul>
+        <li><strong>Aquatic</strong> (water-based)</li>
+        <li><strong>Terrestrial/Arboreal</strong> (land/tree-based)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PART A: AQUATIC -->
+  <div class="section-card">
+    <h2>🌊 Part A: Aquatic Habitats</h2>
+    <p><strong>Definition (Aquatic habitat):</strong> A habitat in which organisms live in water (freshwater, marine, or brackish environments).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Freshwater_ecosystem.jpg" alt="Freshwater habitat" class="diagram-img">
+    <p class="image-caption">Freshwater ecosystems include ponds, streams, and lakes</p>
+
+    <h3>1. Freshwater Habitats</h3>
+
+    <h4>Ponds</h4>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Pond_ecosystem.jpg" alt="Pond ecosystem" class="diagram-img">
+    <p class="image-caption">Ponds: still water, shallow, lots of vegetation</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Habitat</th>
+          <th>Characteristics</th>
+          <th>Common Organisms</th>
+          <th>Adaptive Features</th>
+        </tr>
+        <tr>
+          <td><strong>Ponds</strong></td>
+          <td>Still/standing water; shallow; high vegetation; low oxygen at bottom</td>
+          <td>Water lily, duckweed, algae; tadpoles, frogs, water snails, dragonfly nymphs, pond skaters</td>
+          <td>Floating leaves; air spaces for buoyancy; gills; webbed feet; streamlined bodies</td>
+        </tr>
+        <tr>
+          <td><strong>Streams</strong></td>
+          <td>Flowing water; high oxygen; cooler; rocky/sandy bottom</td>
+          <td>Water cress, mosses; trout, crayfish, mayfly nymphs, water striders</td>
+          <td>Flattened bodies; hooks/claws; streamlined shape to resist current</td>
+        </tr>
+        <tr>
+          <td><strong>Lakes</strong></td>
+          <td>Large standing water; zones (littoral/limnetic/profundal); varying depths</td>
+          <td>Lotus, reeds, water weeds; tilapia, catfish, water birds, plankton</td>
+          <td>Long stems to surface; swim bladder; waterproof feathers; temperature tolerance</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <h4>Streams (Fast-flowing water)</h4>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/63/Mountain_stream.jpg" alt="Mountain stream" class="diagram-img">
+    <p class="image-caption">Streams: flow + high oxygen → animals need strong attachment adaptations</p>
+
+    <h4>Lakes</h4>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Lake_ecosystem.jpg" alt="Lake habitat" class="diagram-img">
+    <p class="image-caption">Lakes have zones that support different organisms</p>
+
+    <h3>2. Marine (Saltwater) Habitats</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Coral_reef_in_the_Red_Sea.jpg" alt="Marine habitat coral reef" class="diagram-img">
+    <p class="image-caption">Marine habitats include shorelines, reefs, and open oceans</p>
+
+    <h4>Seashores (Intertidal Zone)</h4>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/23/Intertidal_zone_rocky_shore.jpg" alt="Intertidal zone" class="diagram-img">
+    <p class="image-caption">Intertidal zone: alternating wet/dry + wave action</p>
+
+    <h4>Mangrove Swamps (Brackish water)</h4>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5a/Mangrove_forest.jpg" alt="Mangrove swamp" class="diagram-img">
+    <p class="image-caption">Mangroves live in brackish, waterlogged, salty conditions</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Habitat</th>
+          <th>Characteristics</th>
+          <th>Common Organisms</th>
+          <th>Adaptive Features</th>
+        </tr>
+        <tr>
+          <td><strong>Seashores (Intertidal)</strong></td>
+          <td>Alternating wet/dry; waves; varying salinity; rocky/sandy</td>
+          <td>Seaweeds, algae; crabs, starfish, sea anemones, barnacles, mussels, periwinkles</td>
+          <td>Hard shells; closing shells to prevent drying; tube feet/attachment; camouflage</td>
+        </tr>
+        <tr>
+          <td><strong>Mangrove swamps</strong></td>
+          <td>Brackish water; waterlogged soil; low oxygen; high salinity; aerial roots</td>
+          <td>Mangroves; mudskippers, crabs, oysters, shrimp, birds (egrets/herons)</td>
+          <td>Pneumatophores; prop roots; salt-excreting glands; vivipary; salinity tolerance</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="jamb-alert">
+      <h4>🔑 JAMB Hot Point: Mangrove Survival</h4>
+      <ul>
+        <li>Pneumatophores = breathing roots (low oxygen soil)</li>
+        <li>Prop roots = support in mud</li>
+        <li>Salt-excreting glands = remove excess salt</li>
+        <li>Vivipary = seeds germinate on parent plant</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PART B: TERRESTRIAL -->
+  <div class="section-card">
+    <h2>🌳 Part B: Terrestrial & Arboreal Habitats</h2>
+    <p><strong>Definition (Terrestrial habitat):</strong> A habitat found on land where organisms depend on air for breathing and must conserve water.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Savanna_landscape.jpg" alt="Savanna habitat" class="diagram-img">
+    <p class="image-caption">Terrestrial habitats include savanna, forests, and underground burrows</p>
+
+    <h3>Tree-tops (Arboreal/Canopy)</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/54/Tropical_rainforest_canopy.jpg" alt="Forest canopy" class="diagram-img">
+    <p class="image-caption">Canopy: high sunlight, wind exposure, limited water</p>
+
+    <h3>Abandoned Farmland (Secondary Succession)</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Old_field_succession.jpg" alt="Secondary succession old field" class="diagram-img">
+    <p class="image-caption">Secondary succession: pioneer species → shrubs → young trees</p>
+
+    <h3>Dry Grassy Field (Savanna)</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9f/Acacia_tree_in_savanna.jpg" alt="Acacia in savanna" class="diagram-img">
+    <p class="image-caption">Savanna: seasonal rain, long dry season, fire-prone</p>
+
+    <h3>Burrows / Holes</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Meerkat_burrow.jpg" alt="Burrow habitat" class="diagram-img">
+    <p class="image-caption">Burrows provide stable temperature, humidity, and protection</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Habitat</th>
+          <th>Characteristics</th>
+          <th>Common Organisms</th>
+          <th>Adaptive Features</th>
+        </tr>
+        <tr>
+          <td><strong>Tree-tops (Arboreal)</strong></td>
+          <td>High sunlight; windy; limited water; lots of fruits/leaves</td>
+          <td>Epiphytes; monkeys, squirrels, parrots, chameleons, tree frogs, insects, snakes</td>
+          <td>Prehensile tails; sharp claws; camouflage green; binocular vision; lightweight bodies; aerial roots</td>
+        </tr>
+        <tr>
+          <td><strong>Abandoned farmland</strong></td>
+          <td>Disturbed soil; high sunlight; pioneer species; changing community</td>
+          <td>Grasses/weeds/shrubs; grasshoppers, rodents, lizards, birds</td>
+          <td>Fast growth; wind-dispersed seeds; high reproduction; generalist feeding; migration</td>
+        </tr>
+        <tr>
+          <td><strong>Savanna</strong></td>
+          <td>Seasonal rainfall; long dry season; scattered trees; fire-prone</td>
+          <td>Elephant grass, acacia, baobab; zebras, antelopes, lions, giraffes, termites</td>
+          <td>Thick bark; deep roots; waxy leaves; thorns; migration; camouflage; burrowing; water conservation</td>
+        </tr>
+        <tr>
+          <td><strong>Burrows</strong></td>
+          <td>Underground; dark; stable temperature; humid; protected</td>
+          <td>Rabbits, rats, earthworms, termites, foxes, meerkats</td>
+          <td>Strong claws/teeth; reduced eyesight; enhanced senses; streamlined bodies; tolerate low oxygen; nocturnal behavior</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+  </div>
+
+  <!-- KEY CONCEPTS -->
+  <div class="section-card">
+    <h2>🔑 Key Concepts to Remember</h2>
+
+    <h3>Adaptive Features Explained</h3>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Feature Type</th>
+          <th>Meaning</th>
+          <th>Purpose</th>
+          <th>Examples</th>
+        </tr>
+        <tr>
+          <td><strong>Structural (Morphological)</strong></td>
+          <td>Physical body parts</td>
+          <td>Helps survival in habitat</td>
+          <td>Webbed feet (duck), gills (fish), pneumatophores (mangrove)</td>
+        </tr>
+        <tr>
+          <td><strong>Physiological</strong></td>
+          <td>Internal body processes</td>
+          <td>Maintains body function</td>
+          <td>Salt excretion (mangrove), water conservation, swim bladder (fish)</td>
+        </tr>
+        <tr>
+          <td><strong>Behavioral</strong></td>
+          <td>Actions/behaviours</td>
+          <td>Avoids danger/extremes</td>
+          <td>Migration, burrowing, nocturnal activity</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <h3>Comparison: Aquatic vs Terrestrial</h3>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Aspect</th>
+          <th>Aquatic</th>
+          <th>Terrestrial</th>
+        </tr>
+        <tr>
+          <td><strong>Medium</strong></td>
+          <td>Water</td>
+          <td>Air/Land</td>
+        </tr>
+        <tr>
+          <td><strong>Support</strong></td>
+          <td>Buoyancy from water</td>
+          <td>Strong skeleton/muscles needed</td>
+        </tr>
+        <tr>
+          <td><strong>Respiration</strong></td>
+          <td>Gills/skin/lungs</td>
+          <td>Lungs/trachea/skin (moist)</td>
+        </tr>
+        <tr>
+          <td><strong>Temperature</strong></td>
+          <td>More stable</td>
+          <td>More variable</td>
+        </tr>
+        <tr>
+          <td><strong>Water availability</strong></td>
+          <td>Abundant</td>
+          <td>Variable (conservation needed)</td>
+        </tr>
+        <tr>
+          <td><strong>Reproduction</strong></td>
+          <td>Often external fertilization</td>
+          <td>Usually internal fertilization</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+  </div>
+
+  <!-- QUICK REVISION -->
+  <div class="section-card">
+    <h2>📋 Quick Revision Checklist</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>For each habitat: name 3 plants + 3 animals</li>
+        <li>Explain 3 adaptive features of organisms there</li>
+        <li>Describe environmental conditions</li>
+        <li>Compare pond vs lake; stream vs pond; mangrove vs seashore</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- LIKELY QUESTIONS -->
+  <div class="jamb-alert">
+    <h4>⚡ Likely JAMB Questions & Answers</h4>
+    <ul>
+      <li><strong>Q1:</strong> Mangrove survival in waterlogged soil? <br><strong>A:</strong> Pneumatophores, prop roots, salt glands, vivipary.</li>
+      <li><strong>Q2:</strong> Why savanna trees have thick bark? <br><strong>A:</strong> Fire protection + reduces water loss.</li>
+      <li><strong>Q3:</strong> Arboreal animals adaptations? <br><strong>A:</strong> Prehensile tail, claws, binocular vision, lightweight body.</li>
+      <li><strong>Q4:</strong> Pond plants float how? <br><strong>A:</strong> Air spaces for buoyancy + broad floating leaves.</li>
+      <li><strong>Q5:</strong> Why stream animals flattened? <br><strong>A:</strong> Reduce resistance + avoid being swept away.</li>
+    </ul>
+  </div>
+
+  <!-- STUDY TIPS -->
+  <div class="section-card">
+    <h2>🎯 Study Tips</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Make flashcards: habitat → organisms → adaptations</li>
+        <li>Draw each habitat with organism placement</li>
+        <li>Practice comparing similar habitats (pond vs lake)</li>
+        <li>Focus on “adaptation → reason” (application questions)</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Simple memory line:</strong>
+      <p>"Habitat = conditions, Organisms = adaptations."</p>
+    </div>
+  </div>
+
+  <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+    🌟 If you can match habitat → organisms → adaptations, Chapter 15 becomes easy marks. 🌟
+  </p>
+
+  <button class="explore-btn" onclick="alert('Practice JAMB past questions on Natural Habitats (Chapter 15)!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

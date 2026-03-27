@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIOLOGY - Humans and Environment</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    :root {
+      --background: #1e1e2f;
+      --shadow-in: #171723;
+      --shadow-out: #25253b;
+      --text-primary: #f0f0ff;
+      --text-secondary: #c0c0e0;
+      --accent: #1db954;
+      --card-bg: #2a2a3f;
+    }
+
+    body.light {
+      --background: #e0e0e0;
+      --shadow-in: #bebebe;
+      --shadow-out: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #444;
+      --accent: #1db954;
+      --card-bg: #f8f8f8;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      background: var(--background);
+      border-radius: 20px;
+      box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out);
+      overflow: hidden;
+      min-height: 100vh;
+      position: relative;
+      padding-top: 70px;
+      padding-bottom: 80px;
+    }
+
+    .neumorphic {
+      background: var(--background);
+      box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out);
+      border-radius: 15px;
+    }
+
+    .neumorphic-btn {
+      background: var(--background);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      cursor: pointer;
+      color: var(--text-primary);
+      font-size: 18px;
+    }
+
+    .neumorphic-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 5px 10px var(--shadow-in);
+      z-index: 20;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .top-bar .header {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+
+    .top-bar .right-icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-bar .profile-upload {
+      position: relative;
+    }
+
+    .top-bar .profile-upload input {
+      opacity: 0;
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 20px 16px;
+      line-height: 1.6;
+    }
+
+    .main-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .main-header h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .main-header p.subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .section {
+      background: var(--card-bg);
+      padding: 24px 20px;
+      border-radius: 20px;
+      box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out);
+      margin-bottom: 30px;
+    }
+
+    .section h2 {
+      font-size: 22px;
+      margin: 0 0 16px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .section h3 {
+      font-size: 18px;
+      margin: 24px 0 12px;
+      color: var(--accent);
+    }
+
+    .section p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .section ul, .section ol {
+      padding-left: 24px;
+      margin: 16px 0;
+    }
+
+    .section li {
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .section .highlight {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .diagram-img {
+      width: 100%;
+      border-radius: 12px;
+      margin: 16px 0 8px;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 16px 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .section table {
+      width: 100%;
+      min-width: 580px;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .section th,
+    .section td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .section th {
+      background: rgba(29, 185, 84, 0.2);
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .section tr:last-child td {
+      border-bottom: none;
+    }
+
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -5px 10px var(--shadow-in);
+      z-index: 20;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .nav-bar .nav-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .nav-bar .nav-item button {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.center button {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      background: var(--accent);
+      box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      color: #000;
+    }
+
+    .nav-bar .nav-item p {
+      display: none;
+      font-size: 12px;
+      margin-top: 5px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.active p {
+      display: block;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <!-- Top Fixed Bar -->
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn profile-upload">
+          📷
+          <input type="file" accept="image/*" id="profile-upload">
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+      <div class="main-header">
+        <h1>Level Up Your Biology Knowledge! 🚀</h1>
+        <p class="subtitle">– JAMB Topic: Humans and Environment</p>
+      </div>
+
+      <div class="section">
+        <p>This topic explores how humans interact with their environment, focusing on health risks like diseases and drug abuse, environmental issues like pollution and conservation, and protective measures like sanitation and national parks. We'll break it down step by step, using simple explanations, examples, and key facts. Each section aligns with the JAMB objectives, so you'll learn what you need to know for exams. Read slowly, take notes, and relate it to real-life scenarios for better retention.</p>
+
+        <h2>Understanding Diseases</h2>
+        <p>Diseases are a major way the environment affects human health. We'll cover common/endemic diseases and easily transmissible ones, including their causes, spread, symptoms, and control. This ties into objectives (i), (ii), (vi), and (vii).</p>
+
+        <h3>1.1 Common and Endemic Diseases</h3>
+        <p><strong>Definition:</strong> Endemic diseases are constantly present in a specific area, often due to local ecological conditions like climate, water, or vectors (organisms that spread disease).</p>
+        <p><strong>Examples and Factors Favoring Spread:</strong></p>
+        <ul>
+          <li><strong>Malaria:</strong> Caused by <strong>Plasmodium parasite</strong>, spread by female <strong>Anopheles mosquitoes</strong>. Favored by warm, humid areas with stagnant water (breeding sites). Symptoms: Fever, chills, headache. Control: Use mosquito nets, insecticides, drain water; vaccination trials ongoing.</li>
+          <li><strong>Meningitis:</strong> Often bacterial (e.g., <strong>Neisseria meningitidis</strong>), spreads via respiratory droplets in dry, dusty areas like Nigeria's "meningitis belt." Symptoms: Stiff neck, fever, confusion. Control: Vaccination (e.g., MenAfriVac), avoid overcrowding.</li>
+          <li><strong>Dracunculiasis (Guinea Worm Disease):</strong> Caused by <strong>Dracunculus worm</strong> via contaminated water. Endemic in rural areas with unsafe drinking water. Symptoms: Painful blister, worm emerges from skin. Control: Filter water, treat sources; nearly eradicated globally.</li>
+          <li><strong>Schistosomiasis (Bilharzia):</strong> Parasitic worm (<strong>Schistosoma</strong>) from snail-infested water. Spread in areas with poor sanitation near rivers/lakes. Symptoms: Bloody urine, abdominal pain. Control: Avoid infested water, use praziquantel drug, snail control.</li>
+          <li><strong>Onchocerciasis (River Blindness):</strong> Caused by <strong>Onchocerca worm</strong>, spread by blackflies near fast-flowing rivers. Symptoms: Itching, blindness. Control: Ivermectin treatment, insecticide spraying.</li>
+          <li><strong>Typhoid Fever:</strong> Bacterial (<strong>Salmonella typhi</strong>) via contaminated food/water. Favored by poor hygiene in crowded areas. Symptoms: High fever, weakness. Control: Vaccination, safe water, handwashing.</li>
+        </ul>
+        <p>Key Tip: Ecological conditions like poor drainage, overcrowding, and vectors (e.g., mosquitoes for malaria) make these diseases common. Prevention often involves breaking the transmission cycle (e.g., inoculate via vaccines to build immunity).</p>
+
+<grok:render card_id="a88cb8" card_type="image_card" type="render_searched_image"><argument name="image_id">0</argument><argument name="size">"LARGE"</argument></grok:render>
+
+        <h3>1.2 Easily Transmissible Diseases and Syndromes</h3>
+        <p>These spread quickly person-to-person or via vectors. Focus on biology of agents/vectors for control.</p>
+        <ul>
+          <li><strong>Poliomyelitis (Polio):</strong> Viral (<strong>poliovirus</strong>), spreads via fecal-oral route in unsanitary areas. Vector/Agent: No true vector; direct contact or contaminated water. Symptoms: Paralysis, muscle weakness. Control: Oral polio vaccine (OPV), sanitation; global eradication efforts.</li>
+          <li><strong>Cholera:</strong> Bacterial (<strong>Vibrio cholerae</strong>), via contaminated water/food. Agent: Bacteria produce toxins causing diarrhea. Symptoms: Severe watery diarrhea, dehydration. Control: Oral rehydration, vaccines, clean water.</li>
+          <li><strong>Tuberculosis (TB):</strong> Bacterial (<strong>Mycobacterium tuberculosis</strong>), airborne via coughs. Agent: Bacteria infect lungs. Symptoms: Cough with blood, weight loss. Control: BCG vaccine, antibiotics, ventilation.</li>
+        </ul>
+        <p><strong>Sexually Transmitted Diseases/Syndromes (STDs/STIs):</strong></p>
+        <ul>
+          <li><strong>Gonorrhea:</strong> Bacterial (<strong>Neisseria gonorrhoeae</strong>), via sexual contact. Symptoms: Painful urination, discharge. Control: Antibiotics, condoms.</li>
+          <li><strong>Syphilis:</strong> Bacterial (<strong>Treponema pallidum</strong>), via sexual contact or mother-to-child. Symptoms: Sores, rash, organ damage if untreated. Control: Penicillin, safe sex.</li>
+          <li><strong>AIDS (Acquired Immunodeficiency Syndrome):</strong> Caused by <strong>HIV virus</strong>, weakens immune system. Spread via blood, semen, etc. Symptoms: Opportunistic infections. Control: Antiretrovirals (no cure), condoms, PrEP; no vaccine yet.</li>
+        </ul>
+        <p>Prevention Principles: Use inoculation (single dose) or vaccination (builds immunity). Control vectors (e.g., flies for onchocerciasis) and modes (e.g., hygiene for cholera). For epidemics, trace contacts and isolate.</p>
+
+<grok:render card_id="48a1fc,6daca9,162b88" card_type="image_card_group"></grok:render>
+
+        <h3>Tables for Diseases (from Modern Biology Textbook / JAMB Perspectives)</h3>
+        <p>Based on JAMB syllabus and common references, here are tables for viruses, bacteria, fungi, and parasites. Note: Fungi are less emphasized in JAMB for human diseases, but include common ones like ringworm.</p>
+
+        <h4>Viral Diseases</h4>
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Disease/Organism</th>
+              <th>Other Names</th>
+              <th>Mode of Transmission</th>
+              <th>Symptoms</th>
+              <th>Control</th>
+            </tr>
+            <tr>
+              <td>Poliomyelitis (Poliovirus)</td>
+              <td>Polio</td>
+              <td>Fecal-oral route, contaminated water/food</td>
+              <td>Paralysis, muscle weakness, fever</td>
+              <td>Oral polio vaccine, sanitation</td>
+            </tr>
+            <tr>
+              <td>AIDS (HIV)</td>
+              <td>Acquired Immunodeficiency Syndrome</td>
+              <td>Blood, semen, vaginal fluids, mother-to-child</td>
+              <td>Opportunistic infections, weight loss, fatigue</td>
+              <td>Antiretrovirals, condoms, PrEP</td>
+            </tr>
+            <tr>
+              <td>Measles (Measles virus)</td>
+              <td>Rubeola</td>
+              <td>Airborne respiratory droplets</td>
+              <td>Rash, fever, cough, red eyes</td>
+              <td>MMR vaccine, isolation</td>
+            </tr>
+          </table>
+        </div>
+
+        <h4>Bacterial Diseases</h4>
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Disease/Organism</th>
+              <th>Other Names</th>
+              <th>Mode of Transmission</th>
+              <th>Symptoms</th>
+              <th>Control</th>
+            </tr>
+            <tr>
+              <td>Cholera (Vibrio cholerae)</td>
+              <td> - </td>
+              <td>Contaminated water/food</td>
+              <td>Severe diarrhea, dehydration</td>
+              <td>Oral rehydration, vaccines, clean water</td>
+            </tr>
+            <tr>
+              <td>Tuberculosis (Mycobacterium tuberculosis)</td>
+              <td>TB</td>
+              <td>Airborne droplets</td>
+              <td>Cough with blood, weight loss</td>
+              <td>BCG vaccine, antibiotics</td>
+            </tr>
+            <tr>
+              <td>Typhoid (Salmonella typhi)</td>
+              <td>Enteric fever</td>
+              <td>Contaminated food/water</td>
+              <td>High fever, weakness, abdominal pain</td>
+              <td>Vaccination, safe water, hygiene</td>
+            </tr>
+            <tr>
+              <td>Gonorrhea (Neisseria gonorrhoeae)</td>
+              <td>Clap</td>
+              <td>Sexual contact</td>
+              <td>Painful urination, discharge</td>
+              <td>Antibiotics, condoms</td>
+            </tr>
+            <tr>
+              <td>Syphilis (Treponema pallidum)</td>
+              <td> - </td>
+              <td>Sexual contact, mother-to-child</td>
+              <td>Sores, rash, organ damage</td>
+              <td>Penicillin, safe sex</td>
+            </tr>
+            <tr>
+              <td>Meningitis (Neisseria meningitidis)</td>
+              <td>Meningococcal meningitis</td>
+              <td>Respiratory droplets</td>
+              <td>Stiff neck, fever, confusion</td>
+              <td>Vaccination, antibiotics</td>
+            </tr>
+          </table>
+        </div>
+
+        <h4>Fungal Diseases</h4>
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Disease/Organism</th>
+              <th>Other Names</th>
+              <th>Mode of Transmission</th>
+              <th>Symptoms</th>
+              <th>Control</th>
+            </tr>
+            <tr>
+              <td>Ringworm (Tinea species, e.g., Trichophyton)</td>
+              <td>Dermatophytosis</td>
+              <td>Direct contact, contaminated items</td>
+              <td>Red, itchy ring-shaped rash</td>
+              <td>Antifungal creams, hygiene</td>
+            </tr>
+            <tr>
+              <td>Candidiasis (Candida albicans)</td>
+              <td>Thrush, yeast infection</td>
+              <td>Overgrowth in moist areas, weakened immunity</td>
+              <td>White patches in mouth, itching in genitals</td>
+              <td>Antifungal drugs, good hygiene</td>
+            </tr>
+            <tr>
+              <td>Athlete's Foot (Tinea pedis)</td>
+              <td> - </td>
+              <td>Moist environments, direct contact</td>
+              <td>Itchy, cracked skin between toes</td>
+              <td>Antifungal powders, dry feet</td>
+            </tr>
+          </table>
+        </div>
+
+        <h4>Parasitic Diseases</h4>
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Disease/Organism</th>
+              <th>Other Names</th>
+              <th>Mode of Transmission</th>
+              <th>Symptoms</th>
+              <th>Control</th>
+            </tr>
+            <tr>
+              <td>Malaria (Plasmodium spp.)</td>
+              <td> - </td>
+              <td>Anopheles mosquito bite</td>
+              <td>Fever, chills, headache</td>
+              <td>Mosquito nets, insecticides, antimalarials</td>
+            </tr>
+            <tr>
+              <td>Schistosomiasis (Schistosoma spp.)</td>
+              <td>Bilharzia</td>
+              <td>Snail-infested water contact</td>
+              <td>Bloody urine, abdominal pain</td>
+              <td>Praziquantel, avoid infested water</td>
+            </tr>
+            <tr>
+              <td>Onchocerciasis (Onchocerca volvulus)</td>
+              <td>River Blindness</td>
+              <td>Blackfly bite</td>
+              <td>Itching, blindness</td>
+              <td>Ivermectin, vector control</td>
+            </tr>
+            <tr>
+              <td>Dracunculiasis (Dracunculus medinensis)</td>
+              <td>Guinea Worm Disease</td>
+              <td>Contaminated water</td>
+              <td>Painful blister, worm emergence</td>
+              <td>Water filtration, education</td>
+            </tr>
+            <tr>
+              <td>Trypanosomiasis (Trypanosoma spp.)</td>
+              <td>Sleeping Sickness</td>
+              <td>Tsetse fly bite</td>
+              <td>Fever, sleep disturbances</td>
+              <td>Insecticides, drugs like pentamidine</td>
+            </tr>
+          </table>
+        </div>
+
+        <h2>Step 2: Drug Abuse</h2>
+        <p>This section covers addiction, common drugs, effects, and prevention (objectives iii, iv, v).</p>
+        <h3>2.1 Drug Addiction</h3>
+        <p><strong>Definition:</strong> Drug abuse is misuse of substances for non-medical reasons. Addiction is physical/psychological dependence, where the body craves the drug, leading to tolerance (needing more for effect) and withdrawal symptoms.</p>
+        <h3>2.2 Commonly Abused Drugs</h3>
+        <p><strong>Categories and Examples:</strong></p>
+        <ul>
+          <li><strong>Stimulants:</strong> Cocaine, amphetamines (e.g., methamphetamine) – increase alertness but cause heart issues.</li>
+          <li><strong>Depressants:</strong> Alcohol, benzodiazepines (e.g., Valium) – slow brain activity, lead to coma.</li>
+          <li><strong>Hallucinogens:</strong> LSD, psilocybin mushrooms – alter perception.</li>
+          <li><strong>Opioids:</strong> Heroin, codeine, tramadol – pain relief but highly addictive.</li>
+          <li><strong>Cannabis:</strong> Marijuana – relaxes but can impair memory.</li>
+          <li><strong>Others:</strong> Inhalants (e.g., glue), prescription drugs like opioids.</li>
+        </ul>
+        <h3>2.3 Effects on Health</h3>
+        <p>Short-term: Euphoria, but risks like overdose, accidents.</p>
+        <p>Long-term: Liver damage (alcohol), heart disease (cocaine), mental health issues (depression, psychosis), weakened immunity, organ failure.</p>
+        <p>Social: Crime, family breakdown.</p>
+        <h3>2.4 Prevention</h3>
+        <p>Education on risks, counseling, laws against illegal drugs, rehab programs. Avoid peer pressure; promote healthy alternatives like sports.</p>
+
+<grok:render card_id="66ff7d" card_type="image_card" type="render_searched_image"><argument name="image_id">9</argument><argument name="size">"LARGE"</argument></grok:render>
+
+        <h2>Step 3: Pollution and Its Control</h2>
+        <p>Pollution harms health and ecosystems. Cover types, sources, effects, control, and sanitation (objectives viii, ix, x, xi, xii).</p>
+        <h3>3.1 Sources, Types, Effects, and Control</h3>
+        <p><strong>Types:</strong></p>
+        <ul>
+          <li><strong>Air Pollution:</strong> Gases/particles in air (e.g., CO2, smoke).</li>
+          <li><strong>Water Pollution:</strong> Contaminants in water (e.g., sewage, chemicals).</li>
+          <li><strong>Soil Pollution:</strong> Toxins in land (e.g., pesticides, waste).</li>
+        </ul>
+        <p><strong>Sources:</strong> Industries (factories), vehicles (exhaust), agriculture (fertilizers), households (waste).</p>
+        <p><strong>Effects:</strong></p>
+        <ul>
+          <li>Human Health: Respiratory issues (air), cancers (chemicals), digestive problems (water).</li>
+          <li>Environment: Acid rain, biodiversity loss, climate change.</li>
+        </ul>
+        <p><strong>Control Methods:</strong></p>
+        <ul>
+          <li>Air: Use filters, electric vehicles, plant trees.</li>
+          <li>Water: Treat sewage, ban dumping.</li>
+          <li>Soil: Crop rotation, reduce pesticides.</li>
+          <li>General: Laws, recycling, monitoring.</li>
+        </ul>
+
+<grok:render card_id="b95345" card_type="image_card" type="render_searched_image"><argument name="image_id">11</argument><argument name="size">"LARGE"</argument></grok:render>
+
+        <h3>3.2 Sanitation and Sewage</h3>
+        <p><strong>Importance:</strong> Prevents disease spread. Sanitation includes clean water, waste disposal; sewage is wastewater management.</p>
+        <p><strong>Methods:</strong> Pit latrines/septic tanks in rural areas, treatment plants in cities. Personal hygiene: Handwashing, clean food.</p>
+        <p>Community Health: Reduces cholera/typhoid. Agencies like WHO (global standards), UNICEF (child health), IRCS (emergency aid), Nigerian Ministries of Health/Environment (policies, vaccinations).</p>
+
+<grok:render card_id="4c62ed" card_type="image_card" type="render_searched_image"><argument name="image_id">25</argument><argument name="size">"LARGE"</argument></grok:render>
+
+        <h2>Step 4: Conservation of Natural Resources</h2>
+        <p>Protecting resources for sustainability (objectives xiii, xiv, xv).</p>
+        <p><strong>Definition:</strong> Managing renewable (e.g., forests, water) and non-renewable (e.g., oil, minerals) resources.</p>
+        <p><strong>Methods:</strong> Reforestation, recycling, sustainable farming, protected areas.</p>
+        <p><strong>Benefits:</strong> Prevents desertification (land turning to desert, e.g., in Sahel), maintains biodiversity, ensures resources for future generations.</p>
+        <p><strong>Bodies Responsible:</strong></p>
+        <ul>
+          <li><strong>National:</strong> Nigerian Conservation Foundation (NCF) – education; Federal Ministry of Environment – policies; Nigeria National Parks – management.</li>
+          <li><strong>International:</strong> WWF (wildlife protection), IUCN (species lists), UNEP (global programs).</li>
+        </ul>
+
+<grok:render card_id="0a0fc2" card_type="image_card" type="render_searched_image"><argument name="image_id">19</argument><argument name="size">"LARGE"</argument></grok:render>
+
+        <h2>Step 5: Game Reserves and National Parks</h2>
+        <p>These are protected areas for wildlife (objective xvi).</p>
+        <p><strong>Importance:</strong> Biodiversity conservation, tourism, research, prevent poaching.</p>
+        <p><strong>Examples in Nigeria (Locations and Key Features):</strong></p>
+        <ul>
+          <li><strong>Yankari National Park (Bauchi State):</strong> Hot springs, elephants, lions; eco-tourism.</li>
+          <li><strong>Gashaka Gumti National Park (Taraba/Adamawa States):</strong> Largest in Nigeria; chimpanzees, mountains.</li>
+          <li><strong>Cross River National Park (Cross River State):</strong> Gorillas, rainforests.</li>
+          <li><strong>Kainji National Park (Niger/Kebbi States):</strong> Kainji Lake, hippos, antelopes.</li>
+          <li><strong>Old Oyo National Park (Oyo State):</strong> Historical sites, buffaloes.</li>
+          <li><strong>Chad Basin National Park (Borno/Yobe States):</strong> Wetlands, migratory birds.</li>
+          <li><strong>Kamuku National Park (Kaduna State):</strong> Savanna, elephants.</li>
+          <li><strong>Okomu National Park (Edo State):</strong> Forest elephants, monkeys.</li>
+        </ul>
+        <p>Game Reserves: Similar but allow limited hunting (e.g., Borgu Game Reserve in Kainji).</p>
+
+<grok:render card_id="5e2210,490cca,5a409b" card_type="image_card_group"></grok:render>
+
+        <h2>Final Tips for Learning and JAMB Prep</h2>
+        <ul>
+          <li><strong>Summary:</strong> Humans impact the environment through pollution and resource use, but face backlash via diseases and degradation. Control involves hygiene, conservation, and agencies.</li>
+          <li><strong>Study Hacks:</strong> Make flashcards for diseases (cause, vector, control). Draw mind maps for pollution types. Memorize Nigerian parks with a map.</li>
+          <li><strong>Practice:</strong> Explain how malaria spreads and control it. Discuss why conservation matters.</li>
+          <li><strong>Exam Focus:</strong> Relate everything to objectives – e.g., vectors for diseases, agencies for health.</li>
+        </ul>
+        <p>If you need quizzes, diagrams, or deeper dives, click on the button below!</p>
+      </div>
+
+      <p style="text-align: center; font-size: 17px; margin: 40px 0; font-weight: bold; color: var(--accent);">
+        Great job 🌟 You now master JAMB Topic: Humans and Environment!
+      </p>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="nav-bar">
+      <div class="nav-item">
+        <button class="neumorphic-btn">🔍</button>
+        <p>Search</p>
+      </div>
+      <div class="nav-item center">
+        <button class="neumorphic-btn">⭐</button>
+        <p>Favorite</p>
+      </div>
+      <div class="nav-item">
+        <button class="neumorphic-btn">📚</button>
+        <p>Library</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    // Profile Upload placeholder
+    document.getElementById('profile-upload').addEventListener('change', (e) => {
+      if (e.target.files[0]) console.log('Profile picture selected!');
+    });
+  </script>
+</body>
+</html>

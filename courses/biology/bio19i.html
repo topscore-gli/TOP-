@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Humans & Environment</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 520px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 980px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+    .image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+  </style>
+</head>
+  
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">BIOLOGY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>🌍 Chapter 19: Humans & Environment</h1>
+    <p class="subtitle">Diseases, drug abuse, pollution, conservation, and national parks (Nigeria-focused)</p>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="section-card">
+    <h2>🎯 Overview</h2>
+    <p>This chapter connects human activities, health, and the environment. JAMB tests lists + relationships (cause → spread → control; pollution → effects → control; conservation → examples in Nigeria).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Environmental_health.png" alt="Environmental health concept" class="diagram-img">
+    <p class="image-caption">Human health is closely linked to environment, sanitation, and resource use</p>
+
+    <div class="quick-facts">
+      <h4>What JAMB Expects</h4>
+      <ul>
+        <li>Identify common/endemic diseases + causative agents + transmission</li>
+        <li>Link environmental conditions to disease spread</li>
+        <li>Explain drug abuse and its effects</li>
+        <li>Describe air/water/soil pollution and control</li>
+        <li>Explain conservation methods and agencies</li>
+        <li>Know Nigerian game reserves/national parks and their importance</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 1. DISEASES -->
+  <div class="section-card">
+    <h2>🦠 1. Diseases</h2>
+    <p><strong>Definition (Disease):</strong> A condition that impairs normal body function and shows symptoms. Many endemic diseases spread faster under certain ecological conditions (warmth, water, poor sanitation).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Mosquito_breeding_stagnant_water.jpg" alt="Stagnant water mosquito breeding" class="diagram-img">
+    <p class="image-caption">Many tropical diseases are linked to water and sanitation (vectors breed in stagnant water)</p>
+
+    <h3>(a) Common and Endemic Diseases (Nigeria/Tropics)</h3>
+    <p><strong>Definition (Endemic disease):</strong> A disease that is constantly present in a particular region.</p>
+
+    <div class="quick-facts">
+      <h4>Examples (JAMB Lists)</h4>
+      <ul>
+        <li>Malaria</li>
+        <li>Meningitis (cerebrospinal)</li>
+        <li>Schistosomiasis (Bilharzia)</li>
+        <li>Onchocerciasis (River blindness)</li>
+        <li>Typhoid fever</li>
+        <li>Cholera</li>
+        <li>Tuberculosis</li>
+        <li>HIV/AIDS</li>
+        <li>STDs (gonorrhea, syphilis)</li>
+        <li>Dracunculiasis (Guinea worm) — now eradicated in Nigeria</li>
+      </ul>
+    </div>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Disease</th>
+          <th>Causative Agent</th>
+          <th>Vector / Transmission</th>
+          <th>Favorable Conditions</th>
+          <th>Main Symptoms</th>
+          <th>Prevention & Control</th>
+        </tr>
+        <tr>
+          <td><strong>Malaria</strong></td>
+          <td>Plasmodium (esp. <em>P. falciparum</em>)</td>
+          <td>Female <em>Anopheles</em> mosquito</td>
+          <td>Stagnant water, rainy season, poor housing</td>
+          <td>Fever, chills, headache, anemia</td>
+          <td>Insecticide nets, indoor spraying, ACT drugs, drain stagnant water</td>
+        </tr>
+        <tr>
+          <td><strong>Cholera</strong></td>
+          <td><em>Vibrio cholerae</em></td>
+          <td>Contaminated water/food (faecal-oral)</td>
+          <td>Poor sanitation, flooding, overcrowding</td>
+          <td>Severe diarrhea, vomiting, dehydration</td>
+          <td>Clean water, sanitation, ORS, vaccination</td>
+        </tr>
+        <tr>
+          <td><strong>Schistosomiasis</strong></td>
+          <td><em>Schistosoma</em> worms</td>
+          <td>Snail host; skin penetration in infected water</td>
+          <td>Irrigation, rivers, dams</td>
+          <td>Blood in urine/stool, abdominal pain</td>
+          <td>Avoid infected water, praziquantel, snail control</td>
+        </tr>
+        <tr>
+          <td><strong>Onchocerciasis</strong></td>
+          <td><em>Onchocerca volvulus</em></td>
+          <td>Blackfly (<em>Simulium</em>)</td>
+          <td>Fast-flowing rivers</td>
+          <td>Rash, itching, river blindness</td>
+          <td>Ivermectin, blackfly control</td>
+        </tr>
+        <tr>
+          <td><strong>Typhoid</strong></td>
+          <td><em>Salmonella typhi</em></td>
+          <td>Contaminated food/water</td>
+          <td>Poor hygiene</td>
+          <td>High fever, headache, abdominal pain</td>
+          <td>Safe water, hygiene, vaccination</td>
+        </tr>
+        <tr>
+          <td><strong>Tuberculosis</strong></td>
+          <td><em>Mycobacterium tuberculosis</em></td>
+          <td>Air droplets (cough)</td>
+          <td>Overcrowding, poor ventilation</td>
+          <td>Chronic cough, weight loss, blood in sputum</td>
+          <td>BCG vaccine, DOTS drugs, ventilation</td>
+        </tr>
+        <tr>
+          <td><strong>HIV/AIDS</strong></td>
+          <td>HIV</td>
+          <td>Blood, sex, mother-to-child</td>
+          <td>Unprotected sex, shared needles</td>
+          <td>Opportunistic infections, weight loss</td>
+          <td>Condoms, testing, ARVs, safe blood screening</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Anopheles_stephensi.jpg" alt="Anopheles mosquito" class="diagram-img">
+    <p class="image-caption">Vector example: female Anopheles transmits malaria</p>
+
+    <div class="memory-tip">
+      <strong>🧠 JAMB Trick:</strong>
+      <p>Always link “vector/agent → habitat → control” (e.g., mosquito breeds in stagnant water → drain it).</p>
+    </div>
+  </div>
+
+  <!-- 2. DRUG ABUSE -->
+  <div class="section-card">
+    <h2>💊 2. Drug Abuse</h2>
+    <p><strong>Drug abuse:</strong> Using drugs without medical reason or in the wrong way/amount.</p>
+    <p><strong>Drug addiction:</strong> Physical/psychological dependence; withdrawal symptoms occur when stopped.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Drugs_pills.jpg" alt="Drugs and pills" class="diagram-img">
+    <p class="image-caption">Drug abuse affects health, behavior, and society</p>
+
+    <h3>Commonly abused drugs (JAMB list)</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Cannabis (Indian hemp)</li>
+        <li>Cocaine</li>
+        <li>Heroin</li>
+        <li>Alcohol</li>
+        <li>Tobacco (nicotine)</li>
+        <li>Codeine (cough syrups)</li>
+        <li>Tramadol</li>
+        <li>Amphetamines/stimulants</li>
+      </ul>
+    </div>
+
+    <h3>Effects on health</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Liver/kidney damage</li>
+        <li>Mental disorders (depression, psychosis)</li>
+        <li>Lung/heart problems</li>
+        <li>Addiction → crime, poor performance</li>
+        <li>Overdose → death</li>
+      </ul>
+    </div>
+
+    <h3>Prevention</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Education/awareness</li>
+        <li>Counseling</li>
+        <li>Strict laws</li>
+        <li>Avoid peer pressure</li>
+        <li>Rehabilitation centers</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Memory line:</strong>
+      <p>"Abuse harms organs, addiction traps behavior."</p>
+    </div>
+  </div>
+
+  <!-- 3. POLLUTION -->
+  <div class="section-card">
+    <h2>🏭 3. Pollution and its Control</h2>
+    <p><strong>Pollution:</strong> Contamination of the environment making it harmful to living things.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Air_pollution_industry.jpg" alt="Air pollution from industry" class="diagram-img">
+    <p class="image-caption">Pollution can be air, water, or soil/land</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Type</th>
+          <th>Common Sources</th>
+          <th>Pollutants</th>
+          <th>Effects</th>
+          <th>Control Methods</th>
+        </tr>
+        <tr>
+          <td><strong>Air</strong></td>
+          <td>Vehicles, industries, burning</td>
+          <td>CO, SO₂, NOₓ, particulate matter, smoke</td>
+          <td>Respiratory diseases, acid rain, global warming</td>
+          <td>Clean fuels, filters, laws, tree planting</td>
+        </tr>
+        <tr>
+          <td><strong>Water</strong></td>
+          <td>Sewage, oil spills, chemicals, plastics</td>
+          <td>Pathogens, heavy metals, oil</td>
+          <td>Cholera, poisoning, eutrophication, fish death</td>
+          <td>Treatment plants, no dumping, regulations</td>
+        </tr>
+        <tr>
+          <td><strong>Soil/Land</strong></td>
+          <td>Pesticides, fertilizers, waste</td>
+          <td>Chemicals, plastics</td>
+          <td>Reduced fertility, food-chain poisoning</td>
+          <td>Proper disposal, organic farming</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Oil_spill.jpg" alt="Oil spill water pollution" class="diagram-img">
+    <p class="image-caption">Oil spills contaminate water and kill aquatic organisms</p>
+
+    <h3>Sanitation and sewage</h3>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Importance:</strong> prevents diseases and improves community health</li>
+        <li><strong>Solid waste:</strong> landfill, recycling, incineration</li>
+        <li><strong>Sewage:</strong> treat in plants before safe disposal</li>
+        <li><strong>Hygiene:</strong> reduces spread of cholera/typhoid</li>
+      </ul>
+    </div>
+
+    <h3>Agencies (know roles)</h3>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>WHO:</strong> global health standards and disease control</li>
+        <li><strong>UNICEF:</strong> child health, water/sanitation support</li>
+        <li><strong>Red Cross (IRCS):</strong> emergency aid</li>
+        <li><strong>Nigeria Ministries:</strong> health/environment policies and programs</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 4. CONSERVATION -->
+  <div class="section-card">
+    <h2>🌱 4. Conservation of Natural Resources</h2>
+    <p><strong>Natural resources:</strong> materials from nature used by humans.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Reforestation.jpg" alt="Tree planting afforestation" class="diagram-img">
+    <p class="image-caption">Afforestation helps restore forests and reduce erosion</p>
+
+    <div class="comparison-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0;">
+      <div class="comparison-card">
+        <h5>Renewable</h5>
+        <ul>
+          <li>Forests</li>
+          <li>Water</li>
+          <li>Soil</li>
+        </ul>
+      </div>
+      <div class="comparison-card">
+        <h5>Non-renewable</h5>
+        <ul>
+          <li>Minerals</li>
+          <li>Fossil fuels</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Methods of conservation</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Afforestation (plant trees)</li>
+        <li>Controlled grazing/logging</li>
+        <li>Protected areas</li>
+        <li>Recycling</li>
+        <li>Use alternatives (solar energy)</li>
+        <li>Laws against poaching</li>
+      </ul>
+    </div>
+
+    <h3>Benefits</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Prevents desertification</li>
+        <li>Maintains biodiversity</li>
+        <li>Sustains future generations</li>
+        <li>Reduces erosion and flooding</li>
+      </ul>
+    </div>
+
+    <h3>Bodies responsible</h3>
+    <div class="table-container">
+      <table class="summary-table">
+        <tr><th>Type</th><th>Examples</th></tr>
+        <tr><td><strong>Nigeria</strong></td><td>NCF, Federal Ministry of Environment, National Parks</td></tr>
+        <tr><td><strong>International</strong></td><td>WWF, IUCN, UNEP</td></tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+  </div>
+
+  <!-- 5. GAME RESERVES -->
+  <div class="section-card">
+    <h2>🦁 5. Game Reserves and National Parks</h2>
+    <p><strong>Purpose:</strong> protect wildlife, conserve biodiversity, support tourism, education, and research.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/African_elephant_herd.jpg" alt="Elephants in reserve" class="diagram-img">
+    <p class="image-caption">Protected areas help preserve endangered species and habitats</p>
+
+    <h3>Importance</h3>
+    <div class="quick-facts">
+      <ul>
+        <li>Preserve endangered species</li>
+        <li>Eco-tourism revenue</li>
+        <li>Research and education</li>
+        <li>Maintain ecological balance</li>
+      </ul>
+    </div>
+
+    <h3>Examples in Nigeria (know locations)</h3>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Park/Reserve</th>
+          <th>State/Region</th>
+          <th>Key Notes</th>
+        </tr>
+        <tr>
+          <td><strong>Yankari Game Reserve</strong></td>
+          <td>Bauchi</td>
+          <td>Elephants; warm springs; tourism</td>
+        </tr>
+        <tr>
+          <td><strong>Kainji Lake National Park</strong></td>
+          <td>Niger/Kwara</td>
+          <td>Wildlife + lake ecosystem</td>
+        </tr>
+        <tr>
+          <td><strong>Cross River National Park</strong></td>
+          <td>Cross River (Oban/Okwangwo)</td>
+          <td>Rainforest; rare primates</td>
+        </tr>
+        <tr>
+          <td><strong>Gashaka-Gumti National Park</strong></td>
+          <td>Taraba/Adamawa</td>
+          <td>Largest park; chimpanzees</td>
+        </tr>
+        <tr>
+          <td><strong>Chad Basin / Kamuku</strong></td>
+          <td>North-east / Kaduna</td>
+          <td>Conservation + anti-poaching value</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+  </div>
+
+  <!-- QUICK REVISION -->
+  <div class="section-card">
+    <h2>📋 Quick Revision Tips (JAMB)</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Memorize the disease table (agent → transmission → symptoms → prevention)</li>
+        <li>Always link vector habitat to control method</li>
+        <li>Pollution: type → source → effect → control</li>
+        <li>Know at least 3 Nigerian parks + their states</li>
+        <li>This chapter is high scoring if you master lists + relationships</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Quick mnemonic:</strong>
+      <p>"D-D-P-C-P" → Diseases, Drug abuse, Pollution, Conservation, Parks</p>
+    </div>
+  </div>
+
+  <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+    🌟 If you can match disease → transmission → control, and pollution → effect → solution, Chapter 19 becomes easy marks. 🌟
+  </p>
+
+  <button class="explore-btn" onclick="alert('Practice JAMB past questions on Humans & Environment (Chapter 19)!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

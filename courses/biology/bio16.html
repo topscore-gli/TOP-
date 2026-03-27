@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIOLOGY - Biomes in Nigeria (Study + Quiz)</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    :root {
+      --background: #1e1e2f;
+      --shadow-in: #171723;
+      --shadow-out: #25253b;
+      --text-primary: #f0f0ff;
+      --text-secondary: #c0c0e0;
+      --accent: #1db954;
+      --card-bg: #2a2a3f;
+    }
+
+    body.light {
+      --background: #e0e0e0;
+      --shadow-in: #bebebe;
+      --shadow-out: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #444;
+      --accent: #1db954;
+      --card-bg: #f8f8f8;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      background: var(--background);
+      border-radius: 20px;
+      box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out);
+      overflow: hidden;
+      min-height: 100vh;
+      position: relative;
+      padding-top: 70px;
+      padding-bottom: 80px;
+    }
+
+    .neumorphic {
+      background: var(--background);
+      box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out);
+      border-radius: 15px;
+    }
+
+    .neumorphic-btn {
+      background: var(--background);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      cursor: pointer;
+      color: var(--text-primary);
+      font-size: 18px;
+    }
+
+    .neumorphic-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 5px 10px var(--shadow-in);
+      z-index: 20;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .top-bar .header {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+
+    .top-bar .right-icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-bar .profile-upload {
+      position: relative;
+    }
+
+    .top-bar .profile-upload input {
+      opacity: 0;
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 20px 16px;
+      line-height: 1.6;
+    }
+
+    .main-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .main-header h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .main-header p.subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .section {
+      background: var(--card-bg);
+      padding: 24px 20px;
+      border-radius: 20px;
+      box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out);
+      margin-bottom: 30px;
+    }
+
+    .section h2 {
+      font-size: 22px;
+      margin: 0 0 16px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .section h3 {
+      font-size: 18px;
+      margin: 24px 0 12px;
+      color: var(--accent);
+    }
+
+    .section p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .section ul, .section ol {
+      padding-left: 24px;
+      margin: 16px 0;
+    }
+
+    .section li {
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .section .highlight {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .diagram-img {
+      width: 100%;
+      border-radius: 12px;
+      margin: 16px 0 8px;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .quiz-container {
+      margin-top: 40px;
+    }
+
+    .question {
+      margin-bottom: 28px;
+    }
+
+    .question p {
+      font-weight: bold;
+      margin-bottom: 14px;
+      font-size: 16px;
+    }
+
+    .options {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .options li {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      background: var(--background);
+      box-shadow: 2px 2px 6px var(--shadow-in), -2px -2px 6px var(--shadow-out);
+    }
+
+    .options label {
+      cursor: pointer;
+      display: block;
+    }
+
+    #submit-quiz {
+      margin: 32px auto 16px;
+      display: block;
+    }
+
+    #result {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin: 20px 0;
+      color: var(--accent);
+    }
+
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -5px 10px var(--shadow-in);
+      z-index: 20;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .nav-bar .nav-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .nav-bar .nav-item button {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.center button {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      background: var(--accent);
+      box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      color: #000;
+    }
+
+    .nav-bar .nav-item p {
+      display: none;
+      font-size: 12px;
+      margin-top: 5px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.active p {
+      display: block;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <!-- Top Fixed Bar -->
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn profile-upload">
+          📷
+          <input type="file" accept="image/*" id="profile-upload">
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+      <div class="main-header">
+        <h1>Biomes in Nigeria 🚀</h1>
+        <p class="subtitle">Study Guide + JAMB Quiz</p>
+      </div>
+
+      <!-- Study Material -->
+      <div class="section">
+
+        <h2> What is a Biome?</h2>
+        <p>A <strong>biome</strong> is a large natural community of plants, animals, and other organisms adapted to a specific climate and environment. Nigeria's biomes form a south-to-north gradient due to decreasing rainfall.</p>
+        <p>Key JAMB skills: locate biomes on a map, describe climate/vegetation/fauna/soil, and explain human activities.</p>
+
+        <h2>1. Mangrove Swamp Forest</h2>
+        <p><strong>Location:</strong> Niger Delta coast (Lagos, Delta, Rivers, Bayelsa, Akwa Ibom, Cross River)</p>
+        <p><strong>Climate:</strong> >2,500 mm rain, hot & humid, tidal flooding</p>
+        <p><strong>Vegetation:</strong> Red & white mangroves, nipa palms (aerial roots, salt-tolerant)</p>
+        <p><strong>Fauna:</strong> Crabs, fish, crocodiles, herons</p>
+        <p><strong>Human use:</strong> Fishing, oil & gas (but pollution risk)</p>
+        <img src="https://images.theconversation.com/files/707694/original/file-20251210-56-8r89pu.jpg?ixlib=rb-4.1.0&rect=0%2C0%2C2500%2C1666&q=50&auto=format&w=768&h=512&fit=crop&dpr=2" alt="Mangrove swamp forest in Niger Delta" class="diagram-img">
+
+        <h2>2. Tropical Rainforest</h2>
+        <p><strong>Location:</strong> Southern Nigeria (Edo, Delta, Ondo, Ogun, Imo, Cross River…)</p>
+        <p><strong>Climate:</strong> >2,000 mm rain, high humidity, 25–30°C</p>
+        <p><strong>Vegetation:</strong> Multi-layered evergreen (mahogany, iroko, oil palm, cocoa)</p>
+        <p><strong>Fauna:</strong> Monkeys, chimpanzees, elephants, parrots</p>
+        <p><strong>Human use:</strong> Timber, cash crops, oil — but deforestation threat</p>
+        <img src="https://jaresourcehub.org/wp-content/uploads/2024/01/IDH-Nigeria-2-1024x767.jpg" alt="Tropical rainforest in Edo State" class="diagram-img">
+
+        <h2>3. Guinea Savanna (Southern & Northern)</h2>
+        <p><strong>Location:</strong> Middle belt (Kogi, Benue, Kwara, Niger, Osun, Kaduna…)</p>
+        <p><strong>Climate:</strong> 1,000–1,500 mm rain, distinct wet/dry seasons</p>
+        <p><strong>Vegetation:</strong> Tall grasses + scattered trees (shea, locust bean, acacia)</p>
+        <p><strong>Fauna:</strong> Antelopes, lions, giraffes (Yankari reserve)</p>
+        <p><strong>Human use:</strong> Yams, maize, cattle rearing</p>
+
+        <h2>4. Sudan Savanna</h2>
+        <p><strong>Location:</strong> Northern belt (Kano, Kaduna, Jigawa, southern Borno…)</p>
+        <p><strong>Climate:</strong> 500–1,000 mm rain, long dry season</p>
+        <p><strong>Vegetation:</strong> Short grasses, baobab, thorny acacia</p>
+        <p><strong>Fauna:</strong> Gazelles, ostriches, camels</p>
+        <p><strong>Human use:</strong> Millet, sorghum, nomadic herding</p>
+
+        <h2>5. Sahel Savanna / Semi-Desert</h2>
+        <p><strong>Location:</strong> Far north (Sokoto, Kebbi, northern Katsina, Yobe, Borno)</p>
+        <p><strong>Climate:</strong> <500 mm rain, extreme heat</p>
+        <p><strong>Vegetation:</strong> Sparse grasses, date palms in oases</p>
+        <p><strong>Fauna:</strong> Camels, lizards, scorpions</p>
+        <p><strong>Human use:</strong> Nomadic herding, irrigated farming</p>
+        <img src="https://images.takeshape.io/86ce9525-f5f2-4e97-81ba-54e8ce933da7/dev/dd800420-ba10-4647-8719-664e28b8e0d7/53%20Sahelian%20Acacia%20savanna%20-%20JC%20Brito.jpg?auto=compress%2Cformat&w=1600" alt="Sahel savanna landscape" class="diagram-img">
+
+        <h2>6. Montane (Highland) Forests & Grasslands</h2>
+        <p><strong>Location:</strong> Jos Plateau, Obudu, Mambilla Plateau</p>
+        <p><strong>Climate:</strong> Cooler (15–25°C), higher rainfall</p>
+        <p><strong>Vegetation:</strong> Pines, eucalyptus, grasslands</p>
+        <p><strong>Human use:</strong> Tea, coffee, potatoes, tourism</p>
+        <img src="https://images.takeshape.io/86ce9525-f5f2-4e97-81ba-54e8ce933da7/dev/fef73b53-a438-491c-ba36-ae8f1056558f/14%20Guinean%20montane%20forests%20-%20Yakoo1986.jpg?auto=compress%2Cformat&w=1400" alt="Jos Plateau highland" class="diagram-img">
+
+        <h2>Quick Summary Table</h2>
+        <p>South → North rainfall decreases → biomes get drier:</p>
+        <ul>
+          <li>Mangrove → Rainforest → Guinea Savanna → Sudan Savanna → Sahel</li>
+          <li>Highlands = cooler pockets anywhere elevation >1,000 m</li>
+        </ul>
+      </div>
+
+      <!-- Quiz Section -->
+      <div class="section quiz-container">
+        <h2>JAMB-Style Quiz</h2>
+        <p>Test yourself — 5 questions. Good luck!</p>
+
+        <form id="quiz-form">
+          <div class="question">
+            <p>1. The biome with salt-tolerant trees and aerial roots is:</p>
+            <ul class="options">
+              <li><label><input type="radio" name="q1" value="A"> A. Tropical Rainforest</label></li>
+              <li><label><input type="radio" name="q1" value="B"> B. Mangrove Swamp Forest</label></li>
+              <li><label><input type="radio" name="q1" value="C"> C. Guinea Savanna</label></li>
+              <li><label><input type="radio" name="q1" value="D"> D. Sudan Savanna</label></li>
+            </ul>
+          </div>
+
+          <div class="question">
+            <p>2. Which state is NOT in the Tropical Rainforest biome?</p>
+            <ul class="options">
+              <li><label><input type="radio" name="q2" value="A"> A. Edo</label></li>
+              <li><label><input type="radio" name="q2" value="B"> B. Kano</label></li>
+              <li><label><input type="radio" name="q2" value="C"> C. Delta</label></li>
+              <li><label><input type="radio" name="q2" value="D"> D. Cross River</label></li>
+            </ul>
+          </div>
+
+          <div class="question">
+            <p>3. The Sahel is best known for:</p>
+            <ul class="options">
+              <li><label><input type="radio" name="q3" value="A"> A. Dense evergreen forest</label></li>
+              <li><label><input type="radio" name="q3" value="B"> B. Very low rainfall & sparse vegetation</label></li>
+              <li><label><input type="radio" name="q3" value="C"> C. Tall grasses & many trees</label></li>
+              <li><label><input type="radio" name="q3" value="D"> D. Multi-layered rainforest</label></li>
+            </ul>
+          </div>
+
+          <div class="question">
+            <p>4. Montane forests & grasslands are mainly found:</p>
+            <ul class="options">
+              <li><label><input type="radio" name="q4" value="A"> A. Along the coast</label></li>
+              <li><label><input type="radio" name="q4" value="B"> B. In the far north desert</label></li>
+              <li><label><input type="radio" name="q4" value="C"> C. On high plateaus (Jos, Obudu, Mambilla)</label></li>
+              <li><label><input type="radio" name="q4" value="D"> D. Only in the Guinea Savanna</label></li>
+            </ul>
+          </div>
+
+          <div class="question">
+            <p>5. The main human activity in the Guinea Savanna is:</p>
+            <ul class="options">
+              <li><label><input type="radio" name="q5" value="A"> A. Oil exploration</label></li>
+              <li><label><input type="radio" name="q5" value="B"> B. Mixed farming & cattle herding</label></li>
+              <li><label><input type="radio" name="q5" value="C"> C. Large-scale timber logging</label></li>
+              <li><label><input type="radio" name="q5" value="D"> D. Date palm farming</label></li>
+            </ul>
+          </div>
+
+          <button type="button" class="explore-btn neumorphic" id="submit-quiz">Submit Quiz</button>
+        </form>
+
+        <div id="result"></div>
+      </div>
+
+      <p style="text-align: center; font-size: 17px; margin: 40px 0; font-weight: bold; color: var(--accent);">
+        Great work, TopScore! Keep revising 🌟
+      </p>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="nav-bar">
+      <div class="nav-item">
+        <button class="neumorphic-btn">🔍</button>
+        <p>Search</p>
+      </div>
+      <div class="nav-item center">
+        <button class="neumorphic-btn">⭐</button>
+        <p>Favorite</p>
+      </div>
+      <div class="nav-item">
+        <button class="neumorphic-btn">📚</button>
+        <p>Library</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    // Profile Upload placeholder
+    document.getElementById('profile-upload').addEventListener('change', (e) => {
+      if (e.target.files[0]) console.log('Profile picture selected!');
+    });
+
+    // Quiz Logic
+    const correctAnswers = { q1: 'B', q2: 'B', q3: 'B', q4: 'C', q5: 'B' };
+
+    document.getElementById('submit-quiz').addEventListener('click', () => {
+      const form = document.getElementById('quiz-form');
+      const formData = new FormData(form);
+      let score = 0;
+
+      for (let i = 1; i <= 5; i++) {
+        if (formData.get(`q\( {i}`) === correctAnswers[`q \){i}`]) {
+          score++;
+        }
+      }
+
+      document.getElementById('result').textContent = 
+        `You scored ${score} out of 5! ${score === 5 ? 'Perfect! 🎉' : score >= 3 ? 'Good job! Keep going 💪' : 'Review & try again 📖'}`;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIOLOGY - Variation in Population (JAMB 2026)</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    :root {
+      --background: #1e1e2f;
+      --shadow-in: #171723;
+      --shadow-out: #25253b;
+      --text-primary: #f0f0ff;
+      --text-secondary: #c0c0e0;
+      --accent: #1db954;
+      --card-bg: #2a2a3f;
+    }
+
+    body.light {
+      --background: #e0e0e0;
+      --shadow-in: #bebebe;
+      --shadow-out: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #444;
+      --accent: #1db954;
+      --card-bg: #f8f8f8;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      background: var(--background);
+      border-radius: 20px;
+      box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out);
+      overflow: hidden;
+      min-height: 100vh;
+      position: relative;
+      padding-top: 70px;
+      padding-bottom: 80px;
+    }
+
+    .neumorphic {
+      background: var(--background);
+      box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out);
+      border-radius: 15px;
+    }
+
+    .neumorphic-btn {
+      background: var(--background);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      cursor: pointer;
+      color: var(--text-primary);
+      font-size: 18px;
+    }
+
+    .neumorphic-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 5px 10px var(--shadow-in);
+      z-index: 20;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .top-bar .header {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+
+    .top-bar .right-icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-bar .profile-upload {
+      position: relative;
+    }
+
+    .top-bar .profile-upload input {
+      opacity: 0;
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 20px 16px;
+      line-height: 1.6;
+    }
+
+    .main-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .main-header h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .main-header p.subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .section {
+      background: var(--card-bg);
+      padding: 24px 20px;
+      border-radius: 20px;
+      box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out);
+      margin-bottom: 30px;
+    }
+
+    .section h2 {
+      font-size: 22px;
+      margin: 0 0 16px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .section h3 {
+      font-size: 18px;
+      margin: 24px 0 12px;
+      color: var(--accent);
+    }
+
+    .section p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .section ul, .section ol {
+      padding-left: 24px;
+      margin: 16px 0;
+    }
+
+    .section li {
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+
+    .section .highlight {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .diagram-img {
+      width: 100%;
+      border-radius: 12px;
+      margin: 16px 0 8px;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 16px 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .section table {
+      width: 100%;
+      min-width: 580px;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .section th,
+    .section td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .section th {
+      background: rgba(29, 185, 84, 0.2);
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .section tr:last-child td {
+      border-bottom: none;
+    }
+
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -5px 10px var(--shadow-in);
+      z-index: 20;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .nav-bar .nav-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .nav-bar .nav-item button {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.center button {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      background: var(--accent);
+      box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      color: #000;
+    }
+
+    .nav-bar .nav-item p {
+      display: none;
+      font-size: 12px;
+      margin-top: 5px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.active p {
+      display: block;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <!-- Top Fixed Bar -->
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn profile-upload">
+          📷
+          <input type="file" accept="image/*" id="profile-upload">
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+      <div class="main-header">
+        <h1>Variation in Population 🚀</h1>
+        <p class="subtitle">JAMB 2026 Syllabus & Modern Biology Textbook</p>
+      </div>
+
+      <div class="section">
+        <p>Hello TopScore! In Port Harcourt, variation is all around—like diverse heights in a crowd or blood types in hospitals. This complete page covers the entire JAMB topic “Variation in Population” based on the 2026 syllabus (morphological & physiological variations, continuous & discontinuous, applications) and Modern Biology textbook (inheritance patterns, polygenic traits, blood groups, etc.).</p>
+
+        <h2>1. Definition of Variation</h2>
+        <p><strong>Variation</strong> is the occurrence of differences among individuals of the same species due to genetic and/or environmental factors. It provides the raw material for natural selection and ensures adaptability and survival of populations.</p>
+
+        <h2>2. Definition of Agglutination in Blood</h2>
+        <p><strong>Agglutination</strong> is the clumping together of red blood cells when incompatible blood types are mixed. It occurs when antigens on the surface of red blood cells react with specific antibodies in the plasma, causing the cells to stick together (e.g., during transfusion of mismatched blood).</p>
+
+        <h2>3. Types of Variation</h2>
+
+        <h3>Continuous Variation</h3>
+        <p>Gradual range with intermediates; influenced by many genes (polygenic) + environment.</p>
+        <ul>
+          <li><strong>Examples:</strong> Height, weight, skin color shades, intelligence, leaf size</li>
+          <li><strong>Graph:</strong> Bell-shaped (normal distribution) curve</li>
+          <li><strong>Causes:</strong> Multiple genes + environmental factors (additive effects)</li>
+        </ul>
+        <img src="https://www.onlinemathlearning.com/image-files/normal-distribution-curve.png" alt="Bell-shaped curve for continuous variation" class="diagram-img">
+
+        <h3>Discontinuous Variation</h3>
+        <p>Distinct categories with no intermediates; usually one/few genes (monogenic), minimal environmental influence.</p>
+        <ul>
+          <li><strong>Examples:</strong> Blood groups (A, B, AB, O), tongue rolling (yes/no), earlobe attachment</li>
+        </ul>
+        <img src="https://www.scienceabc.com/wp-content/uploads/2017/12/blood-types-chart.jpg" alt="ABO blood groups – discontinuous variation" class="diagram-img">
+
+        <h2>4. Morphological Variations (Visible/Physical)</h2>
+        <ul>
+          <li><strong>Size (height/weight):</strong> Continuous – class measurement → frequency histogram (bell curve)</li>
+          <li><strong>Colour (skin, eye, hair):</strong> Mostly continuous (polygenic + melanin); some discontinuous (albino/normal)</li>
+          <li><strong>Fingerprints:</strong> Discontinuous – arch (\~5%), loop (\~60%), whorl (\~35%). Unique even in twins; used in forensics</li>
+          <li><strong>Experiment (JAMB practical):</strong> Classify fingerprints, calculate % occurrence in population</li>
+        </ul>
+        <img src="https://www.forensicsciencesimplified.org/prints/principles.html" alt="Fingerprint patterns: arch, loop, whorl" class="diagram-img">
+
+        <h2>5. Physiological Variations (Internal/Functional)</h2>
+        <ul>
+          <li><strong>Tongue Rolling:</strong> Discontinuous – dominant (roller \~70%), recessive (non-roller \~30%)</li>
+          <li><strong>PTC Tasting:</strong> Discontinuous – dominant (taster \~75%, bitter), recessive (non-taster)</li>
+          <li><strong>Blood Groups:</strong> Discontinuous – ABO + Rh = 8 types (A±, B±, AB±, O±)</li>
+        </ul>
+        <img src="https://biologydictionary.net/wp-content/uploads/2017/07/Tongue-rolling.jpg" alt="Tongue rolling variation" class="diagram-img">
+
+        <h2>6. Causes of Variation</h2>
+        <ul>
+          <li><strong>Genetic:</strong> Mutations, crossing over, independent assortment, fertilization</li>
+          <li><strong>Environmental:</strong> Nutrition, climate, diseases (stronger effect on continuous traits)</li>
+        </ul>
+        <p>JAMB Objective: Relate variation to genetics, environment, and habitat.</p>
+
+        <h2>7. ABO Blood Group System</h2>
+        <p><strong>Alleles:</strong> I^A, I^B (codominant), i (recessive)</p>
+        <div class="table-wrapper">
+          <table>
+            <tr><th>Genotype</th><th>Phenotype</th></tr>
+            <tr><td>I^A I^A or I^A i</td><td>A</td></tr>
+            <tr><td>I^B I^B or I^B i</td><td>B</td></tr>
+            <tr><td>I^A I^B</td><td>AB</td></tr>
+            <tr><td>ii</td><td>O</td></tr>
+          </table>
+        </div>
+        <p>Example cross: I^A i × I^B i → 25% A, 25% B, 25% AB, 25% O</p>
+        <img src="https://biologydictionary.net/wp-content/uploads/2020/07/ABO-blood-group-Punnett-square.jpg" alt="Punnett square ABO blood groups" class="diagram-img">
+
+        <h2>8. Rh Factor</h2>
+        <p><strong>Alleles:</strong> R (Rh+ dominant), r (Rh- recessive)</p>
+        <div class="table-wrapper">
+          <table>
+            <tr><th>Genotype</th><th>Phenotype</th></tr>
+            <tr><td>RR or Rr</td><td>Rh+</td></tr>
+            <tr><td>rr</td><td>Rh-</td></tr>
+          </table>
+        </div>
+        <p>Example cross: Rr × Rr → 75% Rh+, 25% Rh-</p>
+        <p><strong>Rh Incompatibility:</strong> Rh- mother + Rh+ fetus → antibodies attack later Rh+ fetuses (hemolytic disease: jaundice, anemia). Prevented by RhoGAM.</p>
+        <img src="https://www.merckmanuals.com/-/media/manual/home/images/rh_incompatibility.gif" alt="Rh incompatibility diagram" class="diagram-img">
+
+        <h2>9. Combined ABO + Rh Inheritance</h2>
+        <p>8 blood types (A+, A-, B+, B-, AB+, AB-, O+, O-). Inherited independently (different chromosomes).</p>
+        <p>Example: A+ (I^A i Rr) × B+ (I^B i Rr) → all 8 types possible.</p>
+
+        <h2>10. Applications of Discontinuous Variation</h2>
+        <ul>
+          <li><strong>Crime Detection:</strong> Fingerprints (unique), blood groups/DNA narrow suspects</li>
+          <li><strong>Blood Transfusion:</strong> Match ABO + Rh to avoid agglutination</li>
+          <li><strong>Paternity Determination:</strong> Rule out impossible matches (e.g., O parents cannot have AB child)</li>
+        </ul>
+        <div class="table-wrapper">
+          <table>
+            <tr><th>Recipient</th><th>Can Receive From</th><th>Can Donate To</th></tr>
+            <tr><td>A+</td><td>A+, A-, O+, O-</td><td>A+, AB+</td></tr>
+            <tr><td>A-</td><td>A-, O-</td><td>A+, A-, AB+, AB-</td></tr>
+            <tr><td>B+</td><td>B+, B-, O+, O-</td><td>B+, AB+</td></tr>
+            <tr><td>B-</td><td>B-, O-</td><td>B+, B-, AB+, AB-</td></tr>
+            <tr><td>AB+</td><td>All (universal recipient)</td><td>AB+</td></tr>
+            <tr><td>AB-</td><td>A-, B-, AB-, O-</td><td>AB+, AB-</td></tr>
+            <tr><td>O+</td><td>O+, O-</td><td>A+, B+, AB+, O+</td></tr>
+            <tr><td>O-</td><td>O- (universal donor)</td><td>All</td></tr>
+          </table>
+        </div>
+        <img src="https://www.redcrossblood.org/content/dam/redcrossblood/rcb/images/donation-pages/blood-donation/blood-types/blood-type-compatibility-chart.jpg" alt="Blood compatibility chart" class="diagram-img">
+
+        <h2>Quick Exam Mantra (JAMB 2026)</h2>
+        <ul>
+          <li>Continuous → polygenic + environment → range + bell curve</li>
+          <li>Discontinuous → monogenic → distinct categories → Mendelian inheritance</li>
+          <li>Applications → fingerprints (crime), blood groups (transfusion/paternity)</li>
+        </ul>
+
+        <p style="text-align: center; font-size: 17px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+          Great job, TopScore! Mastered JAMB Variation in Population 🌟
+        </p>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="nav-bar">
+      <div class="nav-item">
+        <button class="neumorphic-btn">🔍</button>
+        <p>Search</p>
+      </div>
+      <div class="nav-item center">
+        <button class="neumorphic-btn">⭐</button>
+        <p>Favorite</p>
+      </div>
+      <div class="nav-item">
+        <button class="neumorphic-btn">📚</button>
+        <p>Library</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    // Profile Upload placeholder
+    document.getElementById('profile-upload').addEventListener('change', (e) => {
+      if (e.target.files[0]) console.log('Profile picture selected!');
+    });
+  </script>
+</body>
+</html>

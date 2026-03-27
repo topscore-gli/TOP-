@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Nigeria Vegetation Zones</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 500px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 780px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+    .comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+    .comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+    .comparison-card li { margin-bottom: 4px; font-size: 12px; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+    .image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">BIOLOGY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>🇳🇬 Nigeria Vegetation Zones (JAMB)</h1>
+    <p class="subtitle">Rainfall gradient: South (wet forest) → North (dry savanna/sahel) + Highland “islands”</p>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="section-card">
+    <h2>🎯 Overview</h2>
+    <p>Nigeria’s local biomes (vegetation/ecological zones) are mainly determined by <strong>rainfall</strong>, temperature, soil, and distance from the coast. Rainfall generally <strong>decreases from south to north</strong>.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Nigeria_satellite.png" alt="Nigeria satellite view" class="diagram-img">
+    <p class="image-caption">Nigeria: coastal south is wetter; far north is drier</p>
+
+    <div class="quick-facts">
+      <h4>JAMB Focus (5 Zones)</h4>
+      <ul>
+        <li>Tropical rainforest</li>
+        <li>Guinea savanna (southern + northern)</li>
+        <li>Sudan savanna</li>
+        <li>Desert / Sahel-like zone (small area)</li>
+        <li>Montane highlands (Obudu, Jos, Mambilla)</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 SOUTH → NORTH ORDER:</strong>
+      <p>Rainforest → Guinea → Sudan → Sahel/Desert (Highlands are “islands” due to altitude)</p>
+    </div>
+  </div>
+
+  <!-- LOCATION SUMMARY -->
+  <div class="section-card">
+    <h2>🗺️ Quick Location Summary (South → North)</h2>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Nigeria_vegetation_map.png" alt="Nigeria vegetation map" class="diagram-img">
+    <p class="image-caption">Vegetation zones map (use to practice locating regions)</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Zone</th>
+          <th>Main Location</th>
+          <th>Example States/Areas</th>
+          <th>Quick Clue</th>
+        </tr>
+        <tr>
+          <td><strong>Tropical Rainforest</strong></td>
+          <td>Southern Nigeria</td>
+          <td>Lagos, Ondo, Edo, Delta, Rivers, Cross River, Akwa Ibom</td>
+          <td>High rainfall + dense evergreen trees</td>
+        </tr>
+        <tr>
+          <td><strong>Guinea Savanna</strong></td>
+          <td>Middle belt (largest)</td>
+          <td>Kwara, Niger, Kogi, Benue, Oyo (parts), Kaduna (parts), Plateau fringes</td>
+          <td>Tall grasses + scattered trees</td>
+        </tr>
+        <tr>
+          <td><strong>Sudan Savanna</strong></td>
+          <td>Far north</td>
+          <td>Kano, Katsina, Sokoto, Bauchi, Gombe, parts of Borno</td>
+          <td>Drier + shorter grasses + thorny shrubs</td>
+        </tr>
+        <tr>
+          <td><strong>Desert/Sahel-like</strong></td>
+          <td>Extreme NE (small)</td>
+          <td>North Borno, Yobe, near Lake Chad borders</td>
+          <td>Very low rainfall + sparse shrubs</td>
+        </tr>
+        <tr>
+          <td><strong>Montane Highlands</strong></td>
+          <td>High plateaus</td>
+          <td>Jos, Obudu, Mambilla</td>
+          <td>Cooler temps + grassland/forest patches</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+  </div>
+
+  <!-- 1. TROPICAL RAINFOREST -->
+  <div class="section-card">
+    <h2>🌧️ 1. Tropical Rainforest</h2>
+    <p><strong>Location:</strong> Southern Nigeria (near coast and Niger Delta; includes mangrove/freshwater swamps in some descriptions, but core is lowland rainforest).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/54/Tropical_rainforest_canopy.jpg" alt="Tropical rainforest canopy" class="diagram-img">
+    <p class="image-caption">Rainforest: dense layered canopy + high humidity</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Key Feature</th>
+          <th>Details</th>
+        </tr>
+        <tr>
+          <td><strong>Rainfall</strong></td>
+          <td>Very high (&gt;2000 mm/year; can reach 3000+ mm)</td>
+        </tr>
+        <tr>
+          <td><strong>Temperature</strong></td>
+          <td>Hot and humid year-round (~27°C average)</td>
+        </tr>
+        <tr>
+          <td><strong>Vegetation</strong></td>
+          <td>Tall evergreen trees (mahogany, iroko, obeche, oil palm), canopy layers, few grasses on forest floor</td>
+        </tr>
+        <tr>
+          <td><strong>Special adaptations</strong></td>
+          <td>Buttress roots, epiphytes, lianas (climbers)</td>
+        </tr>
+        <tr>
+          <td><strong>Biodiversity</strong></td>
+          <td>Very high: monkeys, birds, insects, leopards, chimpanzees, etc.</td>
+        </tr>
+        <tr>
+          <td><strong>Soil</strong></td>
+          <td>Often leached by heavy rain (nutrients washed down)</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Buttress_roots.jpg" alt="Buttress roots" class="diagram-img">
+    <p class="image-caption">Buttress roots help tall trees stand firm in wet soils</p>
+
+    <div class="highlight-box">
+      <p><strong>How to identify:</strong> Constant rain + thick forest + high humidity = <strong>southern rainforest zone</strong>.</p>
+    </div>
+  </div>
+
+  <!-- 2. GUINEA SAVANNA -->
+  <div class="section-card">
+    <h2>🌾 2. Guinea Savanna (Southern & Northern)</h2>
+    <p><strong>Location:</strong> Largest zone in Nigeria — central belt (transition between rainforest and Sudan savanna).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Savanna_landscape.jpg" alt="Guinea savanna landscape" class="diagram-img">
+    <p class="image-caption">Guinea savanna: grasses dominate, trees are scattered</p>
+
+    <div class="quick-facts">
+      <h4>Two Sub-zones</h4>
+      <ul>
+        <li><strong>Southern Guinea:</strong> closer to rainforest (wetter, taller grasses/trees)</li>
+        <li><strong>Northern Guinea:</strong> drier transition to Sudan savanna</li>
+      </ul>
+    </div>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Key Feature</th>
+          <th>Details</th>
+        </tr>
+        <tr>
+          <td><strong>Rainfall</strong></td>
+          <td>Moderate to good (1000–1500 mm/year) with wet and dry seasons</td>
+        </tr>
+        <tr>
+          <td><strong>Vegetation</strong></td>
+          <td>Tall grasses (elephant grass, Andropogon) + scattered trees (shea butter, locust bean/Parkia, Isoberlinia, Daniellia)</td>
+        </tr>
+        <tr>
+          <td><strong>Fire/season effects</strong></td>
+          <td>Grasses burn in dry season; many trees are deciduous and fire-resistant</td>
+        </tr>
+        <tr>
+          <td><strong>Animals</strong></td>
+          <td>Antelopes, birds, rodents; elephants in protected areas</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="highlight-box">
+      <p><strong>How to identify:</strong> Central Nigeria, farming + grazing common, grasses dominate and trees are not too dense.</p>
+    </div>
+  </div>
+
+  <!-- 3. SUDAN SAVANNA -->
+  <div class="section-card">
+    <h2>🌵 3. Sudan Savanna</h2>
+    <p><strong>Location:</strong> Northern Nigeria (e.g., Kano, Katsina, Sokoto, Bauchi, parts of Borno).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9f/Acacia_tree_in_savanna.jpg" alt="Sudan savanna acacia" class="diagram-img">
+    <p class="image-caption">Sudan savanna: more open, thorny trees like acacia</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr><th>Key Feature</th><th>Details</th></tr>
+        <tr><td><strong>Rainfall</strong></td><td>Lower (600–1200 mm/year) with longer dry season</td></tr>
+        <tr><td><strong>Vegetation</strong></td><td>Shorter grasses; fewer/smaller trees (acacia, baobab); thorny shrubs common</td></tr>
+        <tr><td><strong>Animals</strong></td><td>Dry-adapted animals; gazelles, birds; camels in fringes</td></tr>
+        <tr><td><strong>Soil</strong></td><td>Often sandy, less fertile</td></tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="highlight-box">
+      <p><strong>How to identify:</strong> Far north, drier climate, shorter grasses, more open and thorny vegetation; irrigation farming is common.</p>
+    </div>
+  </div>
+
+  <!-- 4. DESERT/SAHEL -->
+  <div class="section-card">
+    <h2>🏜️ 4. Desert / Sahel-like Zone (Fringes)</h2>
+    <p><strong>Location:</strong> Extreme northeast Nigeria (small part near Lake Chad: northern Borno and Yobe). True desert is mostly outside Nigeria, but Sahel-like conditions occur.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/66/Sahel_landscape.jpg" alt="Sahel landscape" class="diagram-img">
+    <p class="image-caption">Sahel: sparse shrubs and grasses under very low rainfall</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr><th>Key Feature</th><th>Details</th></tr>
+        <tr><td><strong>Rainfall</strong></td><td>Very low (&lt;600 mm/year) and often erratic</td></tr>
+        <tr><td><strong>Vegetation</strong></td><td>Sparse grasses, thorny shrubs, occasional acacia/date palms</td></tr>
+        <tr><td><strong>Temperature</strong></td><td>Hot days, cooler nights (extreme range)</td></tr>
+        <tr><td><strong>Soil</strong></td><td>Sandy; prone to desertification</td></tr>
+        <tr><td><strong>Animals</strong></td><td>Drought-resistant: camels/goats, reptiles</td></tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="jamb-alert">
+      <h4>⚠️ JAMB Hot Point</h4>
+      <ul>
+        <li>This zone is the driest part of Nigeria and is closely linked to <strong>desertification</strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 5. MONTANE HIGHLANDS -->
+  <div class="section-card">
+    <h2>⛰️ 5. Montane Highlands (Obudu, Jos, Mambilla)</h2>
+    <p><strong>Location:</strong> Jos Plateau (Plateau), Obudu Plateau (Cross River), Mambilla Plateau (Taraba).</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Jos_Plateau_landscape.jpg" alt="Jos Plateau landscape" class="diagram-img">
+    <p class="image-caption">Highlands: cooler climate due to altitude</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr><th>Key Feature</th><th>Details</th></tr>
+        <tr><td><strong>Altitude</strong></td><td>Usually 1000–1700 m+ (higher altitude = cooler)</td></tr>
+        <tr><td><strong>Temperature</strong></td><td>Cooler (about 15–22°C)</td></tr>
+        <tr><td><strong>Rainfall</strong></td><td>Can be high in some areas (e.g., Obudu very wet and misty)</td></tr>
+        <tr><td><strong>Vegetation</strong></td><td>Montane grasslands with patches of forest/woodland</td></tr>
+        <tr><td><strong>Soil</strong></td><td>Often rocky/volcanic (Jos)</td></tr>
+        <tr><td><strong>Animals</strong></td><td>Unique birds/monkeys; some endemic species</td></tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="highlight-box">
+      <p><strong>How to identify:</strong> Cooler highlands + grasslands with forest patches; tourist areas like Obudu (cattle ranch region).</p>
+    </div>
+  </div>
+
+  <!-- QUICK COMPARISON TABLE -->
+  <div class="section-card">
+    <h2>📋 Quick Comparison Table (Easy Memorization)</h2>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Biome</th>
+          <th>Location</th>
+          <th>Rainfall</th>
+          <th>Vegetation</th>
+          <th>Temperature</th>
+          <th>Key Identifier</th>
+        </tr>
+        <tr>
+          <td><strong>Tropical Rainforest</strong></td>
+          <td>South (coastal)</td>
+          <td>Very high (&gt;2000 mm)</td>
+          <td>Dense evergreen, layers</td>
+          <td>Hot/humid</td>
+          <td>Thick forest, high biodiversity</td>
+        </tr>
+        <tr>
+          <td><strong>Guinea Savanna</strong></td>
+          <td>Central belt</td>
+          <td>Moderate (1000–1500 mm)</td>
+          <td>Tall grasses + scattered trees</td>
+          <td>Warm</td>
+          <td>Largest zone, fire-prone grasses</td>
+        </tr>
+        <tr>
+          <td><strong>Sudan Savanna</strong></td>
+          <td>Far north</td>
+          <td>Lower (600–1200 mm)</td>
+          <td>Short grasses, thorny shrubs</td>
+          <td>Hot/dry</td>
+          <td>Open landscape, drier</td>
+        </tr>
+        <tr>
+          <td><strong>Sahel/Desert</strong></td>
+          <td>Extreme NE</td>
+          <td>Very low (&lt;600 mm)</td>
+          <td>Sparse shrubs/grasses</td>
+          <td>Extreme range</td>
+          <td>Drought, desertification risk</td>
+        </tr>
+        <tr>
+          <td><strong>Montane Highlands</strong></td>
+          <td>Jos/Obudu/Mambilla</td>
+          <td>Varies (often high)</td>
+          <td>Grassland + montane forests</td>
+          <td>Cooler</td>
+          <td>Altitude “islands”</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+  </div>
+
+  <!-- TIPS -->
+  <div class="jamb-alert">
+    <h4>⚡ Tips for JAMB</h4>
+    <ul>
+      <li>Memorize the south-to-north order: <strong>Rainforest → Guinea → Sudan → Sahel</strong></li>
+      <li>Highlands are exceptions (“islands”) due to altitude</li>
+      <li>Match features to region (e.g., high rainfall + dense trees = rainforest)</li>
+      <li>Practice locating zones on a simple Nigeria map sketch</li>
+      <li>Common style: “Which biome is found in Kano?” → <strong>Sudan Savanna</strong></li>
+    </ul>
+  </div>
+
+  <div class="section-card">
+    <h2>🧠 Quick Memory Aids</h2>
+    <div class="table-container">
+      <table class="summary-table">
+        <tr><th>Mnemonic</th><th>Meaning</th></tr>
+        <tr><td><strong>R-G-S-S</strong></td><td>Rainforest → Guinea → Sudan → Sahel (South → North)</td></tr>
+        <tr><td><strong>“Highlands = Islands”</strong></td><td>Altitude creates cooler mini-biomes inside savanna areas</td></tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="memory-tip">
+      <strong>🧠 One-line test trick:</strong>
+      <p>Dense evergreen + constant rain = South | Short thorny shrubs + long dry season = North</p>
+    </div>
+  </div>
+
+  <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+    🌟 If you can match state → rainfall → vegetation type, you’ll answer most JAMB biome questions fast. 🌟
+  </p>
+
+  <button class="explore-btn" onclick="alert('Practice JAMB questions on Nigeria vegetation zones!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

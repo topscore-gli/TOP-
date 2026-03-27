@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Evolutionary Trends</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 500px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 600px; }
+    .summary-table.extra-wide { min-width: 700px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+    .comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+    .comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+    .comparison-card li { margin-bottom: 4px; font-size: 12px; }
+    .evolution-arrow { text-align: center; font-size: 24px; color: var(--accent); margin: 12px 0; font-weight: bold; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .organelle-list { margin: 12px 0; padding: 14px; background: rgba(0,0,0,0.15); border-radius: 12px; }
+    .organelle-list li strong { color: var(--accent-tertiary); }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .quiz-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center; }
+    .quiz-content { background: var(--background); width: 90%; max-width: 380px; border-radius: 20px; padding: 24px; box-shadow: 10px 10px 30px rgba(0,0,0,0.5); max-height: 80vh; overflow-y: auto; }
+    .quiz-content h3 { color: var(--accent); margin-bottom: 16px; text-align: center; }
+    .quiz-question { background: var(--card-bg); padding: 16px; border-radius: 12px; margin-bottom: 12px; box-shadow: inset 2px 2px 5px var(--shadow-in), inset -2px -2px 5px var(--shadow-out); }
+    .quiz-question p { font-size: 14px; margin-bottom: 10px; font-weight: 600; }
+    .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+    .quiz-option { background: var(--background); border: none; padding: 10px 14px; border-radius: 8px; text-align: left; cursor: pointer; box-shadow: 2px 2px 5px var(--shadow-in), -2px -2px 5px var(--shadow-out); font-size: 13px; color: var(--text-primary); transition: all 0.2s; }
+    .quiz-option:hover { transform: translateX(4px); }
+    .quiz-option.correct { background: rgba(29,185,84,0.3); border: 1px solid var(--accent); }
+    .quiz-option.wrong { background: rgba(255,107,107,0.3); border: 1px solid var(--accent-secondary); }
+    .quiz-close { background: var(--accent-secondary); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; margin-top: 16px; display: block; margin-left: auto; margin-right: auto; }
+    .quiz-score { text-align: center; font-size: 18px; color: var(--accent); margin: 16px 0; font-weight: bold; }
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="goBack()">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="bookmarkPage()">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🧬 Evolutionary Trends</h1>
+        <p class="subtitle">From Simple Prokaryotes to Complex Life Forms</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📊 The Five Kingdoms Overview</h2>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Kingdom</th>
+              <th>Cell Type</th>
+              <th>Cell Wall</th>
+              <th>Nutrition</th>
+            </tr>
+            <tr>
+              <td><strong>Monera</strong></td>
+              <td>Prokaryotic</td>
+              <td>Peptidoglycan</td>
+              <td>Auto/Hetero</td>
+            </tr>
+            <tr>
+              <td><strong>Protista</strong></td>
+              <td>Eukaryotic</td>
+              <td>Some have</td>
+              <td>Auto/Hetero</td>
+            </tr>
+            <tr>
+              <td><strong>Fungi</strong></td>
+              <td>Eukaryotic</td>
+              <td>Chitin</td>
+              <td>Heterotrophic</td>
+            </tr>
+            <tr>
+              <td><strong>Plantae</strong></td>
+              <td>Eukaryotic</td>
+              <td>Cellulose</td>
+              <td>Autotrophic</td>
+            </tr>
+            <tr>
+              <td><strong>Animalia</strong></td>
+              <td>Eukaryotic</td>
+              <td>None</td>
+              <td>Heterotrophic</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>💡 Memory Tip:</strong>
+          <p>"Mr. P. F. Plant Animals" = Monera, Protista, Fungi, Plantae, Animalia</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>a. Monera (Prokaryotes) 🦠</h2>
+        
+        <div class="quick-facts">
+          <h4>🔬 Key Characteristics</h4>
+          <ul>
+            <li><strong>No true nucleus</strong> - DNA floats freely (nucleoid)</li>
+            <li><strong>No membrane-bound organelles</strong> - no mitochondria, ER, etc.</li>
+            <li><strong>Unicellular only</strong> - never form tissues</li>
+            <li><strong>Cell wall:</strong> Peptidoglycan (unique to bacteria)</li>
+            <li><strong>Reproduction:</strong> Binary fission (asexual)</li>
+          </ul>
+        </div>
+
+        <h3>Examples & Features</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Organism</th>
+              <th>Type</th>
+              <th>Key Features</th>
+            </tr>
+            <tr>
+              <td><strong>Bacteria</strong></td>
+              <td>Heterotrophic/Autotrophic</td>
+              <td>Rod, spherical, spiral shapes; decomposers</td>
+            </tr>
+            <tr>
+              <td><strong>Blue-green algae</strong> (Cyanobacteria)</td>
+              <td>Photosynthetic</td>
+              <td>First oxygen producers; nitrogen fixers</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Average_prokaryote_cell-_en.svg/1200px-Average_prokaryote_cell-_en.svg.png" alt="Bacterial cell diagram" class="diagram-img">
+        
+        <div class="organelle-list">
+          <p><strong>📋 Structure Notes:</strong></p>
+          <ul>
+            <li><strong>Cell wall:</strong> Protection & shape (peptidoglycan)</li>
+            <li><strong>Plasma membrane:</strong> Controls entry/exit of substances</li>
+            <li><strong>Cytoplasm:</strong> Contains enzymes for reactions</li>
+            <li><strong>Nucleoid:</strong> Circular DNA (not in nucleus!)</li>
+            <li><strong>Ribosomes:</strong> Protein synthesis (smaller than eukaryotes)</li>
+            <li><strong>Flagellum:</strong> Movement (when present)</li>
+            <li><strong>Capsule:</strong> Extra protection layer (in some)</li>
+            <li><strong>Pilus:</strong> Attachment to surfaces/conjugation</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 JAMB Trick:</strong>
+          <p>Blue-green algae are NOT true algae! They are bacteria (cyanobacteria) - prokaryotes, not eukaryotes!</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>b. Protista (Protozoans & Protophyta) 🔬</h2>
+        
+        <div class="quick-facts">
+          <h4>🔬 Key Characteristics</h4>
+          <ul>
+            <li><strong>First eukaryotes</strong> - have true nucleus & organelles</li>
+            <li><strong>Mostly unicellular</strong> - some colonial</li>
+            <li><strong>"Catch-all" kingdom</strong> - organisms that don't fit elsewhere</li>
+            <li><strong>Three types:</strong> Animal-like (protozoa), Plant-like (algae), Fungus-like (slime molds)</li>
+          </ul>
+        </div>
+
+        <h3>Major Examples Comparison</h3>
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Organism</th>
+              <th>Type</th>
+              <th>Movement</th>
+              <th>Key Feature</th>
+            </tr>
+            <tr>
+              <td><strong>Amoeba</strong></td>
+              <td>Protozoan</td>
+              <td>Pseudopodia</td>
+              <td>Shape-shifter, engulfs food</td>
+            </tr>
+            <tr>
+              <td><strong>Paramecium</strong></td>
+              <td>Protozoan</td>
+              <td>Cilia</td>
+              <td>Two nuclei (macro & micro)</td>
+            </tr>
+            <tr>
+              <td><strong>Euglena</strong></td>
+              <td>Both!</td>
+              <td>Flagellum</td>
+              <td>Eyespot, mixotrophic</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h4>Amoeba Details</h4>
+        <img src="https://cdn1.byjus.com/wp-content/uploads/2019/08/structure-of-amoeba.png" alt="Amoeba diagram" class="diagram-img">
+        <div class="organelle-list">
+          <ul>
+            <li><strong>Pseudopodia:</strong> "False feet" for movement & feeding (phagocytosis)</li>
+            <li><strong>Contractile vacuole:</strong> Pumps out excess water (osmoregulation)</li>
+            <li><strong>Food vacuole:</strong> Digests engulfed food</li>
+            <li><strong>Nucleus:</strong> Controls cell activities</li>
+            <li><strong>Ectoplasm/Endoplasm:</strong> Outer gel layer, inner fluid</li>
+          </ul>
+        </div>
+
+        <h4>Euglena Details</h4>
+        <img src="https://cdn.britannica.com/97/181797-050-262AFF0D/Euglena-anatomy.jpg" alt="Euglena diagram" class="diagram-img">
+        <div class="organelle-list">
+          <ul>
+            <li><strong>Flagellum:</strong> Whip-like movement</li>
+            <li><strong>Eyespot (Stigma):</strong> Detects light direction</li>
+            <li><strong>Chloroplasts:</strong> Photosynthesis (plant-like)</li>
+            <li><strong>Contractile vacuole:</strong> Water balance</li>
+            <li><strong>Paramylon:</strong> Stored carbohydrate (not starch!)</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 JAMB Trick:</strong>
+          <p>Euglena is the "JACK OF ALL TRADES" - has both plant (chloroplasts) AND animal (eyespot, flagellum, eats food) characteristics!</p>
+        </div>
+
+        <h4>Paramecium Details</h4>
+        <img src="https://rsscience.com/wp-content/uploads/2020/07/Paramecium-Cell-Structure-1024x624.jpg" alt="Paramecium diagram" class="diagram-img">
+        <div class="organelle-list">
+          <ul>
+            <li><strong>Cilia:</strong> Thousands for movement & sweeping food</li>
+            <li><strong>Oral groove:</strong> Mouth entrance</li>
+            <li><strong>Two nuclei:</strong> Macronucleus (daily functions) & Micronucleus (reproduction)</li>
+            <li><strong>Contractile vacuoles:</strong> Two of them for osmoregulation</li>
+            <li><strong>Trichocysts:</strong> Defense structures</li>
+            <li><strong>Anal pore (Cytoproct):</strong> Waste exit</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>c. Fungi 🍄</h2>
+        
+        <div class="quick-facts">
+          <h4>🔬 Key Characteristics</h4>
+          <ul>
+            <li><strong>Heterotrophic absorbers</strong> - secrete enzymes, absorb nutrients</li>
+            <li><strong>Cell wall:</strong> CHITIN (NOT cellulose like plants!)</li>
+            <li><strong>No chlorophyll</strong> - cannot photosynthesize</li>
+            <li><strong>Body:</strong> Thread-like hyphae forming mycelium</li>
+            <li><strong>Mostly multicellular</strong> - except yeast (unicellular)</li>
+          </ul>
+        </div>
+
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Organism</th>
+              <th>Common Name</th>
+              <th>Key Features</th>
+              <th>Reproduction</th>
+            </tr>
+            <tr>
+              <td><strong>Rhizopus</strong></td>
+              <td>Bread mold</td>
+              <td>White cottony growth, sporangia</td>
+              <td>Spores (asexual) & Zygospores (sexual)</td>
+            </tr>
+            <tr>
+              <td><strong>Mushroom</strong></td>
+              <td>Toadstool</td>
+              <td>Fruiting body, gills, underground mycelium</td>
+              <td>Basidiospores</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h4>Mushroom Structure</h4>
+        <img src="https://cdn1.byjus.com/wp-content/uploads/2020/03/Structure-Of-Mushroom.png" alt="Mushroom diagram" class="diagram-img">
+        <div class="organelle-list">
+          <ul>
+            <li><strong>Pileus (Cap):</strong> Protects gills underneath</li>
+            <li><strong>Gills:</strong> Produce millions of basidiospores</li>
+            <li><strong>Stipe (Stalk):</strong> Supports cap</li>
+            <li><strong>Annulus:</strong> Ring from broken partial veil</li>
+            <li><strong>Volva:</strong> Cup at base (remnant of universal veil)</li>
+            <li><strong>Mycelium:</strong> Underground network of hyphae (main body!)</li>
+          </ul>
+        </div>
+
+        <h4>Rhizopus Structure</h4>
+        <img src="https://cdn1.byjus.com/wp-content/uploads/2018/11/Rhizopus.png" alt="Rhizopus diagram" class="diagram-img">
+        <div class="organelle-list">
+          <ul>
+            <li><strong>Sporangium:</strong> Black round spore case at top</li>
+            <li><strong>Sporangiophore:</strong> Stalk holding sporangium</li>
+            <li><strong>Columella:</strong> Dome supporting sporangium</li>
+            <li><strong>Stolon:</strong> Horizontal hyphae connecting groups</li>
+            <li><strong>Rhizoids:</strong> Root-like hyphae for anchoring & absorption</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 JAMB Trick:</strong>
+          <p>Fungi cell walls = CHITIN (same as insect exoskeletons!), NOT cellulose. This distinguishes them from plants!</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>d. Plantae (Plants) 🌿</h2>
+        
+        <div class="quick-facts">
+          <h4>🌱 Evolutionary Progression</h4>
+          <p style="text-align: center; font-size: 14px; margin: 10px 0;">
+            <strong>Thallophyta</strong> → <strong>Bryophyta</strong> → <strong>Pteridophyta</strong> → <strong>Spermatophyta</strong><br>
+            (Algae) → (Mosses) → (Ferns) → (Seed Plants)
+          </p>
+          <ul>
+            <li><strong>Trend:</strong> Aquatic → Terrestrial</li>
+            <li><strong>Trend:</strong> No vascular → Vascular tissues</li>
+            <li><strong>Trend:</strong> Spores → Seeds (naked → enclosed in fruits)</li>
+          </ul>
+        </div>
+
+        <h3>i. Thallophyta (Algae)</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Feature</th>
+              <th>Description</th>
+            </tr>
+            <tr>
+              <td>Body</td>
+              <td>Thallus (undifferentiated - no true roots, stems, leaves)</td>
+            </tr>
+            <tr>
+              <td>Habitat</td>
+              <td>Mostly aquatic (freshwater & marine)</td>
+            </tr>
+            <tr>
+              <td>Vascular tissue</td>
+              <td>❌ Absent</td>
+            </tr>
+            <tr>
+              <td>Reproduction</td>
+              <td>Asexual (fragmentation) & Sexual (conjugation in Spirogyra)</td>
+            </tr>
+            <tr>
+              <td>Example</td>
+              <td>Spirogyra (filamentous with spiral chloroplasts)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h4>Spirogyra Structure</h4>
+        <img src="https://static.pw.live/5eb393ee95fab7468a79d189/GLOBAL_CMS_BLOGS/c6b4d56c-9fa9-4c62-9460-7236406f9246.webp" alt="Spirogyra diagram" class="diagram-img">
+        <div class="organelle-list">
+          <ul>
+            <li><strong>Spiral chloroplasts:</strong> Characteristic ribbon-like spirals</li>
+            <li><strong>Pyrenoid:</strong> Protein body in chloroplast for starch storage</li>
+            <li><strong>Conjugation tube:</strong> Sexual reproduction between filaments</li>
+            <li><strong>Septa:</strong> Cross-walls between cells</li>
+          </ul>
+        </div>
+
+        <h3>ii. Bryophyta (Mosses & Liverworts)</h3>
+        <div class="memory-tip">
+          <strong>💡 Memory Aid:</strong>
+          <p>"Amphibians of the Plant World" - first land plants but NEED WATER to reproduce (sperm swims to egg)</p>
+        </div>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Feature</th>
+              <th>Description</th>
+            </tr>
+            <tr>
+              <td>Body</td>
+              <td>Simple leafy structure (no true roots)</td>
+            </tr>
+            <tr>
+              <td>Vascular tissue</td>
+              <td>❌ Absent (no xylem/phloem)</td>
+            </tr>
+            <tr>
+              <td>Attachment</td>
+              <td>Rhizoids (not true roots)</td>
+            </tr>
+            <tr>
+              <td>Life cycle</td>
+              <td>Alternation of generations (gametophyte dominant)</td>
+            </tr>
+            <tr>
+              <td>Examples</td>
+              <td>Brachymenium (moss), Marchantia (liverwort)</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h4>Marchantia (Liverwort)</h4>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Marchantia_polymorpha.jpg/800px-Marchantia_polymorpha.jpg" alt="Marchantia diagram" class="diagram-img">
+        <div class="organelle-list">
+          <ul>
+            <li><strong>Thallus:</strong> Flat, lobed, dichotomously branched</li>
+            <li><strong>Gemma cups:</strong> Contain gemmae for asexual reproduction</li>
+            <li><strong>Rhizoids:</strong> Anchor and absorb water</li>
+            <li><strong>Antheridiophore:</strong> Male structure with antheridia (sperm)</li>
+            <li><strong>Archegoniophore:</strong> Female structure with archegonia (egg)</li>
+          </ul>
+        </div>
+
+        <h3>iii. Pteridophyta (Ferns)</h3>
+        <div class="quick-facts">
+          <h4>🌿 Key Advancement</h4>
+          <ul>
+            <li><strong>First vascular plants!</strong> - have xylem & phloem</li>
+            <li>True roots, stems (rhizomes), and leaves (fronds)</li>
+            <li>Can grow taller due to vascular tissues</li>
+            <li>Still need water for fertilization (swimming sperm)</li>
+          </ul>
+        </div>
+
+        <h4>Dryopteris (Fern)</h4>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Dryopteris_filix-mas.jpg/800px-Dryopteris_filix-mas.jpg" alt="Fern diagram" class="diagram-img">
+        <div class="organelle-list">
+          <ul>
+            <li><strong>Frond:</strong> Large divided leaf (megaphyll)</li>
+            <li><strong>Pinnae:</strong> Leaflets of the frond</li>
+            <li><strong>Sori:</strong> Clusters of sporangia on underside</li>
+            <li><strong>Fiddlehead:</strong> Young coiled frond (circinate vernation)</li>
+            <li><strong>Rhizome:</strong> Underground stem</li>
+            <li><strong>Prothallus:</strong> Small heart-shaped gametophyte</li>
+          </ul>
+        </div>
+
+        <h3>iv. Spermatophyta (Seed Plants)</h3>
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <h5>Gymnosperms</h5>
+            <ul>
+              <li>Naked seeds</li>
+              <li>No flowers/fruits</li>
+              <li>Cones for reproduction</li>
+              <li>Needle-like leaves</li>
+              <li>Examples: Pines, Cycads</li>
+            </ul>
+          </div>
+          <div class="comparison-card">
+            <h5>Angiosperms</h5>
+            <ul>
+              <li>Seeds in fruits</li>
+              <li>Flowers present</li>
+              <li>Enclosed ovules</li>
+              <li>Broad leaves</li>
+              <li>Examples: Maize, Beans</li>
+            </ul>
+          </div>
+        </div>
+
+        <h4>Angiosperm Division</h4>
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Feature</th>
+              <th>Monocots</th>
+              <th>Dicots</th>
+            </tr>
+            <tr>
+              <td>Cotyledons</td>
+              <td>One</td>
+              <td>Two</td>
+            </tr>
+            <tr>
+              <td>Leaf veins</td>
+              <td>Parallel</td>
+              <td>Net-like (reticulate)</td>
+            </tr>
+            <tr>
+              <td>Flower parts</td>
+              <td>3 or multiples</td>
+              <td>4 or 5 or multiples</td>
+            </tr>
+            <tr>
+              <td>Vascular bundles</td>
+              <td>Scattered</td>
+              <td>Ring arrangement</td>
+            </tr>
+            <tr>
+              <td>Root system</td>
+              <td>Fibrous</td>
+              <td>Tap root</td>
+            </tr>
+            <tr>
+              <td>Example</td>
+              <td>Maize 🌽</td>
+              <td>Water leaf 🍃</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h4>Maize (Monocot) Structure</h4>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Maize_plant.jpg/800px-Maize_plant.jpg" alt="Maize diagram" class="diagram-img">
+
+        <h4>Bean Seed (Dicot) Structure</h4>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Bean_seed_diagram.svg/800px-Bean_seed_diagram.svg.png" alt="Bean seed diagram" class="diagram-img">
+        <div class="organelle-list">
+          <ul>
+            <li><strong>Cotyledons:</strong> Two seed leaves storing food</li>
+            <li><strong>Plumule:</strong> Shoot tip (future stem & leaves)</li>
+            <li><strong>Radicle:</strong> Root tip (future root system)</li>
+            <li><strong>Seed coat (testa):</strong> Protective outer layer</li>
+            <li><strong>Micropyle:</strong> Small pore for water entry</li>
+            <li><strong>Hilum:</strong> Scar where seed attached to pod</li>
+          </ul>
+        </div>
+
+        <h3>v. Plants by Life Cycle</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Category</th>
+              <th>Duration</th>
+              <th>Examples</th>
+            </tr>
+            <tr>
+              <td><strong>Annuals</strong></td>
+              <td>Complete life in ONE year</td>
+              <td>Maize, rice, beans</td>
+            </tr>
+            <tr>
+              <td><strong>Biennials</strong></td>
+              <td>Complete life in TWO years</td>
+              <td>Carrot, cabbage, onion</td>
+            </tr>
+            <tr>
+              <td><strong>Perennials</strong></td>
+              <td>Live MANY years</td>
+              <td>Mango, orange, palm</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+      </div>
+
+      <div class="section-card">
+        <h2>e. Animalia (Animals) 🐾</h2>
+        
+        <div class="quick-facts">
+          <h4>🔬 Major Division</h4>
+          <ul>
+            <li><strong>Invertebrates:</strong> No backbone (95% of animal species)</li>
+            <li><strong>Vertebrates:</strong> Have backbone (fish, amphibians, reptiles, birds, mammals)</li>
+          </ul>
+        </div>
+
+        <h3>i. Invertebrates (No Backbone)</h3>
+        <div class="table-container">
+          <table class="summary-table extra-wide">
+            <tr>
+              <th>Phylum</th>
+              <th>Key Features</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td><strong>Coelenterata</strong> (Cnidaria)</td>
+              <td>Radial symmetry, tentacles with stinging cells (cnidocytes), one opening</td>
+              <td>Hydra</td>
+            </tr>
+            <tr>
+              <td><strong>Platyhelminthes</strong></td>
+              <td>Bilateral, flattened, no body cavity, parasitic</td>
+              <td>Taenia (tapeworm)</td>
+            </tr>
+            <tr>
+              <td><strong>Nematoda</strong></td>
+              <td>Round, pseudocoelom, complete gut</td>
+              <td>Ascaris</td>
+            </tr>
+            <tr>
+              <td><strong>Annelida</strong></td>
+              <td>Segmented, true coelom, setae</td>
+              <td>Earthworm</td>
+            </tr>
+            <tr>
+              <td><strong>Arthropoda</strong></td>
+              <td>Exoskeleton (chitin), jointed legs, segmented</td>
+              <td>Insects, spiders</td>
+            </tr>
+            <tr>
+              <td><strong>Mollusca</strong></td>
+              <td>Soft body, mantle, muscular foot</td>
+              <td>Snails, octopus</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h4>Hydra (Coelenterata)</h4>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Hydra_viridissima.jpg/800px-Hydra_viridissima.jpg" alt="Hydra diagram" class="diagram-img">
+        <div class="organelle-list">
+          <ul>
+            <li><strong>Tentacles:</strong> Surround mouth, armed with cnidocytes (stinging cells)</li>
+            <li><strong>Cnidocytes:</strong> Contain nematocysts (stinging organelles)</li>
+            <li><strong>Gastrovascular cavity:</strong> Digestive chamber (one opening)</li>
+            <li><strong>Budding:</strong> Asexual reproduction</li>
+            <li><strong>Basal disc:</strong> Attachment to substrate</li>
+          </ul>
+        </div>
+
+        <h4>Taenia (Tapeworm - Platyhelminthes)</h4>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Taenia_saginata_scolex.jpg/800px-Taenia_saginata_scolex.jpg" alt="Taenia diagram" class="diagram-img">
+        <div class="organelle-list">
+          <ul>
+            <li><strong>Scolex:</strong> Head with hooks and suckers for attachment</li>
+            <li><strong>Proglottids:</strong> Segments containing reproductive organs</li>
+            <li><strong>No digestive system:</strong> Absorbs nutrients through tegument</li>
+            <li><strong>Hermaphroditic:</strong> Each segment has both male & female organs</li>
+          </ul>
+        </div>
+
+        <h4>Earthworm (Annelida)</h4>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Earthworm_anatomy.svg/800px-Earthworm_anatomy.svg.png" alt="Earthworm diagram" class="diagram-img">
+        <div class="organelle-list">
+          <ul>
+            <li><strong>Clitellum:</strong> Saddle-like structure for cocoon formation</li>
+            <li><strong>Setae:</strong> Bristles for grip and movement</li>
+            <li><strong>Segments:</strong> Metamerism (repeated segments with organs)</li>
+            <li><strong>Crop & Gizzard:</strong> Food storage and grinding</li>
+            <li><strong>Nephridia:</strong> Excretory organs in each segment</li>
+            <li><strong>Hermaphroditic:</strong> Exchange sperm during copulation</li>
+          </ul>
+        </div>
+
+        <h4>Arthropoda Classes</h4>
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Class</th>
+              <th>Features</th>
+              <th>Examples</th>
+            </tr>
+            <tr>
+              <td><strong>Insecta</strong></td>
+              <td>3 body parts, 6 legs, often wings</td>
+              <td>Mosquito, bee, butterfly</td>
+            </tr>
+            <tr>
+              <td><strong>Arachnida</strong></td>
+              <td>2 body parts, 8 legs, no antennae</td>
+              <td>Spider, scorpion</td>
+            </tr>
+            <tr>
+              <td><strong>Crustacea</strong></td>
+              <td>2 pairs antennae, mostly aquatic</td>
+              <td>Crab, crayfish</td>
+            </tr>
+            <tr>
+              <td><strong>Myriapoda</strong></td>
+              <td>Many segments, many legs</td>
+              <td>Centipede, millipede</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <h4>Mosquito (Insecta)</h4>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Mosquito-labeled.jpg/800px-Mosquito-labeled.jpg" alt="Mosquito diagram" class="diagram-img">
+        <div class="organelle-list">
+          <ul>
+            <li><strong>Proboscis:</strong> Piercing-sucking mouthpart (only female bites)</li>
+            <li><strong>Compound eyes:</strong> Made of many ommatidia</li>
+            <li><strong>Antennae:</strong> Sensory (male has feathery antennae)</li>
+            <li><strong>Wings:</strong> One pair (hind wings reduced to halteres)</li>
+            <li><strong>Complete metamorphosis:</strong> Egg → Larva → Pupa → Adult</li>
+          </ul>
+        </div>
+
+        <h4>Snail (Mollusca)</h4>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Snail_anatomy.svg/800px-Snail_anatomy.svg.png" alt="Snail diagram" class="diagram-img">
+        <div class="organelle-list">
+          <ul>
+            <li><strong>Shell:</strong> External protection (secreted by mantle)</li>
+            <li><strong>Mantle:</strong> Tissue layer secreting shell</li>
+            <li><strong>Foot:</strong> Muscular for creeping locomotion</li>
+            <li><strong>Radula:</strong> Rasping tongue for feeding</li>
+            <li><strong>Tentacles:</strong> Upper pair has eyes at tips</li>
+          </ul>
+        </div>
+
+        <h3>ii. Vertebrates (With Backbone)</h3>
+        <div class="table-container">
+          <table class="summary-table wide">
+            <tr>
+              <th>Class</th>
+              <th>Key Features</th>
+              <th>Examples</th>
+            </tr>
+            <tr>
+              <td><strong>Pisces</strong> (Fish)</td>
+              <td>Scales, gills, fins, ectothermic</td>
+              <td>Sharks (cartilage), Tilapia (bony)</td>
+            </tr>
+            <tr>
+              <td><strong>Amphibia</strong></td>
+              <td>Moist skin, dual life, metamorphosis</td>
+              <td>Frogs, toads, salamanders</td>
+            </tr>
+            <tr>
+              <td><strong>Reptilia</strong></td>
+              <td>Scales, amniotic eggs, terrestrial</td>
+              <td>Lizards, snakes, turtles</td>
+            </tr>
+            <tr>
+              <td><strong>Aves</strong> (Birds)</td>
+              <td>Feathers, wings, beak, endothermic</td>
+              <td>Eagle, chicken, ostrich</td>
+            </tr>
+            <tr>
+              <td><strong>Mammalia</strong></td>
+              <td>Hair, mammary glands, placenta (most)</td>
+              <td>Humans, whales, bats</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+        <div class="memory-tip">
+          <strong>🧠 Memory Aid:</strong>
+          <p>"Can All Frogs Really Be Men?" = Coelenterata (no), but for vertebrates: Pisces, Amphibia, Reptilia, Aves, Mammalia</p>
+        </div>
+
+        <div class="evolution-arrow">
+          🐟 → 🐸 → 🦎 → 🐦 → 🦁
+        </div>
+        <p style="text-align: center; font-size: 13px; color: var(--text-secondary);">
+          Fish → Amphibians → Reptiles → Birds → Mammals
+        </p>
+
+        <div class="quick-facts">
+          <h4>🔥 Key Evolutionary Trends in Animals</h4>
+          <ul>
+            <li><strong>Symmetry:</strong> Radial → Bilateral</li>
+            <li><strong>Body cavity:</strong> Acoelom → Pseudocoelom → True coelom</li>
+            <li><strong>Organization:</strong> Tissue → Organ → Organ systems</li>
+            <li><strong>Skeleton:</strong> Hydrostatic → Exoskeleton → Endoskeleton</li>
+            <li><strong>Temperature:</strong> Ectothermic (cold-blooded) → Endothermic (warm-blooded)</li>
+            <li><strong>Reproduction:</strong> External fertilization → Internal fertilization → Live birth</li>
+            <li><strong>Habitat:</strong> Aquatic → Semi-terrestrial → Fully terrestrial</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="jamb-alert">
+        <h4>⚠️ CRITICAL JAMB EXAM TIPS</h4>
+        <ul>
+          <li><strong>Euglena</strong> is frequently tested as having BOTH plant and animal characteristics</li>
+          <li><strong>Blue-green algae are bacteria</strong> (prokaryotes), NOT true algae</li>
+          <li><strong>Fungi cell walls = Chitin</strong> (not cellulose like plants)</li>
+          <li><strong>Bryophytes need water</strong> for sperm to swim to egg</li>
+          <li><strong>Gymnosperms have naked seeds</strong> (no fruits)</li>
+          <li><strong>All arthropods have chitin exoskeletons</strong></li>
+          <li><strong>Birds and mammals are endothermic</strong> (warm-blooded)</li>
+          <li><strong>Amphibians are the evolutionary link</strong> between water and land vertebrates</li>
+          <li><strong>Earthworms are hermaphrodites</strong> (both male and female)</li>
+          <li><strong>Spirogyra reproduces by conjugation</strong> (sexual) and fragmentation (asexual)</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Master Evolutionary Summary</h2>
+        <div class="table-container">
+          <table class="summary-table extra-wide">
+            <tr>
+              <th>Feature</th>
+              <th>Primitive → Advanced</th>
+            </tr>
+            <tr>
+              <td>Cell Type</td>
+              <td>Prokaryotic → Eukaryotic</td>
+            </tr>
+            <tr>
+              <td>Organization</td>
+              <td>Unicellular → Multicellular → Tissues → Organs → Systems</td>
+            </tr>
+            <tr>
+              <td>Nuclear Membrane</td>
+              <td>Absent → Present</td>
+            </tr>
+            <tr>
+              <td>Body Cavity</td>
+              <td>Acoelom → Pseudocoelom → Coelom</td>
+            </tr>
+            <tr>
+              <td>Symmetry</td>
+              <td>Asymmetrical → Radial → Bilateral</td>
+            </tr>
+            <tr>
+              <td>Vascular Tissue (Plants)</td>
+              <td>Absent → Present (Xylem & Phloem)</td>
+            </tr>
+            <tr>
+              <td>Reproduction (Plants)</td>
+              <td>Spores → Naked Seeds → Enclosed Seeds</td>
+            </tr>
+            <tr>
+              <td>Skeleton (Animals)</td>
+              <td>Hydrostatic → Exoskeleton → Endoskeleton</td>
+            </tr>
+            <tr>
+              <td>Temperature Regulation</td>
+              <td>Ectothermic → Endothermic</td>
+            </tr>
+            <tr>
+              <td>Reproduction (Animals)</td>
+              <td>Asexual → Sexual (external) → Sexual (internal) → Live birth</td>
+            </tr>
+          </table>
+        </div>
+        <p class="table-scroll-hint">← Swipe table to see more →</p>
+      </div>
+
+      <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+        🌟 Master these trends, ace your JAMB! 🌟
+      </p>
+
+      <button class="explore-btn" onclick="window.location.href='dispersion-quiz.html'">Start JAMB Quiz</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+    
+  </div>
+
+  <div class="quiz-modal" id="quizModal">
+    <div class="quiz-content">
+      <h3>📝 JAMB Biology Quick Quiz</h3>
+      <div id="quizContainer"></div>
+      <div class="quiz-score" id="quizScore"></div>
+      <button class="quiz-close" onclick="closeQuiz()">Close Quiz</button>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+
+    function goBack() {
+      alert('Back button clicked! (Navigation would go here)');
+    }
+
+    function bookmarkPage() {
+      alert('📖 Page bookmarked for later study!');
+    }
+
+    const quizQuestions = [
+      {
+        question: "Which kingdom includes organisms with chitin cell walls?",
+        options: ["Plantae", "Fungi", "Protista", "Monera"],
+        correct: 1
+      },
+      {
+        question: "Blue-green algae are classified as:",
+        options: ["True algae (Protista)", "Bacteria (Monera)", "Plants (Plantae)", "Fungi"],
+        correct: 1
+      },
+      {
+        question: "Which organism has BOTH plant and animal characteristics?",
+        options: ["Amoeba", "Paramecium", "Euglena", "Hydra"],
+        correct: 2
+      },
+      {
+        question: "Bryophytes are called 'amphibians of plant world' because:",
+        options: ["They live in water only", "They need water for reproduction", "They have lungs", "They can swim"],
+        correct: 1
+      },
+      {
+        question: "First vascular plants belong to:",
+        options: ["Thallophyta", "Bryophyta", "Pteridophyta", "Spermatophyta"],
+        correct: 2
+      },
+      {
+        question: "Gymnosperms differ from angiosperms by having:",
+        options: ["Flowers", "Fruits", "Naked seeds", "Broad leaves"],
+        correct: 2
+      },
+      {
+        question: "Which has parallel leaf venation?",
+        options: ["Bean (dicot)", "Water leaf (dicot)", "Maize (monocot)", "Sunflower (dicot)"],
+        correct: 2
+      },
+      {
+        question: "Earthworms are classified as:",
+        options: ["Nematoda", "Annelida", "Arthropoda", "Platyhelminthes"],
+        correct: 1
+      },
+      {
+        question: "All arthropods have:",
+        options: ["8 legs", "Exoskeleton of chitin", "Wings", "Segmented bodies only"],
+        correct: 1
+      },
+      {
+        question: "Endothermic (warm-blooded) animals include:",
+        options: ["Fish and amphibians", "Reptiles only", "Birds and mammals", "All vertebrates"],
+        correct: 2
+      }
+    ];
+
+    let currentScore = 0;
+    let answeredQuestions = 0;
+
+    function openQuiz() {
+      const modal = document.getElementById('quizModal');
+      const container = document.getElementById('quizContainer');
+      const scoreDiv = document.getElementById('quizScore');
+      
+      currentScore = 0;
+      answeredQuestions = 0;
+      scoreDiv.textContent = '';
+      
+      container.innerHTML = quizQuestions.map((q, index) => `
+        <div class="quiz-question" id="question-${index}">
+          <p>${index + 1}. ${q.question}</p>
+          <div class="quiz-options">
+            ${q.options.map((opt, optIndex) => `
+              <button class="quiz-option" onclick="checkAnswer(${index}, ${optIndex}, this)">${opt}</button>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+      
+      modal.style.display = 'flex';
+    }
+
+    function checkAnswer(questionIndex, selectedIndex, btnElement) {
+      const question = quizQuestions[questionIndex];
+      const questionDiv = document.getElementById(`question-${questionIndex}`);
+      const buttons = questionDiv.querySelectorAll('.quiz-option');
+      
+      buttons.forEach(btn => btn.disabled = true);
+      
+      if (selectedIndex === question.correct) {
+        btnElement.classList.add('correct');
+        currentScore++;
+      } else {
+        btnElement.classList.add('wrong');
+        buttons[question.correct].classList.add('correct');
+      }
+      
+      answeredQuestions++;
+      
+      if (answeredQuestions === quizQuestions.length) {
+        document.getElementById('quizScore').textContent = 
+          `🎉 Score: ${currentScore}/${quizQuestions.length} (${Math.round(currentScore/quizQuestions.length*100)}%)`;
+      }
+    }
+
+    function closeQuiz() {
+      document.getElementById('quizModal').style.display = 'none';
+    }
+
+    document.getElementById('quizModal').addEventListener('click', (e) => {
+      if (e.target.id === 'quizModal') closeQuiz();
+    });
+  </script>
+</body>
+</html>
