@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Coordination & Control</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 500px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 650px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+    .comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+    .comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+    .comparison-card li { margin-bottom: 4px; font-size: 12px; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+    .image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+  
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">BIOLOGY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>🧠 Chapter 9: Coordination & Control</h1>
+    <p class="subtitle">Nervous system + Sense organs + Hormones + Homeostasis (JAMB-ready)</p>
+  </div>
+
+  <!-- A. NERVOUS COORDINATION -->
+  <div class="section-card">
+    <h2>🧠 A. Nervous Coordination</h2>
+    <p><strong>Definition:</strong> The process by which the nervous system detects, processes, and responds to stimuli through electrical signals (nerve impulses) to coordinate body activities.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Nervous_system_diagram-en.svg" alt="Human nervous system" class="diagram-img">
+    <p class="image-caption">Nervous system overview: CNS + PNS</p>
+
+    <h3>i. Central Nervous System (CNS)</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Brain_and_spinal_cord.svg" alt="Brain and spinal cord" class="diagram-img">
+    <p class="image-caption">CNS = Brain + Spinal cord</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Component</th>
+          <th>Structure</th>
+          <th>Function</th>
+        </tr>
+        <tr>
+          <td><strong>Brain</strong></td>
+          <td>Protected by skull; 3 main parts (cerebrum, cerebellum, medulla)</td>
+          <td>Control center for body activities</td>
+        </tr>
+        <tr>
+          <td><strong>Spinal Cord</strong></td>
+          <td>Protected by vertebrae; runs from brain down the back</td>
+          <td>Connects brain to body; reflex center</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="memory-tip">
+      <strong>🧠 Brain Parts Mnemonic: "CCM"</strong>
+      <p>Cerebrum = thinking/memory/voluntary movement | Cerebellum = balance/coordination | Medulla = breathing/heartbeat/swallowing</p>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>🔑 JAMB Tip</h4>
+      <ul>
+        <li>The <strong>medulla</strong> controls involuntary actions you can’t stop (breathing, heartbeat).</li>
+      </ul>
+    </div>
+
+    <h3>ii. Peripheral Nervous System (PNS)</h3>
+    <p><strong>Definition:</strong> The network of nerves that connects the central nervous system to all other parts of the body, carrying signals to and from the brain and spinal cord.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Peripheral_nervous_system.svg" alt="Peripheral nervous system" class="diagram-img">
+    <p class="image-caption">PNS: cranial nerves + spinal nerves (outside CNS)</p>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Component</th>
+          <th>Function</th>
+        </tr>
+        <tr>
+          <td><strong>Cranial nerves (12 pairs)</strong></td>
+          <td>Connect brain to head/neck organs</td>
+        </tr>
+        <tr>
+          <td><strong>Spinal nerves (31 pairs)</strong></td>
+          <td>Connect spinal cord to the rest of the body</td>
+        </tr>
+        <tr>
+          <td><strong>Autonomic system</strong></td>
+          <td>Controls internal organs automatically</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="highlight-box">
+      <p><strong>Quick line:</strong> PNS = everything <strong>outside</strong> brain & spinal cord.</p>
+    </div>
+
+    <h3>iii. Mechanism of Impulse Transmission</h3>
+    <p><strong>Definition:</strong> The process by which electrical signals (action potentials) travel along neurons and cross synapses using chemical messengers to communicate information throughout the body.</p>
+
+    <div class="highlight-box">
+      <p><strong>Pathway:</strong></p>
+      <p>STIMULUS → RECEPTOR → SENSORY NEURON → CNS → MOTOR NEURON → EFFECTOR → RESPONSE</p>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/Neuron_Hand-tuned.svg" alt="Neuron structure" class="diagram-img">
+    <p class="image-caption">Neuron: dendrites → cell body → axon → synapse</p>
+
+    <div class="quick-facts">
+      <h4>🧩 Neuron Structure (Functions)</h4>
+      <ul>
+        <li><strong>Dendrites</strong> → receive signals</li>
+        <li><strong>Cell body</strong> → processes information</li>
+        <li><strong>Axon</strong> → transmits signals away</li>
+        <li><strong>Myelin sheath</strong> → insulates & speeds transmission</li>
+        <li><strong>Synapse</strong> → gap where neurotransmitters cross</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/32/Chemical_synapse_schema_cropped.png" alt="Chemical synapse" class="diagram-img">
+    <p class="image-caption">Synapse: neurotransmitters carry signal across the gap</p>
+
+    <div class="memory-tip">
+      <strong>🧠 ONE-WAY STREET:</strong>
+      <p>Dendrite → Cell body → Axon (signals don’t travel backwards in normal flow)</p>
+    </div>
+
+    <h3>iv. Reflex Action</h3>
+    <p><strong>Definition:</strong> An automatic, rapid, and involuntary response to a stimulus that occurs without conscious thought, mediated mainly by the spinal cord to protect the body from harm.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Reflex_arc.svg" alt="Reflex arc" class="diagram-img">
+    <p class="image-caption">Reflex arc: spinal cord coordinates the quick response</p>
+
+    <div class="highlight-box">
+      <p><strong>Reflex Arc Pathway:</strong></p>
+      <p>Stimulus → Receptor → Sensory neuron → <strong>Spinal cord</strong> → Motor neuron → Effector → Response</p>
+    </div>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Reflex</th>
+          <th>Stimulus</th>
+          <th>Response</th>
+        </tr>
+        <tr>
+          <td><strong>Knee jerk</strong></td>
+          <td>Tap below kneecap</td>
+          <td>Leg kicks out</td>
+        </tr>
+        <tr>
+          <td><strong>Blinking</strong></td>
+          <td>Object near eye</td>
+          <td>Eyelids close</td>
+        </tr>
+        <tr>
+          <td><strong>Pupil reflex</strong></td>
+          <td>Bright light</td>
+          <td>Pupil constricts</td>
+        </tr>
+        <tr>
+          <td><strong>Withdrawal</strong></td>
+          <td>Touch hot object</td>
+          <td>Hand pulls away</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="jamb-alert">
+      <h4>⚠️ Why Reflexes Are Fast</h4>
+      <ul>
+        <li>They <strong>skip the brain at first</strong> (spinal cord handles it directly).</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- B. SENSE ORGANS -->
+  <div class="section-card">
+    <h2>👁️ B. The Sense Organs</h2>
+    <p><strong>Definition:</strong> Specialized organs/structures that contain receptors capable of detecting specific stimuli and converting them into nerve impulses.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Sensory_receptors_types.png" alt="Sensory receptors" class="diagram-img">
+    <p class="image-caption">Sense organs contain receptors that detect stimuli</p>
+
+    <h3>Quick Overview Table</h3>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Sense Organ</th>
+          <th>Receptor Type</th>
+          <th>Stimulus Detected</th>
+          <th>Defects/Corrections</th>
+        </tr>
+        <tr>
+          <td><strong>Skin</strong></td>
+          <td>Tactile (touch/pressure/temp/pain)</td>
+          <td>Mechanical, thermal, pain</td>
+          <td>Burns/frostbite (avoid extremes)</td>
+        </tr>
+        <tr>
+          <td><strong>Nose</strong></td>
+          <td>Olfactory</td>
+          <td>Chemicals (smell)</td>
+          <td>Anosmia</td>
+        </tr>
+        <tr>
+          <td><strong>Tongue</strong></td>
+          <td>Gustatory (taste buds)</td>
+          <td>Chemicals (taste)</td>
+          <td>Taste blindness</td>
+        </tr>
+        <tr>
+          <td><strong>Eye</strong></td>
+          <td>Photoreceptors (rods & cones)</td>
+          <td>Light</td>
+          <td>Myopia→concave; Hyperopia→convex; Cataract→surgery</td>
+        </tr>
+        <tr>
+          <td><strong>Ear</strong></td>
+          <td>Mechanoreceptors</td>
+          <td>Sound vibrations</td>
+          <td>Deafness→hearing aids/cochlear implants</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <h3>iv. The Eye (Detailed)</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Schematic_diagram_of_the_human_eye_en.svg" alt="Human eye diagram" class="diagram-img">
+    <p class="image-caption">Eye structure: cornea, lens, retina, optic nerve</p>
+
+    <div class="quick-facts">
+      <h4>👁️ Key Structures (What They Do)</h4>
+      <ul>
+        <li><strong>Cornea</strong> → refracts light</li>
+        <li><strong>Iris</strong> → controls pupil size</li>
+        <li><strong>Pupil</strong> → hole that lets light in</li>
+        <li><strong>Lens</strong> → focuses image (accommodation)</li>
+        <li><strong>Retina</strong> → rods (dim) & cones (color/bright)</li>
+        <li><strong>Optic nerve</strong> → carries impulses to brain</li>
+      </ul>
+    </div>
+
+    <div class="highlight-box">
+      <p><strong>How Vision Works:</strong> Light enters → lens focuses on retina → rods/cones convert to impulses → optic nerve → brain interprets image.</p>
+    </div>
+
+    <h4>Common Eye Defects</h4>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Myopia_hyperopia_astigmatism.svg" alt="Myopia and hyperopia diagram" class="diagram-img">
+    <p class="image-caption">Myopia vs Hyperopia (and astigmatism) — how images focus</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Defect</th>
+          <th>Cause</th>
+          <th>Effect</th>
+          <th>Correction</th>
+        </tr>
+        <tr>
+          <td><strong>Myopia</strong> (short-sighted)</td>
+          <td>Eyeball too long</td>
+          <td>Near clear, far blurry</td>
+          <td><strong>Concave</strong> lens</td>
+        </tr>
+        <tr>
+          <td><strong>Hyperopia</strong> (long-sighted)</td>
+          <td>Eyeball too short</td>
+          <td>Far clear, near blurry</td>
+          <td><strong>Convex</strong> lens</td>
+        </tr>
+        <tr>
+          <td><strong>Astigmatism</strong></td>
+          <td>Uneven cornea curvature</td>
+          <td>Blur/distortion</td>
+          <td>Cylindrical lens</td>
+        </tr>
+        <tr>
+          <td><strong>Cataract</strong></td>
+          <td>Cloudy lens</td>
+          <td>Reduced vision</td>
+          <td>Surgery (lens replacement)</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="memory-tip">
+      <strong>🧠 Eye Defects:</strong>
+      <p>Myopia = “My eyes see near” | Hyperopia = “Hyper eyes see far”</p>
+    </div>
+
+    <h3>v. The Ear (Detailed)</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/Ear_anatomy_en.svg" alt="Human ear diagram" class="diagram-img">
+    <p class="image-caption">Ear: outer, middle, inner — hearing + balance</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Part</th>
+          <th>Contains</th>
+          <th>Function</th>
+        </tr>
+        <tr>
+          <td><strong>Outer ear</strong></td>
+          <td>Pinna, ear canal</td>
+          <td>Collects & directs sound</td>
+        </tr>
+        <tr>
+          <td><strong>Middle ear</strong></td>
+          <td>Eardrum, ossicles (hammer, anvil, stirrup)</td>
+          <td>Amplifies vibrations</td>
+        </tr>
+        <tr>
+          <td><strong>Inner ear</strong></td>
+          <td>Cochlea, semicircular canals</td>
+          <td>Hearing (cochlea) & balance (canals)</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="highlight-box">
+      <p><strong>How Hearing Works:</strong> eardrum vibrates → ossicles amplify → oval window → cochlea fluid moves → hair cells → auditory nerve → brain.</p>
+      <p><strong>Balance:</strong> semicircular canals detect head movement/position.</p>
+    </div>
+  </div>
+
+  <!-- C. HORMONAL CONTROL -->
+  <div class="section-card">
+    <h2>🧪 C. Hormonal Control</h2>
+    <p><strong>Definition:</strong> Regulation of body activities through chemical messengers (hormones) produced by endocrine glands and transported in blood to target organs.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Endocrine_system_en.svg" alt="Endocrine system" class="diagram-img">
+    <p class="image-caption">Major endocrine glands (top-to-bottom)</p>
+
+    <div class="memory-tip">
+      <strong>🧠 Glands Mnemonic:</strong>
+      <p>"PATPAG" — Pituitary, Adrenal, Thyroid, Parathyroid, Pancreas, (And) Gonads</p>
+    </div>
+
+    <h3>i. Animal Endocrine System</h3>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Gland</th>
+          <th>Location</th>
+          <th>Hormone(s)</th>
+          <th>Function</th>
+        </tr>
+        <tr>
+          <td><strong>Pituitary</strong> (Master)</td>
+          <td>Base of brain</td>
+          <td>GH, TSH, ACTH, FSH, LH, ADH, Oxytocin</td>
+          <td>Controls other glands; growth; water balance; childbirth</td>
+        </tr>
+        <tr>
+          <td><strong>Thyroid</strong></td>
+          <td>Neck (front of trachea)</td>
+          <td>Thyroxine</td>
+          <td>Metabolism rate; growth/development</td>
+        </tr>
+        <tr>
+          <td><strong>Parathyroid</strong></td>
+          <td>Behind thyroid</td>
+          <td>PTH</td>
+          <td>Calcium/phosphate balance</td>
+        </tr>
+        <tr>
+          <td><strong>Adrenal</strong></td>
+          <td>Above kidneys</td>
+          <td>Adrenaline</td>
+          <td>Fight/flight response</td>
+        </tr>
+        <tr>
+          <td><strong>Pancreas</strong></td>
+          <td>Behind stomach</td>
+          <td>Insulin & Glucagon</td>
+          <td>Blood sugar regulation</td>
+        </tr>
+        <tr>
+          <td><strong>Gonads</strong></td>
+          <td>Pelvic area</td>
+          <td>Estrogen/Progesterone, Testosterone</td>
+          <td>Sexual development + reproduction</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="quick-facts">
+      <h4>🔑 Must-Remember Notes</h4>
+      <ul>
+        <li>Pituitary = <strong>master gland</strong> (controls others)</li>
+        <li>Adrenaline increases heart rate + breathing + glucose release</li>
+        <li>Insulin <strong>lowers</strong> blood sugar; Glucagon <strong>raises</strong> blood sugar</li>
+      </ul>
+    </div>
+
+    <h3>ii. Plant Hormones (Phytohormones)</h3>
+    <p><strong>Definition:</strong> Chemicals produced in plants that regulate growth, development, and responses at very low concentrations.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Phototropism_in_plants.png" alt="Phototropism" class="diagram-img">
+    <p class="image-caption">Phototropism: auxin causes bending toward light</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Hormone</th>
+          <th>Main Functions</th>
+          <th>Applications</th>
+        </tr>
+        <tr>
+          <td><strong>Auxins (IAA)</strong></td>
+          <td>Cell elongation; root/shoot growth; phototropism & geotropism</td>
+          <td>Weed killers (2,4-D); rooting powder</td>
+        </tr>
+        <tr>
+          <td><strong>Gibberellins</strong></td>
+          <td>Stem elongation; seed germination; fruit development</td>
+          <td>Seedless grapes; bigger fruits</td>
+        </tr>
+        <tr>
+          <td><strong>Cytokinins</strong></td>
+          <td>Cell division; delay leaf aging; lateral bud growth</td>
+          <td>Tissue culture; keep cut flowers fresh</td>
+        </tr>
+        <tr>
+          <td><strong>Ethylene</strong></td>
+          <td>Fruit ripening; leaf abscission</td>
+          <td>Artificial ripening of bananas/tomatoes</td>
+        </tr>
+        <tr>
+          <td><strong>ABA</strong></td>
+          <td>Inhibits growth; stomatal closure; seed dormancy</td>
+          <td>Drought stress responses</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <h4>Tropisms (Plant Movements)</h4>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Phototropism</strong> → toward light</li>
+        <li><strong>Geotropism</strong> → response to gravity (roots +, shoots -)</li>
+        <li><strong>Hydrotropism</strong> → toward water</li>
+        <li><strong>Thigmotropism</strong> → response to touch (tendrils)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- D. HOMEOSTASIS -->
+  <div class="section-card">
+    <h2>🏠 D. Homeostasis</h2>
+    <p><strong>Definition:</strong> Maintenance of a constant internal environment (temperature, pH, water, salts, glucose) within narrow limits for proper enzyme/cell function.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Homeostasis.png" alt="Homeostasis concept" class="diagram-img">
+    <p class="image-caption">Homeostasis keeps internal conditions stable</p>
+
+    <h3>i. Body Temperature Regulation</h3>
+    <p><strong>Normal body temperature:</strong> 37°C (98.6°F)</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1f/Hypothalamus.png" alt="Hypothalamus" class="diagram-img">
+    <p class="image-caption">Hypothalamus: body’s thermostat (control center)</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>When Too HOT</th>
+          <th>When Too COLD</th>
+        </tr>
+        <tr>
+          <td>Sweating (evaporation cools skin)</td>
+          <td>Shivering (muscle contraction generates heat)</td>
+        </tr>
+        <tr>
+          <td>Vasodilation (blood vessels widen)</td>
+          <td>Vasoconstriction (blood vessels narrow)</td>
+        </tr>
+        <tr>
+          <td>Hair lies flat (less insulation)</td>
+          <td>Hair stands (goosebumps trap air)</td>
+        </tr>
+        <tr>
+          <td>Less thyroxine produced</td>
+          <td>More thyroxine (increases metabolism)</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="memory-tip">
+      <strong>🧠 Temperature:</strong>
+      <p>"SHIVER when cold, SWEAT when hot"</p>
+    </div>
+
+    <h3>ii. Salt & Water Regulation (Osmoregulation)</h3>
+    <p><strong>Definition:</strong> Regulation of water and salts in body fluids to maintain osmotic balance and proper cell function.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9b/Kidney_nephron_diagram_en.svg" alt="Nephron diagram" class="diagram-img">
+    <p class="image-caption">Kidney nephron: key unit for water/salt regulation</p>
+
+    <div class="quick-facts">
+      <h4>Organs Involved</h4>
+      <ul>
+        <li>Kidneys</li>
+        <li>Skin</li>
+        <li>Lungs</li>
+        <li>Liver</li>
+      </ul>
+    </div>
+
+    <div class="highlight-box">
+      <p><strong>ADH (from pituitary) controls water reabsorption:</strong></p>
+      <ul>
+        <li><strong>Hot day / dehydrated:</strong> more ADH → more water reabsorbed → concentrated urine (small volume)</li>
+        <li><strong>Cold day / hydrated:</strong> less ADH → less water reabsorbed → dilute urine (large volume)</li>
+      </ul>
+      <p><strong>Aldosterone (adrenal cortex):</strong> controls sodium/potassium balance.</p>
+    </div>
+  </div>
+
+  <!-- OBJECTIVES CHECKLIST -->
+  <div class="jamb-alert">
+    <h4>📋 JAMB Candidate Objectives Checklist</h4>
+    <ul>
+      <li>CNS structure & function (brain + spinal cord)</li>
+      <li>Reflex actions and examples</li>
+      <li>Reflex vs voluntary vs conditioned responses</li>
+      <li>Sense organs + defects/corrections</li>
+      <li>Endocrine glands (location + hormone + function)</li>
+      <li>Plant hormones + tropisms</li>
+      <li>Hormones in homeostasis (ADH, insulin/glucagon, thyroxine, adrenaline)</li>
+    </ul>
+  </div>
+
+  <!-- QUICK MEMORY AIDS -->
+  <div class="section-card">
+    <h2>🎯 Quick Memory Aids</h2>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Topic</th>
+          <th>Mnemonic / Tip</th>
+        </tr>
+        <tr>
+          <td>Reflex arc</td>
+          <td>"SR SMER" → Stimulus → Receptor → Sensory → Motor → Effector → Response</td>
+        </tr>
+        <tr>
+          <td>Brain parts</td>
+          <td>"CCM" → Cerebrum, Cerebellum, Medulla</td>
+        </tr>
+        <tr>
+          <td>Eye defects</td>
+          <td>Myopia = near (concave) | Hyperopia = far (convex)</td>
+        </tr>
+        <tr>
+          <td>Plant hormones</td>
+          <td>Auxin (Any direction) | Gibberellin (Growth/Germination) | Cytokinin (Cell division) | Ethylene (Eating/ripening)</td>
+        </tr>
+        <tr>
+          <td>Temperature</td>
+          <td>SHIVER when cold, SWEAT when hot</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+  </div>
+
+  <!-- COMMON TRAPS -->
+  <div class="jamb-alert">
+    <h4>⚠️ Common JAMB Traps</h4>
+    <ul>
+      <li>Reflex actions do <strong>not</strong> involve the brain initially</li>
+      <li>Pituitary is the <strong>master gland</strong></li>
+      <li>Auxins cause <strong>cell elongation</strong> (not cell division)</li>
+      <li>Adrenaline = <strong>emergency</strong> hormone</li>
+      <li>Homeostasis includes both <strong>temperature</strong> and <strong>osmoregulation</strong></li>
+    </ul>
+  </div>
+
+  <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+    🌟 If you can draw the reflex arc + label the eye + match hormones to glands, you’re set for JAMB! 🌟
+  </p>
+
+  <button class="explore-btn" onclick="alert('Practice JAMB past questions on Coordination & Control (Chapter 9)!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIOLOGY  - Symbiotic Interactions & Nutrient Cycling</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    :root {
+      --background: #1e1e2f;
+      --shadow-in: #171723;
+      --shadow-out: #25253b;
+      --text-primary: #f0f0ff;
+      --text-secondary: #c0c0e0;
+      --accent: #1db954;
+      --card-bg: #2a2a3f;
+    }
+
+    body.light {
+      --background: #e0e0e0;
+      --shadow-in: #bebebe;
+      --shadow-out: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #444;
+      --accent: #1db954;
+      --card-bg: #f8f8f8;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      border-radius: 20px;
+      box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out);
+      overflow: hidden;
+      position: relative;
+      height: 700px;
+      overflow-y: auto;
+      padding-top: 70px;
+      padding-bottom: 70px;
+    }
+
+    .neumorphic {
+      background: var(--background);
+      box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out);
+      border-radius: 15px;
+    }
+
+    .neumorphic-btn {
+      background: var(--background);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      cursor: pointer;
+      color: var(--text-primary);
+      font-size: 18px;
+    }
+
+    .neumorphic-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 5px 10px var(--shadow-in);
+      z-index: 20;
+    }
+
+    .top-bar .header {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+
+    .top-bar .right-icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-bar .profile-upload {
+      position: relative;
+    }
+
+    .top-bar .profile-upload input {
+      opacity: 0;
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 20px 16px;
+      line-height: 1.6;
+    }
+
+    .main-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .main-header h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .main-header p.subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .welcome-note {
+      background: var(--card-bg);
+      padding: 28px 20px;
+      border-radius: 20px;
+      box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out);
+      margin-bottom: 30px;
+    }
+
+    .welcome-note h2 {
+      font-size: 22px;
+      margin: 32px 0 16px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .welcome-note h3 {
+      font-size: 18px;
+      margin: 24px 0 12px;
+      color: var(--accent);
+    }
+
+    .welcome-note p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .welcome-note ul, .welcome-note ol {
+      padding-left: 24px;
+      margin: 16px 0;
+    }
+
+    .welcome-note li {
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .welcome-note .highlight {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .diagram-img {
+      width: 100%;
+      border-radius: 12px;
+      margin: 16px 0 8px;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .organelle-list {
+      margin: 16px 0;
+      padding: 12px;
+      background: rgba(0,0,0,0.1);
+      border-radius: 12px;
+    }
+
+    .organelle-list li strong {
+      color: var(--accent);
+    }
+
+    .welcome-note table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .welcome-note th,
+    .welcome-note td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 14px;
+    }
+
+    .welcome-note th {
+      background: rgba(29, 185, 84, 0.2);
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .welcome-note tr:last-child td {
+      border-bottom: none;
+    }
+
+    .explore-btn {
+      background: var(--accent);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      color: #000;
+      cursor: pointer;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      font-size: 16px;
+      margin: 24px auto 0;
+      display: block;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .explore-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -5px 10px var(--shadow-in);
+      z-index: 20;
+    }
+
+    .nav-bar .nav-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .nav-bar .nav-item button {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.center button {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      background: var(--accent);
+      box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      color: #000;
+    }
+
+    .nav-bar .nav-item.active button {
+      background: var(--accent);
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .nav-bar .nav-item p {
+      display: none;
+      font-size: 12px;
+      margin-top: 5px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.active p {
+      display: block;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <!-- Top Fixed Bar -->
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn profile-upload">
+          📷
+          <input type="file" accept="image/*" id="profile-upload">
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+      <div class="main-header">
+        <h1>Level Up Your Biology Knowledge (ECOLOGY)! 🚀</h1>
+        <p class="subtitle">–Symbiotic Interactions & Nutrient Cycling</p>
+      </div>
+
+      <div class="welcome-note neumorphic">
+        <h2>1. Types of Symbiotic Interactions</h2>
+        <p>Symbiotic interactions are close, long-term relationships between different species. JAMB loves asking for examples and the type of benefit/harm.</p>
+
+        <h3>Mutualism – Both benefit</h3>
+        <ul>
+          <li>Bees and flowers (bee gets nectar, flower gets pollinated)</li>
+          <li><strong>Rhizobium bacteria</strong> in root nodules of legumes (beans, cowpea, groundnut) – bacteria fix nitrogen, plant gives sugar</li>
+          <li>Lichen (algae + fungus)</li>
+        </ul>
+
+        <h3>Commensalism – One benefits, other unaffected</h3>
+        <ul>
+          <li>Cattle egrets and cattle (egrets eat insects stirred by cattle)</li>
+          <li>Orchids growing on tree trunks</li>
+          <li>Remora fish on sharks</li>
+        </ul>
+
+        <h3>Parasitism – One benefits, other harmed</h3>
+        <ul>
+          <li>Ticks/lice on dogs or cattle</li>
+          <li><strong>Mistletoe</strong> on cocoa or mango trees</li>
+          <li>Tapeworm in human intestine</li>
+        </ul>
+
+        <h3>Saprophytism – Feed on dead matter</h3>
+        <ul>
+          <li>Mushrooms and fungi on rotting wood</li>
+          <li>Bacteria breaking down dead leaves/animals</li>
+        </ul>
+
+        <h3>Competition, Predation & Others</h3>
+        <ul>
+          <li><strong>Competition</strong> – both harmed (plants fighting for light in a farm)</li>
+          <li><strong>Predation</strong> – lion eats zebra</li>
+          <li><strong>Amensalism</strong> – penicillin mould kills bacteria</li>
+        </ul>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Lichen.jpg/800px-Lichen.jpg" alt="Lichen – perfect example of mutualism" class="diagram-img">
+
+        <h2>2. Energy Flow in the Ecosystem</h2>
+        <p>Energy flows in one direction from the sun and is lost as heat at each step (only \~10% transferred).</p>
+
+        <h3>Food Chains</h3>
+        <p>Linear sequence showing who eats whom.</p>
+        <p>Example (savanna): Grass → Grasshopper → Frog → Snake → Hawk</p>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Food_chain.svg/800px-Food_chain.svg.png" alt="Simple food chain diagram" class="diagram-img">
+
+        <h3>Food Webs</h3>
+        <p>Many food chains linked together – more realistic.</p>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Food_web.svg/800px-Food_web.svg.png" alt="Complex food web diagram" class="diagram-img">
+
+        <h3>Trophic Levels</h3>
+        <ul>
+          <li><strong>Producers</strong> (Level 1) – green plants</li>
+          <li><strong>Primary consumers</strong> (Level 2) – herbivores</li>
+          <li><strong>Secondary consumers</strong> (Level 3) – carnivores</li>
+          <li><strong>Tertiary consumers</strong> (Level 4) – top predators</li>
+        </ul>
+
+        <h2>3. Nutrient Cycling in Nature</h2>
+
+        <h3>Carbon Cycle</h3>
+        <p>Carbon moves between atmosphere, organisms and oceans.</p>
+        <ul>
+          <li>Plants take CO₂ during <strong>photosynthesis</strong></li>
+          <li>Animals and plants release CO₂ during <strong>respiration</strong></li>
+          <li>Decomposers and burning fossil fuels release more CO₂</li>
+        </ul>
+        <p><strong>Significance</strong>: Maintains O₂/CO₂ balance. Excess CO₂ causes global warming.</p>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Carbon_cycle.svg/800px-Carbon_cycle.svg.png" alt="Carbon cycle diagram" class="diagram-img">
+
+        <h3>Water Cycle</h3>
+        <p>Water evaporates, condenses, rains, and returns to oceans. It carries nutrients and supports all other cycles.</p>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Water_cycle.svg/800px-Water_cycle.svg.png" alt="Water cycle diagram" class="diagram-img">
+
+        <h3>Nitrogen Cycle</h3>
+        <p>78% of air is nitrogen but plants cannot use it directly.</p>
+        <ul>
+          <li><strong>Nitrogen fixation</strong> by <strong>Rhizobium</strong> in root nodules of legumes (beans, groundnut)</li>
+          <li>Nitrification → nitrates for plants</li>
+          <li>Decomposers return nitrogen to soil</li>
+        </ul>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Nitrogen_cycle.svg/800px-Nitrogen_cycle.svg.png" alt="Nitrogen cycle diagram showing Rhizobium role" class="diagram-img">
+
+        <p style="text-align: center; font-size: 17px; margin: 32px 0; font-weight: bold;">
+          Great job 🌟 You now master JAMB Topic 2 inside out!
+        </p>
+
+        <p style="text-align: center; margin: 20px 0;">Access JAMB questions related to this passage</p>
+        <button class="explore-btn" onclick="window.location.href='question.html'">Start JAMB Quiz Now!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Nav Bar -->
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    // Profile Upload placeholder
+    document.getElementById('profile-upload').addEventListener('change', (e) => {
+      if (e.target.files[0]) {
+        console.log('Profile picture selected!');
+      }
+    });
+  </script>
+</body>
+</html>

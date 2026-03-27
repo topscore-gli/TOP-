@@ -1,0 +1,545 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Distribution of Organisms</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 500px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 700px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+    .comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+    .comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+    .comparison-card li { margin-bottom: 4px; font-size: 12px; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+    .image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">BIOLOGY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>🌍 Chapter 13: Distribution of Organisms</h1>
+    <p class="subtitle">Abiotic + Biotic factors, measuring tools, practice Q&A, and mnemonics</p>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="section-card">
+    <h2>🎯 Overview</h2>
+    <p><strong>Distribution of organisms</strong> refers to where living things are found and why they are found there.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8b/Biomes_of_the_world.png" alt="World biomes map" class="diagram-img">
+    <p class="image-caption">Different biomes (habitats) support different organisms</p>
+
+    <div class="quick-facts">
+      <h4>Two Main Categories</h4>
+      <ul>
+        <li><strong>Abiotic factors</strong> (non-living)</li>
+        <li><strong>Biotic factors</strong> (living interactions)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PART A -->
+  <div class="section-card">
+    <h2>🔵 Part A: Abiotic Factors (Non-Living)</h2>
+    <p><strong>Definition:</strong> Abiotic factors are the physical and chemical (non-living) conditions of the environment that affect survival, growth, and distribution of organisms.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Desert_and_rainforest_contrast.jpg" alt="Desert and rainforest contrast" class="diagram-img">
+    <p class="image-caption">Abiotic conditions shape habitats (e.g., deserts vs rainforests)</p>
+
+    <h3>1. Temperature</h3>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr><th>Aspect</th><th>Details</th></tr>
+        <tr><td><strong>Effect</strong></td><td>Affects metabolic rate, enzyme activity, and survival</td></tr>
+        <tr><td><strong>Distribution pattern</strong></td><td>Tropical organisms → warm regions; Arctic organisms → cold regions; migration to avoid extremes</td></tr>
+        <tr><td><strong>Adaptations</strong></td><td>Fur/feathers; hibernation/aestivation; cold-blooded vs warm-blooded</td></tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5b/Polar_bear_-_Alaska.jpg" alt="Polar bear adaptation" class="diagram-img">
+    <p class="image-caption">Insulation (fur/fat) helps animals survive cold temperatures</p>
+
+    <h3>2. Rainfall (Precipitation)</h3>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr><th>Aspect</th><th>Details</th></tr>
+        <tr><td><strong>Effect</strong></td><td>Determines water availability for life processes</td></tr>
+        <tr><td><strong>Distribution pattern</strong></td><td>Rainforest (high); Desert (low); Savannah (moderate wet/dry)</td></tr>
+        <tr><td><strong>Adaptations</strong></td><td>Xerophytes (thick cuticle, sunken stomata); Hydrophytes (aquatic plants)</td></tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Saguaro_cactus_in_Saguaro_National_Park.jpg" alt="Xerophyte cactus" class="diagram-img">
+    <p class="image-caption">Xerophytes (e.g., cactus) reduce water loss in dry regions</p>
+
+    <h3>3. Relative Humidity</h3>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr><th>Aspect</th><th>Details</th></tr>
+        <tr><td><strong>Effect</strong></td><td>Water vapor in air; affects transpiration rate</td></tr>
+        <tr><td><strong>Distribution pattern</strong></td><td>High humidity: rainforests; Low humidity: deserts</td></tr>
+        <tr><td><strong>Adaptations</strong></td><td>Nocturnal behavior; burrowing; waxy cuticle</td></tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <h3>4. Wind Speed & Direction</h3>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr><th>Aspect</th><th>Details</th></tr>
+        <tr><td><strong>Effects</strong></td><td>Increases transpiration; aids pollen/seed dispersal; causes soil erosion</td></tr>
+        <tr><td><strong>Distribution pattern</strong></td><td>Windward mountain side = wet; leeward side = dry (rain shadow effect)</td></tr>
+        <tr><td><strong>Adaptations</strong></td><td>Flexible stems; winged seeds/fruits</td></tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Maple_samara.jpg" alt="Winged seed samara" class="diagram-img">
+    <p class="image-caption">Winged seeds (e.g., maple samara) are dispersed by wind</p>
+
+    <h3>5. Altitude (Elevation)</h3>
+    <div class="quick-facts">
+      <h4>Key Rule</h4>
+      <ul>
+        <li>Temperature drops about <strong>6.5°C per 1000m</strong> ascent (lapse rate)</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Vegetation_zonation_on_mountain.svg" alt="Altitudinal zonation" class="diagram-img">
+    <p class="image-caption">Altitude creates vegetation zones on mountains</p>
+
+    <h3>6. Salinity</h3>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Water Type</th>
+          <th>Salt Level</th>
+          <th>Examples / Organisms</th>
+          <th>Key Point</th>
+        </tr>
+        <tr>
+          <td><strong>Freshwater</strong></td>
+          <td>&lt;0.5%</td>
+          <td>Fish, amphibians, aquatic plants</td>
+          <td>Low salt</td>
+        </tr>
+        <tr>
+          <td><strong>Brackish</strong></td>
+          <td>0.5–30%</td>
+          <td>Mangroves, estuaries</td>
+          <td>Mixed salt</td>
+        </tr>
+        <tr>
+          <td><strong>Marine</strong></td>
+          <td>30–35%</td>
+          <td>Most fish, corals, whales</td>
+          <td>High salt</td>
+        </tr>
+        <tr>
+          <td><strong>Hypersaline</strong></td>
+          <td>&gt;40%</td>
+          <td>Salt lakes; halophilic bacteria</td>
+          <td>Extreme salt</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Osmoregulation_freshwater_marine_fish.svg" alt="Osmoregulation in fish" class="diagram-img">
+    <p class="image-caption">Osmoregulation: freshwater vs marine fish strategies</p>
+
+    <h3>7. Turbidity (Water Cloudiness)</h3>
+    <p><strong>Definition:</strong> Turbidity is the cloudiness of water caused by suspended particles, reducing light penetration.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Secchi_disk.jpg" alt="Secchi disc" class="diagram-img">
+    <p class="image-caption">Secchi disc: used to measure turbidity/water clarity</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr><th>Aspect</th><th>Details</th></tr>
+        <tr><td><strong>Effect</strong></td><td>Blocks sunlight → reduces photosynthesis in deeper water</td></tr>
+        <tr><td><strong>Distribution pattern</strong></td><td>Clear lakes: deeper photosynthesis zone; estuaries: limited plant growth</td></tr>
+        <tr><td><strong>Measurement</strong></td><td>Secchi disc lowered until it becomes invisible</td></tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <h3>8. pH (Acidity/Alkalinity)</h3>
+    <p><strong>Definition:</strong> pH measures how acidic or alkaline an environment is, affecting enzymes and nutrient availability.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2b/PH_scale.svg" alt="pH scale" class="diagram-img">
+    <p class="image-caption">pH scale: acidic (&lt;7), neutral (7), alkaline (&gt;7)</p>
+
+    <h3>9. Edaphic Factors (Soil Conditions)</h3>
+    <p><strong>Definition:</strong> Edaphic factors are soil properties (texture, pH, nutrients, depth, mineral content, topography) that affect plant growth and therefore animal distribution too.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Soil_texture_triangle.png" alt="Soil texture triangle" class="diagram-img">
+    <p class="image-caption">Soil texture (sand/silt/clay) affects drainage and plant types</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Factor</th>
+          <th>Effect on Distribution</th>
+        </tr>
+        <tr>
+          <td><strong>Soil texture</strong></td>
+          <td>Sandy → drainage (cacti); Clay → waterlogging (rice paddies)</td>
+        </tr>
+        <tr>
+          <td><strong>Soil pH</strong></td>
+          <td>Acidic → conifers; Neutral → many crops</td>
+        </tr>
+        <tr>
+          <td><strong>Soil nutrients</strong></td>
+          <td>Fertile alluvial soils → dense vegetation/agriculture</td>
+        </tr>
+        <tr>
+          <td><strong>Soil depth</strong></td>
+          <td>Shallow → grasslands; Deep → forests</td>
+        </tr>
+        <tr>
+          <td><strong>Topography</strong></td>
+          <td>Slope affects drainage and erosion</td>
+        </tr>
+        <tr>
+          <td><strong>Mineral content</strong></td>
+          <td>Laterite → savanna; Loamy → crop fields</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+  </div>
+
+  <!-- PART B -->
+  <div class="section-card">
+    <h2>🟢 Part B: Measuring Abiotic Factors (JAMB Focus)</h2>
+    <p><strong>Definition:</strong> Measuring abiotic factors means using instruments to record environmental conditions that influence organism distribution.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Weather_station_instruments.jpg" alt="Weather instruments" class="diagram-img">
+    <p class="image-caption">Environmental instruments help measure abiotic factors</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Equipment</th>
+          <th>Measures</th>
+          <th>How to Use</th>
+        </tr>
+        <tr>
+          <td><strong>Thermometer</strong></td>
+          <td>Temperature</td>
+          <td>Place in shade, wait, read scale</td>
+        </tr>
+        <tr>
+          <td><strong>Rain gauge</strong></td>
+          <td>Rainfall</td>
+          <td>Collect in open area; read mm collected</td>
+        </tr>
+        <tr>
+          <td><strong>Secchi disc</strong></td>
+          <td>Turbidity</td>
+          <td>Lower until pattern disappears; note depth</td>
+        </tr>
+        <tr>
+          <td><strong>Hygrometer</strong></td>
+          <td>Relative humidity</td>
+          <td>Wet-bulb vs dry-bulb temperature difference</td>
+        </tr>
+        <tr>
+          <td><strong>Wind vane / Anemometer</strong></td>
+          <td>Wind direction / speed</td>
+          <td>Vane points to wind source; cups rotate for speed</td>
+        </tr>
+        <tr>
+          <td><strong>pH meter</strong></td>
+          <td>pH</td>
+          <td>Calibrate, dip probe, read display</td>
+        </tr>
+        <tr>
+          <td><strong>Soil testing kit</strong></td>
+          <td>Soil pH, NPK</td>
+          <td>Mix soil with water; compare color change</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="memory-tip">
+      <strong>🧠 Equipment Mnemonic:</strong>
+      <p>"TRH-SA" → Thermometer, Rain gauge, Hygrometer, Secchi disc, Anemometer</p>
+    </div>
+  </div>
+
+  <!-- PART C -->
+  <div class="section-card">
+    <h2>🟡 Part C: Biotic Factors (Living)</h2>
+    <p><strong>Definition:</strong> Biotic factors are living interactions between organisms that affect survival and determine where organisms can live.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5a/Ecological_interactions.png" alt="Ecological interactions" class="diagram-img">
+    <p class="image-caption">Biotic interactions: competition, predation, parasitism, mutualism</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Biotic Factor</th>
+          <th>Explanation</th>
+          <th>Examples</th>
+        </tr>
+        <tr>
+          <td><strong>Competition</strong></td>
+          <td>Organisms compete for limited resources</td>
+          <td>Lions vs hyenas for prey; oak vs maple for sunlight; male seals for territory; maize for nutrients</td>
+        </tr>
+        <tr>
+          <td><strong>Predation</strong></td>
+          <td>One organism kills and eats another</td>
+          <td>Lion → wildebeest; snake → mouse; hawk → rabbit; frog → insect</td>
+        </tr>
+        <tr>
+          <td><strong>Parasitism</strong></td>
+          <td>One benefits at the expense of another</td>
+          <td>Tapeworm in humans; ticks on cattle; mistletoe on trees; Plasmodium in blood</td>
+        </tr>
+        <tr>
+          <td><strong>Mutualism</strong></td>
+          <td>Both organisms benefit</td>
+          <td>Bees & flowers; Rhizobium & legumes; oxpecker & rhino; lichens</td>
+        </tr>
+        <tr>
+          <td><strong>Human activities</strong></td>
+          <td>Actions that alter habitats</td>
+          <td>Deforestation; urbanization; pesticides; pollution; invasive species (water hyacinth)</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="memory-tip">
+      <strong>🧠 Biotic Mnemonic:</strong>
+      <p>"COPPER" → Competition, Organisms/Humans, Parasitism, Predation, Environmental impact, Relationships (Mutualism)</p>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Rhizobium_nodules_on_legume_roots.jpg" alt="Rhizobium nodules" class="diagram-img">
+    <p class="image-caption">Mutualism example: Rhizobium bacteria in legume root nodules</p>
+  </div>
+
+  <!-- QUICK REVISION -->
+  <div class="section-card">
+    <h2>📋 Quick Revision Table</h2>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr><th>Factor</th><th>Key Point</th></tr>
+        <tr><td>Temperature</td><td>Metabolic rates; geographic distribution</td></tr>
+        <tr><td>Rainfall</td><td>Water availability; vegetation types</td></tr>
+        <tr><td>Humidity</td><td>Transpiration rates; habitat suitability</td></tr>
+        <tr><td>Wind</td><td>Dispersal, erosion, microclimate effects</td></tr>
+        <tr><td>Altitude</td><td>Temperature gradient; vegetation zones</td></tr>
+        <tr><td>Salinity</td><td>Osmoregulation challenges; aquatic distribution</td></tr>
+        <tr><td>Turbidity</td><td>Light penetration; photosynthesis depth</td></tr>
+        <tr><td>pH</td><td>Enzyme activity; nutrient availability</td></tr>
+        <tr><td>Edaphic</td><td>Soil determines plant community type</td></tr>
+        <tr><td>Competition</td><td>Resource limitation; niche differentiation</td></tr>
+        <tr><td>Human impact</td><td>Major modern threat to distribution</td></tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+  </div>
+
+  <!-- EXAM TIPS -->
+  <div class="jamb-alert">
+    <h4>⚡ Exam Tips</h4>
+    <ul>
+      <li>Know the equipment: Thermometer, Rain gauge, Secchi disc</li>
+      <li>Always link factor → adaptation (how organisms cope)</li>
+      <li>Human activities: know clear examples (deforestation, pollution, invasive species)</li>
+      <li>Altitude lapse rate: <strong>6.5°C per 1000m</strong></li>
+      <li>Edaphic shortcut: <strong>T.R.O.P.H.I.C</strong> (Texture, pH, Rock type, Organic matter, Parent material, Humus, Ion exchange, Climate/Topography)</li>
+    </ul>
+  </div>
+
+  <!-- PRACTICE QUESTIONS + ANSWERS -->
+  <div class="section-card">
+    <h2>🎯 Practice Questions (With Answers)</h2>
+
+    <h3>1) Coral reefs distribution</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Coral_reef_in_the_Red_Sea.jpg" alt="Coral reef" class="diagram-img">
+    <p class="image-caption">Coral reefs thrive in shallow, clear, warm waters</p>
+    <div class="highlight-box">
+      <p><strong>Answer:</strong> Coral reefs need shallow water (sunlight for zooxanthellae), clear water (low turbidity), and warm tropical temperatures (20–28°C) for metabolism and CaCO₃ deposition.</p>
+    </div>
+
+    <h3>2) Desert plants reduced leaves</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Opuntia_ficus-indica_flowers.jpg" alt="Cactus spines" class="diagram-img">
+    <p class="image-caption">Spines = reduced leaves to reduce water loss</p>
+    <div class="highlight-box">
+      <p><strong>Answer:</strong> Reduced leaves lower surface area and reduce transpiration. Thick cuticle and sunken stomata also reduce water loss in dry conditions.</p>
+    </div>
+
+    <h3>3) Measuring turbidity (Secchi disc)</h3>
+    <div class="highlight-box">
+      <p><strong>Answer:</strong> Lower the Secchi disc until it disappears; record that depth. Shallow disappearance = high turbidity; deep disappearance = clear water.</p>
+    </div>
+
+    <h3>4) Human activities reducing forests</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/9b/Deforestation_in_Brazil.jpg" alt="Deforestation" class="diagram-img">
+    <p class="image-caption">Deforestation reduces forest habitats and distribution</p>
+    <div class="highlight-box">
+      <p><strong>Answer:</strong> Deforestation, urbanization, agricultural expansion (also: pollution, bush burning, mining).</p>
+    </div>
+
+    <h3>5) Freshwater fish die in marine water</h3>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1f/Osmosis_diagram.png" alt="Osmosis" class="diagram-img">
+    <p class="image-caption">Osmosis causes water/salt movement across membranes</p>
+    <div class="highlight-box">
+      <p><strong>Answer:</strong> Sudden change causes osmotic shock. Freshwater fish (body saltier than water) aren’t adapted to salty water; they lose water and gain salt too fast → dehydration and organ failure.</p>
+    </div>
+  </div>
+
+  <!-- MNEMONICS -->
+  <div class="section-card">
+    <h2>🧠 Memory Aids / Mnemonics</h2>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr><th>Mnemonic</th><th>What It Helps You Remember</th></tr>
+        <tr><td><strong>TEMP WISHES</strong></td><td>Abiotic factors: Temperature, Edaphic, Moisture/Humidity, pH, Wind, Illumination (turbidity/light), Salinity, Speed (current), Elevation, Sunlight/Rainfall</td></tr>
+        <tr><td><strong>COPPER</strong></td><td>Biotic: Competition, Organisms/Humans, Parasitism, Predation, Environmental impact, Relationships (Mutualism)</td></tr>
+        <tr><td><strong>TRH-SA</strong></td><td>Equipment: Thermometer, Rain gauge, Hygrometer, Secchi disc, Anemometer</td></tr>
+        <tr><td><strong>FACTORS</strong></td><td>Mixed master reminder: F-abiotic, A-atmosphere, C-competition, T-temperature, O-organisms, R-rainfall, S-salinity/soil</td></tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="memory-tip">
+      <strong>🧠 Last Line to Remember:</strong>
+      <p>"ABIOTIC = non-living, BIOTIC = living interactions."</p>
+    </div>
+  </div>
+
+  <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+    🌟 Master the factors + link them to adaptations, and Chapter 13 becomes easy marks. 🌟
+  </p>
+
+  <button class="explore-btn" onclick="alert('Practice JAMB past questions on Distribution of Organisms (Chapter 13)!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

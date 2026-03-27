@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIOLOGY - Co-ordination and Control (Detailed JAMB Notes)</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Arial',sans-serif; }
+    :root {
+      --background:#1e1e2f; --shadow-in:#171723; --shadow-out:#25253b;
+      --text-primary:#f0f0ff; --text-secondary:#c0c0e0; --accent:#1db954; --card-bg:#2a2a3f;
+    }
+    body.light {
+      --background:#e0e0e0; --shadow-in:#bebebe; --shadow-out:#ffffff;
+      --text-primary:#1a1a1a; --text-secondary:#444; --accent:#1db954; --card-bg:#f8f8f8;
+    }
+    body { background:var(--background); color:var(--text-primary); min-height:100vh; overflow-x:hidden; }
+    .container {
+      width:100%; max-width:400px; margin:0 auto; background:var(--background);
+      border-radius:20px; box-shadow:10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out);
+      overflow:hidden; height:700px; overflow-y:auto; padding-top:70px; padding-bottom:70px;
+    }
+    .neumorphic { background:var(--background); box-shadow:5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius:15px; }
+    .neumorphic-btn {
+      background:var(--background); border:none; border-radius:50%; width:40px; height:40px;
+      display:flex; align-items:center; justify-content:center; box-shadow:3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      cursor:pointer; color:var(--text-primary); font-size:18px;
+    }
+    .neumorphic-btn:active { box-shadow:inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); }
+    .top-bar {
+      position:fixed; top:0; width:100%; max-width:400px; background:var(--background); padding:15px;
+      display:flex; align-items:center; justify-content:space-between; box-shadow:0 5px 10px var(--shadow-in); z-index:20;
+    }
+    .top-bar .header { font-size:18px; font-weight:bold; color:var(--text-primary); }
+    .top-bar .right-icons { display:flex; gap:10px; }
+    .top-bar .profile-upload { position:relative; }
+    .top-bar .profile-upload input { opacity:0; position:absolute; width:40px; height:40px; cursor:pointer; }
+    .content { padding:20px 16px; line-height:1.6; }
+    .main-header { text-align:center; margin-bottom:32px; }
+    .main-header h1 { font-size:30px; margin-bottom:8px; color:var(--accent); font-weight:800; }
+    .main-header p.subtitle { font-size:16px; color:var(--text-secondary); }
+    .welcome-note {
+      background:var(--card-bg); padding:28px 20px; border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom:30px;
+    }
+    .welcome-note h2 { font-size:22px; margin:32px 0 16px; color:var(--accent); font-weight:bold; }
+    .welcome-note h3 { font-size:18px; margin:24px 0 12px; color:var(--accent); }
+    .welcome-note p { margin-bottom:16px; font-size:15px; color:var(--text-primary); }
+    .welcome-note ul, .welcome-note ol { padding-left:24px; margin:16px 0; }
+    .welcome-note li { margin-bottom:10px; font-size:15px; }
+    .diagram-img {
+      width:100%; border-radius:12px; margin:16px 0 8px;
+      box-shadow:3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+    .table-wrapper { overflow-x:auto; margin:16px 0; -webkit-overflow-scrolling:touch; }
+    .welcome-note table {
+      width:100%; min-width:520px; border-collapse:collapse; background:var(--card-bg);
+      border-radius:12px; overflow:hidden; box-shadow:3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+    .welcome-note th, .welcome-note td {
+      padding:12px 15px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.1); font-size:14px; white-space:nowrap;
+    }
+    .welcome-note th { background:rgba(29,185,84,0.2); color:var(--accent); font-weight:bold; }
+    .welcome-note tr:last-child td { border-bottom:none; }
+    details { margin:16px 0; border-radius:12px; overflow:hidden; }
+    summary {
+      padding:12px 16px; background:rgba(29,185,84,0.15); cursor:pointer;
+      font-weight:bold; color:var(--accent);
+    }
+    details[open] summary { background:rgba(29,185,84,0.3); }
+    .quiz-question { margin:20px 0; padding:16px; background:rgba(0,0,0,0.15); border-radius:12px; }
+    .explore-btn {
+      background:var(--accent); border:none; padding:10px 20px; border-radius:20px; color:#000;
+      cursor:pointer; box-shadow:3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      font-size:16px; margin:24px auto 0; display:block; text-align:center; font-weight:bold;
+    }
+    .explore-btn:active { box-shadow:inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); }
+    .nav-bar {
+      position:fixed; bottom:0; width:100%; max-width:400px; background:var(--background); padding:10px;
+      display:flex; justify-content:space-around; box-shadow:0 -5px 10px var(--shadow-in); z-index:20;
+    }
+    .nav-bar .nav-item { text-align:center; position:relative; }
+    .nav-bar .nav-item button { width:40px; height:40px; font-size:18px; color:var(--text-primary); }
+    .nav-bar .nav-item.center button {
+      width:50px; height:50px; font-size:24px; background:var(--accent);
+      box-shadow:0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color:#000;
+    }
+    .nav-bar .nav-item.active button { background:var(--accent); box-shadow:inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); }
+    .nav-bar .nav-item p { display:none; font-size:12px; margin-top:5px; color:var(--text-primary); }
+    .nav-bar .nav-item.active p { display:block; }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn profile-upload">📷<input type="file" accept="image/*" id="profile-upload"></button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>Co-ordination and Control</h1>
+        <p class="subtitle">JAMB Biology – Detailed & Easy-to-Learn Notes</p>
+      </div>
+
+      <div class="welcome-note neumorphic">
+        <h2>1. Introduction</h2>
+        <p>Co-ordination and control enable organisms to detect changes (<strong>stimuli</strong>) and respond appropriately to maintain <strong>homeostasis</strong>.</p>
+        <ul>
+          <li><strong>Nervous system</strong> → rapid electrical impulses</li>
+          <li><strong>Endocrine (hormonal) system</strong> → slower chemical messages via blood</li>
+        </ul>
+        <p>Plants use phytohormones for growth and responses.</p>
+
+        <h2>2. Nervous System</h2>
+
+        
+Central Nervous System (CNS) – Brain & Spinal Cord
+          <ul>
+            <li><strong>Cerebrum</strong> – largest part; voluntary actions, intelligence, memory, reasoning, interpretation of senses</li>
+            <li><strong>Cerebellum</strong> – balance, posture, coordination of voluntary movements</li>
+            <li><strong>Medulla oblongata</strong> – involuntary vital functions: breathing, heart rate, blood pressure, swallowing</li>
+            <li><strong>Hypothalamus</strong> – links nervous & endocrine systems; regulates body temperature, hunger, thirst, sleep-wake cycle</li>
+            <li><strong>Spinal cord</strong> – grey matter (H-shaped – cell bodies) inside, white matter (myelinated axons) outside; relays impulses & handles reflexes</li>
+          </ul>
+
+        <img src="https://www.hopkinsmedicine.org/-/media/images/health-conditions/anatomy-of-the-brain.jpg" alt="Labelled diagram of human brain showing cerebrum, cerebellum, medulla, hypothalamus" class="diagram-img">
+
+        
+Peripheral Nervous System (PNS) & Neuron Structure
+          <p><strong>PNS</strong>: 12 cranial nerves + 31 spinal nerves</p>
+          <ul>
+            <li><strong>Somatic</strong> → voluntary control of skeletal muscles</li>
+            <li><strong>Autonomic</strong> → involuntary
+              <ul>
+                <li>Sympathetic → fight or flight (↑ heart rate, pupil dilation)</li>
+                <li>Parasympathetic → rest & digest (↓ heart rate, digestion)</li>
+              </ul>
+            </li>
+          </ul>
+          <p><strong>Neuron parts</strong>:</p>
+          <ul>
+            <li>Dendrites → receive signals</li>
+            <li>Cell body → nucleus & organelles</li>
+            <li>Axon → long fibre that carries impulse away (myelin sheath + nodes of Ranvier = saltatory conduction → faster)</li>
+            <li>Axon terminals → release neurotransmitters (e.g. acetylcholine) at synapse</li>
+          </ul>
+
+        <img src="https://askabiologist.asu.edu/sites/default/files/styles/large/public/Neuron_anatomy.png" alt="Detailed labelled diagram of a neuron" class="diagram-img">
+
+ 
+Reflex Action & Reflex Arc
+          <p>Fast, involuntary, protective response (usually spinal, minimal brain involvement).</p>
+          <p><strong>Pathway (reflex arc)</strong>: Receptor → Sensory (afferent) neuron → Relay neuron (spinal cord) → Motor (efferent) neuron → Effector (muscle or gland)</p>
+          <p>Examples: knee jerk, withdrawal from hot object, blinking when dust enters eye.</p>
+
+        <img src="https://www.merckmanuals.com/-/media/manual/home/images/reflex_arc_a_no_brainer.jpg" alt="Labelled spinal reflex arc diagram – knee jerk example" class="diagram-img">
+
+        <h2>3. Sense Organs – Detailed Key Parts & JAMB Defects</h2>
+
+  
+Key Parts of the Five Sense Organs
+
+          <p><strong>1. Skin (Tactile – Touch, Pressure, Temperature, Pain)</strong></p>
+          <ul>
+            <li><strong>Meissner's corpuscles</strong> – light touch, low-frequency vibration, texture</li>
+            <li><strong>Pacinian corpuscles</strong> – deep pressure, high-frequency vibration</li>
+            <li><strong>Merkel discs</strong> – sustained light pressure, fine detail</li>
+            <li><strong>Ruffini endings</strong> – skin stretch, sustained pressure</li>
+            <li><strong>Free nerve endings</strong> – pain, temperature (hot/cold)</li>
+          </ul>
+
+          <p><strong>2. Nose (Olfactory – Smell)</strong></p>
+          <ul>
+            <li><strong>Olfactory epithelium</strong> – chemoreceptors detect odor molecules</li>
+            <li>Mucus dissolves volatile chemicals</li>
+            <li>Olfactory nerve (CN I) → brain</li>
+          </ul>
+
+          <p><strong>3. Tongue (Gustatory – Taste)</strong></p>
+          <ul>
+            <li><strong>Taste buds</strong> on papillae – detect sweet, salty, sour, bitter, umami</li>
+            <li>No strict tongue map – all areas sense all tastes</li>
+          </ul>
+
+          <p><strong>4. Eye (Visual – Sight)</strong></p>
+          <ul>
+            <li><strong>Cornea</strong> – major refraction</li>
+            <li><strong>Iris & pupil</strong> – control light entry</li>
+            <li><strong>Lens</strong> – accommodation (shape change for focus)</li>
+            <li><strong>Retina</strong> – rods (dim light), cones (colour, detail)</li>
+            <li><strong>Optic nerve</strong> – to brain</li>
+          </ul>
+
+          <p><strong>5. Ear (Auditory & Balance)</strong></p>
+          <ul>
+            <li><strong>Outer ear</strong> – pinna + canal</li>
+            <li><strong>Middle ear</strong> – eardrum + ossicles (amplify)</li>
+            <li><strong>Inner ear</strong> – cochlea (hearing), semicircular canals + vestibule (balance)</li>
+          </ul>
+
+        <img src="https://www.visiblebody.com/learn/nervous/five-senses" alt="Overview of five human sense organs" class="diagram-img">
+
+        
+JAMB High-Yield: Defects of Sense Organs & Corrections
+
+          <h3>Eye Defects (Most Common in JAMB)</h3>
+          <ul>
+            <li><strong>Myopia (Short-sightedness)</strong>
+              <ul>
+                <li>Image forms <strong>in front</strong> of retina</li>
+                <li>Cause: elongated eyeball or strong lens</li>
+                <li>Symptoms: distant objects blurry</li>
+                <li><strong>Correction</strong>: Concave (diverging) lens</li>
+              </ul>
+            </li>
+
+            <li><strong>Hypermetropia (Long-sightedness)</strong>
+              <ul>
+                <li>Image forms <strong>behind</strong> retina</li>
+                <li>Cause: short eyeball or weak lens</li>
+                <li>Symptoms: near objects blurry</li>
+                <li><strong>Correction</strong>: Convex (converging) lens</li>
+              </ul>
+            </li>
+
+            <li><strong>Presbyopia</strong>
+              <ul>
+                <li>Age-related loss of lens elasticity → poor near vision</li>
+                <li><strong>Correction</strong>: bifocal or progressive lenses</li>
+              </ul>
+            </li>
+
+            <li><strong>Cataract</strong>
+              <ul>
+                <li>Cloudy lens (protein denaturation)</li>
+                <li><strong>Correction</strong>: surgical removal + artificial lens</li>
+              </ul>
+            </li>
+          </ul>
+
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Myopia_and_hyperopia.svg/800px-Myopia_and_hyperopia.svg.png" alt="Ray diagram: Normal vs Myopia vs Hypermetropia with lens correction" class="diagram-img">
+
+          <img src="https://www.aoa.org/images/default-source/infographics/cataract.jpg" alt="Cataract – cloudy lens vs normal clear lens" class="diagram-img">
+
+          <h3>Ear Defects</h3>
+          <ul>
+            <li><strong>Conductive deafness</strong>
+              <ul>
+                <li>Cause: blockage or damage in outer/middle ear (wax, ossicle damage, perforated eardrum)</li>
+                <li><strong>Correction</strong>: hearing aid or surgery</li>
+              </ul>
+            </li>
+            <li><strong>Sensorineural deafness</strong>
+              <ul>
+                <li>Cause: damage to cochlea hair cells or auditory nerve (noise, infection, ageing)</li>
+                <li><strong>Correction</strong>: cochlear implant (severe cases)</li>
+              </ul>
+            </li>
+          </ul>
+
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Anatomy_of_the_Human_Ear.svg/800px-Anatomy_of_the_Human_Ear.svg.png" alt="Labelled human ear diagram – shows areas affected in different types of deafness" class="diagram-img">
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Eye-diagram-en.svg/800px-Eye-diagram-en.svg.png" alt="Labelled cross-section of the human eye – key for JAMB defects questions" class="diagram-img">
+
+        
+Quick Self-Test – Sense Organs & Defects (JAMB Style)
+          <div class="quiz-question">
+            <p><strong>Q1.</strong> Short-sightedness (myopia) is corrected using which type of lens?</p>
+            
+Answer<p><strong>Concave lens</strong></p>
+          </div>
+          <div class="quiz-question">
+            <p><strong>Q2.</strong> Cloudy lens is a symptom of which eye defect?</p>
+            
+Answer<p><strong>Cataract</strong></p>
+          </div>
+          <div class="quiz-question">
+            <p><strong>Q3.</strong> Damage to the cochlea or auditory nerve causes which type of deafness?</p>
+            
+Answer<p><strong>Sensorineural deafness</strong></p>
+          </div>
+
+        <h2>4. Hormonal (Endocrine) Control</h2>
+
+        
+Endocrine Glands & Hormones Table
+          <div class="table-wrapper">
+            <table>
+              <tr><th>Gland</th><th>Location</th><th>Main Hormones</th><th>Functions</th></tr>
+              <tr><td>Pituitary</td><td>Base of brain</td><td>Growth hormone, TSH, FSH/LH, ADH</td><td>Master gland – growth, stimulates other glands, reproduction, water balance</td></tr>
+              <tr><td>Thyroid</td><td>Neck</td><td>Thyroxine (T4), T3</td><td>Increases metabolic rate, growth & development</td></tr>
+              <tr><td>Adrenal</td><td>Above kidneys</td><td>Adrenaline, Cortisol, Aldosterone</td><td>Stress response, blood glucose, salt & water balance</td></tr>
+              <tr><td>Pancreas</td><td>Abdomen</td><td>Insulin, Glucagon</td><td>Blood glucose regulation</td></tr>
+              <tr><td>Gonads</td><td>Testes / Ovaries</td><td>Testosterone / Oestrogen & Progesterone</td><td>Secondary sexual characteristics, gamete production</td></tr>
+            </table>
+          </div>
+
+    
+Plant Phytohormones
+          <ul>
+            <li><strong>Auxins</strong> – cell elongation, phototropism, apical dominance</li>
+            <li><strong>Gibberellins</strong> – stem elongation, seed germination</li>
+            <li><strong>Cytokinins</strong> – cell division, delay ageing</li>
+            <li><strong>Ethylene</strong> – fruit ripening, abscission</li>
+          </ul>
+
+        <h2>5. Homeostasis</h2>
+
+        
+Thermoregulation & Osmoregulation
+          <p><strong>Thermoregulation</strong> (37°C): Hypothalamus → sweating/vasodilation (hot), shivering/vasoconstriction (cold).</p>
+          <p><strong>Osmoregulation</strong>: ADH → more water reabsorption (concentrated urine); Aldosterone → Na⁺ retention (water follows).</p>
+
+        
+Quick Self-Test – Homeostasis
+          <div class="quiz-question">
+            <p><strong>Q1.</strong> Hormone that increases water reabsorption in kidneys?</p>
+            
+Answer<p><strong>ADH</strong></p>
+          </div>
+
+        <p style="text-align:center; font-size:17px; margin:32px 0; font-weight:bold;">
+          Great job 🌟 You now have clean, detailed, visual JAMB-ready notes!
+        </p>
+
+        <p style="text-align:center; margin:20px 0;">Access JAMB questions related to this passage</p>
+        <button class="explore-btn" onclick="window.location.href='question.html'">Start JAMB Quiz Now!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Favorite</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+    document.getElementById('profile-upload').addEventListener('change', (e) => {
+      if (e.target.files[0]) console.log('Profile picture selected!');
+    });
+  </script>
+</body>
+</html>

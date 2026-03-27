@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Reproduction</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root {
+      --background: #1e1e2f;
+      --shadow-in: #171723;
+      --shadow-out: #25253b;
+      --text-primary: #f0f0ff;
+      --text-secondary: #c0c0e0;
+      --accent: #1db954;
+      --accent-secondary: #ff6b6b;
+      --accent-tertiary: #4ecdc4;
+      --card-bg: #2a2a3f;
+    }
+    body.light {
+      --background: #e0e0e0;
+      --shadow-in: #bebebe;
+      --shadow-out: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #444;
+      --card-bg: #f8f8f8;
+    }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); }
+    .section-card p { margin-bottom: 14px; font-size: 14px; }
+    .diagram-img { width: 100%; border-radius: 12px; margin: 12px 0; background: #fff; padding: 8px; }
+    .table-container { overflow-x: auto; margin: 10px 0; }
+    .summary-table { min-width: 500px; border-collapse: collapse; width: 100%; }
+    .summary-table th, .summary-table td { border: 1px solid var(--accent-secondary); padding: 8px; text-align: left; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 12px; border-left: 4px solid var(--accent-secondary); margin-top: 12px; }
+    .quick-facts { background: rgba(29,185,84,0.1); padding: 12px; margin-top: 12px; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .comparison-card { padding: 10px; border-radius: 10px; background: rgba(78,205,196,0.1); text-align: center; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; display: flex; justify-content: space-around; padding: 10px 0; background: var(--background); box-shadow: 0 -5px 10px var(--shadow-in); }
+  </style>
+</head>
+
+<body class="dark">
+<div class="container" id="scroll-container">
+
+<div class="top-bar">
+<button class="neumorphic-btn">←</button>
+<div class="header">BIOLOGY</div>
+<div class="right-icons">
+<button class="neumorphic-btn" id="theme-toggle">🌙</button>
+</div>
+</div>
+
+<div class="content">
+
+<div class="main-header">
+<h1>🌱 REPRODUCTION</h1>
+<p class="subtitle">JAMB Chapter 10 - Complete Master Note</p>
+</div>
+
+<!-- INTRO -->
+<div class="section-card">
+<h2>🌟 Introduction</h2>
+<p><strong>Definition:</strong> Reproduction is the biological process by which living organisms produce new individuals of their own kind, ensuring continuity of species.</p>
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Reproduction_diagram.png" class="diagram-img">
+
+<div class="quick-facts">
+<ul>
+<li>Ensures continuity of life</li>
+<li>Occurs in all living organisms</li>
+<li>Two types: Asexual & Sexual</li>
+<li>Important for evolution and survival</li>
+</ul>
+</div>
+</div>
+
+<!-- ASEXUAL -->
+<div class="section-card">
+<h2>🔁 Asexual Reproduction</h2>
+<p><strong>Definition:</strong> Asexual reproduction is a type of reproduction in which only one parent is involved, producing genetically identical offspring (clones).</p>
+
+<h3>1. Fission</h3>
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Binary_fission.png" class="diagram-img">
+<p><strong>Definition:</strong> Fission is when a single parent cell divides into two or more identical daughter cells.</p>
+<p><strong>Examples:</strong> Amoeba, Paramecium, Euglena, Bacteria (E. coli), Plasmodium (multiple fission)</p>
+<p><strong>Process:</strong> Nucleus divides → Cytoplasm divides → New identical organisms are formed.</p>
+<p><strong>Note:</strong> Multiple fission produces many offspring at once (e.g., Plasmodium).</p>
+
+<h3>2. Budding</h3>
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Hydra_budding.png" class="diagram-img">
+<p><strong>Definition:</strong> Budding is when a new organism develops as an outgrowth (bud) from the parent body.</p>
+<p><strong>Examples:</strong> Yeast, Hydra, Sponges, Corals, some fungi</p>
+<p><strong>Process:</strong> Bud forms → Grows → Detaches or remains attached.</p>
+
+<h3>3. Natural Vegetative Propagation</h3>
+<img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Potato_tubers.jpg" class="diagram-img">
+<p><strong>Definition:</strong> New plants grow naturally from vegetative parts (root, stem, leaf).</p>
+
+<div class="table-container">
+<table class="summary-table">
+<tr><th>Structure</th><th>Examples</th></tr>
+<tr><td>Stem</td><td>Potato (tuber), Ginger (rhizome), Onion (bulb), Strawberry (runner), Yam</td></tr>
+<tr><td>Root</td><td>Sweet potato, Dahlia, Cassava, Carrot, Beetroot</td></tr>
+<tr><td>Leaf</td><td>Bryophyllum, Begonia, Kalanchoe, African violet, Sansevieria</td></tr>
+</table>
+</div>
+
+<h3>4. Artificial Vegetative Propagation</h3>
+<p><strong>Definition:</strong> Deliberate production of plants using human methods.</p>
+
+<div class="table-container">
+<table class="summary-table">
+<tr><th>Method</th><th>Definition</th><th>Examples</th></tr>
+<tr><td>Cutting</td><td>New plant grows from cut part of stem/root/leaf</td><td>Cassava, Sugarcane, Rose, Hibiscus</td></tr>
+<tr><td>Grafting</td><td>Joining parts of two plants to grow as one</td><td>Mango, Citrus, Apple, Guava</td></tr>
+<tr><td>Budding</td><td>Inserting a bud from one plant into another</td><td>Orange, Lemon, Rubber, Peach</td></tr>
+<tr><td>Layering</td><td>Bending branch to ground to form roots before cutting</td><td>Bougainvillea, Jasmine, Grapevine, Blackberry</td></tr>
+</table>
+</div>
+
+<div class="memory-tip">
+<p>Asexual reproduction → rapid multiplication, preserves traits, important in agriculture.</p>
+</div>
+
+</div>
+
+<!-- SEXUAL PLANTS -->
+<div class="section-card">
+<h2>🌸 Sexual Reproduction in Flowering Plants</h2>
+<p><strong>Definition:</strong> Involves fusion of male and female gametes to form a zygote.</p>
+
+<h3>Flower</h3>
+<img src="https://upload.wikimedia.org/wikipedia/commons/3/37/Flower_parts_diagram.png" class="diagram-img">
+<p><strong>Sepals:</strong> Protect flower bud</p>
+<p><strong>Petals:</strong> Attract pollinators</p>
+<p><strong>Stamen:</strong> Male part, produces pollen</p>
+<p><strong>Carpel/Pistil:</strong> Female part, contains ovules</p>
+
+<h3>Pollination</h3>
+<p>Transfer of pollen from anther → stigma</p>
+<div class="comparison-grid">
+<div class="comparison-card"><strong>Self-pollination</strong><br>Same flower/plant (Pea, Rice, Tomato, Wheat, Groundnut)</div>
+<div class="comparison-card"><strong>Cross-pollination</strong><br>Different plant (Maize, Cocoa, Oil Palm, Pawpaw, Date Palm)</div>
+</div>
+<p><strong>Agents:</strong> Wind, Insects, Water, Animals, Man</p>
+<p><strong>Advantages of Cross-pollination:</strong> Genetic variation, stronger offspring, disease resistance</p>
+
+<h3>Fertilization</h3>
+<img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/Double_fertilization.png" class="diagram-img">
+<p>Fusion of male & female gametes → zygote formation</p>
+
+<h3>Fruits</h3>
+<p><strong>Definition:</strong> Ripened ovary containing seeds</p>
+
+<div class="table-container">
+<table class="summary-table">
+<tr><th>Type</th><th>Definition</th><th>Examples</th></tr>
+<tr><td>Simple</td><td>Develop from one ovary</td><td>Mango, Tomato, Orange, Pepper, Guava</td></tr>
+<tr><td>Aggregate</td><td>Develop from many ovaries of one flower</td><td>Strawberry, Raspberry, Blackberry, Custard Apple, Soursop</td></tr>
+<tr><td>Multiple</td><td>Develop from many flowers</td><td>Pineapple, Breadfruit, Fig, Mulberry, Jackfruit</td></tr>
+<tr><td>Succulent</td><td>Fleshy, high water content</td><td>Banana, Pawpaw, Watermelon, Orange, Mango</td></tr>
+</table>
+</div>
+</div>
+
+<!-- MAMMALS -->
+<div class="section-card">
+<h2>👶 Reproduction in Mammals</h2>
+<p><strong>Definition:</strong> Sexual reproduction involving internal fertilization and development.</p>
+
+<h3>Male Reproductive System</h3>
+<img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Male_reproductive_system.png" class="diagram-img">
+<p><strong>Functions:</strong></p>
+<ul>
+<li>Testes → sperm production</li>
+<li>Scrotum → temperature regulation</li>
+<li>Sperm duct → transport</li>
+<li>Penis → delivery</li>
+</ul>
+
+<h3>Female Reproductive System</h3>
+<img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Female_reproductive_system.png" class="diagram-img">
+<p><strong>Functions:</strong></p>
+<ul>
+<li>Ovary → produces ova</li>
+<li>Fallopian tube → fertilization site</li>
+<li>Uterus → embryo development</li>
+<li>Vagina → birth canal</li>
+</ul>
+
+<h3>Fertilization & Development</h3>
+<p>Sperm + Egg → Zygote → Embryo → Fetus → Birth</p>
+<div class="memory-tip">
+<p>Factors affecting development: Poor nutrition, Alcohol, Drugs, Smoking, Diseases → birth defects/miscarriage/poor growth</p>
+</div>
+</div>
+
+<!-- MODERN METHODS -->
+<div class="section-card">
+<h2>🧪 Modern Methods of Reproduction</h2>
+
+<h3>1. IVF (In Vitro Fertilization)</h3>
+<img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/IVF_process.png" class="diagram-img">
+<p><strong>Definition:</strong> Fertilization occurs outside the body in laboratory.</p>
+<p><strong>Examples:</strong> Human fertility, Animal breeding, Research, Surrogacy, Genetic improvement</p>
+
+<h3>2. Birth Control</h3>
+<p><strong>Definition:</strong> Methods to prevent pregnancy</p>
+<div class="table-container">
+<table class="summary-table">
+<tr><th>Type</th><th>Examples</th></tr>
+<tr><td>Barrier</td><td>Condom, Diaphragm, Sponge, Cervical cap, Female condom</td></tr>
+<tr><td>Hormonal</td><td>Pills, Injections, Implants, Patches, Ring</td></tr>
+<tr><td>Device</td><td>IUD, Implants</td></tr>
+<tr><td>Natural</td><td>Abstinence, Safe period, Withdrawal</td></tr>
+</table>
+</div>
+</div>
+
+<!-- FINAL POINTS -->
+<div class="section-card">
+<h2>🎯 JAMB Quick Points</h2>
+<ul>
+<li>Asexual → one parent, no variation</li>
+<li>Sexual → two parents, genetic variation</li>
+<li>Pollination ≠ Fertilization</li>
+<li>Fertilization = fusion of gametes</li>
+<li>Ovule → seed, Ovary → fruit</li>
+<li>Cross-pollination → stronger offspring</li>
+<li>Mammals → internal fertilization</li>
+<li>IVF → fertilization outside body</li>
+<li>Vegetative propagation → important in agriculture</li>
+</ul>
+<div class="memory-tip">
+<p>Quick Code: "A S F M" → Asexual, Sexual (plants), Flowers & Fruits, Mammals</p>
+</div>
+</div>
+
+</div>
+
+<div class="nav-bar">
+<button>🔍</button>
+<button>⭐</button>
+<button>📚</button>
+</div>
+
+</div>
+
+<script>
+const toggle = document.getElementById('theme-toggle');
+toggle.onclick = () => document.body.classList.toggle('light');
+</script>
+
+</body>
+</html>

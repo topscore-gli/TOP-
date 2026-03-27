@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neumorphism Learning Hub - Human Anatomy Basics</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    :root {
+      --background: #1e1e2f;
+      --shadow-in: #171723;
+      --shadow-out: #25253b;
+      --text-primary: #f0f0ff;
+      --text-secondary: #c0c0e0;
+      --accent: #1db954;
+      --card-bg: #2a2a3f;
+    }
+
+    body.light {
+      --background: #e0e0e0;
+      --shadow-in: #bebebe;
+      --shadow-out: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #444;
+      --accent: #1db954;
+      --card-bg: #f8f8f8;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      border-radius: 20px;
+      box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out);
+      overflow: hidden;
+      position: relative;
+      height: 700px;
+      overflow-y: auto;
+      padding-top: 70px;
+      padding-bottom: 70px;
+    }
+
+    .neumorphic {
+      background: var(--background);
+      box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out);
+      border-radius: 15px;
+    }
+
+    .neumorphic-btn {
+      background: var(--background);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      cursor: pointer;
+      color: var(--text-primary);
+      font-size: 18px;
+    }
+
+    .neumorphic-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 5px 10px var(--shadow-in);
+      z-index: 20;
+    }
+
+    .top-bar .header {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+
+    .top-bar .right-icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-bar .profile-upload {
+      position: relative;
+    }
+
+    .top-bar .profile-upload input {
+      opacity: 0;
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 20px 16px;
+      line-height: 1.6;
+    }
+
+    .main-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .main-header h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .main-header p.subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .welcome-note {
+      background: var(--card-bg);
+      padding: 28px 20px;
+      border-radius: 20px;
+      box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out);
+      margin-bottom: 30px;
+    }
+
+    .welcome-note h2 {
+      font-size: 22px;
+      margin: 32px 0 16px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .welcome-note h3 {
+      font-size: 18px;
+      margin: 24px 0 12px;
+      color: var(--accent);
+    }
+
+    .welcome-note p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .welcome-note ul, .welcome-note ol {
+      padding-left: 24px;
+      margin: 16px 0;
+    }
+
+    .welcome-note li {
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .welcome-note .highlight {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .diagram-img {
+      width: 100%;
+      border-radius: 12px;
+      margin: 16px 0;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    /* Footer Nav Bar */
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -5px 10px var(--shadow-in);
+      z-index: 20;
+    }
+
+    .nav-bar .nav-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .nav-bar .nav-item button {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.center button {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      background: var(--accent);
+      box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      color: #000;
+    }
+
+    .nav-bar .nav-item.active button {
+      background: var(--accent);
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .nav-bar .nav-item p {
+      display: none;
+      font-size: 12px;
+      margin-top: 5px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.active p {
+      display: block;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <!-- Top Fixed Bar -->
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn">←</button>
+      <div class="header">Human Anatomy Basics</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn profile-upload">
+          📷
+          <input type="file" accept="image/*" id="profile-upload">
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+      <div class="main-header">
+        <h1>Level Up Your Biology Knowledge! 🚀</h1>
+        <p class="subtitle">Abumchukwu – Cells, Life & Organization Made Super Easy</p>
+      </div>
+
+      <div class="welcome-note neumorphic">
+        <h2>1. Characteristics of Living Things 🧬</h2>
+        <p>How do we know something is <strong>alive</strong>? Use the famous mnemonic <strong>MRS GREN</strong>!</p>
+
+        <p><strong>MRS GREN stands for:</strong></p>
+        <ul>
+          <li><strong>M</strong>ovement – Animals run 🏃, plants grow toward light (phototropism) ☀️</li>
+          <li><strong>R</strong>espiration – Breaking down food to release energy (with or without oxygen)</li>
+          <li><strong>S</strong>ensitivity – Detect and respond to environment (pull hand from fire 🔥, Mimosa closes leaves)</li>
+          <li><strong>G</strong>rowth – Permanent increase in size (cell division & enlargement)</li>
+          <li><strong>R</strong>eproduction – Make offspring (sexual or asexual)</li>
+          <li><strong>E</strong>xcretion – Remove waste (CO₂, urea, sweat)</li>
+          <li><strong>N</strong>utrition – Get food/energy (plants photosynthesize 🌱, animals eat 🍔)</li>
+        </ul>
+
+        <p>Living things also adapt over time. Non-living things (like rocks) don't do these!</p>
+
+        <img src="https://images.teachthis.com.au/Product/image/original/04e9fc8494caaa5595970226ade0cce69879aeaf47d3ffadc99489ec7e29d8e55cad288450218.png" alt="MRS GREN mnemonic poster" class="diagram-img">
+        <img src="https://i.pinimg.com/736x/5d/47/65/5d47653d7359a09d439922701de02595.jpg" alt="MRS GREN life processes display" class="diagram-img">
+
+        <h2>2. Cell Theory – The Foundation of Biology 📜</h2>
+        <p>All living things are made of cells! This big idea came from many scientists.</p>
+
+        <p><strong>Key discoveries:</strong></p>
+        <ul>
+          <li>1665 – Robert Hooke saw "cells" in cork under microscope</li>
+          <li>1670s – Leeuwenhoek saw living cells (bacteria, protozoa)</li>
+          <li>1838 – Schleiden: All plants are made of cells</li>
+          <li>1839 – Schwann: All animals are made of cells</li>
+          <li>1855 – Virchow: "All cells come from pre-existing cells"</li>
+        </ul>
+
+        <p><strong>Three main rules today:</strong></p>
+        <ol>
+          <li>All organisms are made of one or more cells</li>
+          <li>Cell is the basic unit of structure, function, and life</li>
+          <li>All cells come from other cells (via division)</li>
+        </ol>
+
+        <img src="https://s3-us-west-2.amazonaws.com/courses-images/wp-content/uploads/sites/1094/2016/11/03153808/OSC_Microbio_03_02_GermTimeln.jpg" alt="Cell theory historical timeline" class="diagram-img">
+
+        <h2>3. Cell Structure – Plant vs Animal Cells 🔬</h2>
+        <p>Cells are tiny living units. Plant 🌿 and animal 🐱 cells are similar but different!</p>
+
+        <h3>Plant Cell Parts</h3>
+        <ul>
+          <li><strong>Cell wall</strong> – Rigid protection & shape (cellulose)</li>
+          <li><strong>Chloroplasts</strong> – Photosynthesis (make food from light)</li>
+          <li><strong>Large central vacuole</strong> – Storage & keeps plant firm</li>
+          <li>Others: nucleus, mitochondria, ribosomes, ER, Golgi, cytoplasm</li>
+        </ul>
+
+        <img src="https://sciencenotes.org/wp-content/uploads/2023/05/Labeled-Plant-Cell-Diagram.png" alt="Labeled plant cell diagram" class="diagram-img">
+        <img src="https://cdn1.byjus.com/wp-content/uploads/2022/05/Plant-cell.png" alt="Plant cell structure" class="diagram-img">
+
+        <h3>Animal Cell Parts</h3>
+        <ul>
+          <li>No cell wall, no chloroplasts, no large vacuole</li>
+          <li>Has <strong>centrioles</strong> for cell division</li>
+          <li>Others same as plant: nucleus, mitochondria, etc.</li>
+        </ul>
+
+        <img src="https://i.pinimg.com/736x/f0/af/86/f0af8656ed8b45370a11bc02dd7085c8.jpg" alt="Labeled animal cell diagram" class="diagram-img">
+
+        <h3>Plant vs Animal – Quick Comparison</h3>
+        <ul>
+          <li><strong>Both:</strong> membrane, nucleus, cytoplasm, mitochondria, ribosomes, ER, Golgi</li>
+          <li><strong>Plant only:</strong> cell wall, chloroplasts, large vacuole</li>
+          <li><strong>Animal only:</strong> centrioles</li>
+        </ul>
+
+        <img src="https://microbenotes.com/wp-content/uploads/2023/06/Animal-cell-vs.-Plant-cell.jpeg" alt="Plant vs animal cell comparison" class="diagram-img">
+        <img src="https://rsscience.com/wp-content/uploads/2021/01/Animal-cell-vs-Plant-cell-similarities-difference-1024x698.jpg" alt="Side-by-side plant and animal cells" class="diagram-img">
+
+        <h2>4. Levels of Organization – Building Life Step by Step 📏</h2>
+        <p>Life gets more complex layer by layer:</p>
+
+        <ol>
+          <li><strong>Cell</strong> – Basic unit (e.g., Euglena, Paramecium, Chlamydomonas)</li>
+          <li><strong>Tissue</strong> – Similar cells together (e.g., epithelial tissue, Hydra layers)</li>
+          <li><strong>Organ</strong> – Tissues team up (e.g., onion bulb, heart ❤️)</li>
+          <li><strong>System</strong> – Organs working together (e.g., digestive, reproductive)</li>
+          <li><strong>Organism</strong> – Whole living thing (you! 👦 or a tree 🌳)</li>
+        </ol>
+
+        <img src="https://thumbs.dreamstime.com/b/living-world-biosphere-structural-hierarchy-division-outline-concept-labeled-educational-classification-atom-to-bioma-239382954.jpg" alt="Biological hierarchy from cell to biosphere" class="diagram-img">
+        <img src="https://thumbs.dreamstime.com/b/organisation-organisms-hierarchical-level-structure-outline-diagram-organisation-organisms-hierarchical-level-252942090.jpg" alt="Levels of organization in organisms diagram" class="diagram-img">
+
+        <p style="text-align: center; font-size: 17px; margin: 32px 0; font-weight: bold;">
+          Abumchukwu, you're doing great! 🌟 Keep studying – you've got the basics of life down now!
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Nav Bar -->
+  <div class="nav-bar">
+    <div class="nav-item active">
+      <button class="neumorphic-btn">🏠</button>
+      <p>Home</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">⚙️</button>
+      <p>Settings</p>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    // Profile Upload placeholder
+    document.getElementById('profile-upload').addEventListener('change', (e) => {
+      if (e.target.files[0]) {
+        console.log('Profile picture selected!');
+      }
+    });
+  </script>
+</body>
+</html>

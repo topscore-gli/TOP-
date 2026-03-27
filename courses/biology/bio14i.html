@@ -1,0 +1,599 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Symbiosis & Ecosystem Dynamics</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 500px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 760px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+    .comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+    .comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+    .comparison-card li { margin-bottom: 4px; font-size: 12px; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height: 4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+    .image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+  </style>
+</head>
+  
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">BIOLOGY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>🌿 Chapter 14: Symbiosis & Ecosystem Dynamics</h1>
+    <p class="subtitle">Energy flow + nutrient cycles + symbiotic interactions (JAMB-ready)</p>
+  </div>
+
+  <!-- PART A -->
+  <div class="section-card">
+    <h2>⚡ Part A: Energy Flow in Ecosystems</h2>
+    <p><strong>Definition (Energy flow):</strong> The movement of energy through living organisms in an ecosystem, usually from the sun → producers → consumers. Energy flows in <strong>one direction</strong>.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Trophic_web.png" alt="Energy flow trophic levels" class="diagram-img">
+    <p class="image-caption">Energy moves upward through trophic levels (and decreases at each step)</p>
+
+    <h3>1. 🔗 Food Chains</h3>
+    <p><strong>Definition:</strong> A food chain is a linear sequence showing how energy and nutrients pass from one organism to another.</p>
+
+    <div class="quick-facts">
+      <h4>Structure (Remember)</h4>
+      <ul>
+        <li><strong>P → C → SC → TC</strong> (Producer → Consumer → Secondary → Tertiary)</li>
+        <li>"Plants Provide, Consumers Consume"</li>
+      </ul>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Food_chain.png" alt="Food chain diagram" class="diagram-img">
+    <p class="image-caption">Simple food chain example (producer → consumers)</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Level</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><strong>1°</strong></td>
+          <td>Producers (Autotrophs)</td>
+          <td>Make food by photosynthesis</td>
+          <td>Grass, algae, phytoplankton</td>
+        </tr>
+        <tr>
+          <td><strong>2°</strong></td>
+          <td>Primary consumers</td>
+          <td>Eat producers (herbivores)</td>
+          <td>Grasshopper, rabbit, zebrafish</td>
+        </tr>
+        <tr>
+          <td><strong>3°</strong></td>
+          <td>Secondary consumers</td>
+          <td>Eat herbivores</td>
+          <td>Frog, small fish, spider</td>
+        </tr>
+        <tr>
+          <td><strong>4°</strong></td>
+          <td>Tertiary consumers</td>
+          <td>Top carnivores</td>
+          <td>Snake, hawk, shark</td>
+        </tr>
+        <tr>
+          <td><strong>—</strong></td>
+          <td>Decomposers</td>
+          <td>Break down dead matter</td>
+          <td>Bacteria, fungi</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="highlight-box">
+      <p><strong>Example food chain:</strong> Grass → Grasshopper → Frog → Snake → Hawk</p>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>🔑 Key Points for JAMB</h4>
+      <ul>
+        <li>Energy flows one way (not recycled)</li>
+        <li>About <strong>10%</strong> transfers; <strong>90%</strong> lost as heat/respiration</li>
+        <li>Usually <strong>3–5 trophic levels</strong> maximum</li>
+      </ul>
+    </div>
+
+    <h3>2. 🕸️ Food Webs</h3>
+    <p><strong>Definition:</strong> A food web is an interconnected network of multiple food chains showing complex feeding relationships.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5a/Foodweb.jpg" alt="Food web" class="diagram-img">
+    <p class="image-caption">Food webs show multiple feeding links (more stable than a single chain)</p>
+
+    <div class="quick-facts">
+      <h4>Why Food Webs Matter</h4>
+      <ul>
+        <li>Animals often eat more than one food type</li>
+        <li>Alternative food sources improve stability</li>
+        <li>Shows biodiversity and interdependence</li>
+      </ul>
+    </div>
+
+    <h3>3. 📊 Trophic Levels & Energy Pyramid</h3>
+    <p><strong>Definition (Trophic level):</strong> The feeding position an organism occupies in a food chain/web.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Ecological_pyramid.svg" alt="Energy pyramid" class="diagram-img">
+    <p class="image-caption">Energy pyramid: producers have the most energy</p>
+
+    <div class="highlight-box">
+      <p><strong>10% rule example:</strong> If producers have 10,000 kJ → primary 1,000 kJ → secondary 100 kJ → tertiary 10 kJ.</p>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 MEMORY AID:</strong>
+      <p>"Energy is expensive — <strong>90% tax</strong> at each level!"</p>
+    </div>
+  </div>
+
+  <!-- PART B -->
+  <div class="section-card">
+    <h2>♻️ Part B: Nutrient Cycling in Nature</h2>
+    <p><strong>Definition (Nutrient cycling):</strong> The continuous movement and recycling of nutrients (like carbon, water, nitrogen) between living organisms and the environment.</p>
+
+    <div class="jamb-alert">
+      <h4>Big Idea</h4>
+      <ul>
+        <li><strong>Energy</strong> flows one way</li>
+        <li><strong>Nutrients</strong> are recycled</li>
+      </ul>
+    </div>
+
+    <h3>i. 🌫️ Carbon Cycle</h3>
+    <p><strong>Definition:</strong> The carbon cycle is the movement of carbon between the atmosphere, organisms, soil, and oceans.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Carbon_cycle.jpg" alt="Carbon cycle" class="diagram-img">
+    <p class="image-caption">Carbon cycle: photosynthesis removes CO₂, respiration/combustion adds CO₂</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Process</th>
+          <th>What Happens</th>
+          <th>Direction</th>
+        </tr>
+        <tr>
+          <td><strong>Photosynthesis</strong></td>
+          <td>Plants take in CO₂</td>
+          <td>Atmosphere → living things</td>
+        </tr>
+        <tr>
+          <td><strong>Respiration</strong></td>
+          <td>Organisms release CO₂</td>
+          <td>Living things → atmosphere</td>
+        </tr>
+        <tr>
+          <td><strong>Combustion</strong></td>
+          <td>Burning releases CO₂</td>
+          <td>Fossil fuels → atmosphere</td>
+        </tr>
+        <tr>
+          <td><strong>Decomposition</strong></td>
+          <td>Decomposers release CO₂</td>
+          <td>Dead matter → atmosphere</td>
+        </tr>
+        <tr>
+          <td><strong>Feeding</strong></td>
+          <td>Carbon moves up food chains</td>
+          <td>Plants → animals</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="jamb-alert">
+      <h4>🌍 Carbon Cycle & Global Warming (JAMB Hot Topic)</h4>
+      <ul>
+        <li>Deforestation → less CO₂ removed</li>
+        <li>Fossil fuel burning → more CO₂ added</li>
+        <li>Result: greenhouse effect → global warming</li>
+      </ul>
+    </div>
+
+    <h3>ii. 💧 Water Cycle (Hydrological Cycle)</h3>
+    <p><strong>Definition:</strong> The water cycle is the continuous movement of water between the earth’s surface and the atmosphere.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Water_cycle.png" alt="Water cycle" class="diagram-img">
+    <p class="image-caption">Water cycle: evaporation → condensation → precipitation</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Term</th>
+          <th>Definition</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><strong>Evaporation</strong></td>
+          <td>Liquid → vapor (heat driven)</td>
+          <td>Oceans, lakes</td>
+        </tr>
+        <tr>
+          <td><strong>Transpiration</strong></td>
+          <td>Water loss from plant leaves</td>
+          <td>Trees</td>
+        </tr>
+        <tr>
+          <td><strong>Condensation</strong></td>
+          <td>Vapor → droplets</td>
+          <td>Cloud formation</td>
+        </tr>
+        <tr>
+          <td><strong>Precipitation</strong></td>
+          <td>Water falls to earth</td>
+          <td>Rain, snow</td>
+        </tr>
+        <tr>
+          <td><strong>Infiltration</strong></td>
+          <td>Water soaks into ground</td>
+          <td>Groundwater</td>
+        </tr>
+        <tr>
+          <td><strong>Runoff</strong></td>
+          <td>Water flows over land</td>
+          <td>Rivers/streams</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="memory-tip">
+      <strong>🧠 MEMORY TIP:</strong>
+      <p>"Water is the delivery truck for nutrients!"</p>
+    </div>
+
+    <h3>iii. 🦠 Nitrogen Cycle (Most Complex)</h3>
+    <p><strong>Definition:</strong> The nitrogen cycle is the recycling of nitrogen through atmosphere, soil, and organisms so that plants can obtain usable nitrogen for proteins/DNA.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Nitrogen_Cycle.svg" alt="Nitrogen cycle" class="diagram-img">
+    <p class="image-caption">Nitrogen cycle: fixation → nitrification → assimilation → denitrification</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Process</th>
+          <th>Conversion</th>
+          <th>Agent</th>
+          <th>Where</th>
+        </tr>
+        <tr>
+          <td><strong>Nitrogen fixation</strong></td>
+          <td>N₂ → NH₃ / nitrates</td>
+          <td>Fixing bacteria</td>
+          <td>Soil, root nodules</td>
+        </tr>
+        <tr>
+          <td><strong>Nitrification</strong></td>
+          <td>NH₃ → NO₂⁻ → NO₃⁻</td>
+          <td>Nitrifying bacteria</td>
+          <td>Soil</td>
+        </tr>
+        <tr>
+          <td><strong>Assimilation</strong></td>
+          <td>NO₃⁻ → plant proteins</td>
+          <td>Plants</td>
+          <td>Plant tissues</td>
+        </tr>
+        <tr>
+          <td><strong>Ammonification</strong></td>
+          <td>Organic N → NH₃</td>
+          <td>Decomposers</td>
+          <td>Soil</td>
+        </tr>
+        <tr>
+          <td><strong>Denitrification</strong></td>
+          <td>NO₃⁻ → N₂ gas</td>
+          <td>Denitrifying bacteria</td>
+          <td>Waterlogged soil</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <h4>Roles of Bacteria (JAMB Loves This)</h4>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Bacteria Type</th>
+          <th>Role</th>
+          <th>Process</th>
+          <th>Importance</th>
+        </tr>
+        <tr>
+          <td><strong>Nitrogen-fixing</strong></td>
+          <td>Convert N₂ to ammonia</td>
+          <td>Fixation</td>
+          <td>Makes nitrogen available to plants</td>
+        </tr>
+        <tr>
+          <td><strong>Nitrifying</strong></td>
+          <td>Ammonia → nitrites → nitrates</td>
+          <td>Nitrification</td>
+          <td>Produces plant-usable nitrates</td>
+        </tr>
+        <tr>
+          <td><strong>Denitrifying</strong></td>
+          <td>Nitrates → N₂ gas</td>
+          <td>Denitrification</td>
+          <td>Returns nitrogen to atmosphere</td>
+        </tr>
+        <tr>
+          <td><strong>Decomposers</strong></td>
+          <td>Break down organic nitrogen</td>
+          <td>Ammonification</td>
+          <td>Recycles N from dead matter</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="quick-facts">
+      <h4>Examples of Nitrogen Fixers</h4>
+      <ul>
+        <li><strong>Free-living:</strong> Azotobacter, Clostridium</li>
+        <li><strong>Symbiotic:</strong> Rhizobium (legume root nodules)</li>
+      </ul>
+    </div>
+
+    <h3>🌱 Leguminous Plants & Rhizobium (Mutualism)</h3>
+    <p><strong>Definition (Symbiosis):</strong> A close, long-term interaction between different species living together.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/73/Rhizobium_nodules_on_legume_roots.jpg" alt="Rhizobium nodules" class="diagram-img">
+    <p class="image-caption">Legume root nodules contain Rhizobium bacteria</p>
+
+    <div class="highlight-box">
+      <p><strong>Mutualism:</strong> Plant provides carbohydrates + shelter; Rhizobium fixes N₂ → ammonia/nitrates for plant.</p>
+      <p><strong>Result:</strong> better protein growth + improved soil fertility.</p>
+    </div>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr><th>Agricultural Practice</th><th>Benefit</th></tr>
+        <tr><td><strong>Crop rotation with legumes</strong></td><td>Replenishes soil nitrogen naturally</td></tr>
+        <tr><td><strong>Green manure</strong></td><td>Adds nutrients when ploughed into soil</td></tr>
+        <tr><td><strong>Reduced fertilizer need</strong></td><td>Saves cost; less pollution</td></tr>
+        <tr><td><strong>Intercropping</strong></td><td>Legumes + cereals improve yield balance</td></tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+  </div>
+
+  <!-- SYMBIOTIC INTERACTIONS TABLE -->
+  <div class="section-card">
+    <h2>🤝 Symbiotic Interactions Summary</h2>
+    <p><strong>Definition (Symbiotic interaction):</strong> Any close relationship between two different species living together that affects at least one of them.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Mutualism_bee_flower.jpg" alt="Bee and flower mutualism" class="diagram-img">
+    <p class="image-caption">Mutualism example: bee and flower</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Interaction</th>
+          <th>Species A</th>
+          <th>Species B</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><strong>Mutualism</strong></td>
+          <td>Benefits</td>
+          <td>Benefits</td>
+          <td>Bee & flower; Rhizobium & legume</td>
+        </tr>
+        <tr>
+          <td><strong>Commensalism</strong></td>
+          <td>Benefits</td>
+          <td>Unaffected</td>
+          <td>Remora & shark; epiphyte on tree</td>
+        </tr>
+        <tr>
+          <td><strong>Parasitism</strong></td>
+          <td>Benefits</td>
+          <td>Harmed</td>
+          <td>Tapeworm & human; dodder & plant</td>
+        </tr>
+        <tr>
+          <td><strong>Saprophytism</strong></td>
+          <td>Feeds on dead matter</td>
+          <td>Dead matter</td>
+          <td>Fungi on bread; bacteria on carcass</td>
+        </tr>
+        <tr>
+          <td><strong>Amensalism</strong></td>
+          <td>Harmed</td>
+          <td>Unaffected</td>
+          <td>Penicillium & bacteria</td>
+        </tr>
+        <tr>
+          <td><strong>Competition</strong></td>
+          <td>Harmed</td>
+          <td>Harmed</td>
+          <td>Lions & hyenas for prey</td>
+        </tr>
+        <tr>
+          <td><strong>Predation</strong></td>
+          <td>Benefits</td>
+          <td>Killed/eaten</td>
+          <td>Hawk & mouse; lion & zebra</td>
+        </tr>
+        <tr>
+          <td><strong>Cooperation</strong></td>
+          <td>Benefits</td>
+          <td>Benefits (not essential)</td>
+          <td>Wolves in pack; bees in hive</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+  </div>
+
+  <!-- QUICK REVISION -->
+  <div class="section-card">
+    <h2>📋 Quick Revision Checklist</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Draw a food chain with 4 trophic levels</li>
+        <li>Explain why food webs are more stable</li>
+        <li>Calculate energy transfer (10% rule)</li>
+        <li>Draw carbon cycle + global warming link</li>
+        <li>Explain water cycle processes</li>
+        <li>Draw nitrogen cycle + bacterial roles</li>
+        <li>Explain Rhizobium-legume mutualism</li>
+        <li>Give examples of interaction types</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- EXAM PATTERNS -->
+  <div class="jamb-alert">
+    <h4>🎓 JAMB Past Question Patterns</h4>
+    <ul>
+      <li>Primary consumer = herbivore</li>
+      <li>Decomposers recycle nutrients from dead matter</li>
+      <li>Energy transfer is inefficient (90% lost)</li>
+      <li>Legumes improve soil fertility (nitrogen fixation)</li>
+      <li>Global warming = excess CO₂ from deforestation + fossil fuels</li>
+    </ul>
+  </div>
+
+  <!-- MEMORY AIDS -->
+  <div class="section-card">
+    <h2>🧠 Memory Aids</h2>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr><th>Topic</th><th>Memory Aid</th></tr>
+        <tr><td>Food chain order</td><td><strong>P → C → SC → TC</strong></td></tr>
+        <tr><td>Energy transfer</td><td>"<strong>10% stays</strong>, <strong>90% pays</strong> (lost as heat)"</td></tr>
+        <tr><td>Carbon disruption</td><td>"<strong>Cut trees + burn fuel = CO₂ rules</strong>"</td></tr>
+        <tr><td>Legume mutualism</td><td>"<strong>Plant feeds bacteria, bacteria feeds plant</strong>"</td></tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+  </div>
+
+  <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+    🌟 Draw the cycles from memory and you’ll own Chapter 14 in JAMB. 🌟
+  </p>
+
+  <button class="explore-btn" onclick="alert('Practice JAMB past questions on Symbiosis & Ecosystem Dynamics (Chapter 14)!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

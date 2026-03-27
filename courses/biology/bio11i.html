@@ -1,0 +1,417 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Biology - Growth</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    :root { --background: #1e1e2f; --shadow-in: #171723; --shadow-out: #25253b; --text-primary: #f0f0ff; --text-secondary: #c0c0e0; --accent: #1db954; --accent-secondary: #ff6b6b; --accent-tertiary: #4ecdc4; --card-bg: #2a2a3f; }
+    body.light { --background: #e0e0e0; --shadow-in: #bebebe; --shadow-out: #ffffff; --text-primary: #1a1a1a; --text-secondary: #444; --card-bg: #f8f8f8; }
+    body { background: var(--background); color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+    .container { width: 100%; max-width: 420px; background: var(--background); border-radius: 20px; box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out); overflow: hidden; position: relative; height: 750px; overflow-y: auto; padding-top: 70px; padding-bottom: 80px; }
+    .neumorphic { background: var(--background); box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out); border-radius: 15px; }
+    .neumorphic-btn { background: var(--background); border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); cursor: pointer; color: var(--text-primary); font-size: 18px; transition: all 0.3s ease; }
+    .neumorphic-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.95); }
+    .top-bar { position: fixed; top: 0; width: 100%; max-width: 420px; background: var(--background); padding: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 5px 10px var(--shadow-in); z-index: 20; }
+    .top-bar .header { font-size: 18px; font-weight: bold; color: var(--accent); }
+    .top-bar .right-icons { display: flex; gap: 10px; }
+    .content { padding: 20px 16px; line-height: 1.7; }
+    .main-header { text-align: center; margin-bottom: 28px; padding: 20px; border-radius: 20px; background: rgba(29, 185, 84, 0.1); }
+    .main-header h1 { font-size: 26px; margin-bottom: 8px; color: var(--accent); font-weight: 800; }
+    .main-header p.subtitle { font-size: 14px; color: var(--text-secondary); font-weight: 500; }
+    .section-card { background: var(--card-bg); padding: 24px 18px; border-radius: 20px; box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out); margin-bottom: 24px; border-left: 4px solid var(--accent); }
+    .section-card h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .section-card h3 { font-size: 17px; margin: 20px 0 12px; color: var(--accent-tertiary); font-weight: 600; padding-left: 12px; border-left: 3px solid var(--accent-tertiary); }
+    .section-card h4 { font-size: 15px; margin: 16px 0 10px; color: var(--accent-secondary); font-weight: 600; }
+    .section-card p { margin-bottom: 14px; font-size: 14px; color: var(--text-primary); text-align: justify; }
+    .section-card ul, .section-card ol { padding-left: 20px; margin: 12px 0; }
+    .section-card li { margin-bottom: 8px; font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+    .table-container { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0; border-radius: 12px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); }
+    .table-container::-webkit-scrollbar { height: 6px; }
+    .table-container::-webkit-scrollbar-track { background: var(--shadow-in); border-radius: 3px; }
+    .table-container::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .summary-table { width: 100%; min-width: 500px; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+    .summary-table th { background: var(--accent); color: #000; padding: 12px 10px; text-align: left; font-weight: 600; white-space: nowrap; }
+    .summary-table td { padding: 10px; border-bottom: 1px solid var(--shadow-in); background: var(--card-bg); white-space: nowrap; }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .summary-table.wide { min-width: 600px; }
+    .table-scroll-hint { font-size: 11px; color: var(--text-secondary); text-align: center; margin-top: 4px; font-style: italic; }
+    .quick-facts { background: linear-gradient(135deg, rgba(29,185,84,0.1), rgba(78,205,196,0.1)); padding: 16px; border-radius: 15px; margin: 16px 0; border: 1px solid rgba(29,185,84,0.3); }
+    .quick-facts h4 { color: var(--accent); margin-bottom: 10px; font-size: 15px; }
+    .quick-facts ul { margin: 0; padding-left: 18px; }
+    .quick-facts li { margin-bottom: 6px; font-size: 13px; }
+    .memory-tip { background: rgba(255,107,107,0.1); padding: 14px 16px; border-radius: 12px; margin: 16px 0; border-left: 4px solid var(--accent-secondary); }
+    .memory-tip strong { color: var(--accent-secondary); display: block; margin-bottom: 6px; font-size: 14px; }
+    .memory-tip p { margin: 0; font-size: 13px; font-style: italic; }
+    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+    .comparison-card { background: var(--background); padding: 14px; border-radius: 12px; box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); }
+    .comparison-card h5 { color: var(--accent); font-size: 14px; margin-bottom: 8px; text-align: center; }
+    .comparison-card ul { margin: 0; padding-left: 16px; font-size: 12px; }
+    .comparison-card li { margin-bottom: 4px; font-size: 12px; }
+    .diagram-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: 12px; margin: 14px 0 10px; box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out); background: #fff; padding: 8px; }
+    .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: var(--background); padding: 10px; display: flex; justify-content: space-around; box-shadow: 0 -5px 10px var(--shadow-in); z-index: 20; }
+    .nav-bar .nav-item { text-align: center; position: relative; }
+    .nav-bar .nav-item button { width: 40px; height: 40px; font-size: 18px; color: var(--text-primary); }
+    .nav-bar .nav-item.center button { width: 50px; height: 50px; font-size: 24px; background: var(--accent); box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out); color: #000; }
+    .nav-bar .nav-item p { display: none; font-size: 11px; margin-top: 4px; color: var(--text-primary); }
+    .nav-bar .nav-item.active p { display: block; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; max-width: 420px; height:  4px; background: var(--shadow-in); z-index: 15; }
+    .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+    .explore-btn { background: var(--accent); border: none; padding: 14px 28px; border-radius: 25px; color: #000; cursor: pointer; box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out); font-size: 16px; margin: 24px auto; display: block; text-align: center; font-weight: bold; transition: all 0.3s ease; }
+    .explore-btn:active { box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out); transform: scale(0.98); }
+    .jamb-alert { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border: 1px solid rgba(255,193,7,0.4); border-radius: 12px; padding: 16px; margin: 20px 0; }
+    .jamb-alert h4 { color: #ffc107; margin-bottom: 10px; font-size: 15px; }
+    .jamb-alert ul { margin: 0; padding-left: 18px; }
+    .jamb-alert li { font-size: 13px; margin-bottom: 6px; }
+    .highlight-box { background: rgba(78,205,196,0.1); padding: 12px 16px; border-radius: 10px; margin: 12px 0; border-left: 3px solid var(--accent-tertiary); }
+    .image-caption { text-align: center; font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: -8px; margin-bottom: 12px; }
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">BIOLOGY</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📖 Bookmarked for later study!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>📚 Chapter 11: Growth</h1>
+    <p class="subtitle">Clear Definitions + Germination (Epigeal vs Hypogeal) for JAMB</p>
+  </div>
+
+  <!-- 8a: MEANING OF GROWTH -->
+  <div class="section-card">
+    <h2>🌱 8a. Meaning of Growth</h2>
+    <p><strong>Definition (Growth):</strong> Growth is the <strong>irreversible</strong> permanent increase in <strong>size</strong> and <strong>dry mass</strong> of an organism over time.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Plant_growth_meristem.jpg" alt="Plant growth at meristem" class="diagram-img">
+    <p class="image-caption">Plants grow at meristems (regions of active cell division)</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Feature</th>
+          <th>Explanation</th>
+        </tr>
+        <tr>
+          <td><strong>Irreversible</strong></td>
+          <td>Once growth occurs, it cannot be reversed</td>
+        </tr>
+        <tr>
+          <td><strong>Permanent</strong></td>
+          <td>The increase in size is lasting, not temporary</td>
+        </tr>
+        <tr>
+          <td><strong>Increase in dry mass</strong></td>
+          <td>True growth increases protoplasm (living matter), not just water absorption</td>
+        </tr>
+        <tr>
+          <td><strong>Cellular basis</strong></td>
+          <td>Growth results from <strong>cell division (mitosis)</strong> + <strong>cell enlargement</strong></td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="jamb-alert">
+      <h4>⚠️ Important Distinction</h4>
+      <ul>
+        <li><strong>Swelling</strong> (e.g., seed absorbing water) is <strong>NOT growth</strong></li>
+        <li>Reason: it is <strong>reversible</strong> and does not increase <strong>dry mass</strong></li>
+      </ul>
+    </div>
+
+    <h3>Types of Growth in Organisms</h3>
+    <div class="comparison-grid">
+      <div class="comparison-card">
+        <h5>🌿 Unlimited (Indeterminate)</h5>
+        <ul>
+          <li><strong>Where:</strong> Plants</li>
+          <li><strong>How:</strong> Grow continuously at meristems</li>
+          <li><strong>Key idea:</strong> Growth continues throughout life</li>
+        </ul>
+      </div>
+      <div class="comparison-card">
+        <h5>🧍 Limited (Determinate)</h5>
+        <ul>
+          <li><strong>Where:</strong> Animals</li>
+          <li><strong>How:</strong> Stop growing after maturity</li>
+          <li><strong>Key idea:</strong> Growth has an endpoint</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 MEMORY TRICK:</strong>
+      <p>"Plants keep growing, animals stop at maturity."</p>
+    </div>
+  </div>
+
+  <!-- 8b: GERMINATION -->
+  <div class="section-card">
+    <h2>🌾 8b. Germination of Seeds</h2>
+    <p><strong>Definition (Germination):</strong> Germination is the process by which a seed develops into a new seedling (young plant). It begins when the dormant embryo resumes metabolic activity and starts growing.</p>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Seed_germination.svg" alt="Seed germination stages" class="diagram-img">
+    <p class="image-caption">Seed germination: water uptake → enzyme activity → embryo growth</p>
+
+    <h3>Conditions Necessary for Germination</h3>
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Condition</th>
+          <th>Why It's Needed</th>
+          <th>Practical Example</th>
+        </tr>
+        <tr>
+          <td><strong>Water</strong></td>
+          <td>Softens seed coat; activates enzymes; mobilizes food reserves</td>
+          <td>Soaking seeds before planting</td>
+        </tr>
+        <tr>
+          <td><strong>Oxygen</strong></td>
+          <td>For aerobic respiration to release energy for growth</td>
+          <td>Well-aerated soil (not waterlogged)</td>
+        </tr>
+        <tr>
+          <td><strong>Suitable Temperature</strong></td>
+          <td>Activates enzymes for metabolic processes</td>
+          <td>Usually 25–30°C for tropical seeds</td>
+        </tr>
+        <tr>
+          <td><strong>Viable Seed</strong></td>
+          <td>Embryo must be alive and capable of growth</td>
+          <td>Fresh seeds (not old/damaged)</td>
+        </tr>
+        <tr>
+          <td><strong>Enzymes</strong></td>
+          <td>Break down stored food into usable forms</td>
+          <td>Amylase: starch→sugars; Protease: proteins→amino acids</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="memory-tip">
+      <strong>🧠 MEMORY TIP:</strong>
+      <p>Remember "<strong>WOVE</strong>" — Water, Oxygen, Viable seed, Enzymes (temperature is implied because enzymes need it).</p>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>🧪 Application (JAMB Style)</h4>
+      <ul>
+        <li>Seeds planted in <strong>waterlogged soil</strong> may fail to germinate because of <strong>lack of oxygen</strong> for respiration.</li>
+      </ul>
+    </div>
+
+    <h3>Types of Germination ⭐ (Exam Favorite)</h3>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Epigeal_and_hypogeal_germination.svg" alt="Epigeal vs Hypogeal germination" class="diagram-img">
+    <p class="image-caption">Epigeal vs Hypogeal germination (cotyledon position is key)</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Feature</th>
+          <th>EPIGEAL GERMINATION</th>
+          <th>HYPOGEAL GERMINATION</th>
+        </tr>
+        <tr>
+          <td><strong>Meaning</strong></td>
+          <td>"Epi" = above; cotyledons rise above ground</td>
+          <td>"Hypo" = below; cotyledons remain below ground</td>
+        </tr>
+        <tr>
+          <td><strong>Cotyledon position</strong></td>
+          <td>Pushed above soil surface</td>
+          <td>Stay underground in the soil</td>
+        </tr>
+        <tr>
+          <td><strong>Fate of cotyledons</strong></td>
+          <td>Emerge, turn green, photosynthesize temporarily</td>
+          <td>Stay in soil as food storage; shrivel after use</td>
+        </tr>
+        <tr>
+          <td><strong>Hypocotyl</strong></td>
+          <td>Elongates rapidly</td>
+          <td>Does not elongate much</td>
+        </tr>
+        <tr>
+          <td><strong>Epicotyl</strong></td>
+          <td>Stays short initially</td>
+          <td>Elongates to push plumule up</td>
+        </tr>
+        <tr>
+          <td><strong>Examples</strong></td>
+          <td>Beans, groundnut, cotton, sunflower, castor oil</td>
+          <td>Maize, rice, wheat, sorghum, pea, mango</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="highlight-box">
+      <p><strong>Visual Hint:</strong></p>
+      <p><strong>Epi</strong> = cotyledons go <strong>up</strong> | <strong>Hypo</strong> = cotyledons stay <strong>down</strong></p>
+      <p><strong>Easy memory:</strong> "Bean goes Up, Maize stays Down"</p>
+    </div>
+
+    <h3>📝 JAMB Exam Points (What They Test)</h3>
+    <div class="quick-facts">
+      <h4>Common Question Types</h4>
+      <ul>
+        <li>Differentiate epigeal vs hypogeal (cotyledon position + examples)</li>
+        <li>List conditions for germination (with brief reasons)</li>
+        <li>Why is oxygen needed? (aerobic respiration → energy)</li>
+        <li>Waterlogged soil case study (oxygen shortage)</li>
+      </ul>
+    </div>
+
+    <h3>✅ Practice Question</h3>
+    <p><strong>Q:</strong> State four differences between epigeal and hypogeal germination and give two examples of plants for each type.</p>
+
+    <div class="table-container">
+      <table class="summary-table wide">
+        <tr>
+          <th>Epigeal</th>
+          <th>Hypogeal</th>
+        </tr>
+        <tr>
+          <td>Cotyledons emerge above ground</td>
+          <td>Cotyledons remain below ground</td>
+        </tr>
+        <tr>
+          <td>Hypocotyl elongates</td>
+          <td>Epicotyl elongates</td>
+        </tr>
+        <tr>
+          <td>Cotyledons become green/photosynthetic</td>
+          <td>Cotyledons act as food store only</td>
+        </tr>
+        <tr>
+          <td>Examples: Bean, Groundnut</td>
+          <td>Examples: Maize, Rice</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+
+    <div class="memory-tip">
+      <strong>🧠 QUICK MEMORY AIDS:</strong>
+      <p>WOVE | "Epi-Above, Hypo-Below" | "Bean Up, Maize Down"</p>
+    </div>
+  </div>
+
+  <!-- QUICK REVISION -->
+  <div class="section-card">
+    <h2>📋 Quick Revision Checklist</h2>
+
+    <h3>Must-Know Definitions:</h3>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Growth:</strong> irreversible permanent increase in size and dry mass</li>
+        <li><strong>Germination:</strong> seed developing into a seedling</li>
+        <li><strong>Epigeal:</strong> cotyledons above ground</li>
+        <li><strong>Hypogeal:</strong> cotyledons below ground</li>
+      </ul>
+    </div>
+
+    <h3>Must-Know Lists:</h3>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Conditions:</strong> water, oxygen, temperature, viable seed, enzymes</li>
+        <li><strong>Enzymes examples:</strong> amylase, protease</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- MNEMONICS SUMMARY -->
+  <div class="section-card">
+    <h2>🧩 Mnemonics Summary</h2>
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Topic</th>
+          <th>Mnemonic</th>
+        </tr>
+        <tr>
+          <td>Conditions for germination</td>
+          <td>WOVE (Water, Oxygen, Viable seed, Enzymes)</td>
+        </tr>
+        <tr>
+          <td>Types of germination</td>
+          <td>"Epi-Above, Hypo-Below"</td>
+        </tr>
+        <tr>
+          <td>Examples</td>
+          <td>"Bean goes Up, Maize stays Down"</td>
+        </tr>
+      </table>
+    </div>
+    <p class="table-scroll-hint">← Swipe table to see more →</p>
+  </div>
+
+  <p style="text-align: center; font-size: 16px; margin: 32px 0; font-weight: bold; color: var(--accent);">
+    🌟 Master growth + germination, and you’ll grab those JAMB marks! 🌟
+  </p>
+
+  <button class="explore-btn" onclick="alert('Practice JAMB past questions on Growth (Chapter 11)!')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      const scrolled = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+  </script>
+</body>
+</html>

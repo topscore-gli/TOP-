@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIOLOGY  - Growth</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    :root {
+      --background: #1e1e2f;
+      --shadow-in: #171723;
+      --shadow-out: #25253b;
+      --text-primary: #f0f0ff;
+      --text-secondary: #c0c0e0;
+      --accent: #1db954;
+      --card-bg: #2a2a3f;
+    }
+
+    body.light {
+      --background: #e0e0e0;
+      --shadow-in: #bebebe;
+      --shadow-out: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #444;
+      --accent: #1db954;
+      --card-bg: #f8f8f8;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      border-radius: 20px;
+      box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out);
+      overflow: hidden;
+      position: relative;
+      height: 700px;
+      overflow-y: auto;
+      padding-top: 70px;
+      padding-bottom: 70px;
+    }
+
+    .neumorphic {
+      background: var(--background);
+      box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out);
+      border-radius: 15px;
+    }
+
+    .neumorphic-btn {
+      background: var(--background);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      cursor: pointer;
+      color: var(--text-primary);
+      font-size: 18px;
+    }
+
+    .neumorphic-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 5px 10px var(--shadow-in);
+      z-index: 20;
+    }
+
+    .top-bar .header {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+
+    .top-bar .right-icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-bar .profile-upload {
+      position: relative;
+    }
+
+    .top-bar .profile-upload input {
+      opacity: 0;
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 20px 16px;
+      line-height: 1.6;
+    }
+
+    .main-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .main-header h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .main-header p.subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .welcome-note {
+      background: var(--card-bg);
+      padding: 28px 20px;
+      border-radius: 20px;
+      box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out);
+      margin-bottom: 30px;
+    }
+
+    .welcome-note h2 {
+      font-size: 22px;
+      margin: 32px 0 16px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .welcome-note h3 {
+      font-size: 18px;
+      margin: 24px 0 12px;
+      color: var(--accent);
+    }
+
+    .welcome-note p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .welcome-note ul, .welcome-note ol {
+      padding-left: 24px;
+      margin: 16px 0;
+    }
+
+    .welcome-note li {
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .welcome-note .highlight {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .diagram-img {
+      width: 100%;
+      border-radius: 12px;
+      margin: 16px 0 8px;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .organelle-list {
+      margin: 16px 0;
+      padding: 12px;
+      background: rgba(0,0,0,0.1);
+      border-radius: 12px;
+    }
+
+    .organelle-list li strong {
+      color: var(--accent);
+    }
+
+    /* ─── FIX: Horizontal scroll for wide tables on mobile ─── */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 16px 0;
+      -webkit-overflow-scrolling: touch; /* smooth iOS scrolling */
+    }
+
+    .welcome-note table {
+      width: 100%;
+      min-width: 480px;          /* force scroll when screen < \~480px */
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .welcome-note th,
+    .welcome-note td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 14px;
+      white-space: nowrap;       /* prevent text wrapping in cells */
+    }
+
+    .welcome-note th {
+      background: rgba(29, 185, 84, 0.2);
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .welcome-note tr:last-child td {
+      border-bottom: none;
+    }
+
+    .explore-btn {
+      background: var(--accent);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      color: #000;
+      cursor: pointer;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      font-size: 16px;
+      margin: 24px auto 0;
+      display: block;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .explore-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    /* Footer Nav Bar */
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -5px 10px var(--shadow-in);
+      z-index: 20;
+    }
+
+    .nav-bar .nav-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .nav-bar .nav-item button {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.center button {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      background: var(--accent);
+      box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      color: #000;
+    }
+
+    .nav-bar .nav-item.active button {
+      background: var(--accent);
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .nav-bar .nav-item p {
+      display: none;
+      font-size: 12px;
+      margin-top: 5px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.active p {
+      display: block;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <!-- Top Fixed Bar -->
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn profile-upload">
+          📷
+          <input type="file" accept="image/*" id="profile-upload">
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+      <div class="main-header">
+        <h1>Level Up Your Biology Knowledge! 🚀</h1>
+        <p class="subtitle">– JAMB Topic 8: Growth Made Super Easy</p>
+      </div>
+
+      <div class="welcome-note neumorphic">
+        <h2>1. Meaning of Growth 🌱</h2>
+        <p>Growth is the <strong>permanent and irreversible increase</strong> in the size, mass, volume, length, or number/complexity of cells in a living organism.</p>
+        <p>It results from three main processes:</p>
+        <ul>
+          <li><strong>Cell division</strong> (mainly mitosis in somatic cells)</li>
+          <li><strong>Cell enlargement/elongation</strong></li>
+          <li><strong>Cell differentiation</strong> (cells become specialized, e.g., root hair, xylem)</li>
+        </ul>
+        <p><strong>Plants:</strong> Indeterminate growth (continues lifelong at apical, lateral, intercalary meristems).</p>
+        <p><strong>Animals:</strong> Determinate growth (stops at maturity).</p>
+
+        <h2>2. Mitosis (For growth, repair, asexual reproduction) 🔬</h2>
+        <p>Produces 2 identical diploid daughter cells (2n → 2n).</p>
+        <p><strong>Phases of Mitosis (PMAT mnemonic):</strong></p>
+        <ul>
+          <li><strong>Prophase:</strong> Chromosomes condense & visible; nuclear membrane disappears; spindle forms.</li>
+          <li><strong>Metaphase:</strong> Chromosomes line up at equator; spindle attaches to centromeres.</li>
+          <li><strong>Anaphase:</strong> Sister chromatids separate & move to opposite poles.</li>
+          <li><strong>Telophase:</strong> Chromosomes decondense; nuclear membrane reforms; cytokinesis (cell splits).</li>
+        </ul>
+
+        <img src="https://opened.cuny.edu/courseware/lesson/654/student-old/?task=3" alt="Labeled mitosis phases diagram PMAT" class="diagram-img">
+        <img src="https://www.shutterstock.com/image-vector/stages-mitosis-vector-illustration-diagram-cell-1647476995" alt="Mitosis stages cycle diagram" class="diagram-img">
+
+        <h2>3. Meiosis (Gamete production – reduction division) 🧬</h2>
+        <p>Produces 4 genetically different haploid gametes (2n → n). Two divisions: Meiosis I (reduction) + Meiosis II.</p>
+        <p><strong>Crossing-Over</strong> (Key in Prophase I of Meiosis I): Exchange of genetic material between non-sister chromatids → genetic variation.</p>
+
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Feature</th>
+              <th>Mitosis</th>
+              <th>Meiosis</th>
+            </tr>
+            <tr>
+              <td>Divisions</td>
+              <td>1</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Daughter cells</td>
+              <td>2 identical, diploid</td>
+              <td>4 different, haploid</td>
+            </tr>
+            <tr>
+              <td>Crossing-over</td>
+              <td>No</td>
+              <td>Yes (Prophase I)</td>
+            </tr>
+            <tr>
+              <td>Purpose</td>
+              <td>Growth, repair</td>
+              <td>Gamete production, variation</td>
+            </tr>
+          </table>
+        </div>
+
+        <img src="https://www.mometrix.com/academy/wp-content/uploads/2023/01/mitosis-vs-meiosis-diagram.png" alt="Mitosis vs Meiosis side-by-side comparison" class="diagram-img">
+
+        <h2>4. Plant Hormones (Phytohormones) 🌿</h2>
+        <p>These chemicals control growth and responses.</p>
+
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Hormone</th>
+              <th>Site</th>
+              <th>Key Roles in Growth</th>
+              <th>Effect</th>
+            </tr>
+            <tr>
+              <td><strong>Auxin (IAA)</strong></td>
+              <td>Shoot tip</td>
+              <td>Cell elongation, phototropism, apical dominance</td>
+              <td>Promoter</td>
+            </tr>
+            <tr>
+              <td><strong>Gibberellins</strong></td>
+              <td>Young leaves, seeds</td>
+              <td>Stem elongation, break dormancy</td>
+              <td>Promoter</td>
+            </tr>
+            <tr>
+              <td><strong>Cytokinins</strong></td>
+              <td>Root tips</td>
+              <td>Cell division, delay senescence</td>
+              <td>Promoter</td>
+            </tr>
+            <tr>
+              <td><strong>Abscisic Acid</strong></td>
+              <td>Mature leaves, roots</td>
+              <td>Inhibits growth, closes stomata</td>
+              <td>Inhibitor</td>
+            </tr>
+            <tr>
+              <td><strong>Ethylene</strong></td>
+              <td>Ripening fruits</td>
+              <td>Fruit ripening, abscission</td>
+              <td>Mostly Inhibitor</td>
+            </tr>
+          </table>
+        </div>
+
+        <h2>5. Animal Growth Hormones 🐾</h2>
+
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Hormone</th>
+              <th>Gland</th>
+              <th>Main Functions</th>
+              <th>Deficiency/Excess</th>
+            </tr>
+            <tr>
+              <td><strong>Growth Hormone (GH)</strong></td>
+              <td>Anterior Pituitary</td>
+              <td>Bone/cartilage growth, protein synthesis</td>
+              <td>Dwarfism / Gigantism</td>
+            </tr>
+            <tr>
+              <td><strong>Thyroxine (T3/T4)</strong></td>
+              <td>Thyroid</td>
+              <td>Metabolic rate, brain growth</td>
+              <td>Cretinism / Hyperthyroidism</td>
+            </tr>
+            <tr>
+              <td><strong>Insulin</strong></td>
+              <td>Pancreas</td>
+              <td>Glucose uptake, protein/fat synthesis</td>
+              <td>Diabetes (poor growth)</td>
+            </tr>
+            <tr>
+              <td><strong>Testosterone</strong></td>
+              <td>Testes</td>
+              <td>Muscle/bone growth, male puberty</td>
+              <td>Delayed development</td>
+            </tr>
+            <tr>
+              <td><strong>Estrogen</strong></td>
+              <td>Ovaries</td>
+              <td>Breast/bone growth, female puberty</td>
+              <td>Delayed puberty</td>
+            </tr>
+          </table>
+        </div>
+
+        <h2>6. Tropisms in Plants (Directional growth responses) 🌞</h2>
+        <p>Controlled by auxin redistribution (Cholodny-Went theory).</p>
+
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Type</th>
+              <th>Stimulus</th>
+              <th>Shoot Response</th>
+              <th>Root Response</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td><strong>Phototropism</strong></td>
+              <td>Light</td>
+              <td>Positive (towards)</td>
+              <td>Negative (away)</td>
+              <td>Shoot bends to sun</td>
+            </tr>
+            <tr>
+              <td><strong>Gravitropism</strong></td>
+              <td>Gravity</td>
+              <td>Negative (up)</td>
+              <td>Positive (down)</td>
+              <td>Roots grow down</td>
+            </tr>
+            <tr>
+              <td><strong>Hydrotropism</strong></td>
+              <td>Water</td>
+              <td>—</td>
+              <td>Positive (towards)</td>
+              <td>Roots seek moisture</td>
+            </tr>
+            <tr>
+              <td><strong>Thigmotropism</strong></td>
+              <td>Touch</td>
+              <td>—</td>
+              <td>—</td>
+              <td>Tendrils coil around support</td>
+            </tr>
+          </table>
+        </div>
+
+        <p><strong>Auxin Mechanism:</strong> Higher auxin on shaded/lower side → shoots elongate more → bending.</p>
+
+        <img src="https://www.pearson.com/channels/biology/learn/jason/plant-sensation-and-response/phototropism" alt="Auxin redistribution in phototropism diagram" class="diagram-img">
+
+        <h2>7. Nastic Movements (Non-directional, reversible) 🔄</h2>
+        <p>Due to turgor pressure changes (not growth).</p>
+
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Type</th>
+              <th>Stimulus</th>
+              <th>Example Response</th>
+              <th>Plant Example</th>
+            </tr>
+            <tr>
+              <td><strong>Thigmonasty/Seismonasty</strong></td>
+              <td>Touch/shock</td>
+              <td>Leaves fold downward</td>
+              <td>Mimosa pudica, Venus flytrap</td>
+            </tr>
+            <tr>
+              <td><strong>Photonasty</strong></td>
+              <td>Light change</td>
+              <td>Petals open/close</td>
+              <td>Tulip, Oxalis</td>
+            </tr>
+            <tr>
+              <td><strong>Nyctinasty</strong></td>
+              <td>Darkness (night)</td>
+              <td>Leaves fold ("sleep")</td>
+              <td>Legumes, Oxalis</td>
+            </tr>
+          </table>
+        </div>
+
+        <img src="https://www.geeksforgeeks.org/biology/movement-due-to-growth-in-plants/" alt="Mimosa pudica thigmonasty before and after touch" class="diagram-img">
+
+        <h2>8. Germination of Seeds 🌱</h2>
+        <p>Viable dormant seed awakens under favourable conditions.</p>
+        <p><strong>Essential Conditions (JAMB must-know):</strong></p>
+        <ul>
+          <li><strong>Water</strong> – Imbibition, enzyme activation</li>
+          <li><strong>Oxygen</strong> – Aerobic respiration for ATP</li>
+          <li><strong>Suitable temperature</strong> – 25–35°C for enzymes</li>
+        </ul>
+
+        <div class="table-wrapper">
+          <table>
+            <tr>
+              <th>Feature</th>
+              <th>Epigeal</th>
+              <th>Hypogeal</th>
+            </tr>
+            <tr>
+              <td>Elongating part</td>
+              <td>Hypocotyl</td>
+              <td>Epicotyl</td>
+            </tr>
+            <tr>
+              <td>Cotyledons position</td>
+              <td>Above ground (green, photosynthesize)</td>
+              <td>Below ground (food storage)</td>
+            </tr>
+            <tr>
+              <td>Examples</td>
+              <td>Bean, groundnut, sunflower</td>
+              <td>Maize, rice, pea</td>
+            </tr>
+          </table>
+        </div>
+
+        <img src="https://www.kofastudy.com/courses/ss3-biology-1st-term/lessons/development-of-new-seeds-week-11/topic/germination/" alt="Epigeal germination bean seedling labeled diagram" class="diagram-img">
+        <img src="https://thumbs.dreamstime.com/b/hypogeal-germination-maize-seed-diagram-illustration-educational-purpose-260000000.jpg" alt="Hypogeal germination maize seedling labeled diagram" class="diagram-img">
+
+        <p style="text-align: center; font-size: 17px; margin: 32px 0; font-weight: bold;">
+          Great job 🌟 You now master JAMB Growth topic inside out!
+        </p>
+
+        <p style="text-align: center; margin: 20px 0;">Access JAMB questions related to this passage</p>
+        <button class="explore-btn" onclick="window.location.href='question.html'">Start JAMB Quiz Now!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Nav Bar -->
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    // Profile Upload placeholder
+    document.getElementById('profile-upload').addEventListener('change', (e) => {
+      if (e.target.files[0]) {
+        console.log('Profile picture selected!');
+      }
+    });
+  </script>
+</body>
+</html>

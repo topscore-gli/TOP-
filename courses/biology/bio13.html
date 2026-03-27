@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIOLOGY - Factors Affecting Distribution of Organisms</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    :root {
+      --background: #1e1e2f;
+      --shadow-in: #171723;
+      --shadow-out: #25253b;
+      --text-primary: #f0f0ff;
+      --text-secondary: #c0c0e0;
+      --accent: #1db954;
+      --card-bg: #2a2a3f;
+    }
+
+    body.light {
+      --background: #e0e0e0;
+      --shadow-in: #bebebe;
+      --shadow-out: #ffffff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #444;
+      --accent: #1db954;
+      --card-bg: #f8f8f8;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      border-radius: 20px;
+      box-shadow: 10px 10px 20px var(--shadow-in), -10px -10px 20px var(--shadow-out);
+      overflow: hidden;
+      position: relative;
+      height: 700px;
+      overflow-y: auto;
+      padding-top: 70px;
+      padding-bottom: 70px;
+    }
+
+    .neumorphic {
+      background: var(--background);
+      box-shadow: 5px 5px 10px var(--shadow-in), -5px -5px 10px var(--shadow-out);
+      border-radius: 15px;
+    }
+
+    .neumorphic-btn {
+      background: var(--background);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      cursor: pointer;
+      color: var(--text-primary);
+      font-size: 18px;
+    }
+
+    .neumorphic-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 5px 10px var(--shadow-in);
+      z-index: 20;
+    }
+
+    .top-bar .header {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-primary);
+    }
+
+    .top-bar .right-icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-bar .profile-upload {
+      position: relative;
+    }
+
+    .top-bar .profile-upload input {
+      opacity: 0;
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 20px 16px;
+      line-height: 1.6;
+    }
+
+    .main-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .main-header h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .main-header p.subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .welcome-note {
+      background: var(--card-bg);
+      padding: 28px 20px;
+      border-radius: 20px;
+      box-shadow: inset 4px 4px 10px var(--shadow-in), inset -4px -4px 10px var(--shadow-out);
+      margin-bottom: 30px;
+    }
+
+    .welcome-note h2 {
+      font-size: 22px;
+      margin: 32px 0 16px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .welcome-note h3 {
+      font-size: 18px;
+      margin: 24px 0 12px;
+      color: var(--accent);
+    }
+
+    .welcome-note p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .welcome-note ul, .welcome-note ol {
+      padding-left: 24px;
+      margin: 16px 0;
+    }
+
+    .welcome-note li {
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+
+    .welcome-note .highlight {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .diagram-img {
+      width: 100%;
+      border-radius: 12px;
+      margin: 16px 0 8px;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .organelle-list {
+      margin: 16px 0;
+      padding: 12px;
+      background: rgba(0,0,0,0.1);
+      border-radius: 12px;
+    }
+
+    .organelle-list li strong {
+      color: var(--accent);
+    }
+
+    .welcome-note table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 3px 3px 8px var(--shadow-in), -3px -3px 8px var(--shadow-out);
+    }
+
+    .welcome-note th,
+    .welcome-note td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      font-size: 14px;
+    }
+
+    .welcome-note th {
+      background: rgba(29, 185, 84, 0.2);
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .welcome-note tr:last-child td {
+      border-bottom: none;
+    }
+
+    .explore-btn {
+      background: var(--accent);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      color: #000;
+      cursor: pointer;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      font-size: 16px;
+      margin: 24px auto 0;
+      display: block;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .explore-btn:active {
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 400px;
+      background: var(--background);
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -5px 10px var(--shadow-in);
+      z-index: 20;
+    }
+
+    .nav-bar .nav-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .nav-bar .nav-item button {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.center button {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      background: var(--accent);
+      box-shadow: 0 0 15px var(--accent), 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      color: #000;
+    }
+
+    .nav-bar .nav-item.active button {
+      background: var(--accent);
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .nav-bar .nav-item p {
+      display: none;
+      font-size: 12px;
+      margin-top: 5px;
+      color: var(--text-primary);
+    }
+
+    .nav-bar .nav-item.active p {
+      display: block;
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="container">
+    <!-- Top Fixed Bar -->
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn">←</button>
+      <div class="header">BIOLOGY</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn profile-upload">
+          📷
+          <input type="file" accept="image/*" id="profile-upload">
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+      <div class="main-header">
+        <h1>Level Up Your Biology Knowledge! 🚀</h1>
+        <p class="subtitle">– Factors Affecting Distribution of Organisms</p>
+      </div>
+
+      <div class="welcome-note neumorphic">
+        <h2>1. What Controls Where Organisms Live?</h2>
+        <p>The distribution of plants and animals is not random. It depends on two main groups of factors:</p>
+        <ul>
+          <li><strong>Abiotic factors</strong> – non-living physical & chemical conditions</li>
+          <li><strong>Biotic factors</strong> – interactions with other living organisms (including humans)</li>
+        </ul>
+        <p>JAMB expects you to know how each factor affects distribution and how to measure some abiotic factors.</p>
+
+        <h2>2. Abiotic Factors (Non-living)</h2>
+
+        <h3>Temperature</h3>
+        <p>Affects enzyme activity and metabolic rate.</p>
+        <ul>
+          <li>Too hot/cold → enzymes denature or slow down → organism dies or cannot reproduce</li>
+          <li>Tropical areas → high species diversity</li>
+          <li>Polar regions → few species (mostly adapted animals/plants)</li>
+        </ul>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Temperature_map.png/800px-Temperature_map.png" alt="Global temperature zones affecting organism distribution" class="diagram-img">
+
+        <h3>Rainfall & Relative Humidity</h3>
+        <p>Controls water availability.</p>
+        <ul>
+          <li>High rainfall → rainforests (high plant & animal diversity)</li>
+          <li>Low rainfall → deserts (xerophytes, camels, few species)</li>
+          <li>High humidity → reduces water loss (important for amphibians & insects)</li>
+        </ul>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/World_rainfall_map.jpg/800px-World_rainfall_map.jpg" alt="World rainfall map – shows why rainforests and deserts exist" class="diagram-img">
+
+        <h3>Wind Speed & Direction</h3>
+        <p>Affects pollination, seed dispersal, transpiration, and cooling.</p>
+        <ul>
+          <li>Strong winds → stunted trees on mountains/coasts</li>
+          <li>Wind carries seeds/pollen → spreads species</li>
+        </ul>
+
+        <h3>Altitude</h3>
+        <p>Temperature decreases \~6.5 °C per 1,000 m rise → vegetation zones change.</p>
+        <ul>
+          <li>Low altitude → tropical forest</li>
+          <li>High altitude → alpine tundra (few plants, hardy animals)</li>
+        </ul>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Altitude_zones.png/800px-Altitude_zones.png" alt="Altitude zones – forest to tundra as height increases" class="diagram-img">
+
+        <h3>Salinity, Turbidity & pH (Aquatic)</h3>
+        <ul>
+          <li><strong>Salinity</strong> – freshwater vs marine species (e.g., mangroves tolerate brackish water)</li>
+          <li><strong>Turbidity</strong> – cloudy water reduces light → less photosynthesis (affects algae & fish)</li>
+          <li><strong>pH</strong> – most organisms prefer 6.5–7.5; acidic water (acid rain) harms fish & amphibians</li>
+        </ul>
+
+        <h3>Edaphic (Soil) Factors</h3>
+        <p>Soil texture, nutrients, pH, aeration, water-holding capacity.</p>
+        <ul>
+          <li>Loamy soil → best for most plants</li>
+          <li>Acidic soil → favours heather, blueberries</li>
+          <li>Nutrient-poor soil → few large plants</li>
+        </ul>
+
+        <h2>3. Measuring Abiotic Factors (JAMB Equipment)</h2>
+
+        <ul>
+          <li><strong>Temperature</strong> → thermometer (air, water, soil)</li>
+          <li><strong>Rainfall</strong> → rain gauge</li>
+          <li><strong>Relative humidity</strong> → hygrometer</li>
+          <li><strong>Wind speed</strong> → anemometer</li>
+          <li><strong>Wind direction</strong> → wind vane</li>
+          <li><strong>Turbidity (water clarity)</strong> → Secchi disc</li>
+          <li><strong>pH</strong> → pH meter or universal indicator</li>
+          <li><strong>Salinity</strong> → refractometer or conductivity meter</li>
+          <li><strong>Soil factors</strong> → soil auger, pH kit, sieve</li>
+        </ul>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Rain_gauge.jpg/800px-Rain_gauge.jpg" alt="Rain gauge – measures rainfall amount" class="diagram-img">
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Secchi_disc.jpg/800px-Secchi_disc.jpg" alt="Secchi disc – measures water turbidity (clarity)" class="diagram-img">
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Anemometer.jpg/800px-Anemometer.jpg" alt="Anemometer – measures wind speed" class="diagram-img">
+
+        <h2>4. Biotic Factors (Living Influences)</h2>
+        <p>How other organisms affect distribution:</p>
+        <ul>
+          <li>Competition (for food, space, light)</li>
+          <li>Predation & parasitism</li>
+          <li>Symbiosis (mutualism, commensalism, amensalism)</li>
+          <li>Disease outbreaks</li>
+        </ul>
+
+        <h2>5. Human Activities (Very Important for JAMB)</h2>
+        <p>Humans are the biggest biotic factor today:</p>
+        <ul>
+          <li>Deforestation → (Cutting down of trees) destroys habitats</li>
+          <li>Pollution → poisons air, water, soil</li>
+          <li>Over-hunting & over-fishing → reduces populations</li>
+          <li>Introduction of invasive species → out-compete natives</li>
+          <li>Agriculture & urbanisation → changes land use</li>
+          <li>Climate change → shifts temperature & rainfall zones</li>
+        </ul>
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Deforestation_in_Borneo.jpg/800px-Deforestation_in_Borneo.jpg" alt="Deforestation – major human impact on distribution" class="diagram-img">
+
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Polluted_river.jpg/800px-Polluted_river.jpg" alt="Water pollution – affects aquatic organism distribution" class="diagram-img">
+
+        
+Quick JAMB Self-Test
+          <div class="quiz-question">
+            <p><strong>Q1.</strong> Which tool measures water clarity?</p>
+            
+Answer<p><strong>Secchi disc</strong></p>
+          </div>
+          <div class="quiz-question">
+            <p><strong>Q2.</strong> Deforestation is an example of which type of factor?</p>
+            
+Answer<p><strong>Biotic (human activity)</strong></p>
+          </div>
+          <div class="quiz-question">
+            <p><strong>Q3.</strong> Which abiotic factor drops \~6.5°C per 1,000 m rise?</p>
+            
+Answer<p><strong>Temperature (altitude effect)</strong></p>
+          </div>
+
+        <p style="text-align: center; font-size: 17px; margin: 32px 0; font-weight: bold;">
+          Great job 🌟 You now master this JAMB topic!
+        </p>
+
+        <p style="text-align: center; margin: 20px 0;">Access JAMB questions related to this passage</p>
+        <button class="explore-btn" onclick="window.location.href='question.html'">Start JAMB Quiz Now!</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item">
+      <button class="neumorphic-btn">🔍</button>
+      <p>Search</p>
+    </div>
+    <div class="nav-item center">
+      <button class="neumorphic-btn">⭐</button>
+      <p>Favorite</p>
+    </div>
+    <div class="nav-item">
+      <button class="neumorphic-btn">📚</button>
+      <p>Library</p>
+    </div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    document.getElementById('profile-upload').addEventListener('change', (e) => {
+      if (e.target.files[0]) {
+        console.log('Profile picture selected!');
+      }
+    });
+  </script>
+</body>
+</html>
