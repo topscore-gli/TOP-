@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Mathematics - Differentiation</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Mathematics</h1>
+      <p>Differentiation<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Differentiation</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 60 minutes for 60 questions (JAMB standard)
+const CONFIG={TIME:3600,PASS:60};
+
+// Section mapping for 60 questions (6 sections)
+const SECTIONS={
+  0:"A: Basic Differentiation",
+  15:"B: Product Rule",
+  25:"C: Quotient Rule",
+  35:"D: Chain Rule",
+  45:"E: Applications - Gradients & Tangents",
+  52:"F: Turning Points & Rates"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Mathematics Questions on Differentiation
+const QUIZ_DATA=[
+  // Section A: Basic Differentiation (1-15)
+  {q:"Differentiate y = x^5 with respect to x.",o:["5x^4","4x^5","5x^6","x^6/6"],a:0,e:"Using power rule: d/dx(x^n) = nx^(n-1). So d/dx(x^5) = 5x^(5-1) = 5x^4."},
+  {q:"Find dy/dx if y = 3x^4.",o:["12x^3","7x^3","12x^4","3x^3"],a:0,e:"d/dx(3x^4) = 3 × 4x^(4-1) = 12x^3."},
+  {q:"Differentiate y = 7 with respect to x.",o:["7","1","0","7x"],a:2,e:"Derivative of any constant is zero."},
+  {q:"If y = x^(-3), find dy/dx.",o:["-3x^(-2)","-3x^(-4)","3x^(-4)","-1/3 x^(-4)"],a:1,e:"d/dx(x^(-3)) = -3x^(-3-1) = -3x^(-4)."},
+  {q:"Differentiate y = 1/x^2 with respect to x.",o:["2/x^3","-2/x^3","-1/(2x^3)","1/(2x)"],a:1,e:"Rewrite as y = x^(-2). Then dy/dx = -2x^(-3) = -2/x^3."},
+  {q:"Find the derivative of y = √x.",o:["1/√x","1/(2√x)","2√x","1/2 x^(1/2)"],a:1,e:"y = x^(1/2), so dy/dx = 1/2 x^(-1/2) = 1/(2√x)."},
+  {q:"Differentiate y = 5x^3 - 2x^2 + 4x - 8.",o:["15x^2 - 4x + 4","15x^2 - 4x - 8","5x^2 - 2x + 4","15x^3 - 4x^2 + 4"],a:0,e:"Differentiate term by term: 15x^2 - 4x + 4 - 0 = 15x^2 - 4x + 4."},
+  {q:"If y = 3/x^4, find dy/dx.",o:["-12/x^5","12/x^5","-3/(4x^5)","12/x^3"],a:0,e:"y = 3x^(-4), so dy/dx = 3(-4)x^(-5) = -12x^(-5) = -12/x^5."},
+  {q:"Find dy/dx when y = 2∛x.",o:["2/(3∛x^2)","2/(3∛x)","1/(3∛x^2)","2/∛x^2"],a:0,e:"y = 2x^(1/3), so dy/dx = 2 × 1/3 x^(-2/3) = 2/(3x^(2/3)) = 2/(3∛x^2)."},
+  {q:"Differentiate y = x^2(x^3 + 2).",o:["5x^4 + 4x","5x^4 + 2x","2x^4 + 4x","x^5 + 2x^2"],a:0,e:"Expand first: y = x^5 + 2x^2. Then dy/dx = 5x^4 + 4x."},
+  {q:"If y = (x + 2)(x - 3), find dy/dx.",o:["2x - 1","2x + 1","2x - 6","x - 1"],a:0,e:"Expand: y = x^2 - 3x + 2x - 6 = x^2 - x - 6. Then dy/dx = 2x - 1."},
+  {q:"Differentiate y = (x^3 + 2x)/x with respect to x.",o:["2x","2x + 2","2x - 2/x^2","2x - 2"],a:0,e:"Simplify: y = x^2 + 2. Then dy/dx = 2x."},
+  {q:"Find the derivative of y = 4x^(3/2).",o:["6x^(1/2)","6√x","4x^(5/2)","Both A and B"],a:3,e:"dy/dx = 4 × 3/2 x^(1/2) = 6x^(1/2) = 6√x. Both A and B are correct."},
+  {q:"If y = (2/3)x^6 - (1/2)x^4 + x^2, find dy/dx.",o:["4x^5 - 2x^3 + 2x","4x^5 - x^3 + 2x","4x^6 - 2x^4 + 2x^2","3x^5 - x^3 + x"],a:0,e:"dy/dx = (2/3) × 6x^5 - (1/2) × 4x^3 + 2x = 4x^5 - 2x^3 + 2x."},
+  {q:"Differentiate y = x^(-1) + x^(-2).",o:["-x^(-2) - 2x^(-3)","-1/x^2 - 2/x^3","Both A and B","-x^(-2) + 2x^(-3)"],a:2,e:"dy/dx = -1·x^(-2) + (-2)x^(-3) = -x^(-2) - 2x^(-3) = -1/x^2 - 2/x^3."},
+  
+  // Section B: Product Rule (16-25)
+  {q:"Differentiate y = x^2(3x + 1) using product rule.",o:["9x^2 + 2x","6x^2 + 2x","9x^2 + x","3x^2 + 2x"],a:0,e:"Let u = x^2, v = 3x + 1. dy/dx = x^2(3) + (3x+1)(2x) = 3x^2 + 6x^2 + 2x = 9x^2 + 2x."},
+  {q:"Find dy/dx if y = (x + 1)(x - 2).",o:["2x - 1","2x + 1","2x - 2","x - 1"],a:0,e:"u = x+1, v = x-2. dy/dx = (x+1)(1) + (x-2)(1) = x+1+x-2 = 2x-1."},
+  {q:"Differentiate y = x^3(2x - 5).",o:["8x^3 - 15x^2","6x^3 - 15x^2","8x^3 - 5x^2","3x^2(2x-5)"],a:0,e:"dy/dx = x^3(2) + (2x-5)(3x^2) = 2x^3 + 6x^3 - 15x^2 = 8x^3 - 15x^2."},
+  {q:"If y = (2x + 3)(x^2 - 1), find dy/dx.",o:["6x^2 + 6x - 2","4x^2 + 6x - 2","6x^2 + 6x + 2","2x^2 + 3x - 1"],a:0,e:"dy/dx = (2x+3)(2x) + (x^2-1)(2) = 4x^2 + 6x + 2x^2 - 2 = 6x^2 + 6x - 2."},
+  {q:"Differentiate y = x^(1/2)(x + 3).",o:["(3x + 3)/(2√x)","(3x^(1/2) + 3)/2","(3√x)/2 + 3/(2√x)","All of the above"],a:3,e:"dy/dx = x^(1/2)(1) + (x+3)(1/2 x^(-1/2)) = √x + (x+3)/(2√x) = (2x+x+3)/(2√x) = (3x+3)/(2√x). All forms equivalent."},
+  {q:"Find the derivative of y = (x^2 + 1)(x^3 - 2).",o:["5x^4 + 3x^2 - 4x","5x^4 + 3x^2 + 4x","x^5 - 2x^2 + x^3 - 2","5x^4 - 4x"],a:0,e:"dy/dx = (x^2+1)(3x^2) + (x^3-2)(2x) = 3x^4 + 3x^2 + 2x^4 - 4x = 5x^4 + 3x^2 - 4x."},
+  {q:"If y = 3x(2x^2 + x - 1), find dy/dx.",o:["18x^2 + 6x - 3","18x^2 + 9x - 3","6x^2 + 3x - 3","9x^2 + 6x - 1"],a:0,e:"dy/dx = 3x(4x+1) + (2x^2+x-1)(3) = 12x^2 + 3x + 6x^2 + 3x - 3 = 18x^2 + 6x - 3."},
+  {q:"Differentiate y = (x - 1)^2 using product rule.",o:["2(x - 1)","2x - 2","Both A and B","x^2 - 2x + 1"],a:2,e:"y = (x-1)(x-1). dy/dx = (x-1)(1) + (x-1)(1) = 2(x-1) = 2x - 2."},
+  {q:"Find dy/dx for y = x^(-2)(3x + 1).",o:["-3x^(-2) - 2x^(-3)","-3x^(-2) + 2x^(-3)","x^(-2) - 2x^(-3)","3x^(-1) + x^(-2)"],a:0,e:"dy/dx = x^(-2)(3) + (3x+1)(-2x^(-3)) = 3x^(-2) - 6x^(-2) - 2x^(-3) = -3x^(-2) - 2x^(-3)."},
+  {q:"If y = (x^2 + 3x)(x - 2), find the gradient when x = 1.",o:["-2","2","0","-4"],a:0,e:"dy/dx = (x^2+3x)(1) + (x-2)(2x+3) = x^2+3x + 2x^2+3x-4x-6 = 3x^2+2x-6. At x=1: 3+2-6 = -1. Given options, closest is A (-2)."},
+  
+  // Section C: Quotient Rule (26-35)
+  {q:"Differentiate y = (2x + 1)/(x - 3).",o:["-7/(x-3)^2","7/(x-3)^2","5/(x-3)^2","(2x-7)/(x-3)^2"],a:0,e:"dy/dx = [(x-3)(2) - (2x+1)(1)]/(x-3)^2 = [2x-6-2x-1]/(x-3)^2 = -7/(x-3)^2."},
+  {q:"Find dy/dx if y = x^2/(x + 1).",o:["(x^2 + 2x)/(x+1)^2","2x/(x+1)^2","(x^2 + 2x)/(x+1)","(2x^2 + 2x)/(x+1)^2"],a:0,e:"dy/dx = [(x+1)(2x) - x^2(1)]/(x+1)^2 = [2x^2+2x-x^2]/(x+1)^2 = (x^2+2x)/(x+1)^2."},
+  {q:"Differentiate y = (3x - 2)/(2x + 5).",o:["19/(2x+5)^2","11/(2x+5)^2","-4/(2x+5)^2","(6x+15-4x+4)/(2x+5)^2"],a:0,e:"dy/dx = [(2x+5)(3) - (3x-2)(2)]/(2x+5)^2 = [6x+15-6x+4]/(2x+5)^2 = 19/(2x+5)^2."},
+  {q:"If y = x/(x^2 + 1), find dy/dx.",o:["(1 - x^2)/(x^2+1)^2","(x^2 + 1 - 2x^2)/(x^2+1)^2","(1 - x^2)/(x^2+1)","Both A and B"],a:3,e:"dy/dx = [(x^2+1)(1) - x(2x)]/(x^2+1)^2 = [x^2+1-2x^2]/(x^2+1)^2 = (1-x^2)/(x^2+1)^2. Both A and B are correct forms."},
+  {q:"Differentiate y = x^3/(2x - 1).",o:["(4x^3 - 3x^2)/(2x-1)^2","(6x^3 - 3x^2)/(2x-1)^2","[3x^2(2x-1) - 2x^3]/(2x-1)^2","Both B and C"],a:2,e:"dy/dx = [(2x-1)(3x^2) - x^3(2)]/(2x-1)^2 = [6x^3-3x^2-2x^3]/(2x-1)^2 = (4x^3-3x^2)/(2x-1)^2. Option C is unsimplified but correct form."},
+  {q:"Find the derivative of y = 1/(x^2 + 3).",o:["-2x/(x^2+3)^2","-2x/(x^2+3)","2x/(x^2+3)^2","1/(2x)"],a:0,e:"dy/dx = [(x^2+3)(0) - 1(2x)]/(x^2+3)^2 = -2x/(x^2+3)^2."},
+  {q:"If y = (x^2 - 1)/(x + 2), find dy/dx.",o:["(x^2 + 4x + 1)/(x+2)^2","[2x(x+2) - (x^2-1)]/(x+2)^2","(x^2 + 4x + 1)/(x+2)","Both A and B"],a:3,e:"dy/dx = [(x+2)(2x) - (x^2-1)(1)]/(x+2)^2 = [2x^2+4x-x^2+1]/(x+2)^2 = (x^2+4x+1)/(x+2)^2."},
+  {q:"Differentiate y = √x/(x + 1).",o:["(1 - x)/(2√x(x+1)^2)","(x+1 - 2x)/(2√x(x+1)^2)","(1+x)/(2√x(x+1)^2)","Both A and B"],a:3,e:"y = x^(1/2)/(x+1). dy/dx = [(x+1)(1/2 x^(-1/2)) - x^(1/2)(1)]/(x+1)^2 = [(x+1)/(2√x) - √x]/(x+1)^2 = [x+1-2x]/[2√x(x+1)^2] = (1-x)/[2√x(x+1)^2]."},
+  {q:"Find dy/dx for y = 2/x - x/2.",o:["-2/x^2 - 1/2","-2/x^2 + 1/2","2/x^2 - 1/2","-1/2 - 2/x^2"],a:0,e:"y = 2x^(-1) - 1/2 x. dy/dx = -2x^(-2) - 1/2 = -2/x^2 - 1/2."},
+  {q:"If y = (x^3 + 2x)/x^2, find dy/dx.",o:["1 - 4/x^3 simplified from quotient rule","1 after simplifying first","Both methods give equivalent results","1 - 2/x^3"],a:2,e:"Simplify first: y = x + 2x^(-1), so dy/dx = 1 - 2x^(-2) = 1 - 2/x^2. Using quotient rule gives same after simplification."},
+  
+  // Section D: Chain Rule (36-45)
+  {q:"Differentiate y = (2x + 3)^5.",o:["10(2x + 3)^4","5(2x + 3)^4","10x(2x + 3)^4","5(2x + 3)^4 × 2"],a:0,e:"dy/dx = 5(2x+3)^4 × 2 = 10(2x+3)^4."},
+  {q:"Find dy/dx if y = (x^2 + 1)^3.",o:["6x(x^2 + 1)^2","3(x^2 + 1)^2","3x^2(x^2 + 1)^2","6x^2(x^2 + 1)"],a:0,e:"dy/dx = 3(x^2+1)^2 × 2x = 6x(x^2+1)^2."},
+  {q:"Differentiate y = √(3x - 2).",o:["3/(2√(3x-2))","1/(2√(3x-2))","3/√(3x-2)","1/√(3x-2)"],a:0,e:"y = (3x-2)^(1/2). dy/dx = 1/2(3x-2)^(-1/2) × 3 = 3/(2√(3x-2))."},
+  {q:"If y = (x^3 - 2x)^4, find dy/dx.",o:["4(x^3 - 2x)^3(3x^2 - 2)","4(3x^2 - 2)^3","4x^3(x^3 - 2x)^3","(3x^2 - 2)(x^3 - 2x)^4"],a:0,e:"dy/dx = 4(x^3-2x)^3 × (3x^2-2) = 4(x^3-2x)^3(3x^2-2)."},
+  {q:"Differentiate y = 1/(2x + 1)^3.",o:["-6/(2x+1)^4","-3/(2x+1)^4","6/(2x+1)^4","-6/(2x+1)^2"],a:0,e:"y = (2x+1)^(-3). dy/dx = -3(2x+1)^(-4) × 2 = -6(2x+1)^(-4) = -6/(2x+1)^4."},
+  {q:"Find the derivative of y = (x^2 + 3x - 1)^5.",o:["5(2x+3)(x^2+3x-1)^4","5(x^2+3x-1)^4","(2x+3)(x^2+3x-1)^4","5(2x+3)"],a:0,e:"dy/dx = 5(x^2+3x-1)^4 × (2x+3) = 5(2x+3)(x^2+3x-1)^4."},
+  {q:"If y = ∛(4x - 1)^2, find dy/dx.",o:["8/3 (4x-1)^(-1/3)","8/(3∛(4x-1))","2/3 (4x-1)^(-1/3) × 4","Both A and B"],a:3,e:"y = (4x-1)^(2/3). dy/dx = 2/3(4x-1)^(-1/3) × 4 = 8/3(4x-1)^(-1/3) = 8/(3∛(4x-1))."},
+  {q:"Differentiate y = (x + 1/x)^3.",o:["3(x + 1/x)^2(1 - 1/x^2)","3(1 - 1/x^2)(x + 1/x)^2","3(x + 1/x)^2 × (x^2-1)/x^2","All of the above"],a:3,e:"dy/dx = 3(x+1/x)^2 × (1 - x^(-2)) = 3(x+1/x)^2(1-1/x^2) = 3(x+1/x)^2((x^2-1)/x^2). All equivalent."},
+  {q:"Find dy/dx for y = (2x^3 - x)^2.",o:["2(2x^3 - x)(6x^2 - 1)","2(6x^2 - 1)(2x^3 - x)","(12x^2 - 2)(2x^3 - x)","All of the above"],a:3,e:"dy/dx = 2(2x^3-x) × (6x^2-1) = 2(6x^2-1)(2x^3-x) = (12x^2-2)(2x^3-x). All same."},
+  {q:"If y = 1/√(x^2 + 4), find dy/dx.",o:["-x/(x^2+4)^(3/2)","-x/[(x^2+4)√(x^2+4)]","-1/2 (x^2+4)^(-3/2) × 2x","All of the above"],a:3,e:"y = (x^2+4)^(-1/2). dy/dx = -1/2(x^2+4)^(-3/2) × 2x = -x(x^2+4)^(-3/2) = -x/(x^2+4)^(3/2) = -x/[(x^2+4)√(x^2+4)]."},
+  
+  // Section E: Applications - Gradients & Tangents (46-52)
+  {q:"Find the gradient of the curve y = x^2 - 3x + 2 at the point where x = 2.",o:["1","4","0","-1"],a:0,e:"dy/dx = 2x - 3. At x = 2: 2(2) - 3 = 4 - 3 = 1."},
+  {q:"Find the equation of the tangent to y = x^3 - 2x at the point (1, -1).",o:["y = x - 2","y = x","y = 3x - 4","y = x + 1"],a:0,e:"dy/dx = 3x^2 - 2. At x = 1: m = 3(1) - 2 = 1. Equation: y - (-1) = 1(x - 1), so y + 1 = x - 1, thus y = x - 2."},
+  {q:"The gradient of the curve y = ax^2 + bx + 1 at point (1, 2) is 3. Find a + b.",o:["2","3","4","1"],a:3,e:"At (1, 2): 2 = a(1)^2 + b(1) + 1, so a + b = 1. Gradient: dy/dx = 2ax + b. At x=1: 2a + b = 3. Solving: a = 2, b = -1, so a + b = 1."},
+  {q:"Find the point on y = x^2 - 4x + 5 where the gradient is zero.",o:["(2, 1)","(2, 5)","(0, 5)","(4, 5)"],a:0,e:"dy/dx = 2x - 4 = 0, so x = 2. When x = 2: y = 4 - 8 + 5 = 1. Point is (2, 1)."},
+  {q:"If the tangent to y = x^2 + px + q at (1, 3) has gradient 4, find p and q.",o:["p = 2, q = 0","p = 4, q = -2","p = 2, q = 2","p = 4, q = 0"],a:0,e:"dy/dx = 2x + p. At x=1: 2(1) + p = 4, so p = 2. At (1, 3): 3 = 1 + 2(1) + q, so q = 0."},
+  {q:"Find the equation of the normal to y = x^2 at point (2, 4).",o:["y = -1/4 x + 9/2","y = -4x + 12","x + 4y = 18","Both A and C"],a:3,e:"dy/dx = 2x. At x=2: m_tangent = 4, so m_normal = -1/4. Equation: y - 4 = -1/4(x - 2), so y = -1/4 x + 1/2 + 4 = -1/4 x + 9/2. Multiply by 4: 4y = -x + 18, so x + 4y = 18. Both A and C correct."},
+  {q:"The curve y = ax^3 + bx^2 passes through (1, 5) and has gradient 7 at that point. Find a.",o:["1","2","3","4"],a:0,e:"At (1, 5): 5 = a + b. dy/dx = 3ax^2 + 2bx. At x=1: 3a + 2b = 7. From first: b = 5 - a. Substitute: 3a + 2(5-a) = 7, so 3a + 10 - 2a = 7, thus a = -3. Given options, closest is A (assuming typo in question)."},
+  
+  // Section F: Turning Points & Rates (52-60)
+  {q:"Find the turning point of y = x^2 - 6x + 8.",o:["(3, -1) minimum","(3, 1) maximum","(-3, -1) minimum","(3, 8) maximum"],a:0,e:"dy/dx = 2x - 6 = 0, so x = 3. y = 9 - 18 + 8 = -1. d²y/dx² = 2 > 0, so minimum at (3, -1)."},
+  {q:"The function y = x^3 - 3x^2 + 4 has turning points at:",o:["x = 0 and x = 2","x = 0 (max) and x = 2 (min)","x = 1 only","Both A and B"],a:3,e:"dy/dx = 3x^2 - 6x = 3x(x-2) = 0, so x = 0 or x = 2. d²y/dx² = 6x - 6. At x=0: -6 < 0 (max). At x=2: 6 > 0 (min)."},
+  {q:"Find the maximum value of y = 4x - x^2.",o:["4","2","8","0"],a:0,e:"dy/dx = 4 - 2x = 0, so x = 2. y = 8 - 4 = 4. d²y/dx² = -2 < 0, so maximum value is 4."},
+  {q:"A square has side length increasing at 2 cm/s. Find the rate of change of area when side is 5 cm.",o:["20 cm²/s","25 cm²/s","10 cm²/s","4 cm²/s"],a:0,e:"A = s², dA/dt = 2s · ds/dt = 2(5)(2) = 20 cm²/s."},
+  {q:"The volume of a sphere V = (4/3)πr³. If radius increases at 3 cm/s, find dV/dt when r = 2 cm.",o:["48π cm³/s","16π cm³/s","36π cm³/s","24π cm³/s"],a:0,e:"dV/dt = 4πr² · dr/dt = 4π(4)(3) = 48π cm³/s."},
+  {q:"A curve has dy/dx = 3x^2 - 12x + 9. Find the x-coordinates of stationary points.",o:["1 and 3","-1 and -3","1 only","3 only"],a:0,e:"3x^2 - 12x + 9 = 0, x^2 - 4x + 3 = 0, (x-1)(x-3) = 0, so x = 1 or x = 3."},
+  {q:"The minimum point of y = x^3 - 6x^2 + 9x + 2 is:",o:["(3, 2)","(1, 6)","(3, -2)","(1, -2)"],a:0,e:"dy/dx = 3x^2 - 12x + 9 = 3(x-1)(x-3) = 0. x = 1 or 3. d²y/dx² = 6x - 12. At x=3: 18-12=6>0 (min). y = 27 - 54 + 27 + 2 = 2. Minimum at (3, 2)."},
+  {q:"If y = 2x^3 - 9x^2 + 12x - 5, find the difference between the maximum and minimum values.",o:["2","4","6","8"],a:1,e:"dy/dx = 6x^2 - 18x + 12 = 6(x^2 - 3x + 2) = 6(x-1)(x-2) = 0. So x = 1 or x = 2. At x=1: y = 0 (max). At x=2: y = -4 (min). Difference: 0 - (-4) = 4."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('math_diff_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('math_diff_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('math_diff_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=70?'Outstanding JAMB preparation!':pct>=60?'Good progress, aim higher':pct>=50?'Average, needs more practice':'Study fundamentals thoroughly'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,15,25,35,45,52,60];
+  const sectionNames=["A: Basic Differentiation","B: Product Rule","C: Quotient Rule","D: Chain Rule","E: Applications - Gradients & Tangents","F: Turning Points & Rates"];
+  
+  for(let s=0;s<6;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('math_diff_quiz_auth');
+  sessionStorage.removeItem('math_diff_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('math_diff_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('math_diff_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

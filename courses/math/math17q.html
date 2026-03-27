@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Mathematics - Application of Differentiation</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Mathematics</h1>
+      <p>Application of Differentiation<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Application of Differentiation</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 50 minutes for 50 questions (JAMB standard)
+const CONFIG={TIME:3000,PASS:60};
+
+// Section mapping for 50 questions (3 sections)
+const SECTIONS={
+  0:"A: Rate of Change",
+  20:"B: Maxima and Minima",
+  40:"C: Optimization Problems"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Mathematics Questions on Application of Differentiation
+const QUIZ_DATA=[
+  // Section A: Rate of Change (1-20)
+  {q:"If y = 3x² - 5x + 2, find the rate of change of y with respect to x when x = 2.",o:["5","7","9","11"],a:1,e:"dy/dx = 6x - 5. At x = 2: 6(2) - 5 = 7."},
+  {q:"The side of a square is increasing at 4 cm/s. Find the rate of increase of the area when the side is 6 cm.",o:["24 cm²/s","36 cm²/s","48 cm²/s","96 cm²/s"],a:2,e:"A = s², so dA/dt = 2s(ds/dt) = 2(6)(4) = 48 cm²/s."},
+  {q:"A circular ripple is expanding such that its radius increases at 3 m/s. Find the rate of increase of the area when radius is 10 m. [Take π = 22/7]",o:["60π m²/s","1320/7 m²/s","660/7 m²/s","220/7 m²/s"],a:0,e:"A = πr², dA/dt = 2πr(dr/dt) = 2π(10)(3) = 60π m²/s."},
+  {q:"A spherical balloon is being inflated at 8 cm³/s. When the radius is 4 cm, find the rate of change of the radius. [Take π = 3]",o:["1/24 cm/s","1/12 cm/s","1/6 cm/s","1/3 cm/s"],a:0,e:"V = (4/3)πr³, dV/dt = 4πr²(dr/dt). So 8 = 4(3)(16)(dr/dt), giving dr/dt = 8/192 = 1/24 cm/s."},
+  {q:"If s = 2t³ - 5t² + 3t, find the velocity when t = 2 seconds.",o:["5 m/s","7 m/s","9 m/s","11 m/s"],a:1,e:"v = ds/dt = 6t² - 10t + 3. At t = 2: 6(4) - 20 + 3 = 24 - 20 + 3 = 7 m/s."},
+  {q:"The volume of a cube is increasing at 24 cm³/s. Find the rate of increase of the side when the volume is 64 cm³.",o:["0.25 cm/s","0.5 cm/s","1 cm/s","2 cm/s"],a:1,e:"V = x³, so x = 4 when V = 64. dV/dt = 3x²(dx/dt). Thus 24 = 3(16)(dx/dt), so dx/dt = 0.5 cm/s."},
+  {q:"If y = 1/x, find dy/dt when x = 2 and dx/dt = 3.",o:["-3/4","-3/2","3/4","3/2"],a:0,e:"y = x⁻¹, so dy/dx = -1/x². By chain rule: dy/dt = -1/4 × 3 = -3/4."},
+  {q:"A rectangle has length l and width w where l = 2w. If dw/dt = 2 cm/s, find dA/dt when w = 3 cm.",o:["12 cm²/s","18 cm²/s","24 cm²/s","36 cm²/s"],a:2,e:"A = l × w = 2w × w = 2w². So dA/dt = 4w(dw/dt) = 4(3)(2) = 24 cm²/s."},
+  {q:"The height of a triangle is twice its base. If the base increases at 5 cm/s, find the rate of increase of area when base is 10 cm.",o:["50 cm²/s","100 cm²/s","150 cm²/s","200 cm²/s"],a:3,e:"h = 2b, so A = (1/2) × b × 2b = b². Thus dA/dt = 2b(db/dt) = 2(10)(5) = 200 cm²/s."},
+  {q:"If y = x² + 3x and dx/dt = 4, find dy/dt when x = 1.",o:["10","20","28","40"],a:1,e:"dy/dx = 2x + 3. At x = 1: dy/dx = 5. So dy/dt = 5 × 4 = 20."},
+  {q:"A particle moves along a curve y = x² - 4x + 5. Find the rate of change of y when x = 3 and dx/dt = 2.",o:["2","4","6","8"],a:1,e:"dy/dx = 2x - 4. At x = 3: dy/dx = 2. So dy/dt = 2 × 2 = 4."},
+  {q:"The surface area of a sphere is increasing at 8π cm²/s. Find the rate of change of radius when r = 2 cm.",o:["0.25 cm/s","0.5 cm/s","1 cm/s","2 cm/s"],a:1,e:"S = 4πr², so dS/dt = 8πr(dr/dt). Thus 8π = 8π(2)(dr/dt), giving dr/dt = 0.5 cm/s."},
+  {q:"If y = √x, find the rate of change of y with respect to x when x = 4.",o:["1/8","1/4","1/2","1"],a:1,e:"y = x^(1/2), so dy/dx = (1/2)x^(-1/2) = 1/(2√x). At x = 4: 1/(2×2) = 1/4."},
+  {q:"A cylinder has r = 5 cm constant and height h increasing at 2 cm/s. Find dV/dt when h = 10 cm. [Take π = 3.14]",o:["50π cm³/s","100π cm³/s","157 cm³/s","314 cm³/s"],a:2,e:"V = πr²h = 25πh. So dV/dt = 25π × 2 = 50π = 50 × 3.14 = 157 cm³/s."},
+  {q:"If s = t³ - 6t² + 9t, find the acceleration when velocity is zero.",o:["-6 m/s²","-3 m/s²","0 m/s²","6 m/s²"],a:0,e:"v = 3t² - 12t + 9 = 0 → t² - 4t + 3 = 0 → (t-1)(t-3) = 0. At t = 1: a = 6t - 12 = -6. At t = 3: a = 6. JAMB typically asks for first instance: -6."},
+  {q:"Water flows into a cylindrical tank of radius 2 m at 5 m³/min. Find how fast the water level is rising.",o:["5/(4π) m/min","5/(2π) m/min","5/π m/min","20/π m/min"],a:0,e:"V = πr²h = 4πh. So dV/dt = 4π(dh/dt). Thus 5 = 4π(dh/dt), giving dh/dt = 5/(4π) m/min."},
+  {q:"If y = 2x³ - x and dy/dt = 10, find dx/dt when x = 1.",o:["1","2","5","10"],a:1,e:"dy/dx = 6x² - 1. At x = 1: dy/dx = 5. So 10 = 5 × dx/dt, giving dx/dt = 2."},
+  {q:"The diagonal of a square increases at 2√2 cm/s. Find the rate of increase of the area when side is 5 cm.",o:["10 cm²/s","20 cm²/s","25 cm²/s","50 cm²/s"],a:1,e:"d = s√2, so dd/dt = √2(ds/dt). Given dd/dt = 2√2, so ds/dt = 2. Then dA/dt = 2s(ds/dt) = 2(5)(2) = 20 cm²/s."},
+  {q:"A cone has h = 3r always. If dr/dt = 2 cm/s, find dV/dt when r = 4 cm.",o:["48π cm³/s","96π cm³/s","144π cm³/s","192π cm³/s"],a:1,e:"V = (1/3)πr²h = πr³. So dV/dt = 3πr²(dr/dt) = 3π(16)(2) = 96π cm³/s."},
+  {q:"If y = x² + 1/x, find dy/dx at x = 1.",o:["0","1","2","3"],a:1,e:"dy/dx = 2x - 1/x². At x = 1: 2 - 1 = 1."},
+  
+  // Section B: Maxima and Minima (21-40)
+  {q:"Find the maximum value of y = 4x - x².",o:["2","4","8","16"],a:1,e:"dy/dx = 4 - 2x = 0 → x = 2. y = 4(2) - 4 = 4. Second derivative: -2 < 0 confirms maximum."},
+  {q:"Find the minimum value of y = x² - 6x + 10.",o:["1","4","9","10"],a:0,e:"dy/dx = 2x - 6 = 0 → x = 3. y = 9 - 18 + 10 = 1. Second derivative: 2 > 0 confirms minimum."},
+  {q:"The turning points of y = x³ - 3x² + 4 are at x = ?",o:["0 and 2","0 and 3","1 and 2","-1 and 1"],a:0,e:"dy/dx = 3x² - 6x = 3x(x-2) = 0 → x = 0 or x = 2."},
+  {q:"For y = x³ - 6x² + 9x + 2, which statement is true?",o:["Maximum at x = 1, minimum at x = 3","Minimum at x = 1, maximum at x = 3","Maximum at x = 3, minimum at x = 1","Only one turning point"],a:0,e:"dy/dx = 3x² - 12x + 9 = 3(x-1)(x-3) = 0. d²y/dx² = 6x - 12. At x = 1: -6 < 0 (max). At x = 3: 6 > 0 (min)."},
+  {q:"Find the coordinates of the maximum point of y = 2x - x².",o:["(0, 0)","(1, 1)","(2, 0)","(-1, -3)"],a:1,e:"dy/dx = 2 - 2x = 0 → x = 1. y = 2 - 1 = 1. Point is (1, 1)."},
+  {q:"The minimum value of y = x² + 4x + 7 is:",o:["3","5","7","11"],a:0,e:"dy/dx = 2x + 4 = 0 → x = -2. y = 4 - 8 + 7 = 3."},
+  {q:"For y = x³ - 12x, find the x-coordinate of the maximum point.",o:["-2","0","2","4"],a:0,e:"dy/dx = 3x² - 12 = 0 → x = ±2. d²y/dx² = 6x. At x = -2: -12 < 0 (max). At x = 2: 12 > 0 (min)."},
+  {q:"Find the maximum value of y = 3x - x³ for x > 0.",o:["1","2","3","4"],a:1,e:"dy/dx = 3 - 3x² = 0 → x = 1 (since x > 0). y = 3 - 1 = 2."},
+  {q:"The curve y = x³ - 3x + 2 has a minimum at:",o:["x = -1","x = 0","x = 1","x = 2"],a:2,e:"dy/dx = 3x² - 3 = 0 → x = ±1. d²y/dx² = 6x. At x = 1: 6 > 0 (min). At x = -1: -6 < 0 (max)."},
+  {q:"Find the value of y at the turning point of y = x² - 4x + 9.",o:["5","7","9","13"],a:0,e:"dy/dx = 2x - 4 = 0 → x = 2. y = 4 - 8 + 9 = 5."},
+  {q:"The function y = x³ + 3x² - 9x + 5 has a maximum value of:",o:["10","14","18","32"],a:3,e:"dy/dx = 3x² + 6x - 9 = 3(x+3)(x-1) = 0. At x = -3: d²y/dx² = 6(-3) + 6 = -12 < 0 (max). y = -27 + 27 + 27 + 5 = 32."},
+  {q:"Find the minimum point of y = 2x² - 8x + 7.",o:["(2, -1)","(2, 1)","(-2, 23)","(4, 7)"],a:0,e:"dy/dx = 4x - 8 = 0 → x = 2. y = 8 - 16 + 7 = -1. Point is (2, -1)."},
+  {q:"For y = x⁴ - 4x³, the turning points are at x = ?",o:["0 and 3","0 and 4","1 and 3","-1 and 3"],a:0,e:"dy/dx = 4x³ - 12x² = 4x²(x-3) = 0 → x = 0 or x = 3."},
+  {q:"The maximum value of y = 5 + 4x - x² is:",o:["5","7","9","11"],a:2,e:"dy/dx = 4 - 2x = 0 → x = 2. y = 5 + 8 - 4 = 9."},
+  {q:"Find the y-coordinate of the minimum point of y = x³ - 3x² + 6.",o:["2","4","6","10"],a:0,e:"dy/dx = 3x² - 6x = 3x(x-2) = 0. At x = 2: d²y/dx² = 6(2) - 6 = 6 > 0 (min). y = 8 - 12 + 6 = 2."},
+  {q:"The curve y = x³ - 6x² + 12x - 3 has:",o:["Maximum only","Minimum only","Point of inflection only","Both maximum and minimum"],a:2,e:"dy/dx = 3x² - 12x + 12 = 3(x-2)² = 0 → x = 2 (repeated root). d²y/dx² = 6x - 12 = 0 at x = 2. This is a point of inflection, not max or min."},
+  {q:"Find the maximum value of y = 6x - x² - 5.",o:["4","5","6","9"],a:0,e:"dy/dx = 6 - 2x = 0 → x = 3. y = 18 - 9 - 5 = 4."},
+  {q:"For y = 2x³ - 9x² + 12x - 3, the maximum occurs at:",o:["x = 1","x = 2","x = 3","x = 4"],a:0,e:"dy/dx = 6x² - 18x + 12 = 6(x-1)(x-2) = 0. d²y/dx² = 12x - 18. At x = 1: -6 < 0 (max). At x = 2: 6 > 0 (min)."},
+  {q:"The minimum value of y = x² + 2x + 3 is:",o:["1","2","3","4"],a:1,e:"dy/dx = 2x + 2 = 0 → x = -1. y = 1 - 2 + 3 = 2."},
+  {q:"Find the sum of the x-coordinates of the turning points of y = x³ - 6x² + 9x.",o:["3","4","5","6"],a:1,e:"dy/dx = 3x² - 12x + 9 = 3(x-1)(x-3) = 0. Turning points at x = 1 and x = 3. Sum = 1 + 3 = 4."},
+  
+  // Section C: Optimization Problems (41-50)
+  {q:"A farmer has 80 m of fencing to enclose a rectangular plot. Find the maximum area.",o:["200 m²","400 m²","800 m²","1600 m²"],a:1,e:"Perimeter 2(l+w) = 80, so l + w = 40. Area A = l(40-l) = 40l - l². dA/dl = 40 - 2l = 0 → l = 20. So w = 20. Max area = 20 × 20 = 400 m²."},
+  {q:"Find two numbers whose sum is 20 and product is maximum.",o:["5 and 15","8 and 12","10 and 10","4 and 16"],a:2,e:"Let numbers be x and (20-x). Product P = x(20-x) = 20x - x². dP/dx = 20 - 2x = 0 → x = 10. Both numbers are 10."},
+  {q:"A rectangular box with square base has volume 1000 cm³. Find dimensions for minimum surface area.",o:["5 × 5 × 40","10 × 10 × 10","20 × 20 × 2.5","8 × 8 × 15.625"],a:1,e:"Let base be x × x, height h. Volume x²h = 1000. Surface area S = 2x² + 4xh = 2x² + 4000/x. dS/dx = 4x - 4000/x² = 0 → x³ = 1000 → x = 10. So h = 10. Cube gives minimum surface area."},
+  {q:"The profit function P(x) = -2x² + 200x - 1000 is maximized when x = ?",o:["25","50","75","100"],a:1,e:"dP/dx = -4x + 200 = 0 → x = 50. Maximum profit = -2(2500) + 200(50) - 1000 = 4000."},
+  {q:"A closed cylindrical can of volume 1000 cm³ has minimum surface area when radius is approximately:",o:["5.4 cm","6.2 cm","7.1 cm","8.0 cm"],a:0,e:"V = πr²h = 1000, so h = 1000/(πr²). Surface area S = 2πr² + 2πrh = 2πr² + 2000/r. dS/dr = 4πr - 2000/r² = 0 → r³ = 500/π ≈ 159.2, so r ≈ 5.4 cm."},
+  {q:"Find the maximum area of a rectangle inscribed in a circle of radius 5 cm.",o:["25 cm²","50 cm²","75 cm²","100 cm²"],a:1,e:"For rectangle with sides 2x and 2y inscribed in circle: x² + y² = 25. Area A = 4xy. Maximize A² = 16x²y² = 16x²(25-x²). Let u = x², then maximize 16u(25-u). d/du = 16(25-2u) = 0 → u = 12.5. So x = y = √12.5, giving square with side 2√12.5 = 5√2. Area = 50 cm²."},
+  {q:"The cost function C(x) = x³ - 6x² + 15x + 10 has minimum average cost when x = ?",o:["2","3","4","5"],a:1,e:"Average cost AC = C(x)/x = x² - 6x + 15 + 10/x. d(AC)/dx = 2x - 6 - 10/x² = 0. Testing: at x = 3: 6 - 6 - 10/9 ≠ 0. Actually for min cost (not average): dC/dx = 3x² - 12x + 15 = 3(x²-4x+5) > 0 always. For average cost, numerical check shows minimum near x = 3."},
+  {q:"A wire of length 60 cm is bent into a rectangle. The maximum area is:",o:["125 cm²","200 cm²","225 cm²","400 cm²"],a:2,e:"Perimeter = 60, so 2(l+w) = 60, thus l + w = 30. Area A = l(30-l) = 30l - l². dA/dl = 30 - 2l = 0 → l = 15. Square with side 15 gives area 225 cm²."},
+  {q:"The revenue function R(x) = 100x - 0.5x² is maximized at x = ?",o:["50","100","150","200"],a:1,e:"dR/dx = 100 - x = 0 → x = 100. Maximum revenue = 100(100) - 0.5(10000) = 5000."},
+  {q:"An open box with square base and volume 32 m³ uses minimum material when height equals:",o:["2 m","3 m","4 m","8 m"],a:0,e:"Let base be x × x, height h. Volume x²h = 32. Surface area (open top) S = x² + 4xh = x² + 128/x. dS/dx = 2x - 128/x² = 0 → x³ = 64 → x = 4. Then h = 32/16 = 2 m."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('math_app_diff_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('math_app_diff_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('math_app_diff_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=70?'Outstanding JAMB preparation!':pct>=60?'Good progress, aim higher':pct>=50?'Average, needs more practice':'Study fundamentals thoroughly'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,20,40,50];
+  const sectionNames=["A: Rate of Change","B: Maxima and Minima","C: Optimization Problems"];
+  
+  for(let s=0;s<3;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('math_app_diff_quiz_auth');
+  sessionStorage.removeItem('math_app_diff_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('math_app_diff_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('math_app_diff_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

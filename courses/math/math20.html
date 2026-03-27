@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Mathematics - Measures of Location</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+    .math{
+      font-weight:900;color:var(--accent-secondary)
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">MATHEMATICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📍 Measures of Location</h1>
+        <p>JAMB Mathematics • mean • median • mode • quartiles • percentiles • grouped and ungrouped data</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Chapter Overview</h2>
+        <p>This chapter covers <strong>mean, median, mode, quartiles, and percentiles</strong>. These are important statistical measures used to locate central or positional values in data sets.</p>
+        <p>You must be able to work with both <strong>ungrouped</strong> and <strong>grouped</strong> data.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Mean is the average value</li>
+            <li>Median is the middle value</li>
+            <li>Mode is the most frequent value</li>
+            <li>Quartiles divide data into 4 parts</li>
+            <li>Percentiles divide data into 100 parts</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Measures of location help you identify where the center or important positions of a data set lie.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Mean (Arithmetic Mean)</h2>
+
+        <h3>The Average</h3>
+        <div class="formula-box">
+          <div class="title">Formula</div>
+          <div class="line"><span class="math">x̄ = ∑x / n</span></div>
+          <div class="line">Where <span class="math">∑x</span> = sum of all values and <span class="math">n</span> = number of values</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 1: Simple Mean</div>
+          <p>Find the mean of: 5, 8, 12, 15, 20</p>
+          <p><span class="math">x̄ = (5 + 8 + 12 + 15 + 20) / 5</span></p>
+          <p><span class="math">= 60 / 5 = 12</span></p>
+          <div class="answer">Answer: Mean = 12</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Mean from Frequency Table</div>
+          <div class="table-container">
+            <table class="summary-table" style="min-width:620px">
+              <tr>
+                <th>Score (x)</th>
+                <th>Frequency (f)</th>
+                <th>f × x</th>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>3</td>
+                <td>6</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>5</td>
+                <td>20</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>2</td>
+                <td>12</td>
+              </tr>
+              <tr>
+                <td>Total</td>
+                <td>∑f = 10</td>
+                <td>∑fx = 38</td>
+              </tr>
+            </table>
+          </div>
+          <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+          <p><span class="math">x̄ = ∑fx / ∑f = 38 / 10 = 3.8</span></p>
+          <div class="answer">Answer: Mean = 3.8</div>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Easy memory tip:</strong> Mean = sum of everything ÷ how many things.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Median</h2>
+
+        <h3>The Middle Value</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>For odd number of values, take the middle value</li>
+            <li>For even number of values, take the average of the two middle values</li>
+          </ul>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Grouped data formula</div>
+          <div class="line"><span class="math">Median = L + [(n/2 - Fb) / fm] × c</span></div>
+          <div class="line"><span class="math">L</span> = lower class boundary of median class</div>
+          <div class="line"><span class="math">n</span> = total frequency</div>
+          <div class="line"><span class="math">Fb</span> = cumulative frequency before median class</div>
+          <div class="line"><span class="math">fm</span> = frequency of median class</div>
+          <div class="line"><span class="math">c</span> = class width</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: Median (Ungrouped - Odd)</div>
+          <p>Data: 3, 7, 8, 12, 15</p>
+          <p>Arranged data: 3, 7, 8, 12, 15</p>
+          <p>The middle value is the 3rd value.</p>
+          <p><span class="math">Median = 8</span></p>
+          <div class="answer">Answer: Median = 8</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 4: Median (Ungrouped - Even)</div>
+          <p>Data: 4, 6, 10, 14</p>
+          <p>The two middle values are 6 and 10.</p>
+          <p><span class="math">Median = (6 + 10)/2 = 16/2 = 8</span></p>
+          <div class="answer">Answer: Median = 8</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 5: Median from Grouped Data</div>
+          <div class="table-container">
+            <table class="summary-table" style="min-width:760px">
+              <tr>
+                <th>Class</th>
+                <th>Frequency (f)</th>
+                <th>Cumulative Frequency</th>
+              </tr>
+              <tr>
+                <td>10-19</td>
+                <td>5</td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td>20-29</td>
+                <td>8</td>
+                <td>13</td>
+              </tr>
+              <tr>
+                <td>30-39</td>
+                <td>12</td>
+                <td>25</td>
+              </tr>
+              <tr>
+                <td>40-49</td>
+                <td>10</td>
+                <td>35</td>
+              </tr>
+              <tr>
+                <td>50-59</td>
+                <td>5</td>
+                <td>40</td>
+              </tr>
+            </table>
+          </div>
+          <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+          <p><strong>Step 1:</strong> <span class="math">n = 40</span>, so <span class="math">n/2 = 20</span></p>
+          <p><strong>Step 2:</strong> Median class is <span class="math">30-39</span></p>
+          <p><strong>Step 3:</strong> <span class="math">L = 29.5</span>, <span class="math">Fb = 13</span>, <span class="math">fm = 12</span>, <span class="math">c = 10</span></p>
+          <p><strong>Step 4:</strong></p>
+          <p><span class="math">Median = 29.5 + [(20 - 13)/12] × 10</span></p>
+          <p><span class="math">= 29.5 + (7/12) × 10</span></p>
+          <p><span class="math">= 29.5 + 5.83 = 35.33</span></p>
+          <div class="answer">Answer: Median = 35.33</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Mode</h2>
+
+        <h3>Most Frequent Value</h3>
+        <p>For ungrouped data, the mode is simply the value that occurs most often.</p>
+
+        <div class="formula-box">
+          <div class="title">Grouped data formula</div>
+          <div class="line"><span class="math">Mode = L + [D1 / (D1 + D2)] × c</span></div>
+          <div class="line"><span class="math">L</span> = lower boundary of modal class</div>
+          <div class="line"><span class="math">D1</span> = modal frequency − previous frequency</div>
+          <div class="line"><span class="math">D2</span> = modal frequency − next frequency</div>
+          <div class="line"><span class="math">c</span> = class width</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 6: Mode (Ungrouped)</div>
+          <p>Data: 2, 3, 3, 5, 7, 3, 8</p>
+          <p>2 appears 1 time</p>
+          <p>3 appears 3 times</p>
+          <p>5 appears 1 time</p>
+          <p>7 appears 1 time</p>
+          <p>8 appears 1 time</p>
+          <div class="answer">Answer: Mode = 3</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 7: Mode from Grouped Data</div>
+          <p>Using the same table as Example 5:</p>
+          <p>Modal class is <span class="math">30-39</span> because it has the highest frequency of 12.</p>
+          <p><span class="math">L = 29.5</span></p>
+          <p><span class="math">D1 = 12 - 8 = 4</span></p>
+          <p><span class="math">D2 = 12 - 10 = 2</span></p>
+          <p><span class="math">c = 10</span></p>
+          <p><span class="math">Mode = 29.5 + [4 / (4 + 2)] × 10</span></p>
+          <p><span class="math">= 29.5 + (4/6) × 10</span></p>
+          <p><span class="math">= 29.5 + 6.67 = 36.17</span></p>
+          <div class="answer">Answer: Mode = 36.17</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Percentiles and Quartiles</h2>
+
+        <h3>Data Division Points</h3>
+        <div class="quick-facts">
+          <ul>
+            <li><span class="math">Q₁</span> = 25th percentile</li>
+            <li><span class="math">Q₂</span> = median = 50th percentile</li>
+            <li><span class="math">Q₃</span> = 75th percentile</li>
+          </ul>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Quartile formula for grouped data</div>
+          <div class="line"><span class="math">Qk = L + [(kn/4 - Fb) / f] × c</span></div>
+          <div class="line">Where <span class="math">k = 1, 2, 3</span></div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Percentile formula</div>
+          <div class="line"><span class="math">P = L + [(Pn/100 - Fb) / f] × c</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 8: Finding Q₁</div>
+          <p>Using the grouped data from Example 5 where <span class="math">n = 40</span>:</p>
+          <p><strong>Step 1:</strong> Position of <span class="math">Q₁ = (1 × 40)/4 = 10</span></p>
+          <p><strong>Step 2:</strong> Q₁ class is <span class="math">20-29</span> because cumulative frequency 13 covers position 10</p>
+          <p><span class="math">L = 19.5</span>, <span class="math">Fb = 5</span>, <span class="math">f = 8</span>, <span class="math">c = 10</span></p>
+          <p><span class="math">Q₁ = 19.5 + [(10 - 5)/8] × 10</span></p>
+          <p><span class="math">= 19.5 + (5/8) × 10</span></p>
+          <p><span class="math">= 19.5 + 6.25 = 25.75</span></p>
+          <div class="answer">Answer: Q₁ = 25.75</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 All Formulas Summary</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Measure</th>
+              <th>Type</th>
+              <th>Formula</th>
+            </tr>
+            <tr>
+              <td>Mean</td>
+              <td>Simple</td>
+              <td><span class="math">x̄ = ∑x / n</span></td>
+            </tr>
+            <tr>
+              <td>Mean</td>
+              <td>Frequency</td>
+              <td><span class="math">x̄ = ∑fx / ∑f</span></td>
+            </tr>
+            <tr>
+              <td>Median</td>
+              <td>Ungrouped (odd)</td>
+              <td>Middle value</td>
+            </tr>
+            <tr>
+              <td>Median</td>
+              <td>Ungrouped (even)</td>
+              <td><span class="math">(middle₁ + middle₂)/2</span></td>
+            </tr>
+            <tr>
+              <td>Median</td>
+              <td>Grouped</td>
+              <td><span class="math">L + [(n/2 - Fb)/fm] × c</span></td>
+            </tr>
+            <tr>
+              <td>Mode</td>
+              <td>Ungrouped</td>
+              <td>Most frequent value</td>
+            </tr>
+            <tr>
+              <td>Mode</td>
+              <td>Grouped</td>
+              <td><span class="math">L + [D1/(D1 + D2)] × c</span></td>
+            </tr>
+            <tr>
+              <td>Quartiles</td>
+              <td>Grouped</td>
+              <td><span class="math">L + [(kn/4 - Fb)/f] × c</span></td>
+            </tr>
+            <tr>
+              <td>Percentiles</td>
+              <td>Grouped</td>
+              <td><span class="math">L + [(Pn/100 - Fb)/f] × c</span></td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+        <div class="formula-box">
+          <div class="title">Key variables quick guide</div>
+          <div class="line"><span class="math">L</span>: Lower boundary</div>
+          <div class="line"><span class="math">n</span>: Total frequency</div>
+          <div class="line"><span class="math">Fb</span>: Cumulative frequency before the class</div>
+          <div class="line"><span class="math">c</span>: Class width</div>
+          <div class="line"><span class="math">D1, D2</span>: Differences with adjacent classes</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>✏️ Practice Question</h2>
+
+        <div class="example-box">
+          <div class="title">Ages of 50 Students</div>
+          <p>Age (years): 10-14, 15-19, 20-24, 25-29, 30-34</p>
+          <p>Frequency: 5, 12, 18, 10, 5</p>
+          <p>Find:</p>
+          <p>(a) Mean</p>
+          <p>(b) Median</p>
+          <p>(c) Mode</p>
+          <div class="answer">Answers: Mean = 21.8, Median = 21.72, Mode = 21.64</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 JAMB Exam Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>How to avoid mistakes</h4>
+          <ul>
+            <li>Check whether the data is grouped or ungrouped before choosing a formula</li>
+            <li>Use class boundaries, not class limits, for grouped median and mode</li>
+            <li>Always calculate cumulative frequency first for median and quartiles</li>
+            <li>The modal class is the class with the highest frequency, not the final mode itself</li>
+            <li>For a symmetrical distribution, mean = median = mode</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>⚠️ Common mistakes</strong>
+          <p>Do not use class limits when boundaries are required. Do not forget cumulative frequency. Do not confuse modal class with mode. Also be careful with quartile positions — use <span class="math">kn/4</span>, not just <span class="math">n/4</span> for every quartile.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>✅ Pre-Exam Checklist</h2>
+
+        <div class="memory-tip">
+          <strong>🧠 Checklist</strong>
+          <p>Revise simple mean, mean from a frequency table, median for odd and even ungrouped data, grouped median formula, ungrouped and grouped mode, quartiles <span class="math">Q₁, Q₂, Q₃</span>, percentile calculation, class boundaries, and cumulative frequency tables.</p>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Connects to:</strong> Measures of Dispersion and Representation of Data.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🌟 Final Revision Note</h2>
+
+        <div class="memory-tip">
+          <strong>Excellent!</strong>
+          <p>You now have a complete guide to Measures of Location. Once you know which measure is being asked for and whether the data is grouped or ungrouped, these questions become much more straightforward.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise mean, median, mode, quartiles, percentiles, and grouped data questions today.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

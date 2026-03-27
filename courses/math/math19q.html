@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Mathematics - Representation of Data</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <div id="load"><div class="spinner"></div></div>
+
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Mathematics</h1>
+      <p>Representation of Data<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Representation of Data</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+const CONFIG={TIME:3600,PASS:60};
+
+const SECTIONS={
+  0:"A: Types of Data & Frequency Tables",
+  10:"B: Bar Charts & Histograms",
+  20:"C: Pie Charts",
+  30:"D: Mean",
+  40:"E: Median & Mode",
+  50:"F: Measures of Dispersion & Cumulative Frequency"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+const QUIZ_DATA=[
+  {q:"Which of the following is an example of continuous data?",o:["Number of students in a class","Types of vehicles on the road","Heights of students in meters","Colors of cars in a parking lot"],a:2,e:"Height is measurable and can take any value in a range (continuous). Others are either countable (discrete) or categorical (qualitative)."},
+  {q:"The data below represents the number of books read by 20 students: 2, 3, 1, 4, 2, 3, 5, 2, 1, 3, 4, 2, 3, 2, 1, 4, 3, 2, 5, 2. What is the frequency of 2?",o:["5","6","7","8"],a:1,e:"Counting occurrences of '2': positions 1, 5, 8, 12, 14, 19 = 6 times."},
+  {q:"Given the frequency distribution: x=5,6,7,8,9 with f=3,5,7,4,1. What is the value of ∑f?",o:["15","18","20","25"],a:2,e:"∑f = 3 + 5 + 7 + 4 + 1 = 20 (total frequency)."},
+  {q:"The class boundaries of the class interval 21-30 are",o:["20.5 and 30.5","21 and 30","20 and 31","21.5 and 29.5"],a:0,e:"For discrete data 21-30, lower boundary = 21 - 0.5 = 20.5, upper boundary = 30 + 0.5 = 30.5."},
+  {q:"If the class width is 5 and the lower class boundary is 10.5, what is the upper class boundary?",o:["14.5","15.0","15.5","16.0"],a:2,e:"Upper boundary = Lower boundary + Class width = 10.5 + 5 = 15.5."},
+  {q:"The midpoint of the class interval 15-24 is",o:["18.5","19.0","19.5","20.0"],a:2,e:"Midpoint = (15 + 24) ÷ 2 = 39 ÷ 2 = 19.5."},
+  {q:"Which of the following is a qualitative data?",o:["Weights of bags of rice","Temperature readings","Brands of mobile phones","Ages of students"],a:2,e:"Brands are categorical/non-numerical (qualitative). Others are numerical (quantitative)."},
+  {q:"The table shows the distribution of shoe sizes: Size 6,7,8,9,10 with Frequency 4,8,12,5,1. How many students wear size 8 or larger?",o:["12","16","18","30"],a:2,e:"Size 8 or larger = 12 + 5 + 1 = 18 students."},
+  {q:"What is the class width for the intervals: 10-19, 20-29, 30-39?",o:["9","10","11","19"],a:1,e:"Class width = Upper boundary - Lower boundary = 19.5 - 9.5 = 10, or simply 20 - 10 = 10."},
+  {q:"If data is recorded as: 5, 5, 6, 6, 6, 7, 7, 7, 7, 8, the mode is",o:["5","6","7","8"],a:2,e:"7 appears most frequently (4 times), so mode = 7."},
+  
+  {q:"A bar chart is most suitable for representing",o:["Continuous data with frequencies","Discrete or categorical data","Cumulative frequencies","Time series data"],a:1,e:"Bar charts represent discrete/categorical data with gaps between bars. Histograms represent continuous data."},
+  {q:"In a histogram, the vertical axis represents",o:["Class boundaries","Frequency density or frequency","Cumulative frequency","Class midpoints"],a:1,e:"Histograms plot frequency (equal classes) or frequency density (unequal classes) on the y-axis against class boundaries on x-axis."},
+  {q:"The main difference between a bar chart and a histogram is that",o:["Bar charts use colors, histograms don't","Histogram bars touch, bar chart bars have gaps","Histograms are always vertical","Bar charts show percentages only"],a:1,e:"Histogram bars touch (continuous data), while bar chart bars are separated (discrete/categorical data)."},
+  {q:"The histogram shows the distribution of ages with bars: 0-10=4, 10-20=8, 20-30=6, 30-40=2. What is the total frequency?",o:["14","18","20","22"],a:2,e:"Total frequency = 4 + 8 + 6 + 2 = 20 (sum of all bar heights)."},
+  {q:"In a histogram with unequal class widths, the height of each bar represents",o:["Frequency","Frequency density","Cumulative frequency","Relative frequency"],a:1,e:"For unequal classes, area = frequency, so height = frequency density = frequency ÷ class width."},
+  {q:"The frequency density of a class with frequency 15 and width 5 is",o:["3","5","10","15"],a:0,e:"Frequency density = Frequency ÷ Class width = 15 ÷ 5 = 3."},
+  {q:"A histogram has class intervals of varying widths. The class 20-30 has frequency 40 and width 10. What is the frequency density?",o:["2","4","10","20"],a:1,e:"Frequency density = 40 ÷ 10 = 4."},
+  {q:"Which statement about histograms is FALSE?",o:["Bars are always of equal width","Area of bar represents frequency","There are no gaps between bars","Class boundaries are on the x-axis"],a:0,e:"Histogram bars can have unequal widths (then frequency density is used). This is the false statement."},
+  {q:"The bar chart shows sales: Mon=20, Tue=35, Wed=30, Thu=25, Fri=40. What is the mean daily sales?",o:["28","30","32","35"],a:1,e:"Mean = (20 + 35 + 30 + 25 + 40) ÷ 5 = 150 ÷ 5 = 30."},
+  {q:"If a histogram bar has frequency density 8 and class width 2.5, the frequency is",o:["16","20","24","32"],a:1,e:"Frequency = Frequency density × Class width = 8 × 2.5 = 20."},
+  
+  {q:"A pie chart is used to represent data in terms of",o:["Frequencies only","Percentages or proportions","Cumulative values","Class intervals"],a:1,e:"Pie charts show how a whole is divided into proportional sectors (angles or percentages)."},
+  {q:"If a sector in a pie chart represents 15% of the total, what is the angle of the sector?",o:["45°","54°","60°","72°"],a:1,e:"Angle = (15/100) × 360° = 0.15 × 360 = 54°."},
+  {q:"In a pie chart, a sector has an angle of 72°. What percentage does it represent?",o:["15%","18%","20%","25%"],a:2,e:"Percentage = (72/360) × 100 = 0.2 × 100 = 20%."},
+  {q:"A family's monthly expenditure is represented on a pie chart: Food ₦60,000, Rent ₦40,000, Transport ₦30,000, Others ₦50,000. What angle represents Food?",o:["108°","120°","144°","150°"],a:1,e:"Total = ₦180,000. Angle = (60,000/180,000) × 360 = (1/3) × 360 = 120°."},
+  {q:"If the angle representing Transport in Q24 is 60°, what was spent on Transport?",o:["₦20,000","₦30,000","₦40,000","₦50,000"],a:1,e:"Amount = (60/360) × 180,000 = (1/6) × 180,000 = ₦30,000."},
+  {q:"A school has 600 students. On a pie chart, the sector for Science students is 120°. How many Science students are there?",o:["150","200","250","300"],a:1,e:"Number = (120/360) × 600 = (1/3) × 600 = 200 students."},
+  {q:"The sum of all angles in a pie chart is always",o:["180°","270°","360°","400°"],a:2,e:"A complete circle = 360°. All sectors must sum to 360°."},
+  {q:"In a pie chart, if Rent is represented by 90° and the total monthly income is ₦120,000, how much is spent on Rent?",o:["₦20,000","₦30,000","₦40,000","₦60,000"],a:1,e:"Amount = (90/360) × 120,000 = 0.25 × 120,000 = ₦30,000."},
+  {q:"A pie chart shows three sectors: A = 80°, B = 120°, C = ?. What is the angle for C?",o:["140°","150°","160°","170°"],a:2,e:"Angle C = 360° - 80° - 120° = 160°."},
+  {q:"If ₦45,000 represents 90° on a pie chart, what is the total amount?",o:["₦150,000","₦180,000","₦200,000","₦240,000"],a:1,e:"Total = (360/90) × 45,000 = 4 × 45,000 = ₦180,000."},
+  
+  {q:"Calculate the mean of: 12, 15, 18, 21, 24",o:["16","17","18","19"],a:2,e:"Mean = (12+15+18+21+24)/5 = 90/5 = 18."},
+  {q:"Find the mean of the distribution: x=4,6,8,10 with f=2,3,3,2",o:["6.0","6.5","7.0","7.5"],a:2,e:"∑fx = 8+18+24+20 = 70. ∑f = 10. Mean = 70/10 = 7."},
+  {q:"The mean of 5 numbers is 12. What is their sum?",o:["50","55","60","65"],a:2,e:"Sum = Mean × Number of items = 12 × 5 = 60."},
+  {q:"Find the mean from the grouped data: Class 10-14,15-19,20-24,25-29 with f=3,5,7,5",o:["19.5","20.0","20.5","21.0"],a:2,e:"Midpoints: 12, 17, 22, 27. ∑fx = 36+85+154+135 = 410. ∑f = 20. Mean = 410/20 = 20.5."},
+  {q:"If the mean of 4, 6, 8, x, 12 is 8, find x.",o:["8","9","10","12"],a:2,e:"(4+6+8+x+12)/5 = 8 → (30+x) = 40 → x = 10."},
+  {q:"The mean age of 4 students is 15 years. When a new student joins, the mean becomes 16 years. Find the new student's age.",o:["18","20","22","25"],a:1,e:"Original sum = 4 × 15 = 60. New sum = 5 × 16 = 80. Age = 80 - 60 = 20."},
+  {q:"Calculate the mean of: 2.5, 3.0, 4.5, 5.0, 3.5, 4.0",o:["3.0","3.5","3.75","4.0"],a:2,e:"Sum = 22.5. Count = 6. Mean = 22.5/6 = 3.75."},
+  {q:"From the table: Marks 0-10,10-20,20-30,30-40 with f=3,5,8,4. What is the mean mark?",o:["20.0","20.5","21.0","21.5"],a:3,e:"Midpoints 5,15,25,35. ∑fx=15+75+200+140=430. ∑f=20. Mean=21.5."},
+  {q:"The mean of 10 observations is 25. If one observation of 25 is removed, what is the new mean?",o:["20","24","25","26"],a:2,e:"Original sum = 250. New sum = 225. New count = 9. New mean = 225/9 = 25. The mean stays the same when the removed value equals the original mean."},
+  {q:"If ∑fx = 360 and ∑f = 24, the mean is",o:["12","14","15","16"],a:2,e:"Mean = ∑fx/∑f = 360/24 = 15."},
+  
+  {q:"Find the median of: 8, 3, 5, 12, 10, 6, 9",o:["6","7","8","9"],a:2,e:"Ordered: 3, 5, 6, 8, 9, 10, 12. Median (4th value) = 8."},
+  {q:"The median of 2, 4, 6, 8, 10, 12 is",o:["6","7","8","9"],a:1,e:"Even number of items. Median = (6+8)/2 = 7."},
+  {q:"Find the median from: x=1,2,3,4,5 with f=2,4,6,3,1",o:["2","3","4","5"],a:1,e:"Total frequency = 16. Median position = 8th value. Cumulative: 2, 6, 12... 8th value falls in x=3."},
+  {q:"Calculate the median from the grouped data: Class 10-19,20-29,30-39,40-49 with f=4,6,8,2",o:["25.5","28.5","29.5","30.5"],a:2,e:"N=20, N/2=10. Median class: 20-29 (cumulative reaches 10). L=19.5, F_b=4, f_m=6, c=10. Median = 19.5 + [(10-4)/6]×10 = 19.5 + 10 = 29.5."},
+  {q:"The modal class in Q44 is",o:["10-19","20-29","30-39","40-49"],a:2,e:"Highest frequency is 8, in class 30-39."},
+  {q:"Find the mode of: 3, 5, 2, 3, 4, 3, 5, 3, 2, 3",o:["2","3","4","5"],a:1,e:"3 appears 5 times (most frequent)."},
+  {q:"Calculate the mode from: Class 0-4,5-9,10-14,15-19 with f=6,8,5,3",o:["5.5","6.5","7.0","7.5"],a:1,e:"Modal class 5-9. L=4.5, D₁=8-6=2, D₂=8-5=3, c=5. Mode = 4.5 + [2/(2+3)]×5 = 4.5 + 2 = 6.5."},
+  {q:"If the mode is 4 and the data is 2, 3, 4, 4, x, 5, 6, what is x?",o:["3","4","5","6"],a:1,e:"For 4 to be the unique mode, it must appear most frequently. Currently 4 appears twice. If x=4, it appears 3 times (mode)."},
+  {q:"The relationship between mean, median and mode in a moderately skewed distribution is",o:["Mean = Median = Mode","Mean > Median > Mode","Mode > Median > Mean","Mean = 3Median - 2Mode"],a:3,e:"Empirical relationship: Mean - Mode = 3(Mean - Median), which rearranges to Mean = 3Median - 2Mode."},
+  {q:"Find the median of the first 10 prime numbers.",o:["11","12","13","14"],a:1,e:"First 10 primes: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29. Median = (11+13)/2 = 12."},
+  
+  {q:"The range of 15, 8, 12, 25, 6, 18, 30 is",o:["20","22","24","25"],a:2,e:"Range = Maximum - Minimum = 30 - 6 = 24."},
+  {q:"Calculate the sample standard deviation of: 2, 4, 6, 8, 10",o:["2.83","3.16","3.50","4.00"],a:1,e:"Mean=6. Squared deviations: 16,4,0,4,16. Sum=40. Sample variance=40/4=10. SD=√10≈3.16."},
+  {q:"The variance of a data set is 16. What is the standard deviation?",o:["2","4","8","16"],a:1,e:"SD = √Variance = √16 = 4."},
+  {q:"From the cumulative frequency table: Upper Boundary 10,20,30,40,50 with Cumulative f 4,12,24,34,40. How many observations are less than or equal to 30?",o:["12","20","24","34"],a:2,e:"Directly from table, cumulative frequency at 30 is 24."},
+  {q:"Using the table in Q54, how many observations are between 20 and 40?",o:["12","18","22","24"],a:2,e:"Between 20 and 40 = Cumulative at 40 - Cumulative at 20 = 34 - 12 = 22."},
+  {q:"The ogive is a graphical representation of",o:["Raw data","Frequency distribution","Cumulative frequency","Relative frequency"],a:2,e:"An ogive (cumulative frequency curve) plots cumulative frequency against upper class boundaries."},
+  {q:"From an ogive, the median can be estimated as",o:["The highest point","Where the curve starts","The value at 50% of cumulative frequency","The midpoint of the x-axis"],a:2,e:"Median corresponds to the value at N/2 or 50% of total cumulative frequency on the ogive."},
+  {q:"Calculate the mean deviation of: 10, 12, 14, 16, 18",o:["2.0","2.4","2.8","3.0"],a:1,e:"Mean=14. Absolute deviations: 4,2,0,2,4. Sum=12. Mean deviation=12/5=2.4."},
+  {q:"The interquartile range is calculated as",o:["Q₃ + Q₁","Q₃ - Q₁","(Q₃ + Q₁)/2","Q₂ - Q₁"],a:1,e:"IQR = Q₃ - Q₁ (Upper quartile minus Lower quartile), measuring the spread of the middle 50%."},
+  {q:"The sum of deviations from the mean is always",o:["Equal to the mean","Equal to the variance","Zero","Positive"],a:2,e:"The sum of (x - x̄) always equals zero because positive and negative deviations cancel out around the mean."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('math_data_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('math_data_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  document.getElementById('question').textContent=q.q;
+  
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('math_data_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=70?'Outstanding JAMB preparation!':pct>=60?'Good progress, aim higher':pct>=50?'Average, needs more practice':'Study fundamentals thoroughly'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  const sections=[0,10,20,30,40,50,60];
+  const sectionNames=["A: Types of Data & Frequency Tables","B: Bar Charts & Histograms","C: Pie Charts","D: Mean","E: Median & Mode","F: Measures of Dispersion & Cumulative Frequency"];
+  
+  for(let s=0;s<6;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('math_data_quiz_auth');
+  sessionStorage.removeItem('math_data_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('math_data_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('math_data_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

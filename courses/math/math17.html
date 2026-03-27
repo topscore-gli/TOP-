@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Mathematics - Application of Differentiation</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+    .math{
+      font-weight:900;color:var(--accent-secondary)
+    }
+    .label{
+      fill:var(--text-primary);
+      font-size:11px;
+      font-weight:700
+    }
+    .axis{
+      stroke:var(--text-primary);
+      stroke-width:2
+    }
+    .curve{
+      stroke:var(--line);
+      stroke-width:3;
+      fill:none
+    }
+    .line-soft{
+      stroke:var(--line);
+      stroke-width:3;
+      fill:none
+    }
+    .line-dash{
+      stroke:var(--line);
+      stroke-width:2;
+      stroke-dasharray:6 4;
+      fill:none
+    }
+    .mark{fill:var(--accent-secondary)}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">MATHEMATICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📘 Application of Differentiation</h1>
+        <p>JAMB Mathematics • rate of change • chain rule • stationary points • maxima and minima • optimization</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Chapter Overview</h2>
+        <p>This chapter covers one of the most important parts of introductory calculus in JAMB: <strong>Applications of Differentiation</strong>.</p>
+        <p>The syllabus focus is mainly on:</p>
+        <ul>
+          <li><strong>Rate of change</strong></li>
+          <li><strong>Maxima and minima</strong></li>
+        </ul>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Rate of change tells how fast one quantity changes compared with another</li>
+            <li>Stationary points happen where the gradient is zero</li>
+            <li>Second derivative helps you decide whether the point is a maximum or a minimum</li>
+            <li>This topic is high-yield in JAMB and often gives 2–3 questions</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Differentiation is not only about finding derivatives. In this chapter, the derivative is used to solve real problems involving speed, area, volume, turning points, and optimization.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔑 Essential Formulas</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Application</th>
+              <th>Formula / Rule</th>
+              <th>Explanation</th>
+            </tr>
+            <tr>
+              <td>Rate of Change</td>
+              <td><span class="math">dy/dx</span> or <span class="math">ds/dt</span></td>
+              <td>Instantaneous rate of change</td>
+            </tr>
+            <tr>
+              <td>Chain Rule</td>
+              <td><span class="math">dy/dt = (dy/dx)(dx/dt)</span></td>
+              <td>Connects related rates</td>
+            </tr>
+            <tr>
+              <td>Stationary Points</td>
+              <td>Set <span class="math">dy/dx = 0</span></td>
+              <td>Points where gradient is zero</td>
+            </tr>
+            <tr>
+              <td>Second Derivative</td>
+              <td><span class="math">d²y/dx²</span></td>
+              <td>Determines the nature of turning points</td>
+            </tr>
+            <tr>
+              <td>Maximum Point</td>
+              <td><span class="math">dy/dx = 0</span> and <span class="math">d²y/dx² &lt; 0</span></td>
+              <td>Curve is concave downward</td>
+            </tr>
+            <tr>
+              <td>Minimum Point</td>
+              <td><span class="math">dy/dx = 0</span> and <span class="math">d²y/dx² &gt; 0</span></td>
+              <td>Curve is concave upward</td>
+            </tr>
+            <tr>
+              <td>Point of Inflection</td>
+              <td><span class="math">d²y/dx² = 0</span></td>
+              <td>Concavity changes</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Rate of Change</h2>
+
+        <h3>Concept and Applications</h3>
+        <p>Rate of change measures how fast one quantity varies with another.</p>
+
+        <div class="formula-box">
+          <div class="title">Key rates</div>
+          <div class="line"><span class="math">ds/dt</span> = rate of change of distance or displacement</div>
+          <div class="line"><span class="math">dA/dt</span> = rate of change of area</div>
+          <div class="line"><span class="math">dV/dt</span> = rate of change of volume</div>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Important idea:</strong> If one quantity depends on another quantity that is changing with time, use the <strong>chain rule</strong>.</p>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Rate of change as slope</div>
+          <svg viewBox="0 0 340 220" aria-label="Rate of change graph">
+            <line x1="35" y1="190" x2="310" y2="190" class="axis"/>
+            <line x1="55" y1="205" x2="55" y2="20" class="axis"/>
+            <path d="M70 175 C110 160, 145 135, 180 105 C220 70, 250 55, 290 45" class="curve"/>
+            <line x1="120" y1="155" x2="255" y2="80" class="line-dash"/>
+            <circle cx="180" cy="105" r="4" class="mark"/>
+            <text x="188" y="102" class="label">Point</text>
+            <text x="205" y="140" class="label">Tangent slope = rate</text>
+          </svg>
+          <div class="diagram-caption">The derivative at a point is the slope of the tangent at that point.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 1: Square Side Increasing</div>
+          <p>The side of a square increases at <span class="math">2 cm/s</span>. Find the rate of increase of its area when the side is <span class="math">5 cm</span>.</p>
+          <p>Let side = <span class="math">s</span>, area = <span class="math">A</span></p>
+          <p>Given <span class="math">ds/dt = 2</span></p>
+          <p><span class="math">A = s²</span></p>
+          <p>Differentiate with respect to <span class="math">t</span>:</p>
+          <p><span class="math">dA/dt = 2s · ds/dt</span></p>
+          <p>Substitute <span class="math">s = 5</span> and <span class="math">ds/dt = 2</span>:</p>
+          <p><span class="math">dA/dt = 2(5)(2) = 20 cm²/s</span></p>
+          <div class="answer">Answer: 20 cm²/s</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Spherical Balloon</div>
+          <p>A spherical balloon is inflated so that its radius increases at <span class="math">0.5 cm/s</span>. Find the rate of increase of volume when <span class="math">r = 3 cm</span>. Take <span class="math">π = 22/7</span>.</p>
+          <p><span class="math">V = (4/3)πr³</span></p>
+          <p>Given <span class="math">dr/dt = 0.5</span></p>
+          <p>Differentiate with respect to <span class="math">t</span>:</p>
+          <p><span class="math">dV/dt = 4πr² · dr/dt</span></p>
+          <p>When <span class="math">r = 3</span>:</p>
+          <p><span class="math">dV/dt = 4 × 22/7 × 9 × 0.5</span></p>
+          <p><span class="math">= 396/7 ≈ 56.57 cm³/s</span></p>
+          <div class="answer">Answer: 396/7 cm³/s or about 56.57 cm³/s</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Maxima and Minima</h2>
+
+        <h3>Optimization Problems</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>Differentiate the function</li>
+            <li>Set the first derivative equal to zero</li>
+            <li>Use the second derivative to test the nature</li>
+            <li>Substitute back to get the point or value required</li>
+          </ul>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Step-by-step procedure</div>
+          <div class="line">1. Find <span class="math">dy/dx</span></div>
+          <div class="line">2. Solve <span class="math">dy/dx = 0</span></div>
+          <div class="line">3. Find <span class="math">d²y/dx²</span></div>
+          <div class="line">4. If <span class="math">d²y/dx² &gt; 0</span> → minimum, if <span class="math">d²y/dx² &lt; 0</span> → maximum</div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Turning points on a curve</div>
+          <svg viewBox="0 0 340 220" aria-label="Maxima minima graph">
+            <line x1="30" y1="190" x2="310" y2="190" class="axis"/>
+            <line x1="60" y1="205" x2="60" y2="20" class="axis"/>
+            <path d="M70 160 C105 80, 145 80, 170 140 C200 210, 240 205, 290 80" class="curve"/>
+            <circle cx="118" cy="98" r="4" class="mark"/>
+            <circle cx="210" cy="172" r="4" class="mark"/>
+            <text x="86" y="88" class="label">Maximum</text>
+            <text x="214" y="188" class="label">Minimum</text>
+          </svg>
+          <div class="diagram-caption">At a maximum the curve bends downward, and at a minimum it bends upward.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: Maximum and Minimum Points</div>
+          <p>Find the maximum and minimum values of <span class="math">y = x³ - 6x² + 9x + 2</span>.</p>
+          <p><strong>Step 1:</strong> Differentiate</p>
+          <p><span class="math">dy/dx = 3x² - 12x + 9</span></p>
+          <p><strong>Step 2:</strong> Set to zero</p>
+          <p><span class="math">3x² - 12x + 9 = 0</span></p>
+          <p><span class="math">x² - 4x + 3 = 0</span></p>
+          <p><span class="math">(x - 1)(x - 3) = 0</span></p>
+          <p><span class="math">x = 1</span> or <span class="math">x = 3</span></p>
+          <p><strong>Step 3:</strong> Find second derivative</p>
+          <p><span class="math">d²y/dx² = 6x - 12</span></p>
+          <p><strong>Step 4:</strong> Test the points</p>
+          <p>At <span class="math">x = 1</span>: <span class="math">6(1) - 12 = -6 &lt; 0</span> → Maximum</p>
+          <p><span class="math">y = 1 - 6 + 9 + 2 = 6</span></p>
+          <p>So maximum point is <span class="math">(1, 6)</span></p>
+          <p>At <span class="math">x = 3</span>: <span class="math">6(3) - 12 = 6 &gt; 0</span> → Minimum</p>
+          <p><span class="math">y = 27 - 54 + 27 + 2 = 2</span></p>
+          <p>So minimum point is <span class="math">(3, 2)</span></p>
+          <div class="answer">Answer: Maximum at (1, 6), Minimum at (3, 2)</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 4: Farmer’s Rectangular Plot</div>
+          <p>A farmer has <span class="math">100 m</span> of fencing for a rectangular plot. Find the dimensions for maximum area.</p>
+          <p>Let length = <span class="math">x</span>, width = <span class="math">y</span></p>
+          <p>Perimeter: <span class="math">2x + 2y = 100</span></p>
+          <p><span class="math">x + y = 50</span></p>
+          <p><span class="math">y = 50 - x</span></p>
+          <p>Area:</p>
+          <p><span class="math">A = xy = x(50 - x) = 50x - x²</span></p>
+          <p>Differentiate:</p>
+          <p><span class="math">dA/dx = 50 - 2x</span></p>
+          <p>Set to zero:</p>
+          <p><span class="math">50 - 2x = 0</span> → <span class="math">x = 25</span></p>
+          <p>Second derivative:</p>
+          <p><span class="math">d²A/dx² = -2 &lt; 0</span> → Maximum</p>
+          <p>Then <span class="math">y = 50 - 25 = 25</span></p>
+          <p>Maximum area = <span class="math">25 × 25 = 625 m²</span></p>
+          <div class="answer">Answer: 25 m by 25 m, maximum area = 625 m²</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 5: Turning Point of a Quadratic</div>
+          <p>Find the coordinates of the turning point on <span class="math">y = 2x² - 8x + 5</span> and determine its nature.</p>
+          <p><span class="math">dy/dx = 4x - 8</span></p>
+          <p>Set to zero:</p>
+          <p><span class="math">4x - 8 = 0</span> → <span class="math">x = 2</span></p>
+          <p>Find <span class="math">y</span>:</p>
+          <p><span class="math">y = 2(2)² - 8(2) + 5 = 8 - 16 + 5 = -3</span></p>
+          <p>Second derivative:</p>
+          <p><span class="math">d²y/dx² = 4 &gt; 0</span></p>
+          <div class="answer">Answer: Turning point = (2, -3), minimum</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>📝 JAMB Practice Questions</h2>
+
+        <h3>Objective Questions</h3>
+
+        <div class="example-box">
+          <div class="title">Q1: Maximum Point</div>
+          <p>If <span class="math">y = x³ - 3x² + 4</span>, find the value of <span class="math">x</span> at which <span class="math">y</span> is maximum.</p>
+          <p>Options: A. 0 &nbsp;&nbsp; B. 1 &nbsp;&nbsp; C. 2 &nbsp;&nbsp; D. 3</p>
+          <p><span class="math">dy/dx = 3x² - 6x = 3x(x - 2)</span></p>
+          <p>So <span class="math">x = 0</span> or <span class="math">x = 2</span></p>
+          <p><span class="math">d²y/dx² = 6x - 6</span></p>
+          <p>At <span class="math">x = 0</span>: <span class="math">-6 &lt; 0</span> → maximum</p>
+          <p>At <span class="math">x = 2</span>: <span class="math">6 &gt; 0</span> → minimum</p>
+          <div class="answer">Answer: (A) 0</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q2: Circle Area Rate</div>
+          <p>If the radius of a circle increases at <span class="math">0.1 cm/s</span>, what is the rate of increase of area when <span class="math">r = 5 cm</span>?</p>
+          <p>Options: A. π &nbsp;&nbsp; B. 2π &nbsp;&nbsp; C. 5π &nbsp;&nbsp; D. 10π cm²/s</p>
+          <p><span class="math">A = πr²</span></p>
+          <p><span class="math">dA/dt = 2πr · dr/dt</span></p>
+          <p><span class="math">= 2π(5)(0.1) = π</span></p>
+          <div class="answer">Answer: (A) π cm²/s</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Key Points for JAMB</h2>
+
+        <div class="jamb-alert">
+          <h4>Important reminders</h4>
+          <ul>
+            <li>Simplify first whenever possible before differentiating</li>
+            <li>The chain rule is very important for related-rates questions</li>
+            <li>Do not forget units in rate-of-change answers</li>
+            <li>Always test each stationary point because a curve may have both maximum and minimum points</li>
+            <li>The second derivative test is the fastest way to classify turning points</li>
+            <li>Read the question carefully: “rate of increase” and “rate of decrease” are not the same wording</li>
+          </ul>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Quick reference:</strong> <span class="math">d²y/dx² &gt; 0</span> means minimum, <span class="math">d²y/dx² &lt; 0</span> means maximum, and <span class="math">d²y/dx² = 0</span> may indicate a point of inflection.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>✅ Pre-Exam Checklist</h2>
+
+        <div class="memory-tip">
+          <strong>🧠 Checklist</strong>
+          <p>Make sure you understand the concept of rate of change. Practise the chain rule for related rates. Be able to find stationary points by solving <span class="math">dy/dx = 0</span>. Revise the second derivative test. Know how to identify maximum points, minimum points, and points of inflection. Practise optimization problems involving fencing, boxes, areas, and volumes. Also remember to include units in final answers.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🌟 Final Revision Note</h2>
+
+        <div class="memory-tip">
+          <strong>Excellent!</strong>
+          <p>You now have a complete guide to Application of Differentiation with formulas, worked examples, optimization methods, and JAMB-style practice questions. This is a high-yield topic, so mastering it can give you easy marks in the exam.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise rate of change, stationary points, maxima, minima, and optimization questions today.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

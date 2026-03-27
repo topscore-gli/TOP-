@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Mathematics - Introduction to Integration</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+    .math{
+      font-weight:900;color:var(--accent-secondary)
+    }
+    .label{
+      fill:var(--text-primary);
+      font-size:11px;
+      font-weight:700
+    }
+    .axis{
+      stroke:var(--text-primary);
+      stroke-width:2
+    }
+    .curve{
+      stroke:var(--line);
+      stroke-width:3;
+      fill:none
+    }
+    .fill-soft{fill:rgba(29,185,84,.22)}
+    .line-soft{
+      stroke:var(--line);
+      stroke-width:3;
+      fill:none
+    }
+    .line-dash{
+      stroke:var(--line);
+      stroke-width:2;
+      stroke-dasharray:6 4;
+      fill:none
+    }
+    .mark{fill:var(--accent-secondary)}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">MATHEMATICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📚 Introduction to Integration</h1>
+        <p>JAMB Mathematics • reverse of differentiation • basic integrals • substitution • parts • definite integrals • area and volume</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 What is Integration?</h2>
+        <p>Integration is the <strong>reverse process of differentiation</strong>. If differentiation gives the rate of change, integration helps us find the original function from that rate of change.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Indefinite Integration:</strong> general function and always includes <span class="math">+ C</span></li>
+            <li><strong>Definite Integration:</strong> gives a numerical value between limits</li>
+            <li><strong>Constant of Integration:</strong> needed because the derivative of any constant is zero</li>
+          </ul>
+        </div>
+
+        <div class="jamb-alert">
+          <h4>JAMB focus</h4>
+          <ul>
+            <li>Expect about 3–5 questions on integration</li>
+            <li>Questions may combine algebraic, trigonometric, and application problems</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Differentiation gives the slope or rate. Integration helps us rebuild the original expression from that derivative.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Basic Integration Rules</h2>
+
+        <h3>Power Rule</h3>
+        <div class="formula-box">
+          <div class="title">Most important rule</div>
+          <div class="line"><span class="math">∫ xⁿ dx = xⁿ⁺¹/(n+1) + C</span>, where <span class="math">n ≠ -1</span></div>
+          <div class="line"><span class="math">∫ k·f(x) dx = k ∫ f(x) dx</span></div>
+          <div class="line"><span class="math">∫ [f(x) ± g(x)] dx = ∫ f(x) dx ± ∫ g(x) dx</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 1: Power Rule</div>
+          <p>Find <span class="math">∫ 3x⁴ dx</span>.</p>
+          <p><span class="math">∫ 3x⁴ dx = 3 · x⁵/5 + C</span></p>
+          <p><span class="math">= 3x⁵/5 + C</span></p>
+          <div class="answer">Answer: 3x⁵/5 + C</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Polynomial</div>
+          <p>Find <span class="math">∫ (2x³ - 5x² + 4x - 7) dx</span>.</p>
+          <p>Integrate term by term:</p>
+          <p><span class="math">= 2·x⁴/4 - 5·x³/3 + 4·x²/2 - 7x + C</span></p>
+          <p><span class="math">= x⁴/2 - 5x³/3 + 2x² - 7x + C</span></p>
+          <div class="answer">Answer: x⁴/2 - 5x³/3 + 2x² - 7x + C</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Algebraic Functions</h2>
+
+        <h3>Rational and Exponential Functions</h3>
+        <div class="formula-box">
+          <div class="title">Special cases</div>
+          <div class="line"><span class="math">∫ 1/x dx = ln|x| + C</span></div>
+          <div class="line"><span class="math">∫ eˣ dx = eˣ + C</span></div>
+          <div class="line"><span class="math">∫ aˣ dx = aˣ/ln a + C</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: Rational Function</div>
+          <p>Find <span class="math">∫ 3/x dx</span>.</p>
+          <p><span class="math">∫ 3/x dx = 3 ln|x| + C</span></p>
+          <div class="answer">Answer: 3ln|x| + C</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Trigonometric Functions</h2>
+
+        <h3>Basic Trigonometric Integrals</h3>
+        <div class="table-container">
+          <table class="summary-table" style="min-width:760px">
+            <tr>
+              <th>Function</th>
+              <th>Integral</th>
+            </tr>
+            <tr>
+              <td>sin x</td>
+              <td>-cos x + C</td>
+            </tr>
+            <tr>
+              <td>cos x</td>
+              <td>sin x + C</td>
+            </tr>
+            <tr>
+              <td>sec² x</td>
+              <td>tan x + C</td>
+            </tr>
+            <tr>
+              <td>csc² x</td>
+              <td>-cot x + C</td>
+            </tr>
+            <tr>
+              <td>sec x tan x</td>
+              <td>sec x + C</td>
+            </tr>
+            <tr>
+              <td>csc x cot x</td>
+              <td>-csc x + C</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+        <div class="example-box">
+          <div class="title">Example 4: Trigonometric Integral</div>
+          <p>Find <span class="math">∫ (4 sin x + 3 cos x) dx</span>.</p>
+          <p><span class="math">= 4(-cos x) + 3(sin x) + C</span></p>
+          <p><span class="math">= -4 cos x + 3 sin x + C</span></p>
+          <div class="answer">Answer: -4 cos x + 3 sin x + C</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 5: Using Identity</div>
+          <p>Find <span class="math">∫ sin² x dx</span>.</p>
+          <p>Use <span class="math">sin² x = (1 - cos 2x)/2</span></p>
+          <p><span class="math">∫ sin² x dx = ∫ (1 - cos 2x)/2 dx</span></p>
+          <p><span class="math">= 1/2∫1 dx - 1/2∫cos 2x dx</span></p>
+          <p><span class="math">= x/2 - sin 2x/4 + C</span></p>
+          <div class="answer">Answer: x/2 - sin 2x/4 + C</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Integration by Substitution</h2>
+
+        <h3>When to Use</h3>
+        <p>Use substitution when a function appears together with its derivative, or when you can simplify a composite expression by replacing the inner part.</p>
+
+        <div class="formula-box">
+          <div class="title">Method</div>
+          <div class="line">1. Let <span class="math">u</span> = inner function</div>
+          <div class="line">2. Find <span class="math">du</span></div>
+          <div class="line">3. Substitute into the integral</div>
+          <div class="line">4. Integrate with respect to <span class="math">u</span></div>
+          <div class="line">5. Substitute back to <span class="math">x</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 6: Substitution</div>
+          <p>Find <span class="math">∫ 2x(x² + 3)⁴ dx</span>.</p>
+          <p>Let <span class="math">u = x² + 3</span></p>
+          <p>Then <span class="math">du = 2x dx</span></p>
+          <p><span class="math">∫ 2x(x² + 3)⁴ dx = ∫ u⁴ du</span></p>
+          <p><span class="math">= u⁵/5 + C</span></p>
+          <p><span class="math">= (x² + 3)⁵/5 + C</span></p>
+          <div class="answer">Answer: (x² + 3)⁵/5 + C</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 7: Trigonometric Substitution</div>
+          <p>Find <span class="math">∫ cos 3x dx</span>.</p>
+          <p>Let <span class="math">u = 3x</span></p>
+          <p>Then <span class="math">du = 3 dx</span>, so <span class="math">dx = du/3</span></p>
+          <p><span class="math">∫ cos 3x dx = ∫ cos u · du/3</span></p>
+          <p><span class="math">= (1/3) sin u + C</span></p>
+          <p><span class="math">= sin 3x/3 + C</span></p>
+          <div class="answer">Answer: sin 3x/3 + C</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Integration by Parts</h2>
+
+        <h3>Formula and LIATE Rule</h3>
+        <div class="formula-box">
+          <div class="title">Formula</div>
+          <div class="line"><span class="math">∫ u dv = uv - ∫ v du</span></div>
+        </div>
+
+        <div class="quick-facts">
+          <ul>
+            <li>LIATE helps you choose <span class="math">u</span></li>
+            <li>Logarithmic</li>
+            <li>Inverse trigonometric</li>
+            <li>Algebraic</li>
+            <li>Trigonometric</li>
+            <li>Exponential</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 8: Integration by Parts</div>
+          <p>Find <span class="math">∫ x eˣ dx</span>.</p>
+          <p>Let <span class="math">u = x</span>, <span class="math">dv = eˣ dx</span></p>
+          <p>Then <span class="math">du = dx</span>, <span class="math">v = eˣ</span></p>
+          <p><span class="math">∫ x eˣ dx = xeˣ - ∫ eˣ dx</span></p>
+          <p><span class="math">= xeˣ - eˣ + C</span></p>
+          <p><span class="math">= eˣ(x - 1) + C</span></p>
+          <div class="answer">Answer: eˣ(x - 1) + C</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 9: Another Parts Example</div>
+          <p>Find <span class="math">∫ x ln x dx</span>.</p>
+          <p>Let <span class="math">u = ln x</span>, <span class="math">dv = x dx</span></p>
+          <p>Then <span class="math">du = (1/x)dx</span>, <span class="math">v = x²/2</span></p>
+          <p><span class="math">∫ x ln x dx = (x²/2)ln x - ∫ (x²/2)(1/x) dx</span></p>
+          <p><span class="math">= (x²/2)ln x - ∫ x/2 dx</span></p>
+          <p><span class="math">= (x²/2)ln x - x²/4 + C</span></p>
+          <p><span class="math">= (x²/4)(2ln x - 1) + C</span></p>
+          <div class="answer">Answer: (x²/4)(2ln x - 1) + C</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Definite Integration</h2>
+
+        <h3>Format and Properties</h3>
+        <div class="formula-box">
+          <div class="title">Main formula</div>
+          <div class="line"><span class="math">∫ₐᵇ f(x) dx = [F(x)]ₐᵇ = F(b) - F(a)</span></div>
+        </div>
+
+        <div class="quick-facts">
+          <ul>
+            <li><span class="math">∫ₐᵇ f(x) dx = -∫ᵇₐ f(x) dx</span></li>
+            <li><span class="math">∫ₐₐ f(x) dx = 0</span></li>
+            <li><span class="math">∫ₐᵇ f(x) dx + ∫ᵇᶜ f(x) dx = ∫ₐᶜ f(x) dx</span></li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 10: Definite Integral</div>
+          <p>Evaluate <span class="math">∫₁³ (2x + 1) dx</span>.</p>
+          <p><span class="math">∫ (2x + 1) dx = x² + x</span></p>
+          <p><span class="math">[x² + x]₁³ = (3² + 3) - (1² + 1)</span></p>
+          <p><span class="math">= 12 - 2 = 10</span></p>
+          <div class="answer">Answer: 10</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 11: Definite Integral with Substitution</div>
+          <p>Evaluate <span class="math">∫₀² x(x² + 1)³ dx</span>.</p>
+          <p>Let <span class="math">u = x² + 1</span>, so <span class="math">du = 2x dx</span> and <span class="math">x dx = du/2</span></p>
+          <p>When <span class="math">x = 0</span>, <span class="math">u = 1</span></p>
+          <p>When <span class="math">x = 2</span>, <span class="math">u = 5</span></p>
+          <p><span class="math">∫₀² x(x² + 1)³ dx = ∫₁⁵ u³ · du/2</span></p>
+          <p><span class="math">= 1/2 [u⁴/4]₁⁵</span></p>
+          <p><span class="math">= 1/8(5⁴ - 1⁴)</span></p>
+          <p><span class="math">= 1/8(625 - 1) = 624/8 = 78</span></p>
+          <div class="answer">Answer: 78</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Applications of Integration</h2>
+
+        <h3>A. Area Under a Curve</h3>
+        <div class="formula-box">
+          <div class="title">Area formula</div>
+          <div class="line"><span class="math">Area = ∫ₐᵇ y dx</span> when the curve is above the x-axis</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 12: Area Under a Curve</div>
+          <p>Find the area bounded by <span class="math">y = x²</span>, <span class="math">x = 1</span>, <span class="math">x = 3</span>, and the x-axis.</p>
+          <p><span class="math">Area = ∫₁³ x² dx</span></p>
+          <p><span class="math">= [x³/3]₁³</span></p>
+          <p><span class="math">= 27/3 - 1/3 = 26/3</span></p>
+          <div class="answer">Answer: 26/3 square units</div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Area under a curve</div>
+          <svg viewBox="0 0 340 220" aria-label="Area under curve diagram">
+            <line x1="30" y1="190" x2="310" y2="190" class="axis"/>
+            <line x1="60" y1="205" x2="60" y2="20" class="axis"/>
+            <path d="M70 185 C110 180, 150 160, 190 120 C220 90, 250 55, 290 35" class="curve"/>
+            <path d="M120 175 L120 190 L245 190 L245 70 Q190 110 120 175 Z" class="fill-soft"/>
+            <text x="122" y="205" class="label">x = 1</text>
+            <text x="240" y="205" class="label">x = 3</text>
+          </svg>
+          <div class="diagram-caption">Sketching helps you see the region and choose correct limits.</div>
+        </div>
+
+        <h3>B. Area Between Two Curves</h3>
+        <div class="formula-box">
+          <div class="title">Area between curves</div>
+          <div class="line"><span class="math">Area = ∫ₐᵇ (yupper - ylower) dx</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 13: Area Between Two Curves</div>
+          <p>Find the area enclosed by <span class="math">y = x²</span> and <span class="math">y = x</span>.</p>
+          <p>Find the points of intersection:</p>
+          <p><span class="math">x² = x</span> → <span class="math">x = 0, 1</span></p>
+          <p><span class="math">Area = ∫₀¹ (x - x²) dx</span></p>
+          <p><span class="math">= [x²/2 - x³/3]₀¹</span></p>
+          <p><span class="math">= 1/2 - 1/3 = 1/6</span></p>
+          <div class="answer">Answer: 1/6 square units</div>
+        </div>
+
+        <h3>C. Volume of Revolution</h3>
+        <div class="formula-box">
+          <div class="title">About the x-axis</div>
+          <div class="line"><span class="math">V = π∫ₐᵇ y² dx</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 14: Volume of Revolution</div>
+          <p>Find the volume generated by rotating <span class="math">y = √x</span> from <span class="math">x = 0</span> to <span class="math">x = 4</span> about the x-axis.</p>
+          <p><span class="math">V = π∫₀⁴ (√x)² dx = π∫₀⁴ x dx</span></p>
+          <p><span class="math">= π[x²/2]₀⁴</span></p>
+          <p><span class="math">= π(16/2) = 8π</span></p>
+          <div class="answer">Answer: 8π cubic units</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Formula Summary</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>No.</th>
+              <th>Function</th>
+              <th>Integral</th>
+              <th>Notes</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>∫ xⁿ dx</td>
+              <td>xⁿ⁺¹/(n+1) + C</td>
+              <td>n ≠ -1</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>∫ 1/x dx</td>
+              <td>ln|x| + C</td>
+              <td>Special case</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>∫ eˣ dx</td>
+              <td>eˣ + C</td>
+              <td>Base e</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>∫ aˣ dx</td>
+              <td>aˣ/ln a + C</td>
+              <td>Base a</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>∫ sin x dx</td>
+              <td>-cos x + C</td>
+              <td>Trig</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>∫ cos x dx</td>
+              <td>sin x + C</td>
+              <td>Trig</td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td>∫ sec² x dx</td>
+              <td>tan x + C</td>
+              <td>Trig</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td>∫ csc² x dx</td>
+              <td>-cot x + C</td>
+              <td>Trig</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+        <div class="formula-box">
+          <div class="title">Advanced techniques</div>
+          <div class="line"><span class="math">Substitution: ∫ f(g(x))g'(x)dx = ∫ f(u)du</span></div>
+          <div class="line"><span class="math">Parts: ∫ u dv = uv - ∫ v du</span></div>
+          <div class="line"><span class="math">Definite: ∫ₐᵇ f(x)dx = F(b) - F(a)</span></div>
+          <div class="line"><span class="math">Area: ∫ₐᵇ y dx</span> or <span class="math">∫ₐᵇ (y₁ - y₂)dx</span></div>
+          <div class="line"><span class="math">Volume: V = π∫ₐᵇ y² dx</span></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>✅ Quick Revision Checklist</h2>
+
+        <div class="memory-tip">
+          <strong>🧠 Checklist</strong>
+          <p>Master the power rule. Always remember the constant of integration <span class="math">+C</span>. Practise polynomial integration term by term. Revise the special case <span class="math">∫ 1/x dx = ln|x| + C</span>. Learn exponential and trigonometric integrals well. Practise substitution and integration by parts using LIATE. Also revise definite integrals, area under a curve, area between curves, and volume of revolution.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Practice Tips for JAMB</h2>
+
+        <div class="jamb-alert">
+          <h4>Best strategy</h4>
+          <ul>
+            <li>Master the basics first: power rule and standard integrals</li>
+            <li>Practise substitution because it is one of the most common JAMB techniques</li>
+            <li>Watch your signs carefully, especially in trigonometric integrals</li>
+            <li>Differentiate your answer to verify it</li>
+            <li>Time yourself and aim for 2–3 minutes per question</li>
+            <li>Sketch graphs first for area questions</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🌟 Final Revision Note</h2>
+
+        <div class="memory-tip">
+          <strong>Outstanding!</strong>
+          <p>You now have a complete introduction to Integration with rules, worked examples, standard techniques, and applications. Once you recognize the form of the integral, choosing the correct method becomes much easier.</p>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Exam note:</strong> Integration is the reverse of differentiation and is one of the highest-value calculus topics in JAMB.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise standard integrals, substitution, parts, definite integrals, and area questions today.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

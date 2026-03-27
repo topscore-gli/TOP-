@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Mathematics - Number and Numeration</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Mathematics</h1>
+      <p>Number and Numeration<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Number and Numeration</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 60 minutes for 60 questions
+const CONFIG={TIME:3600,PASS:60};
+
+// Section mapping for 60 questions (6 sections)
+const SECTIONS={
+  0:"A: Number Bases",
+  12:"B: Fractions, Decimals & Approximations",
+  22:"C: Indices & Logarithms",
+  36:"D: Surds",
+  44:"E: Sets",
+  52:"F: Number Systems & Miscellaneous"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Mathematics Questions on Number and Numeration
+const QUIZ_DATA=[
+  // Section A: Number Bases (1-12)
+  {q:"Convert 10110₂ to base 10.",o:["20","22","24","26"],a:1,e:"1×2⁴ + 0×2³ + 1×2² + 1×2¹ + 0×2⁰ = 16+0+4+2+0 = 22"},
+  {q:"Convert 132₄ to base 10.",o:["26","28","30","32"],a:2,e:"1×4² + 3×4¹ + 2×4⁰ = 16+12+2 = 30"},
+  {q:"Convert 100₁₀ to base 2.",o:["1100100₂","1101000₂","1110000₂","1010000₂"],a:0,e:"100÷2=50R0, 50÷2=25R0, 25÷2=12R1, 12÷2=6R0, 6÷2=3R0, 3÷2=1R1, 1÷2=0R1. Read up: 1100100"},
+  {q:"Convert 214₁₀ to base 5.",o:["1324₅","1423₅","1323₅","1234₅"],a:0,e:"214÷5=42R4, 42÷5=8R2, 8÷5=1R3, 1÷5=0R1. Read up: 1324"},
+  {q:"If 132ₙ = 42₁₀, find n.",o:["4","5","6","7"],a:1,e:"1×n² + 3×n + 2 = 42 → n²+3n-40=0 → (n+8)(n-5)=0 → n=5"},
+  {q:"Evaluate 101₂ + 11₂ + 110₂.",o:["1000₂","1010₂","1100₂","1110₂"],a:3,e:"101+11=1000, then 1000+110=1110 (base 2 addition)"},
+  {q:"Convert 3A₁₆ to base 10.",o:["56","58","60","62"],a:1,e:"3×16 + 10 = 48+10 = 58 (A in hex = 10)"},
+  {q:"Convert 11101₂ to base 8.",o:["35₈","36₈","37₈","38₈"],a:0,e:"Group in 3s from right: 011 101 → 3 5 = 35₈"},
+  {q:"Simplify 24₅ × 3₅.",o:["122₅","132₅","142₅","112₅"],a:0,e:"24₅=14₁₀, 3₅=3₁₀, 14×3=42₁₀=1×25+2×5+2=122₅"},
+  {q:"Find y if 23ᵧ + 101ᵧ = 130ᵧ.",o:["4","5","6","7"],a:0,e:"In base 4: 23₄=11, 101₄=17, 11+17=28=130₄ (1×16+3×4+0=28)"},
+  {q:"Convert 0.101₂ to base 10.",o:["0.625","0.75","0.875","0.5"],a:0,e:"1×2⁻¹ + 0×2⁻² + 1×2⁻³ = 0.5 + 0 + 0.125 = 0.625"},
+  {q:"If 52ₙ - 23ₙ = 25ₙ, find base n.",o:["6","7","8","9"],a:0,e:"In base 6: 52₆=32, 23₆=15, 32-15=17=25₆ (2×6+5=17)"},
+  
+  // Section B: Fractions, Decimals & Approximations (13-22)
+  {q:"Express 0.̇4 as a fraction in lowest terms.",o:["2/5","4/9","1/3","2/9"],a:1,e:"Let x=0.444..., 10x=4.444..., 9x=4, x=4/9"},
+  {q:"Express 0.1̇2 as a fraction.",o:["11/90","2/15","1/8","3/25"],a:0,e:"x=0.1222..., 10x=1.222..., 100x=12.222..., 90x=11, x=11/90"},
+  {q:"Correct 0.004567 to 3 significant figures.",o:["0.004","0.00457","0.00456","0.005"],a:1,e:"First 3 sig figs: 4, 5, 6. Next digit 7 rounds up 6: 0.00457"},
+  {q:"Round off 45670 to 2 significant figures.",o:["45000","46000","45600","50000"],a:1,e:"First 2 sig figs: 4, 5. Next digit 6 rounds 5 up to 6: 46000"},
+  {q:"A student measured a length as 12.5cm instead of 12.8cm. Calculate the percentage error.",o:["2.34%","2.44%","2.54%","2.64%"],a:0,e:"|12.8-12.5|/12.8 × 100 = 0.3/12.8 × 100 = 2.34375% ≈ 2.34%"},
+  {q:"Express 0.0004567 in standard form.",o:["4.567×10⁻⁴","4.567×10⁻³","45.67×10⁻⁵","456.7×10⁻⁶"],a:0,e:"Move decimal 4 places right: 4.567×10⁻⁴"},
+  {q:"Evaluate 2/3 + 3/4 - 5/6.",o:["11/12","3/4","5/6","7/12"],a:3,e:"LCM=12: 8/12 + 9/12 - 10/12 = 7/12"},
+  {q:"Simplify 2⅓ × 1⅕ ÷ 2⅘.",o:["1","5/7","6/7","7/6"],a:0,e:"7/3 × 6/5 × 5/14 = (7×6×5)/(3×5×14) = 210/210 = 1"},
+  {q:"A number is increased by 20% and then decreased by 20%. Find the net percentage change.",o:["0%","4% decrease","4% increase","2% decrease"],a:1,e:"1.2 × 0.8 = 0.96, so 4% decrease"},
+  {q:"Express 0.125 as a fraction in lowest terms.",o:["1/6","1/8","1/5","2/15"],a:1,e:"0.125 = 125/1000 = 1/8"},
+  
+  // Section C: Indices & Logarithms (23-36)
+  {q:"Evaluate 27^(2/3).",o:["6","9","18","81"],a:1,e:"(∛27)² = 3² = 9"},
+  {q:"Simplify 16^(-3/4).",o:["1/8","-1/8","1/12","8"],a:0,e:"1/16^(3/4) = 1/(∜16)³ = 1/2³ = 1/8"},
+  {q:"If 2^(x+1) = 32, find x.",o:["3","4","5","6"],a:1,e:"32=2⁵, so x+1=5, x=4"},
+  {q:"Solve for x: 9^(x-1) = 27^(2x).",o:["-1","-3/2","-2/3","-2"],a:1,e:"3^(2(x-1)) = 3^(3(2x)), so 2x-2=6x, -4x=2, x=-1/2. Check: 9^(-1.5)=27^(-1), 3⁻³=3⁻³. Answer: -3/2 = -1.5"},
+  {q:"Simplify [3^(n+2) - 3^(n+1)]/3^n.",o:["6","9","18","27"],a:0,e:"[3^(n+1)(3-1)]/3^n = [3^(n+1)×2]/3^n = 3×2 = 6"},
+  {q:"If log₂ x = 5, find x.",o:["10","25","32","64"],a:2,e:"x = 2⁵ = 32"},
+  {q:"Evaluate log₃ 81 - log₃ 9.",o:["1","2","3","4"],a:1,e:"log₃(81/9) = log₃ 9 = 2 (since 3²=9)"},
+  {q:"If log₁₀ 2 = 0.3010 and log₁₀ 3 = 0.4771, find log₁₀ 6.",o:["0.7781","0.1761","0.9030","1.0791"],a:0,e:"log₁₀ 6 = log₁₀(2×3) = 0.3010 + 0.4771 = 0.7781"},
+  {q:"Solve: log₅ x + log₅ (x-4) = log₅ 5.",o:["5","4","3","1"],a:0,e:"log₅[x(x-4)] = log₅ 5, so x(x-4)=5, x²-4x-5=0, (x-5)(x+1)=0, x=5 (positive)"},
+  {q:"Simplify [8^(2/3) × 4^(1/2)]/16^(3/4).",o:["1","2","4","8"],a:0,e:"[(2³)^(2/3) × (2²)^(1/2)]/(2⁴)^(3/4) = [2² × 2¹]/2³ = (4×2)/8 = 1"},
+  {q:"If 5^(2x) - 6(5^x) + 5 = 0, find x.",o:["0 or 1","1 or 2","0 or 2","-1 or 1"],a:0,e:"Let y=5^x: y²-6y+5=0, (y-5)(y-1)=0, y=5 or y=1. So 5^x=5¹ or 5^x=5⁰, thus x=1 or x=0"},
+  {q:"Evaluate log₂(log₃ 81).",o:["2","3","4","9"],a:0,e:"log₃ 81 = 4 (since 3⁴=81), then log₂ 4 = 2"},
+  {q:"Find x if logₓ 125 = 3.",o:["3","4","5","6"],a:2,e:"x³ = 125 = 5³, so x=5"},
+  {q:"Simplify [25^(n+1) - 25^n]/(24 × 5^(2n)).",o:["1","5","25","24"],a:0,e:"[25^n(25-1)]/(24 × 25^n) = 24/24 = 1"},
+  
+  // Section D: Surds (37-44)
+  {q:"Simplify √72.",o:["6√2","3√8","2√18","4√3"],a:0,e:"√(36×2) = 6√2"},
+  {q:"Rationalize 2/√3.",o:["2√3/3","√3/2","2√3","3√2/2"],a:0,e:"(2/√3) × (√3/√3) = 2√3/3"},
+  {q:"Simplify 3/(2-√3).",o:["6+3√3","6-3√3","6+√3","6-√3"],a:0,e:"[3(2+√3)]/[(2-√3)(2+√3)] = (6+3√3)/(4-3) = 6+3√3"},
+  {q:"Evaluate √12 + √27 - √75.",o:["0","√3","2√3","3√3"],a:0,e:"2√3 + 3√3 - 5√3 = 0"},
+  {q:"If √5 + √3 = √x, find x.",o:["8","8+2√15","8+√15","15"],a:1,e:"Square both sides: (√5+√3)² = 5 + 2√15 + 3 = 8+2√15"},
+  {q:"Rationalize (√5-√3)/(√5+√3).",o:["4-√15","4+√15","4-2√15","4+2√15"],a:0,e:"Multiply by conjugate: [(√5-√3)²]/(5-3) = (5-2√15+3)/2 = (8-2√15)/2 = 4-√15"},
+  {q:"Simplify √50 × √8.",o:["10","20","40","400"],a:1,e:"√400 = 20 (or 5√2 × 2√2 = 10×2 = 20)"},
+  {q:"Find the value of 1/(1+√2) + 1/(1-√2).",o:["0","2","-2","2√2"],a:2,e:"Rationalize each: (1-√2)/(-1) + (1+√2)/(-1) = -(1-√2+1+√2) = -2"},
+  
+  // Section E: Sets (45-52)
+  {q:"If A = {1, 2, 3, 4} and B = {3, 4, 5, 6}, find A ∩ B.",o:["{1, 2}","{3, 4}","{5, 6}","{1, 2, 3, 4, 5, 6}"],a:1,e:"Common elements: 3 and 4"},
+  {q:"If n(A) = 15, n(B) = 20, and n(A ∩ B) = 10, find n(A ∪ B).",o:["25","30","35","45"],a:0,e:"n(A ∪ B) = 15 + 20 - 10 = 25"},
+  {q:"In a class of 50 students, 30 study Mathematics, 25 study Physics, and 10 study neither. How many study both?",o:["5","10","15","20"],a:2,e:"50-10=40 study at least one. 30+25-x=40, so x=15"},
+  {q:"If U = {1,2,3,4,5,6}, A = {2,4,6}, find A'.",o:["{1,3,5}","{2,4,6}","{1,2,3}","{4,5,6}"],a:0,e:"Complement of A: elements in U not in A"},
+  {q:"If P = {x: x is prime, x < 10} and Q = {x: x is odd, x < 10}, find P ∩ Q.",o:["{3, 5, 7}","{1, 3, 5, 7}","{2, 3, 5, 7}","{2, 3, 5, 7, 9}"],a:0,e:"P={2,3,5,7}, Q={1,3,5,7,9}, intersection is {3,5,7}"},
+  {q:"In a survey of 100 people: 60 like tea, 50 like coffee, 30 like both. How many like neither?",o:["10","20","30","40"],a:1,e:"60+50-30=80 like at least one. 100-80=20 like neither"},
+  {q:"If A ⊂ B and n(A) = 5, n(B) = 8, what is n(A ∩ B)?",o:["3","5","8","13"],a:1,e:"Since A is subset of B, A ∩ B = A, so n(A ∩ B) = 5"},
+  {q:"Find the number of subsets of a set with 4 elements.",o:["4","8","16","32"],a:2,e:"2⁴ = 16 subsets"},
+  
+  // Section F: Number Systems & Miscellaneous (53-60)
+  {q:"Which of the following is an irrational number?",o:["√4","√9","√16","√20"],a:3,e:"√20 = 2√5 is irrational; others are integers"},
+  {q:"Express 2.̇3̇6 as a fraction.",o:["8/33","26/11","78/33","236/99"],a:2,e:"x=2.3636..., 100x=236.3636..., 99x=234, x=234/99=78/33=26/11"},
+  {q:"Find the HCF of 48, 72, and 120.",o:["12","24","36","48"],a:1,e:"48=2⁴×3, 72=2³×3², 120=2³×3×5. HCF = 2³×3 = 24"},
+  {q:"Find the LCM of 8, 12, and 20.",o:["60","120","240","480"],a:1,e:"8=2³, 12=2²×3, 20=2²×5. LCM = 2³×3×5 = 120"},
+  {q:"Evaluate (-3)³ × (-2)².",o:["-108","108","-72","72"],a:0,e:"(-27) × 4 = -108"},
+  {q:"Simplify [2^(n+3) - 2^(n+1)]/2^(n+2).",o:["3/2","3","2","1/2"],a:0,e:"[2^(n+1)(4-1)]/2^(n+2) = [3×2^(n+1)]/2^(n+2) = 3/2"},
+  {q:"If x is inversely proportional to y and x=4 when y=3, find x when y=6.",o:["1","2","6","8"],a:1,e:"xy = k, so 4×3=12=k. When y=6, x=12/6=2"},
+  {q:"The sum of three consecutive integers is 72. Find the largest.",o:["23","24","25","26"],a:2,e:"Let integers be n, n+1, n+2. Sum = 3n+3=72, n=23. Largest is 25"}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('math_number_numeration_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('math_number_numeration_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('math_number_numeration_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=70?'Outstanding JAMB preparation!':pct>=60?'Good progress, aim higher':pct>=50?'Average, needs more practice':'Study fundamentals thoroughly'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,12,22,36,44,52,60];
+  const sectionNames=["A: Number Bases","B: Fractions, Decimals & Approximations","C: Indices & Logarithms","D: Surds","E: Sets","F: Number Systems & Miscellaneous"];
+  
+  for(let s=0;s<6;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('math_number_numeration_quiz_auth');
+  sessionStorage.removeItem('math_number_numeration_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('math_number_numeration_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('math_number_numeration_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>
