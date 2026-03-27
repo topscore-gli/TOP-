@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Mathematics - Variation</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+    .math{
+      font-weight:900;color:var(--accent-secondary)
+    }
+    .label{
+      fill:var(--text-primary);
+      font-size:11px;
+      font-weight:700
+    }
+    .axis{
+      stroke:var(--text-primary);
+      stroke-width:2
+    }
+    .curve{
+      stroke:var(--line);
+      stroke-width:3;
+      fill:none
+    }
+    .grid{
+      stroke:var(--grid);
+      stroke-width:1
+    }
+    .mark{
+      fill:var(--accent-secondary)
+    }
+    .fill-soft{fill:rgba(29,185,84,.22)}
+    .fill-soft-2{fill:rgba(78,205,196,.22)}
+    .fill-soft-3{fill:rgba(255,107,107,.22)}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">MATHEMATICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📈 Variation</h1>
+        <p>JAMB Mathematics • direct variation • inverse variation • joint variation • partial variation • combined variation • percentage change</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Introduction to Chapter 6</h2>
+        <p>This chapter explains how quantities change in relation to one another. You will learn how to solve problems involving <strong>direct, inverse, joint, partial, and combined variation</strong>.</p>
+        <p>Variation questions in JAMB are usually straightforward if you identify the type correctly, find the constant of proportionality, and write the correct equation before substituting values.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>The keyword in the question usually tells you the variation type</li>
+            <li>The constant <span class="math">k</span> is always very important</li>
+            <li>Direct variation means same direction, inverse means opposite direction</li>
+            <li>Partial variation usually leads to simultaneous equations</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Variation is mostly about translating words into formulas. If you identify the relationship correctly, the rest becomes simple substitution.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Direct Variation</h2>
+
+        <h3>Concept</h3>
+        <p>When one variable increases, the other also increases in the same ratio.</p>
+
+        <div class="highlight-box">
+          <p><strong>Key phrases:</strong> “y varies directly as x” or “y is directly proportional to x”.</p>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Direct variation formulas</div>
+          <div class="line"><span class="math">y = kx</span></div>
+          <div class="line"><span class="math">y₁/x₁ = y₂/x₂</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 1: y varies directly as x. When y = 20 and x = 2, find y when x = 8</div>
+          <p><strong>Method 1: Formula method</strong></p>
+          <p><span class="math">y = kx</span></p>
+          <p><span class="math">20 = k(2)</span>, so <span class="math">k = 10</span></p>
+          <p>New equation: <span class="math">y = 10x</span></p>
+          <p>When <span class="math">x = 8</span>, <span class="math">y = 10(8) = 80</span></p>
+          <p><strong>Method 2: Proportion method</strong></p>
+          <p><span class="math">20/2 = y/8</span></p>
+          <p><span class="math">2y = 160</span></p>
+          <p><span class="math">y = 80</span></p>
+          <div class="answer">Answer: y = 80</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: y varies directly as the square of x. When y = 4 and x = 3, find y when x = 2</div>
+          <p><strong>Step 1:</strong> Write the equation</p>
+          <p><span class="math">y = kx²</span></p>
+          <p><strong>Step 2:</strong> Find k</p>
+          <p><span class="math">4 = k(3²) = 9k</span></p>
+          <p><span class="math">k = 4/9</span></p>
+          <p><strong>Step 3:</strong> Write the full equation</p>
+          <p><span class="math">y = (4/9)x²</span></p>
+          <p><strong>Step 4:</strong> Substitute x = 2</p>
+          <p><span class="math">y = (4/9)(2²) = (4/9)(4) = 16/9</span></p>
+          <div class="answer">Answer: 16/9</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Inverse Variation</h2>
+
+        <h3>Concept</h3>
+        <p>When one variable increases, the other decreases in such a way that their product remains constant.</p>
+
+        <div class="highlight-box">
+          <p><strong>Key phrases:</strong> “y varies inversely as x” or “y is inversely proportional to x”.</p>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Inverse variation formulas</div>
+          <div class="line"><span class="math">y = k/x</span></div>
+          <div class="line"><span class="math">xy = k</span></div>
+          <div class="line"><span class="math">x₁y₁ = x₂y₂</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: y varies inversely as x. When y = 4 and x = 3, find x when y = 6</div>
+          <p><strong>Method 1: Formula method</strong></p>
+          <p><span class="math">y = k/x</span></p>
+          <p><span class="math">4 = k/3</span>, so <span class="math">k = 12</span></p>
+          <p>New equation: <span class="math">y = 12/x</span></p>
+          <p>When <span class="math">y = 6</span>:</p>
+          <p><span class="math">6 = 12/x</span></p>
+          <p><span class="math">6x = 12</span></p>
+          <p><span class="math">x = 2</span></p>
+          <p><strong>Method 2: Product rule</strong></p>
+          <p><span class="math">(3)(4) = x(6)</span></p>
+          <p><span class="math">12 = 6x</span></p>
+          <p><span class="math">x = 2</span></p>
+          <div class="answer">Answer: x = 2</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Joint Variation</h2>
+
+        <h3>Concept</h3>
+        <p>One variable varies directly with two or more other variables at the same time.</p>
+
+        <div class="highlight-box">
+          <p><strong>Key phrase:</strong> “y varies jointly as x and z”.</p>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Joint variation formulas</div>
+          <div class="line"><span class="math">y = kxz</span></div>
+          <div class="line"><span class="math">y = kx√z</span> if the question says “jointly as x and the square root of z”</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 4: x varies jointly as y and the square root of z. When x = -18, y = 2, and z = 9, find y when x = 10 and z = 4</div>
+          <p><strong>Step 1:</strong> Write the relationship</p>
+          <p><span class="math">x = ky√z</span></p>
+          <p><strong>Step 2:</strong> Find k</p>
+          <p><span class="math">-18 = k(2)(√9)</span></p>
+          <p><span class="math">-18 = k(2)(3) = 6k</span></p>
+          <p><span class="math">k = -3</span></p>
+          <p><strong>Step 3:</strong> Form the equation</p>
+          <p><span class="math">x = -3y√z</span></p>
+          <p><strong>Step 4:</strong> Substitute new values</p>
+          <p><span class="math">10 = -3y√4 = -3y(2) = -6y</span></p>
+          <p><span class="math">y = -10/6 = -5/3</span></p>
+          <div class="answer">Answer: y = -5/3</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Partial Variation</h2>
+
+        <h3>Concept</h3>
+        <p>A partial variation has a constant part and a varying part.</p>
+
+        <div class="highlight-box">
+          <p><strong>Key phrase:</strong> “y is partly constant and partly varies as x”.</p>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Partial variation formula</div>
+          <div class="line"><span class="math">y = k₁x + k₂</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 5: y is partly constant and partly varies directly with x. When y = 4, x = 2, and when y = 16, x = 4. Find y when x = 6</div>
+          <p><strong>Step 1:</strong> Let <span class="math">y = k₁x + k₂</span></p>
+          <p>From first condition:</p>
+          <p><span class="math">4 = 2k₁ + k₂</span> ... (1)</p>
+          <p>From second condition:</p>
+          <p><span class="math">16 = 4k₁ + k₂</span> ... (2)</p>
+          <p><strong>Step 2:</strong> Subtract (1) from (2)</p>
+          <p><span class="math">12 = 2k₁</span></p>
+          <p><span class="math">k₁ = 6</span></p>
+          <p><strong>Step 3:</strong> Substitute back</p>
+          <p><span class="math">4 = 2(6) + k₂</span></p>
+          <p><span class="math">4 = 12 + k₂</span></p>
+          <p><span class="math">k₂ = -8</span></p>
+          <p><strong>Step 4:</strong> Form the equation</p>
+          <p><span class="math">y = 6x - 8</span></p>
+          <p><strong>Step 5:</strong> When <span class="math">x = 6</span></p>
+          <p><span class="math">y = 6(6) - 8 = 28</span></p>
+          <div class="answer">Answer: y = 28</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Combined Variation</h2>
+
+        <h3>Concept</h3>
+        <p>Combined variation mixes direct, inverse, and sometimes joint variation in one expression.</p>
+
+        <div class="highlight-box">
+          <p><strong>Key phrase:</strong> “y varies jointly as x and w and inversely as the square of z”.</p>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Combined variation formula</div>
+          <div class="line"><span class="math">y = kxw / z²</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 6: y varies jointly as x and w and inversely as the square of z. When y = 100, x = 2, w = 4, and z = 20</div>
+          <p><strong>(a) Find the equation of variation</strong></p>
+          <p><strong>Step 1:</strong> Write the formula</p>
+          <p><span class="math">y = kxw / z²</span></p>
+          <p><strong>Step 2:</strong> Substitute known values</p>
+          <p><span class="math">100 = k(2)(4) / 20² = 8k / 400</span></p>
+          <p><span class="math">8k = 100 × 400 = 40000</span></p>
+          <p><span class="math">k = 40000 / 8 = 5000</span></p>
+          <p>Equation: <span class="math">y = 5000xw / z²</span></p>
+          <p><strong>(b) Find y when x = 1, w = 5, and z = 4</strong></p>
+          <p><span class="math">y = 5000(1)(5) / 4²</span></p>
+          <p><span class="math">= 25000 / 16 = 1562.5</span></p>
+          <div class="answer">Answers: (a) y = 5000xw / z², (b) y = 1562.5</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Percentage Increase and Decrease in Variation</h2>
+
+        <h3>Concept</h3>
+        <p>When variables in a variation formula change by percentages, use multipliers.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>10% increase means multiply by <span class="math">1.10</span></li>
+            <li>20% decrease means multiply by <span class="math">0.80</span></li>
+            <li>40% increase means multiply by <span class="math">1.40</span></li>
+            <li>10% decrease means multiply by <span class="math">0.90</span></li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 7: The area of a triangle varies jointly with its base and height. If the base is increased by 40% and the height is decreased by 10%, what is the percentage change in the area?</div>
+          <p><strong>Step 1:</strong> Write the original relationship</p>
+          <p><span class="math">A = kbh</span></p>
+          <p><strong>Step 2:</strong> Apply the new multipliers</p>
+          <p>Base becomes <span class="math">1.4b</span></p>
+          <p>Height becomes <span class="math">0.9h</span></p>
+          <p><strong>Step 3:</strong> Find the new area</p>
+          <p><span class="math">Aₙₑw = k(1.4b)(0.9h)</span></p>
+          <p><span class="math">= 1.26kbh = 1.26A</span></p>
+          <p><strong>Step 4:</strong> Interpret the result</p>
+          <p><span class="math">1.26A - 1.00A = 0.26A</span></p>
+          <p>This is a <span class="math">26%</span> increase.</p>
+          <div class="answer">Answer: 26% increase</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Summary Table</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Variation Type</th>
+              <th>General Formula</th>
+              <th>Proportion Method</th>
+              <th>Key Indicator Words</th>
+            </tr>
+            <tr>
+              <td>Direct</td>
+              <td>y = kx</td>
+              <td>y₁/x₁ = y₂/x₂</td>
+              <td>“varies directly as”</td>
+            </tr>
+            <tr>
+              <td>Direct Square</td>
+              <td>y = kx²</td>
+              <td>y₁/x₁² = y₂/x₂²</td>
+              <td>“varies as the square of”</td>
+            </tr>
+            <tr>
+              <td>Inverse</td>
+              <td>y = k/x or xy = k</td>
+              <td>x₁y₁ = x₂y₂</td>
+              <td>“varies inversely as”</td>
+            </tr>
+            <tr>
+              <td>Inverse Square</td>
+              <td>y = k/x² or x²y = k</td>
+              <td>x₁²y₁ = x₂²y₂</td>
+              <td>“inversely as the square of”</td>
+            </tr>
+            <tr>
+              <td>Joint</td>
+              <td>y = kxz</td>
+              <td>Usually formula method</td>
+              <td>“varies jointly as”</td>
+            </tr>
+            <tr>
+              <td>Partial</td>
+              <td>y = k₁x + k₂</td>
+              <td>Simultaneous equations</td>
+              <td>“partly constant and partly varies”</td>
+            </tr>
+            <tr>
+              <td>Combined</td>
+              <td>y = kxw / z²</td>
+              <td>Usually formula method</td>
+              <td>“jointly as... and inversely as...”</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Quick Tips for JAMB Exam</h2>
+
+        <div class="jamb-alert">
+          <h4>How to score high in variation questions</h4>
+          <ul>
+            <li>Identify the variation type first from the keywords</li>
+            <li>Always find the constant <span class="math">k</span> before solving the unknown</li>
+            <li>Write the full variation equation before substituting new values</li>
+            <li>For partial variation, form two equations and solve together</li>
+            <li>For percentage changes, use multipliers like 1.4 and 0.9</li>
+            <li>Check if the final answer makes sense in the context</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Fast method</strong>
+          <p>Read the words carefully, pick the right variation formula, find <span class="math">k</span>, then substitute. Most errors happen when the variation type is identified wrongly.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Practice Strategy</h2>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Read the question carefully and underline the variation keywords</li>
+            <li>Write the correct general formula first</li>
+            <li>Substitute known values to find <span class="math">k</span></li>
+            <li>Write the specific equation for that problem</li>
+            <li>Substitute the new values and solve</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 Quick Checklist for Variation Problems</h2>
+
+        <div class="memory-tip">
+          <strong>🧠 Checklist</strong>
+          <p>Identify the variation type from keywords. Write the general formula with <span class="math">k</span>. Substitute known values to find <span class="math">k</span>. Write the full equation. For partial variation, use simultaneous equations. For percentage changes, use multipliers like <span class="math">1.4</span> and <span class="math">0.9</span>. Finally, check whether the answer is reasonable.</p>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Connects to:</strong> Chapter 5 Polynomials and Chapter 7 Geometry.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣1️⃣ Final Revision Note</h2>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete guide to Variation with formulas, examples, exam tips, and a full summary table. With enough practice, variation questions become some of the fastest marks to pick in JAMB.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise direct, inverse, joint, partial, and combined variation questions today.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

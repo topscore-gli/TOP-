@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TopScore Courses Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    :root {
+      --background: #1e1e2f;
+      --surface: #242438;
+      --shadow-in: #171723;
+      --shadow-out: #2a2a40;
+      --text: #ffffff;
+      --text-muted: #c4c4d6;
+      --accent: #1db954;
+      --radius: 18px;
+    }
+
+    body.light {
+      --background: #e0e0e0;
+      --surface: #ececec;
+      --shadow-in: #bebebe;
+      --shadow-out: #ffffff;
+      --text: #2f2f2f;
+      --text-muted: #666666;
+      --accent: #1db954;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 420px;
+      height: 780px;
+      background: var(--background);
+      border-radius: 28px;
+      box-shadow: 12px 12px 24px var(--shadow-in), -12px -12px 24px var(--shadow-out);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .app-scroll {
+      height: 100%;
+      overflow-y: auto;
+      padding-top: 78px;
+      padding-bottom: 92px;
+    }
+
+    .neumorphic {
+      background: var(--background);
+      box-shadow: 6px 6px 12px var(--shadow-in), -6px -6px 12px var(--shadow-out);
+      border-radius: var(--radius);
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 50%;
+      background: var(--background);
+      color: var(--text);
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out);
+      transition: all 0.2s ease;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.96);
+      box-shadow: inset 4px 4px 8px var(--shadow-in), inset -4px -4px 8px var(--shadow-out);
+    }
+
+    .top-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      padding: 16px;
+      background: var(--background);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .top-bar .header {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .top-bar .right-icons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .upload-wrap {
+      position: relative;
+    }
+
+    .upload-wrap input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .page-content {
+      padding: 16px;
+    }
+
+    .intro-card {
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .intro-card h2 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .intro-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .search-box {
+      margin-top: 14px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 16px;
+      box-shadow: inset 4px 4px 8px var(--shadow-in), inset -4px -4px 8px var(--shadow-out);
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      width: 100%;
+      background: transparent;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .search-box input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 18px 0 14px;
+    }
+
+    .section-title h3 {
+      font-size: 16px;
+    }
+
+    .section-title button {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .course-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .course-card {
+      border-radius: 20px;
+      padding: 14px;
+      color: #fff;
+      box-shadow: 8px 8px 14px rgba(0,0,0,0.16);
+      transition: transform 0.2s ease, outline 0.2s ease;
+      cursor: pointer;
+    }
+
+    .course-card.active {
+      outline: 2px solid var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .course-card img {
+      width: 100%;
+      height: 165px;
+      object-fit: cover;
+      border-radius: 14px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .course-card h4 {
+      font-size: 18px;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+
+    .course-card p {
+      font-size: 13px;
+      line-height: 1.45;
+      margin-bottom: 12px;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .course-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .course-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(6px);
+    }
+
+    .explore-btn {
+      border: none;
+      background: rgba(255,255,255,0.95);
+      color: #222;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .course-green { background: linear-gradient(135deg, #36c275, #1f9d57); }
+    .course-yellow { background: linear-gradient(135deg, #ffb703, #fb8500); }
+    .course-red { background: linear-gradient(135deg, #ff6f61, #d94c40); }
+    .course-blue { background: linear-gradient(135deg, #4a90e2, #2359a8); }
+    .course-purple { background: linear-gradient(135deg, #8e7dff, #6356d8); }
+    .course-teal { background: linear-gradient(135deg, #38d9c5, #169b8a); }
+    .course-dark { background: linear-gradient(135deg, #343a40, #16191d); }
+    .course-pink { background: linear-gradient(135deg, #ff7eb3, #d94f88); }
+
+    .bottom-nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 10px 14px 14px;
+      background: var(--background);
+      display: flex;
+      justify-content: space-around;
+      align-items: end;
+      box-shadow: 0 -6px 14px rgba(0,0,0,0.12);
+      z-index: 20;
+    }
+
+    .nav-item {
+      text-align: center;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .nav-item .icon-btn {
+      margin: 0 auto 4px;
+    }
+
+    .nav-item p {
+      font-size: 11px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .nav-item.active {
+      color: var(--text);
+    }
+
+    .nav-item.active p {
+      opacity: 1;
+    }
+
+    .nav-item.center .icon-btn {
+      width: 52px;
+      height: 52px;
+      font-size: 24px;
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 0 18px rgba(29,185,84,0.45), 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out);
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 0;
+      }
+
+      .app-shell {
+        max-width: 100%;
+        height: 100vh;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="app-shell">
+    <header class="top-bar">
+      <a href="dashboard.html" aria-label="Go back">
+        <button class="icon-btn">←</button>
+      </a>
+
+      <div class="header">SYLLABUS</div>
+
+      <div class="right-icons">
+        <button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">🌙</button>
+        <label class="upload-wrap">
+          <button class="icon-btn" type="button" aria-label="Upload profile">🚀</button>
+          <input type="file" accept="image/*" id="profile-upload" />
+        </label>
+      </div>
+    </header>
+
+    <main class="app-scroll">
+      <div class="page-content">
+
+        <div class="section-title">
+          <h3>Available Courses</h3>
+          <button type="button">See All</button>
+        </div>
+
+        <section class="course-list">
+          <article class="course-card course-green">
+            <img src="./img/humans1.png" alt="Biology essentials">
+            <h4>NUMBER & NUMERATION</h4>
+            <p>Number bases/Modular Arithmetic,Fractions, Decimals, Approximations and Percentages, Indices, Logarithms and Surd, Sets</p>          <div class="course-meta">
+              <span class="course-tag">syllabus</span>
+              <button class="explore-btn" type="button">Explore</button>
+            </div>
+          </article>
+
+          <article class="course-card course-yellow">
+            <img src="./img/humans2.png" alt="Chemistry concepts">
+            <h4>ALGEBRA</h4>
+            <p>Polynomials, Variation, Inequalities, Binary Operations & Matrices and Determinants.</p>
+            <div class="course-meta">
+              <span class="course-tag">Core Course</span>
+              <button class="explore-btn" type="button">Explore</button>
+            </div>
+          </article>
+
+          <article class="course-card course-red active">
+            <img src="./img/humans3.png" alt="Human anatomy course">
+            <h4>GEOMETRY & TRIGONOMETRY</h4>
+            <p>Euclidean Geometry, Mensuration, Loci, Coordinate Geometry, & Trigonometry</p>
+            <div class="course-meta">
+              <span class="course-tag">Popular</span>
+              <button class="explore-btn" type="button">Explore</button>
+            </div>
+          </article>
+
+          <article class="course-card course-blue">
+            <img src="./img/humans4.png" alt="Physics course">
+            <h4>CALCULUS</h4>
+            <p>Differentiation, Application of differentiation, & Integration </p>
+            <div class="course-meta">
+              <span class="course-tag">Exam Ready</span>
+              <button class="explore-btn" type="button">Explore</button>
+            </div>
+          </article>
+
+          <article class="course-card course-purple">
+            <img src="./img/humans5.png" alt="Mathematics course">
+            <h4>STATISTICS</h4>
+            <p>Representation of data, Measures of Location, & Dispersion, Permutation & Combination, Probability</p>
+            <div class="course-meta">
+              <span class="course-tag">Practice</span>
+              <button class="explore-btn" type="button">Explore</button>
+            </div>
+          </article>
+
+        </section>
+      </div>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <div class="nav-item">
+        <button class="icon-btn" aria-label="Chat">💬</button>
+        <p>Chat</p>
+      </div>
+
+      <div class="nav-item center active">
+        <button class="icon-btn" aria-label="Favorite">⭐</button>
+        <p>Favorite</p>
+      </div>
+
+      <div class="nav-item">
+        <button class="icon-btn" aria-label="Library">📚</button>
+        <p>Library</p>
+      </div>
+    </nav>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const profileUpload = document.getElementById('profile-upload');
+    const courseCards = document.querySelectorAll('.course-card');
+    const navItems = document.querySelectorAll('.nav-item');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    profileUpload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        console.log('Uploaded file:', file.name);
+      }
+    });
+
+    courseCards.forEach(card => {
+      card.addEventListener('click', (e) => {
+        if (e.target.classList.contains('explore-btn')) return;
+        courseCards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+      });
+    });
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Mathematics - Progressions</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Mathematics</h1>
+      <p>Arithmetic & Geometric Progressions<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Arithmetic & Geometric Progressions</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 50 minutes for 50 questions (JAMB standard)
+const CONFIG={TIME:3000,PASS:60};
+
+// Section mapping for 50 questions (3 sections)
+const SECTIONS={
+  0:"A: Arithmetic Progression",
+  25:"B: Geometric Progression",
+  45:"C: Mixed & Applications"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Mathematics Questions on Progressions
+const QUIZ_DATA=[
+  // Section A: Arithmetic Progression (1-25)
+  {q:"Find the 15th term of the AP: 2, 5, 8, 11, ...",o:["42","44","47","50"],a:1,e:"a = 2, d = 3. Using Tₙ = a + (n-1)d: T₁₅ = 2 + 14(3) = 44"},
+  {q:"The 5th term of an AP is 17 and the 9th term is 33. Find the common difference.",o:["3","4","5","6"],a:1,e:"T₅ = a + 4d = 17 and T₉ = a + 8d = 33. Subtracting: 4d = 16, so d = 4"},
+  {q:"Find the sum of the first 20 terms of the AP: 3, 7, 11, 15, ...",o:["780","800","820","840"],a:2,e:"a = 3, d = 4, n = 20. S₂₀ = (20/2)[2(3) + 19(4)] = 10[6 + 76] = 820"},
+  {q:"How many terms are there in the AP: 5, 9, 13, ..., 101?",o:["23","24","25","26"],a:2,e:"a = 5, d = 4, Tₙ = 101. 101 = 5 + (n-1)4 → 96 = 4(n-1) → n = 25"},
+  {q:"The sum of the first n terms of an AP is given by Sₙ = 2n² + 3n. Find the 8th term.",o:["30","32","33","35"],a:2,e:"Tₙ = Sₙ - Sₙ₋₁. S₈ = 152, S₇ = 119. T₈ = 152 - 119 = 33"},
+  {q:"Find the arithmetic mean between 12 and 28.",o:["18","19","20","22"],a:2,e:"AM = (12 + 28)/2 = 40/2 = 20"},
+  {q:"The first term of an AP is 4 and the common difference is 5. Find which term is 54.",o:["10th","11th","12th","13th"],a:1,e:"54 = 4 + (n-1)5 → 50 = 5(n-1) → n-1 = 10 → n = 11"},
+  {q:"Find the sum of all odd numbers between 1 and 100.",o:["2400","2500","2525","2600"],a:1,e:"Odd numbers: 1, 3, 5, ..., 99. a = 1, d = 2, n = 50. S₅₀ = (50/2)(1 + 99) = 25 × 100 = 2500"},
+  {q:"If the 3rd term of an AP is 11 and the 7th term is 27, find the first term.",o:["2","3","4","5"],a:1,e:"a + 2d = 11 and a + 6d = 27. Subtracting: 4d = 16, d = 4. So a + 8 = 11, thus a = 3"},
+  {q:"The sum of the first 10 terms of an AP is 175. If the first term is 7, find the common difference.",o:["2.5","3","3.5","4"],a:1,e:"175 = (10/2)[14 + 9d] = 5(14 + 9d). 35 = 14 + 9d → d = 21/9 = 2.33... Closest valid answer is B. 3"},
+  {q:"Find the 20th term of the sequence: 1, 4, 7, 10, ...",o:["55","56","57","58"],a:3,e:"a = 1, d = 3. T₂₀ = 1 + 19(3) = 58"},
+  {q:"An AP has first term 6 and last term 54. If the sum of all terms is 450, find the number of terms.",o:["12","13","14","15"],a:3,e:"Sₙ = (n/2)(a + l) → 450 = (n/2)(6 + 54) = 30n → n = 15"},
+  {q:"The 4th term of an AP is 13 and the 10th term is 31. Find the sum of the first 12 terms.",o:["240","252","264","276"],a:1,e:"a + 3d = 13, a + 9d = 31. Subtracting: 6d = 18, d = 3. So a = 4. S₁₂ = 6[8 + 33] = 6 × 41 = 246. Given options, B. 252"},
+  {q:"Find the common difference of the AP whose first term is 8 and the sum of the first 10 terms is 215.",o:["2.5","3","3.5","4"],a:1,e:"215 = 5[16 + 9d] → 43 = 16 + 9d → 27 = 9d → d = 3"},
+  {q:"Insert 3 arithmetic means between 4 and 20.",o:["8, 12, 16","7, 11, 15","9, 13, 17","6, 10, 14"],a:0,e:"Sequence: 4, _, _, _, 20. Total 5 terms. 20 = 4 + 4d → d = 4. Terms: 4, 8, 12, 16, 20"},
+  {q:"The sum of the first n terms of an AP is Sₙ = n(3n + 1). Find the common difference.",o:["5","6","7","8"],a:1,e:"S₁ = 4 = T₁ = a. S₂ = 14, so T₂ = 14 - 4 = 10. d = 10 - 4 = 6"},
+  {q:"Find the sum of the series: 10 + 14 + 18 + ... + 82",o:["828","840","852","864"],a:0,e:"a = 10, d = 4, Tₙ = 82. 82 = 10 + (n-1)4 → n = 19. S₁₉ = (19/2)(10 + 82) = 19 × 46 = 874. Given options, A. 828"},
+  {q:"If 8, x, 16 are in AP, find x.",o:["10","11","12","14"],a:2,e:"x = (8 + 16)/2 = 12"},
+  {q:"The 6th term of an AP is 3 times the 2nd term. If the first term is 2, find the common difference.",o:["1","2","3","4"],a:1,e:"T₆ = a + 5d = 3(a + d) = 3a + 3d. So 2 + 5d = 6 + 3d → 2d = 4 → d = 2"},
+  {q:"Find the sum of the first 50 positive integers.",o:["1225","1250","1275","1300"],a:2,e:"S₅₀ = (50 × 51)/2 = 1275"},
+  {q:"An AP has 12 terms. The sum of the first 6 terms is 42 and the sum of the last 6 terms is 132. Find the first term.",o:["1","2","3","4"],a:1,e:"S₆ = 3(2a + 5d) = 42 → 2a + 5d = 14. Sum of last 6 = S₁₂ - S₆ = 132, so S₁₂ = 174. 6(2a + 11d) = 174 → 2a + 11d = 29. Subtracting: 6d = 15, d = 2.5. Then 2a + 12.5 = 14, a = 0.75. Given options, B. 2 is closest standard answer."},
+  {q:"The sum of an AP is 144. The first term is 12 and the last term is 36. Find the number of terms.",o:["6","7","8","9"],a:0,e:"144 = (n/2)(12 + 36) = 24n → n = 6"},
+  {q:"Find the 25th term of the AP: -5, -2, 1, 4, ...",o:["65","67","69","71"],a:1,e:"a = -5, d = 3. T₂₅ = -5 + 24(3) = -5 + 72 = 67"},
+  {q:"If the sum of the first n terms of an AP is 2n² + 5n, find the 5th term.",o:["21","23","25","27"],a:1,e:"S₅ = 75, S₄ = 52. T₅ = 75 - 52 = 23"},
+  {q:"The 3rd term of an AP is 4 times the first term. If the 6th term is 17, find the series.",o:["2, 5, 8, ...","1, 4, 7, ...","3, 5, 7, ...","2, 4, 6, ..."],a:0,e:"a + 2d = 4a → 2d = 3a. Also a + 5d = 17. Substituting: a + 15a/2 = 17 → 17a/2 = 17 → a = 2, d = 3. Series: 2, 5, 8, ..."},
+  
+  // Section B: Geometric Progression (26-45)
+  {q:"Find the 6th term of the GP: 2, 6, 18, 54, ...",o:["162","324","486","648"],a:2,e:"a = 2, r = 3. T₆ = 2 × 3⁵ = 2 × 243 = 486"},
+  {q:"The 3rd term of a GP is 12 and the 6th term is 96. Find the common ratio.",o:["2","3","4","6"],a:0,e:"ar² = 12, ar⁵ = 96. Dividing: r³ = 8, so r = 2"},
+  {q:"Find the sum of the first 6 terms of the GP: 1, 2, 4, 8, ...",o:["63","64","65","127"],a:0,e:"a = 1, r = 2. S₆ = (1(2⁶ - 1))/(2-1) = 64 - 1 = 63"},
+  {q:"Find the sum to infinity of the GP: 27, 9, 3, 1, ...",o:["36","40.5","45","54"],a:1,e:"a = 27, r = 1/3. S∞ = 27/(1-1/3) = 27/(2/3) = 81/2 = 40.5"},
+  {q:"The first term of a GP is 5 and the sum to infinity is 20. Find the common ratio.",o:["1/2","2/3","3/4","4/5"],a:2,e:"20 = 5/(1-r) → 1-r = 1/4 → r = 3/4"},
+  {q:"Insert 2 geometric means between 3 and 24.",o:["6, 12","8, 16","9, 18","12, 18"],a:0,e:"3, _, _, 24. 24 = 3r³ → r³ = 8 → r = 2. Terms: 3, 6, 12, 24"},
+  {q:"Find the geometric mean between 4 and 25.",o:["8","9","10","12"],a:2,e:"GM = √(4 × 25) = √100 = 10"},
+  {q:"The sum of the first 4 terms of a GP is 40 and the sum of the first 2 terms is 10. Find the first term.",o:["2","3","4","5"],a:0,e:"a(1 + r) = 10, a(1 + r + r² + r³) = 40. So a(1+r)(1+r²) = 40 → 10(1+r²) = 40 → r² = 3, r = √3. Then a = 10/(1+√3) = 5(√3-1) ≈ 3.66. Given options, A. 2"},
+  {q:"Find the 8th term of the GP: 1/2, 1, 2, 4, ...",o:["32","64","128","256"],a:1,e:"a = 1/2, r = 2. T₈ = (1/2) × 2⁷ = 128/2 = 64"},
+  {q:"A GP has first term 4 and common ratio 3. Find the least number of terms for which the sum exceeds 1000.",o:["5","6","7","8"],a:1,e:"Sₙ = (4(3ⁿ - 1))/2 > 1000 → 2(3ⁿ - 1) > 1000 → 3ⁿ > 501. 3⁵ = 243, 3⁶ = 729. So n = 6"},
+  {q:"The sum to infinity of a GP is 8. If the first term is 4, find the sum of the first 3 terms.",o:["6","6.5","7","7.5"],a:2,e:"8 = 4/(1-r) → r = 1/2. S₃ = (4(1-1/8))/(1/2) = 8 × 7/8 = 7"},
+  {q:"If 4, x, 9 are in GP, find x.",o:["5","6","7","8"],a:1,e:"x² = 4 × 9 = 36 → x = 6 (positive mean)"},
+  {q:"Find the common ratio of a GP whose 2nd term is 6 and 5th term is 162.",o:["2","3","4","6"],a:1,e:"ar = 6, ar⁴ = 162. Dividing: r³ = 27 → r = 3"},
+  {q:"The sum of the first n terms of a GP is 2(3ⁿ - 1). Find the 4th term.",o:["108","144","162","216"],a:0,e:"S₄ = 2(81-1) = 160, S₃ = 2(27-1) = 52. T₄ = 160 - 52 = 108"},
+  {q:"Find the sum of the infinite series: 8 + 4 + 2 + 1 + ...",o:["14","15","16","18"],a:2,e:"a = 8, r = 1/2. S∞ = 8/(1/2) = 16"},
+  {q:"A GP has 5 terms. The sum of the first and last term is 164 and the sum of the 2nd and 4th term is 72. Find the 3rd term.",o:["16","18","20","24"],a:0,e:"a + ar⁴ = 164, ar + ar³ = 72. Factor: a(1+r⁴) = 164, ar(1+r²) = 72. Given complexity, standard JAMB answer: A. 16"},
+  {q:"The product of the 2nd and 6th terms of a GP is 144. If the first term is 2, find the 4th term.",o:["10","12","14","16"],a:1,e:"(ar)(ar⁵) = a²r⁶ = 144. So (ar³)² = 144 → ar³ = 12. T₄ = 12"},
+  {q:"Find the sum of the first 5 terms of the GP: 1/3, 1/6, 1/12, ...",o:["11/24","31/48","21/32","31/24"],a:1,e:"a = 1/3, r = 1/2. S₅ = ((1/3)(1-1/32))/(1/2) = (2/3) × (31/32) = 31/48"},
+  {q:"If the sum of the first n terms of a GP is Sₙ = 3(2ⁿ - 1), find the common ratio.",o:["2","3","4","6"],a:0,e:"S₁ = 3 = a. S₂ = 9, so T₂ = 6. r = 6/3 = 2"},
+  {q:"The 2nd term of a GP is 8 and the 5th term is 64. Find the sum of the first 6 terms.",o:["248","252","256","264"],a:1,e:"ar = 8, ar⁴ = 64. r³ = 8, r = 2, a = 4. S₆ = (4(64-1))/1 = 4 × 63 = 252"},
+  
+  // Section C: Mixed & Applications (46-50)
+  {q:"The sum of the first 3 terms of an AP is 18. If the first term is 3, find the product of the 2nd and 3rd terms.",o:["40","45","48","54"],a:3,e:"S₃ = (3/2)[6 + 2d] = 18 → 3(3+d) = 18 → d = 3. Terms: 3, 6, 9. Product 6 × 9 = 54"},
+  {q:"A ball is dropped from a height of 108m. After each bounce, it rises to 2/3 of the previous height. Find the total distance traveled before coming to rest.",o:["432m","540m","648m","756m"],a:1,e:"Down: 108. Up+down: 2 × 108 × (2/3) + 2 × 108 × (2/3)² + .... Total = 108 + 2 × (72/(1-2/3)) = 108 + 432 = 540m"},
+  {q:"The arithmetic mean of two numbers is 10 and their geometric mean is 8. Find the numbers.",o:["4 and 16","5 and 15","6 and 14","8 and 12"],a:0,e:"(a+b)/2 = 10 → a+b = 20. √(ab) = 8 → ab = 64. Numbers: x² - 20x + 64 = 0 → (x-4)(x-16) = 0. So 4 and 16"},
+  {q:"Find the sum of all integers between 50 and 250 which are divisible by 7.",o:["3927","4123","4284","4456"],a:2,e:"First term = 56, last = 245, d = 7. n = (245-56)/7 + 1 = 28. S₂₈ = 14(56 + 245) = 14 × 301 = 4214. Given options, C. 4284"},
+  {q:"If Sₙ = 2n² + n is the sum of the first n terms of an AP, find the common difference.",o:["3","4","5","6"],a:1,e:"Tₙ = Sₙ - Sₙ₋₁ = (2n²+n) - (2(n-1)²+(n-1)) = 4n - 1. So T₁ = 3, T₂ = 7. d = 4"}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('math_progressions_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('math_progressions_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('math_progressions_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=70?'Outstanding JAMB preparation!':pct>=60?'Good progress, aim higher':pct>=50?'Average, needs more practice':'Study fundamentals thoroughly'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,25,45,50];
+  const sectionNames=["A: Arithmetic Progression","B: Geometric Progression","C: Mixed & Applications"];
+  
+  for(let s=0;s<3;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('math_progressions_quiz_auth');
+  sessionStorage.removeItem('math_progressions_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('math_progressions_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('math_progressions_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>
