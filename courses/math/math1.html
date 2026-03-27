@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Mathematics - Number and Numeration Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .quiz-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .quiz-box .q{font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px}
+    .quiz-box button{
+      width:100%;margin-top:10px;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+      background:var(--accent);color:#000;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+    }
+    .quiz-answer{
+      margin-top:10px;font-size:13px;color:var(--text-secondary);display:none
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+    .math{
+      font-weight:900;color:var(--accent-secondary)
+    }
+    .label{
+      fill:var(--text-primary);
+      font-size:11px;
+      font-weight:700
+    }
+    .axis{
+      stroke:var(--text-primary);
+      stroke-width:2
+    }
+    .curve{
+      stroke:var(--line);
+      stroke-width:3;
+      fill:none
+    }
+    .grid{
+      stroke:var(--grid);
+      stroke-width:1
+    }
+    .mark{
+      fill:var(--accent-secondary)
+    }
+    .set-fill-a{fill:rgba(29,185,84,.22)}
+    .set-fill-b{fill:rgba(78,205,196,.22)}
+    .set-stroke{stroke:var(--line);stroke-width:2;fill:none}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">MATHEMATICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🔢 Number and Numeration Guide</h1>
+        <p>JAMB Mathematics • number bases • fractions • logarithms • surds • sets • number systems</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Introduction to Number and Numeration</h2>
+        <p><strong>Number and Numeration</strong> is one of the most important foundations in JAMB Mathematics. It covers number bases, fractions, approximations, indices, logarithms, surds, sets, and number systems.</p>
+        <p>If you understand how numbers are written, converted, simplified, and classified, many JAMB questions become faster and easier.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Base conversion questions appear regularly in JAMB</li>
+            <li>Indices and logarithms are common simplification topics</li>
+            <li>Surds and sets often test method, not just memory</li>
+            <li>Most questions can be solved quickly with the right formula</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big picture</strong>
+          <p>Think of this chapter as the language of numbers. Once you understand the language, algebra and geometry become much easier.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Number Bases</h2>
+        <p>A <strong>number base</strong> or <strong>radix</strong> is the number of unique digits, including zero, used to represent numbers in a positional system.</p>
+
+        <div class="table-container">
+          <table class="summary-table" style="min-width:620px">
+            <tr>
+              <th>Base</th>
+              <th>Name</th>
+              <th>Digits Used</th>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Binary</td>
+              <td>0, 1</td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td>Octal</td>
+              <td>0 - 7</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td>Decimal</td>
+              <td>0 - 9</td>
+            </tr>
+            <tr>
+              <td>16</td>
+              <td>Hexadecimal</td>
+              <td>0 - 9, A - F</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>Converting from Other Bases to Base 10</h3>
+        <p>Expand the number using powers of the base. Multiply each digit by the base raised to its position power, starting from zero on the right.</p>
+
+        <div class="formula-box">
+          <div class="title">General idea</div>
+          <div class="line"><span class="math">Value = Σ(digit × base<sup>position</sup>)</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 1: Convert 1011₂ to base 10</div>
+          <p><strong>Step 1:</strong> Expand using powers of 2</p>
+          <p><span class="math">1011₂ = 1×2³ + 0×2² + 1×2¹ + 1×2⁰</span></p>
+          <p><strong>Step 2:</strong> Evaluate</p>
+          <p><span class="math">= 8 + 0 + 2 + 1 = 11</span></p>
+          <div class="answer">Answer: 11₁₀</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Convert 243₅ to base 10</div>
+          <p><strong>Step 1:</strong> Expand using powers of 5</p>
+          <p><span class="math">243₅ = 2×5² + 4×5¹ + 3×5⁰</span></p>
+          <p><strong>Step 2:</strong> Evaluate</p>
+          <p><span class="math">= 2×25 + 4×5 + 3×1 = 50 + 20 + 3 = 73</span></p>
+          <div class="answer">Answer: 73₁₀</div>
+        </div>
+
+        <h3>Converting from Base 10 to Other Bases</h3>
+        <p>Use repeated division. Divide by the new base repeatedly and read the remainders from bottom to top.</p>
+
+        <div class="example-box">
+          <div class="title">Example 3: Convert 45₁₀ to base 2</div>
+          <div class="table-container">
+            <table class="summary-table" style="min-width:520px">
+              <tr>
+                <th>Division</th>
+                <th>Quotient</th>
+                <th>Remainder</th>
+              </tr>
+              <tr><td>45 ÷ 2</td><td>22</td><td>1</td></tr>
+              <tr><td>22 ÷ 2</td><td>11</td><td>0</td></tr>
+              <tr><td>11 ÷ 2</td><td>5</td><td>1</td></tr>
+              <tr><td>5 ÷ 2</td><td>2</td><td>1</td></tr>
+              <tr><td>2 ÷ 2</td><td>1</td><td>0</td></tr>
+              <tr><td>1 ÷ 2</td><td>0</td><td>1</td></tr>
+            </table>
+          </div>
+          <p>Reading the remainders upward gives <span class="math">101101</span>.</p>
+          <div class="answer">Answer: 101101₂</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 4: Convert 200₁₀ to base 5</div>
+          <div class="table-container">
+            <table class="summary-table" style="min-width:520px">
+              <tr>
+                <th>Division</th>
+                <th>Quotient</th>
+                <th>Remainder</th>
+              </tr>
+              <tr><td>200 ÷ 5</td><td>40</td><td>0</td></tr>
+              <tr><td>40 ÷ 5</td><td>8</td><td>0</td></tr>
+              <tr><td>8 ÷ 5</td><td>1</td><td>3</td></tr>
+              <tr><td>1 ÷ 5</td><td>0</td><td>1</td></tr>
+            </table>
+          </div>
+          <p>Reading the remainders upward gives <span class="math">1300</span>.</p>
+          <div class="answer">Answer: 1300₅</div>
+        </div>
+
+        <h3>Converting Between Non-Decimal Bases</h3>
+        <p><strong>Base 10 is the bridge.</strong> Convert first to base 10, then to the target base.</p>
+
+        <div class="example-box">
+          <div class="title">Example 5: Convert 101₂ to base 4</div>
+          <p><strong>Step 1:</strong> Convert to base 10</p>
+          <p><span class="math">101₂ = 1×2² + 0×2 + 1 = 5₁₀</span></p>
+          <p><strong>Step 2:</strong> Convert 5₁₀ to base 4</p>
+          <p><span class="math">5 ÷ 4 = 1 remainder 1</span></p>
+          <p><span class="math">1 ÷ 4 = 0 remainder 1</span></p>
+          <div class="answer">Answer: 11₄</div>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Shortcut:</strong> Binary to base 4 can be done by grouping binary digits in pairs from the right. For example, <span class="math">101₂ → 01 01 → 11₄</span>.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Fractions, Decimals and Approximations</h2>
+
+        <h3>Types of Fractions</h3>
+        <ul>
+          <li><strong>Proper fraction:</strong> numerator is less than denominator, e.g. <span class="math">3/4</span></li>
+          <li><strong>Improper fraction:</strong> numerator is greater than or equal to denominator, e.g. <span class="math">7/4</span></li>
+          <li><strong>Mixed number:</strong> whole number plus proper fraction, e.g. <span class="math">1 3/4</span></li>
+        </ul>
+
+        <h3>Recurring Decimals to Fractions</h3>
+
+        <div class="example-box">
+          <div class="title">Example 6: Convert 0.3̇ to a fraction</div>
+          <p><strong>Step 1:</strong> Let <span class="math">x = 0.333...</span></p>
+          <p><strong>Step 2:</strong> Multiply by 10</p>
+          <p><span class="math">10x = 3.333...</span></p>
+          <p><strong>Step 3:</strong> Subtract</p>
+          <p><span class="math">10x - x = 3.333... - 0.333...</span></p>
+          <p><span class="math">9x = 3</span></p>
+          <p><span class="math">x = 3/9 = 1/3</span></p>
+          <div class="answer">Answer: 1/3</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 7: Convert 0.16̇ to a fraction</div>
+          <p><strong>Step 1:</strong> Let <span class="math">x = 0.1666...</span></p>
+          <p><strong>Step 2:</strong> Multiply by 10 and 100</p>
+          <p><span class="math">10x = 1.666...</span> and <span class="math">100x = 16.666...</span></p>
+          <p><strong>Step 3:</strong> Subtract</p>
+          <p><span class="math">100x - 10x = 16.666... - 1.666...</span></p>
+          <p><span class="math">90x = 15</span></p>
+          <p><span class="math">x = 15/90 = 1/6</span></p>
+          <div class="answer">Answer: 1/6</div>
+        </div>
+
+        <h3>Significant Figures and Decimal Places</h3>
+        <div class="table-container">
+          <table class="summary-table" style="min-width:620px">
+            <tr>
+              <th>Number</th>
+              <th>To 2 S.F.</th>
+              <th>To 2 D.P.</th>
+            </tr>
+            <tr>
+              <td>3.456</td>
+              <td>3.5</td>
+              <td>3.46</td>
+            </tr>
+            <tr>
+              <td>0.00456</td>
+              <td>0.0046</td>
+              <td>0.00</td>
+            </tr>
+            <tr>
+              <td>123.5</td>
+              <td>120</td>
+              <td>123.50</td>
+            </tr>
+          </table>
+        </div>
+
+        <h3>Percentage Error</h3>
+        <div class="formula-box">
+          <div class="title">Percentage error formula</div>
+          <div class="line"><span class="math">Percentage Error = |Exact - Approximate| / Exact × 100%</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 8: A length is measured as 5.2 cm instead of the true value 5.15 cm</div>
+          <p><strong>Step 1:</strong> Find the absolute error</p>
+          <p><span class="math">|5.15 - 5.2| = 0.05</span></p>
+          <p><strong>Step 2:</strong> Divide by exact value and multiply by 100%</p>
+          <p><span class="math">(0.05 / 5.15) × 100%</span></p>
+          <p><strong>Step 3:</strong> Evaluate</p>
+          <p><span class="math">≈ 0.97%</span></p>
+          <div class="answer">Answer: ≈ 0.97%</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Indices and Logarithms</h2>
+
+        <h3>Laws of Indices</h3>
+        <div class="table-container">
+          <table class="summary-table" style="min-width:900px">
+            <tr>
+              <th>Law</th>
+              <th>Formula</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td>Multiplication</td>
+              <td>aᵐ × aⁿ = aᵐ⁺ⁿ</td>
+              <td>2³ × 2⁴ = 2⁷ = 128</td>
+            </tr>
+            <tr>
+              <td>Division</td>
+              <td>aᵐ ÷ aⁿ = aᵐ⁻ⁿ</td>
+              <td>5⁶ ÷ 5² = 5⁴ = 625</td>
+            </tr>
+            <tr>
+              <td>Power of power</td>
+              <td>(aᵐ)ⁿ = aᵐⁿ</td>
+              <td>(3²)³ = 3⁶ = 729</td>
+            </tr>
+            <tr>
+              <td>Zero index</td>
+              <td>a⁰ = 1</td>
+              <td>7⁰ = 1</td>
+            </tr>
+            <tr>
+              <td>Negative index</td>
+              <td>a⁻ⁿ = 1/aⁿ</td>
+              <td>2⁻³ = 1/8</td>
+            </tr>
+            <tr>
+              <td>Fractional index</td>
+              <td>a^(m/n) = ⁿ√(aᵐ)</td>
+              <td>8^(2/3) = (³√8)² = 4</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 9: Simplify (3⁵ × 9²) / 27³</div>
+          <p><strong>Step 1:</strong> Express all terms in base 3</p>
+          <p><span class="math">9² = (3²)² = 3⁴</span></p>
+          <p><span class="math">27³ = (3³)³ = 3⁹</span></p>
+          <p><strong>Step 2:</strong> Simplify</p>
+          <p><span class="math">(3⁵ × 3⁴) / 3⁹ = 3⁹ / 3⁹ = 3⁰ = 1</span></p>
+          <div class="answer">Answer: 1</div>
+        </div>
+
+        <h3>Logarithms</h3>
+        <p>If <span class="math">aˣ = N</span>, then <span class="math">logₐN = x</span>.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li><span class="math">logₐ(MN) = logₐM + logₐN</span></li>
+            <li><span class="math">logₐ(M/N) = logₐM - logₐN</span></li>
+            <li><span class="math">logₐ(Mⁿ) = n logₐM</span></li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 10: Solve log₂x + log₂(x - 2) = 3</div>
+          <p><strong>Step 1:</strong> Combine the logarithms</p>
+          <p><span class="math">log₂[x(x - 2)] = 3</span></p>
+          <p><strong>Step 2:</strong> Remove the log</p>
+          <p><span class="math">x(x - 2) = 2³ = 8</span></p>
+          <p><strong>Step 3:</strong> Solve the quadratic</p>
+          <p><span class="math">x² - 2x - 8 = 0</span></p>
+          <p><span class="math">(x - 4)(x + 2) = 0</span></p>
+          <p><strong>Step 4:</strong> Check validity</p>
+          <p><span class="math">x = 4</span> or <span class="math">x = -2</span>, but logarithms of negative values are undefined.</p>
+          <div class="answer">Answer: x = 4</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Surds</h2>
+        <p>Surds are irrational numbers written in root form, such as <span class="math">√2</span> or <span class="math">³√5</span>.</p>
+
+        <div class="example-box">
+          <div class="title">Example 11: Simplify √50</div>
+          <p><strong>Step 1:</strong> Find the perfect square factor</p>
+          <p><span class="math">50 = 25 × 2</span></p>
+          <p><strong>Step 2:</strong> Split the root</p>
+          <p><span class="math">√50 = √25 × √2 = 5√2</span></p>
+          <div class="answer">Answer: 5√2</div>
+        </div>
+
+        <h3>Rationalizing the Denominator</h3>
+
+        <div class="example-box">
+          <div class="title">Example 12: Rationalize 3/√5</div>
+          <p><strong>Step 1:</strong> Multiply top and bottom by <span class="math">√5</span></p>
+          <p><span class="math">(3/√5) × (√5/√5) = 3√5/5</span></p>
+          <div class="answer">Answer: 3√5 / 5</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 13: Rationalize 2/(3 - √2)</div>
+          <p><strong>Step 1:</strong> Multiply by the conjugate <span class="math">(3 + √2)</span></p>
+          <p><span class="math">[2/(3 - √2)] × [(3 + √2)/(3 + √2)]</span></p>
+          <p><strong>Step 2:</strong> Simplify denominator</p>
+          <p><span class="math">(3 - √2)(3 + √2) = 9 - 2 = 7</span></p>
+          <p><strong>Step 3:</strong> Simplify numerator</p>
+          <p><span class="math">2(3 + √2) = 6 + 2√2</span></p>
+          <div class="answer">Answer: (6 + 2√2) / 7</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Surd shortcut</strong>
+          <p>When the denominator has one surd term, multiply by that surd. When it has two terms like <span class="math">a ± √b</span>, multiply by the conjugate.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Sets</h2>
+        <p>Sets are collections of well-defined objects. They are often tested in JAMB using notation and Venn diagrams.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li><strong>∈</strong> means “is an element of”</li>
+            <li><strong>⊂</strong> means “is a subset of”</li>
+            <li><strong>∩</strong> means intersection</li>
+            <li><strong>∪</strong> means union</li>
+            <li><strong>A'</strong> or <strong>Aᶜ</strong> means complement of A</li>
+            <li><strong>n(A)</strong> means number of elements in A</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 14: In a class of 40 students, 20 study Mathematics, 18 study Physics, and 8 study both. Find how many study neither.</div>
+          <p><strong>Step 1:</strong> Only Mathematics</p>
+          <p><span class="math">20 - 8 = 12</span></p>
+          <p><strong>Step 2:</strong> Only Physics</p>
+          <p><span class="math">18 - 8 = 10</span></p>
+          <p><strong>Step 3:</strong> Total studying at least one subject</p>
+          <p><span class="math">12 + 10 + 8 = 30</span></p>
+          <p><strong>Step 4:</strong> Neither</p>
+          <p><span class="math">40 - 30 = 10</span></p>
+          <div class="answer">Answer: 10 students</div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Simple Venn diagram idea</div>
+          <svg viewBox="0 0 340 220" aria-label="Venn diagram">
+            <rect x="40" y="30" width="260" height="150" rx="8" class="set-stroke"/>
+            <circle cx="140" cy="105" r="55" class="set-fill-a"/>
+            <circle cx="200" cy="105" r="55" class="set-fill-b"/>
+            <circle cx="140" cy="105" r="55" class="set-stroke"/>
+            <circle cx="200" cy="105" r="55" class="set-stroke"/>
+            <text x="125" y="55" class="label">M</text>
+            <text x="210" y="55" class="label">P</text>
+            <text x="110" y="110" class="label">12</text>
+            <text x="167" y="110" class="label">8</text>
+            <text x="225" y="110" class="label">10</text>
+            <text x="252" y="165" class="label">10 outside</text>
+          </svg>
+          <div class="diagram-caption">Draw a Venn diagram first before calculating. It helps avoid double-counting the intersection.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Number Systems</h2>
+
+        <h3>Integers ℤ</h3>
+        <p>Integers are whole numbers, including negative numbers, zero, and positive numbers.</p>
+        <p><span class="math">{..., -2, -1, 0, 1, 2, ...}</span></p>
+
+        <h3>Rational Numbers ℚ</h3>
+        <p>Rational numbers can be written as <span class="math">p/q</span> where <span class="math">p</span> and <span class="math">q</span> are integers and <span class="math">q ≠ 0</span>.</p>
+        <p>Examples: <span class="math">3/4, -2, 0.75, 0.333...</span></p>
+
+        <h3>Irrational Numbers</h3>
+        <p>Irrational numbers cannot be written as simple fractions.</p>
+        <p>Examples: <span class="math">√2, π, e</span></p>
+
+        <h3>Real Numbers ℝ</h3>
+        <p>Real numbers include both rational and irrational numbers.</p>
+
+        <div class="highlight-box">
+          <p><strong>Important:</strong> Every integer is a rational number, but not every rational number is an integer.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Formula Summary</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Topic</th>
+              <th>Key Formula</th>
+              <th>Meaning</th>
+            </tr>
+            <tr>
+              <td>Base conversion</td>
+              <td>Σ(digit × base^position)</td>
+              <td>Expand in powers of the base</td>
+            </tr>
+            <tr>
+              <td>Percentage error</td>
+              <td>(|Exact - Approx| / Exact) × 100%</td>
+              <td>Measures accuracy of approximation</td>
+            </tr>
+            <tr>
+              <td>Change of base</td>
+              <td>logₐb = (logc b) / (logc a)</td>
+              <td>Converts logs to another base</td>
+            </tr>
+            <tr>
+              <td>Quadratic surd conjugate</td>
+              <td>(a + √b)(a - √b) = a² - b</td>
+              <td>Used in rationalizing denominator</td>
+            </tr>
+            <tr>
+              <td>Indices multiplication</td>
+              <td>aᵐ × aⁿ = aᵐ⁺ⁿ</td>
+              <td>Add powers with same base</td>
+            </tr>
+            <tr>
+              <td>Indices division</td>
+              <td>aᵐ ÷ aⁿ = aᵐ⁻ⁿ</td>
+              <td>Subtract powers with same base</td>
+            </tr>
+            <tr>
+              <td>Young log law</td>
+              <td>logₐ(MN) = logₐM + logₐN</td>
+              <td>Product becomes addition</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ JAMB Exam Tips</h2>
+        <div class="jamb-alert">
+          <h4>How to score high in Number and Numeration</h4>
+          <ul>
+            <li>Master base conversions because they appear often</li>
+            <li>Remember the laws of indices, especially negative and fractional powers</li>
+            <li>Practise logarithm equations with care</li>
+            <li>Always rationalize the denominator in surd answers</li>
+            <li>Draw Venn diagrams in set questions</li>
+            <li>Use base 10 as your bridge in non-decimal conversion</li>
+            <li>Most of these questions should take about 1 to 2 minutes each</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Quick checklist</strong>
+          <p>Identify the base first. Express terms in the same base for indices. Look for perfect square factors in surds. Draw the Venn diagram before calculating in set problems.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Practice Questions</h2>
+
+        <div class="example-box">
+          <div class="title">Q1: Convert 1101₂ to base 10</div>
+          <p><strong>Step 1:</strong> Expand in powers of 2</p>
+          <p><span class="math">1101₂ = 1×2³ + 1×2² + 0×2¹ + 1×2⁰</span></p>
+          <p><strong>Step 2:</strong> Evaluate</p>
+          <p><span class="math">= 8 + 4 + 0 + 1 = 13</span></p>
+          <div class="answer">Answer: 13₁₀</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q2: Simplify (2³ × 4²) / 8¹</div>
+          <p><strong>Step 1:</strong> Express everything as powers of 2</p>
+          <p><span class="math">4² = (2²)² = 2⁴</span></p>
+          <p><span class="math">8¹ = 2³</span></p>
+          <p><strong>Step 2:</strong> Simplify</p>
+          <p><span class="math">(2³ × 2⁴) / 2³ = 2⁷ / 2³ = 2⁴ = 16</span></p>
+          <div class="answer">Answer: 16</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q3: Rationalize 5/(2 + √3)</div>
+          <p><strong>Step 1:</strong> Multiply by the conjugate <span class="math">(2 - √3)</span></p>
+          <p><span class="math">[5/(2 + √3)] × [(2 - √3)/(2 - √3)]</span></p>
+          <p><strong>Step 2:</strong> Simplify denominator</p>
+          <p><span class="math">(2 + √3)(2 - √3) = 4 - 3 = 1</span></p>
+          <p><strong>Step 3:</strong> Final answer</p>
+          <p><span class="math">5(2 - √3)</span></p>
+          <div class="answer">Answer: 5(2 - √3)</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 Final Revision Note</h2>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a full Number and Numeration chapter guide with formulas, methods, worked examples, tables, and exam tips. Revise it section by section and practise often.</p>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Connects next to:</strong> Chapter 2 Algebra and Chapter 3 Geometry.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise number bases, indices, logarithms, surds, and set questions today. Focus on speed and correct method.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

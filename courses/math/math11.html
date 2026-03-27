@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Mathematics - Euclidean Geometry Complete Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+    .math{
+      font-weight:900;color:var(--accent-secondary)
+    }
+    .label{
+      fill:var(--text-primary);
+      font-size:11px;
+      font-weight:700
+    }
+    .axis{
+      stroke:var(--text-primary);
+      stroke-width:2
+    }
+    .line-soft{
+      stroke:var(--line);
+      stroke-width:3;
+      fill:none
+    }
+    .line-dash{
+      stroke:var(--line);
+      stroke-width:2;
+      stroke-dasharray:6 4;
+      fill:none
+    }
+    .mark{
+      fill:var(--accent-secondary)
+    }
+    .fill-soft{fill:rgba(29,185,84,.22)}
+    .fill-soft-2{fill:rgba(78,205,196,.22)}
+    .fill-soft-3{fill:rgba(255,107,107,.22)}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">MATHEMATICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📐 Euclidean Geometry Complete Guide</h1>
+        <p>JAMB Mathematics • lines and angles • polygons • circle theorems • constructions • geometry problem solving</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Introduction to Euclidean Geometry</h2>
+        <p>This chapter covers the most important parts of <strong>Euclidean Geometry</strong> for JAMB: angle relationships, polygons, circle theorems, and basic constructions.</p>
+        <p>Geometry questions often become easy once you draw a neat sketch, label the angles clearly, and identify the correct theorem or rule.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Circle theorems are among the most frequently tested geometry topics in JAMB</li>
+            <li>Parallel line questions depend heavily on corresponding, alternate, and interior angles</li>
+            <li>Polygon questions usually rely on angle-sum formulas</li>
+            <li>Construction questions usually test recognition of procedure, not actual drawing</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>In geometry, diagrams matter. Even if one is not given, sketch one quickly. It helps you see which rule or theorem applies.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Properties of Angles and Lines</h2>
+
+        <h3>Fundamental Angle Relationships</h3>
+        <div class="table-container">
+          <table class="summary-table" style="min-width:860px">
+            <tr>
+              <th>Relationship</th>
+              <th>Definition</th>
+              <th>Rule</th>
+            </tr>
+            <tr>
+              <td>Angles on a straight line</td>
+              <td>Adjacent angles on a straight line</td>
+              <td>x + y = 180°</td>
+            </tr>
+            <tr>
+              <td>Angles at a point</td>
+              <td>Angles meeting at a point</td>
+              <td>Sum = 360°</td>
+            </tr>
+            <tr>
+              <td>Vertically opposite angles</td>
+              <td>Angles opposite intersecting lines</td>
+              <td>Opposite angles are equal</td>
+            </tr>
+            <tr>
+              <td>Complementary angles</td>
+              <td>Two angles whose sum is 90°</td>
+              <td>A + B = 90°</td>
+            </tr>
+            <tr>
+              <td>Supplementary angles</td>
+              <td>Two angles whose sum is 180°</td>
+              <td>A + B = 180°</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+        <h3>Parallel Lines and Transversals</h3>
+        <div class="highlight-box">
+          <p><strong>Look out for:</strong> If a question says <span class="math">AB ∥ CD</span>, then corresponding, alternate, and interior angle rules are active.</p>
+        </div>
+
+        <div class="table-container">
+          <table class="summary-table" style="min-width:840px">
+            <tr>
+              <th>Angle Pair</th>
+              <th>Property</th>
+              <th>Example</th>
+            </tr>
+            <tr>
+              <td>Corresponding angles</td>
+              <td>Equal</td>
+              <td>∠1 = ∠5, ∠2 = ∠6</td>
+            </tr>
+            <tr>
+              <td>Alternate angles</td>
+              <td>Equal</td>
+              <td>∠3 = ∠5, ∠4 = ∠6</td>
+            </tr>
+            <tr>
+              <td>Interior angles</td>
+              <td>Sum to 180°</td>
+              <td>∠3 + ∠6 = 180°</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+        <div class="example-box">
+          <div class="title">Worked Example 1: Parallel Lines</div>
+          <p><strong>Problem:</strong> <span class="math">AB ∥ CD</span>, and a transversal cuts them. If one angle is <span class="math">70°</span>, find the corresponding obtuse angle.</p>
+          <p><strong>Step 1:</strong> Angles on a straight line sum to <span class="math">180°</span></p>
+          <p><span class="math">180° - 70° = 110°</span></p>
+          <p><strong>Step 2:</strong> The corresponding angle is equal to this obtuse angle</p>
+          <div class="answer">Answer: 110°</div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Parallel lines and transversal idea</div>
+          <svg viewBox="0 0 340 220" aria-label="Parallel lines diagram">
+            <line x1="35" y1="60" x2="305" y2="60" class="line-soft"/>
+            <line x1="35" y1="160" x2="305" y2="160" class="line-soft"/>
+            <line x1="120" y1="20" x2="210" y2="200" class="line-dash"/>
+            <text x="32" y="50" class="label">A</text>
+            <text x="305" y="50" class="label">B</text>
+            <text x="32" y="178" class="label">C</text>
+            <text x="305" y="178" class="label">D</text>
+            <text x="135" y="83" class="label">70°</text>
+            <text x="170" y="150" class="label">110°</text>
+          </svg>
+          <div class="diagram-caption">A transversal through parallel lines creates equal corresponding and alternate angles.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Polygons</h2>
+
+        <h3>Triangle Properties</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>Sum of interior angles in a triangle = <span class="math">180°</span></li>
+            <li>Exterior angle = sum of the two opposite interior angles</li>
+            <li>Sum of exterior angles of any triangle = <span class="math">360°</span></li>
+          </ul>
+        </div>
+
+        <h4>Types of Triangles</h4>
+        <ul>
+          <li><strong>Scalene:</strong> all sides and angles are different</li>
+          <li><strong>Isosceles:</strong> two equal sides and two equal base angles</li>
+          <li><strong>Equilateral:</strong> all sides equal and each angle is <span class="math">60°</span></li>
+          <li><strong>Right-angled:</strong> one angle is <span class="math">90°</span> and <span class="math">a² + b² = c²</span></li>
+        </ul>
+
+        <div class="example-box">
+          <div class="title">Worked Example 2: Triangle Angles</div>
+          <p><strong>Problem:</strong> The angles of a triangle are in the ratio <span class="math">2:3:4</span>. Find the largest angle.</p>
+          <p>Let the angles be <span class="math">2x</span>, <span class="math">3x</span>, and <span class="math">4x</span>.</p>
+          <p><span class="math">2x + 3x + 4x = 180°</span></p>
+          <p><span class="math">9x = 180°</span></p>
+          <p><span class="math">x = 20°</span></p>
+          <p>Largest angle = <span class="math">4x = 80°</span></p>
+          <div class="answer">Answer: 80°</div>
+        </div>
+
+        <h3>Quadrilaterals</h3>
+        <div class="table-container">
+          <table class="summary-table" style="min-width:920px">
+            <tr>
+              <th>Quadrilateral</th>
+              <th>Key Properties</th>
+              <th>Angle Sum</th>
+            </tr>
+            <tr>
+              <td>Parallelogram</td>
+              <td>Opposite sides parallel and equal; opposite angles equal</td>
+              <td>360°</td>
+            </tr>
+            <tr>
+              <td>Rectangle</td>
+              <td>All angles 90°; diagonals equal</td>
+              <td>360°</td>
+            </tr>
+            <tr>
+              <td>Square</td>
+              <td>All sides equal; all angles 90°</td>
+              <td>360°</td>
+            </tr>
+            <tr>
+              <td>Rhombus</td>
+              <td>All sides equal; diagonals bisect at 90°</td>
+              <td>360°</td>
+            </tr>
+            <tr>
+              <td>Trapezium</td>
+              <td>One pair of parallel sides</td>
+              <td>360°</td>
+            </tr>
+            <tr>
+              <td>Kite</td>
+              <td>Two pairs of adjacent equal sides</td>
+              <td>360°</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+        <h3>General Polygons</h3>
+        <div class="formula-box">
+          <div class="title">Polygon formulas</div>
+          <div class="line"><span class="math">Sum of interior angles = (n - 2) × 180°</span></div>
+          <div class="line"><span class="math">Each interior angle of a regular polygon = [(n - 2) × 180°] / n</span></div>
+          <div class="line"><span class="math">Sum of exterior angles = 360°</span></div>
+          <div class="line"><span class="math">Each exterior angle of a regular polygon = 360° / n</span></div>
+          <div class="line"><span class="math">Number of diagonals = n(n - 3)/2</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Worked Example 3: Regular Polygon</div>
+          <p><strong>Problem:</strong> Find the number of sides of a regular polygon if each interior angle is <span class="math">156°</span>.</p>
+          <p><span class="math">[(n - 2) × 180] / n = 156</span></p>
+          <p><span class="math">180n - 360 = 156n</span></p>
+          <p><span class="math">24n = 360</span></p>
+          <p><span class="math">n = 15</span></p>
+          <div class="answer">Answer: 15 sides</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Circles</h2>
+
+        <div class="jamb-alert">
+          <h4>JAMB favorite topic</h4>
+          <ul>
+            <li>Circle theorems are among the highest-frequency geometry questions in JAMB</li>
+            <li>Mastering these theorems can give you very quick marks</li>
+          </ul>
+        </div>
+
+        <h3>Essential Circle Theorems</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Theorem</th>
+              <th>Statement</th>
+            </tr>
+            <tr>
+              <td>1. Angle at the center</td>
+              <td>Angle at the center is twice the angle at the circumference standing on the same arc</td>
+            </tr>
+            <tr>
+              <td>2. Same segment theorem</td>
+              <td>Angles subtended by the same chord or arc are equal</td>
+            </tr>
+            <tr>
+              <td>3. Angle in a semicircle</td>
+              <td>Angle in a semicircle is 90°</td>
+            </tr>
+            <tr>
+              <td>4. Cyclic quadrilateral</td>
+              <td>Opposite angles of a cyclic quadrilateral sum to 180°</td>
+            </tr>
+            <tr>
+              <td>5. Exterior angle of cyclic quadrilateral</td>
+              <td>Exterior angle equals interior opposite angle</td>
+            </tr>
+            <tr>
+              <td>6. Tangent-radius theorem</td>
+              <td>Radius is perpendicular to tangent at the point of contact</td>
+            </tr>
+            <tr>
+              <td>7. Alternate segment theorem</td>
+              <td>Angle between tangent and chord equals angle in the alternate segment</td>
+            </tr>
+            <tr>
+              <td>8. Intersecting chords theorem</td>
+              <td><span class="math">PA × PB = PC × PD</span></td>
+            </tr>
+            <tr>
+              <td>9. Secant-tangent theorem</td>
+              <td><span class="math">PT² = PA × PB</span></td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+        <div class="example-box">
+          <div class="title">Worked Example 4: Angle at the Center</div>
+          <p><strong>Problem:</strong> A chord subtends <span class="math">70°</span> at the circumference. Find the angle at the center.</p>
+          <p>Using the theorem: <span class="math">Center = 2 × Circumference</span></p>
+          <p><span class="math">Angle at center = 2 × 70° = 140°</span></p>
+          <div class="answer">Answer: 140°</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Worked Example 5: Cyclic Quadrilateral</div>
+          <p><strong>Problem:</strong> In cyclic quadrilateral <span class="math">ABCD</span>, <span class="math">∠A = 85°</span> and <span class="math">∠B = 95°</span>. Find <span class="math">∠C</span> and <span class="math">∠D</span>.</p>
+          <p>Opposite angles in a cyclic quadrilateral sum to <span class="math">180°</span>.</p>
+          <p><span class="math">∠A + ∠C = 180°</span> → <span class="math">85° + ∠C = 180°</span> → <span class="math">∠C = 95°</span></p>
+          <p><span class="math">∠B + ∠D = 180°</span> → <span class="math">95° + ∠D = 180°</span> → <span class="math">∠D = 85°</span></p>
+          <div class="answer">Answer: ∠C = 95°, ∠D = 85°</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Worked Example 6: Intersecting Chords</div>
+          <p><strong>Problem:</strong> Chords intersect at <span class="math">P</span>. If <span class="math">PA = 4 cm</span>, <span class="math">PB = 9 cm</span>, <span class="math">PC = 6 cm</span>, find <span class="math">PD</span>.</p>
+          <p>Using <span class="math">PA × PB = PC × PD</span></p>
+          <p><span class="math">4 × 9 = 6 × PD</span></p>
+          <p><span class="math">36 = 6PD</span></p>
+          <p><span class="math">PD = 6 cm</span></p>
+          <div class="answer">Answer: PD = 6 cm</div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Circle theorem sketch idea</div>
+          <svg viewBox="0 0 340 240" aria-label="Circle theorem diagram">
+            <circle cx="170" cy="120" r="85" fill="none" stroke="var(--line)" stroke-width="3"/>
+            <line x1="170" y1="120" x2="110" y2="60" class="line-soft"/>
+            <line x1="170" y1="120" x2="240" y2="80" class="line-soft"/>
+            <line x1="110" y1="60" x2="240" y2="80" class="line-soft"/>
+            <circle cx="170" cy="120" r="4" class="mark"/>
+            <text x="176" y="118" class="label">O</text>
+            <text x="95" y="56" class="label">A</text>
+            <text x="245" y="82" class="label">B</text>
+            <text x="175" y="90" class="label">2x</text>
+            <text x="162" y="165" class="label">x</text>
+          </svg>
+          <div class="diagram-caption">The angle at the center is twice the angle at the circumference standing on the same arc.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Construction</h2>
+
+        <p>JAMB usually tests your knowledge of how special angles are constructed rather than asking for a full instrument drawing.</p>
+
+        <div class="table-container">
+          <table class="summary-table" style="min-width:760px">
+            <tr>
+              <th>Angle</th>
+              <th>Construction Method</th>
+            </tr>
+            <tr>
+              <td>60°</td>
+              <td>Construct an equilateral triangle using a compass</td>
+            </tr>
+            <tr>
+              <td>90°</td>
+              <td>Construct a perpendicular or perpendicular bisector</td>
+            </tr>
+            <tr>
+              <td>45°</td>
+              <td>Bisect a 90° angle</td>
+            </tr>
+            <tr>
+              <td>30°</td>
+              <td>Bisect a 60° angle</td>
+            </tr>
+            <tr>
+              <td>75°</td>
+              <td>Combine 45° and 30°</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Complete Formula Summary</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Category</th>
+              <th>Formula / Rule</th>
+            </tr>
+            <tr>
+              <td>Straight line</td>
+              <td>Angles on a straight line sum to 180°</td>
+            </tr>
+            <tr>
+              <td>Angles at a point</td>
+              <td>Sum = 360°</td>
+            </tr>
+            <tr>
+              <td>Triangle angle sum</td>
+              <td>∠A + ∠B + ∠C = 180°</td>
+            </tr>
+            <tr>
+              <td>Exterior angle of triangle</td>
+              <td>Exterior = sum of opposite interior angles</td>
+            </tr>
+            <tr>
+              <td>Pythagoras</td>
+              <td>c² = a² + b²</td>
+            </tr>
+            <tr>
+              <td>Polygon interior sum</td>
+              <td>(n - 2) × 180°</td>
+            </tr>
+            <tr>
+              <td>One regular interior angle</td>
+              <td>[(n - 2) × 180°] / n</td>
+            </tr>
+            <tr>
+              <td>Exterior angle sum</td>
+              <td>360°</td>
+            </tr>
+            <tr>
+              <td>One regular exterior angle</td>
+              <td>360° / n</td>
+            </tr>
+            <tr>
+              <td>Diagonals</td>
+              <td>n(n - 3) / 2</td>
+            </tr>
+            <tr>
+              <td>Center vs circumference</td>
+              <td>Angle at center = 2 × angle at circumference</td>
+            </tr>
+            <tr>
+              <td>Angle in semicircle</td>
+              <td>90°</td>
+            </tr>
+            <tr>
+              <td>Cyclic quadrilateral</td>
+              <td>Opposite angles sum to 180°</td>
+            </tr>
+            <tr>
+              <td>Intersecting chords</td>
+              <td>PA × PB = PC × PD</td>
+            </tr>
+            <tr>
+              <td>Tangent-secant</td>
+              <td>PT² = PA × PB</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ JAMB Exam Strategy</h2>
+
+        <div class="jamb-alert">
+          <h4>Best geometry approach</h4>
+          <ul>
+            <li>Master circle theorems first because they appear most often</li>
+            <li>Draw a quick sketch for every problem</li>
+            <li>Label unknown angles clearly with x, y, or letters</li>
+            <li>Mention the theorem or rule you are using</li>
+            <li>Watch for parallel lines because they activate transversal angle rules</li>
+            <li>For regular polygons, use <span class="math">n = 360° / exterior angle</span> for speed</li>
+          </ul>
+        </div>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Parallel lines cut by a transversal → corresponding and alternate angles are equal</li>
+            <li>Triangle angles always sum to 180°</li>
+            <li>Polygon interior sum = <span class="math">(n - 2) × 180°</span></li>
+            <li>In a cyclic quadrilateral, opposite angles add up to 180°</li>
+            <li>For intersecting chords, multiply the two segments on one chord</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Practice Questions</h2>
+
+        <div class="example-box">
+          <div class="title">Q1: Parallel lines are cut by a transversal and one angle is 125°. Find x.</div>
+          <p>If <span class="math">x</span> is supplementary to <span class="math">125°</span>, then:</p>
+          <p><span class="math">x = 180° - 125° = 55°</span></p>
+          <p>If <span class="math">x</span> is a corresponding or alternate angle, then:</p>
+          <p><span class="math">x = 125°</span></p>
+          <div class="answer">Answer: 55° or 125°, depending on the position of x</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q2: A regular polygon has interior angle 162°. How many sides does it have?</div>
+          <p>Exterior angle = <span class="math">180° - 162° = 18°</span></p>
+          <p><span class="math">n = 360° / 18° = 20</span></p>
+          <div class="answer">Answer: 20 sides</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q3: Chords intersect with segments 3 cm, 8 cm, 4 cm, and x cm. Find x.</div>
+          <p>Using intersecting chords theorem:</p>
+          <p><span class="math">3 × 8 = 4 × x</span></p>
+          <p><span class="math">24 = 4x</span></p>
+          <p><span class="math">x = 6 cm</span></p>
+          <div class="answer">Answer: 6 cm</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Pre-Exam Checklist</h2>
+
+        <div class="memory-tip">
+          <strong>🧠 Checklist</strong>
+          <p>Revise angle relationships on straight lines and at a point. Review corresponding, alternate, and interior angles in parallel lines. Practise triangle and polygon formulas. Memorize all major circle theorems. Understand intersecting chords and tangent-secant rules. Revise construction methods for 30°, 45°, 60°, 75°, and 90°. Keep practising by drawing quick sketches from word descriptions.</p>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Connects to:</strong> Mensuration and Coordinate Geometry.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Final Revision Note</h2>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete guide to Euclidean Geometry with angle rules, polygon formulas, circle theorems, construction methods, and exam strategy. Once you identify the right theorem quickly, geometry questions become much easier.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise angle chasing, polygon formulas, circle theorems, and construction questions today.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

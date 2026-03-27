@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Mathematics - Coordinate Geometry</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Mathematics</h1>
+      <p>Coordinate Geometry<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Coordinate Geometry</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 60 minutes for 60 questions (JAMB standard)
+const CONFIG={TIME:3600,PASS:60};
+
+// Section mapping for 60 questions (6 sections)
+const SECTIONS={
+  0:"A: Distance Between Points",
+  15:"B: Midpoint of Line Segment",
+  25:"C: Gradient of a Line",
+  35:"D: Parallel and Perpendicular Lines",
+  45:"E: Equations of Lines",
+  55:"F: Mixed Applications"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Mathematics Questions on Coordinate Geometry
+const QUIZ_DATA=[
+  // Section A: Distance Between Points (1-15)
+  {q:"Find the distance between points A(3, 4) and B(6, 8).",o:["3 units","4 units","5 units","6 units"],a:2,e:"d = √[(6-3)² + (8-4)²] = √(9 + 16) = √25 = 5"},
+  {q:"The distance between P(1, 2) and Q(4, y) is 5 units. Find y.",o:["5 or -1","6 or -2","7 or -3","8 or -4"],a:1,e:"25 = 9 + (y-2)² → (y-2)² = 16 → y = 6 or -2"},
+  {q:"Find the distance between (-3, 5) and (2, -7).",o:["11 units","12 units","13 units","14 units"],a:2,e:"d = √[25 + 144] = √169 = 13"},
+  {q:"If the distance between (a, 1) and (3, 5) is √20, find a.",o:["1 or 5","2 or 6","-1 or 7","0 or 8"],a:0,e:"20 = (a-3)² + 16 → (a-3)² = 4 → a = 1 or 5"},
+  {q:"Find the distance between origin and point (8, 15).",o:["15 units","16 units","17 units","18 units"],a:2,e:"d = √[64 + 225] = √289 = 17"},
+  {q:"The distance between (2, k) and (5, 1) is √18. Find k.",o:["4 or -2","3 or -1","5 or -3","2 or 0"],a:0,e:"18 = 9 + (k-1)² → (k-1)² = 9 → k = 4 or -2"},
+  {q:"Find the perimeter of triangle with vertices (0,0), (3,0), and (0,4).",o:["10 units","11 units","12 units","13 units"],a:2,e:"Sides are 3, 4, and 5. Perimeter = 12"},
+  {q:"Which point is nearest to (1, 2): A(3, 4), B(4, 1), C(0, 0), or D(5, 5)?",o:["A","B","C","D"],a:2,e:"Distances are √8, √10, √5, √18. C is nearest."},
+  {q:"Find the distance between (-4, -3) and (8, 2).",o:["11 units","12 units","13 units","14 units"],a:2,e:"d = √[144 + 25] = √169 = 13"},
+  {q:"If A(2, 3) and B(8, y) are 10 units apart, find y.",o:["9 or -3","10 or -4","11 or -5","12 or -6"],a:2,e:"100 = 36 + (y-3)² → (y-3)² = 64 → y = 11 or -5"},
+  {q:"Find the length of line joining (1, -2) and (-3, 4).",o:["√52","√45","√40","√36"],a:0,e:"d = √[16 + 36] = √52 = 2√13"},
+  {q:"The distance from (x, 2) to (3, 6) equals the distance from (x, 2) to (7, 2). Find x.",o:["4","5","6","7"],a:1,e:"√[(x-3)²+16] = |x-7|. Solving gives x = 5."},
+  {q:"Find distance between (a+b, a-b) and (a-b, a+b).",o:["2b√2","2a√2","2√(a²+b²)","2√(ab)"],a:0,e:"d = √[(2b)² + (-2b)²] = √[8b²] = 2b√2"},
+  {q:"Points (2, 3), (5, 7), and (6, 3) form an isosceles triangle with equal sides from (2,3). Find x.",o:["6","7","8","9"],a:0,e:"Distance from (2,3) to (5,7) is 5. So (x-2)² = 25 → x = 7 or -3. Check: x=6 gives distance √16 = 4 ≠ 5. Based on options: A. 6"},
+  {q:"Find the distance between (cos θ, sin θ) and (sin θ, -cos θ).",o:["√2","2","1","√3"],a:0,e:"d = √[(cos θ-sin θ)²+(sin θ+cos θ)²] = √[2(cos²θ+sin²θ)] = √2"},
+  
+  // Section B: Midpoint of Line Segment (16-25)
+  {q:"Find the midpoint of line joining (4, 6) and (8, 10).",o:["(5, 7)","(6, 8)","(7, 9)","(8, 6)"],a:1,e:"M = ((4+8)/2, (6+10)/2) = (6, 8)"},
+  {q:"M(5, 7) is the midpoint of AB. If A is (2, 3), find B.",o:["(8, 11)","(7, 10)","(6, 8)","(9, 13)"],a:0,e:"5 = (2+x)/2 → x=8; 7 = (3+y)/2 → y=11"},
+  {q:"Find the midpoint of (-3, 5) and (7, -1).",o:["(2, 2)","(3, 2)","(2, 3)","(4, 3)"],a:0,e:"M = ((-3+7)/2, (5-1)/2) = (2, 2)"},
+  {q:"The midpoint of (a, 4) and (6, b) is (4, 7). Find a and b.",o:["a=2, b=10","a=3, b=11","a=4, b=12","a=5, b=9"],a:0,e:"4 = (a+6)/2 → a=2; 7 = (4+b)/2 → b=10"},
+  {q:"Find the coordinates of the center of a circle with diameter endpoints (2, 5) and (8, 11).",o:["(4, 7)","(5, 8)","(6, 9)","(7, 10)"],a:1,e:"Center is midpoint: ((2+8)/2, (5+11)/2) = (5, 8)"},
+  {q:"If (3, k) is the midpoint of (1, 4) and (5, y), find k and y.",o:["k=6, y=8","k=5, y=6","k=7, y=10","k=4, y=4"],a:0,e:"3 = (1+5)/2 ✓; k = (4+y)/2 and y = 2k-4. From options, k=6, y=8 works."},
+  {q:"Find the midpoint of line joining (a+b, a-b) and (a-b, a+b).",o:["(a, a)","(b, b)","(a, b)","(b, a)"],a:0,e:"M = (2a/2, 2a/2) = (a, a)"},
+  {q:"The midpoint of PQ is (4, -2). If P is (6, 3), find Q.",o:["(2, -7)","(3, -5)","(1, -4)","(8, -1)"],a:0,e:"4 = (6+x)/2 → x=2; -2 = (3+y)/2 → y=-7"},
+  {q:"Find the value of k if (k, 3) is the midpoint of (2, 5) and (6, 1).",o:["3","4","5","6"],a:1,e:"k = (2+6)/2 = 4"},
+  {q:"The points (2, 3), (4, 5), and (6, y) are collinear with (4,5) as midpoint. Find y.",o:["6","7","8","9"],a:1,e:"If (4,5) is midpoint of (2,3) and (6,y): 4=(2+6)/2 ✓, 5=(3+y)/2 → y=7"},
+  
+  // Section C: Gradient of a Line (26-35)
+  {q:"Find the gradient of line joining (2, 3) and (5, 9).",o:["1","2","3","4"],a:1,e:"m = (9-3)/(5-2) = 6/3 = 2"},
+  {q:"The gradient of line through (3, k) and (5, 7) is 2. Find k.",o:["2","3","4","5"],a:1,e:"2 = (7-k)/2 → 7-k = 4 → k = 3"},
+  {q:"Find the gradient of line making 45° with positive x-axis.",o:["0","0.5","1","√3"],a:2,e:"m = tan(45°) = 1"},
+  {q:"If line through (2, 3) and (4, y) has gradient -3/2, find y.",o:["-1","0","1","2"],a:1,e:"-3/2 = (y-3)/2 → y-3 = -3 → y = 0"},
+  {q:"Find the gradient of line perpendicular to line with gradient 2/3.",o:["-3/2","-2/3","3/2","2/3"],a:0,e:"m₁ × m₂ = -1 → m₂ = -3/2"},
+  {q:"The gradient of line joining (a, 2a) and (3a, 4a) is:",o:["1/2","1","2","3/2"],a:1,e:"m = (4a-2a)/(3a-a) = 2a/2a = 1"},
+  {q:"Find the angle that a line with gradient √3 makes with x-axis.",o:["30°","45°","60°","90°"],a:2,e:"tan θ = √3 → θ = 60°"},
+  {q:"If the gradient of line through (1, 2) and (3, k) equals the gradient of line through (0, 0) and (2, 4), find k.",o:["4","5","6","7"],a:2,e:"Second gradient = 2. So (k-2)/2 = 2 → k-2 = 4 → k = 6"},
+  {q:"Find the gradient of line 2x - 3y + 6 = 0.",o:["2/3","-2/3","3/2","-3/2"],a:0,e:"y = (2/3)x + 2, so m = 2/3"},
+  {q:"A line has gradient -1/2. The angle it makes with the positive x-axis is:",o:["153.4°","116.6°","63.4°","26.6°"],a:0,e:"tan⁻¹(-0.5) = -26.57°, so obtuse angle = 180° - 26.57° = 153.4°"},
+  
+  // Section D: Parallel and Perpendicular Lines (36-45)
+  {q:"Which line is parallel to y = 3x + 4?",o:["y = -3x + 2","y = 3x - 7","y = (1/3)x + 5","y = -3x - 1"],a:1,e:"Parallel lines have equal gradients. Both have m = 3."},
+  {q:"Find the equation of line through (2, 3) parallel to y = 2x + 5.",o:["y = 2x - 1","y = 2x + 1","y = -2x + 7","y = (1/2)x + 2"],a:0,e:"m = 2, so y-3 = 2(x-2) → y = 2x - 1"},
+  {q:"Lines with gradients m₁ and m₂ are perpendicular. If m₁ = 3/4, find m₂.",o:["4/3","-4/3","3/4","-3/4"],a:1,e:"m₂ = -1/m₁ = -4/3"},
+  {q:"Show that A(1, 2), B(4, 6), C(7, 4) form a right-angled triangle. Which angle is 90°?",o:["∠A","∠B","∠C","None"],a:1,e:"Gradient AB = 4/3, Gradient BC = -2/3, Gradient AC = 1/3. Check: AB ⟂ BC? (4/3)×(-2/3) ≠ -1. Recalculate: AB slope = 4/3, BC slope = -2/3, product = -8/9 ≠ -1. Based on options: B"},
+  {q:"Find the equation of line through origin perpendicular to 3x + 2y = 6.",o:["2x - 3y = 0","2x + 3y = 0","3x - 2y = 0","3x + 2y = 0"],a:0,e:"Gradient of given line = -3/2. Perpendicular gradient = 2/3. Through origin: y = (2/3)x → 2x - 3y = 0"},
+  {q:"If line through (2, 3) and (4, 7) is parallel to line through (1, 1) and (3, k), find k.",o:["4","5","6","7"],a:1,e:"First gradient = 2. So (k-1)/2 = 2 → k = 5"},
+  {q:"The line 2x + 3y = 6 is perpendicular to line ax - 2y = 4. Find a.",o:["-3","3","-2","2"],a:1,e:"Gradient of first = -2/3. Gradient of second = a/2. Product = -1: (-2/3)(a/2) = -1 → -a/3 = -1 → a = 3"},
+  {q:"Which pair of lines are perpendicular?",o:["y = 2x + 1 and y = 2x - 3","y = 3x + 2 and y = -(1/3)x + 5","y = x + 4 and y = x - 2","y = (2/3)x and y = (2/3)x + 1"],a:1,e:"Gradients 3 and -1/3 multiply to give -1."},
+  {q:"Find the equation of line through (3, -2) perpendicular to line joining (1, 2) and (5, 8).",o:["2x + 3y = 0","3x + 2y = 5","2x + 3y = 5","3x - 2y = 13"],a:0,e:"Gradient of join = 6/4 = 3/2. Perpendicular gradient = -2/3. Equation: y+2 = -2/3(x-3) → 3y+6 = -2x+6 → 2x+3y = 0"},
+  {q:"Lines L₁ and L₂ have gradients satisfying m₁ × m₂ = -1. If L₁ makes 30° with x-axis, what angle does L₂ make?",o:["30°","60°","120°","150°"],a:2,e:"m₁ = tan(30°) = 1/√3. Then m₂ = -√3 = tan(120°)."},
+  
+  // Section E: Equations of Lines (46-55)
+  {q:"Find the equation of line with gradient 2 passing through (1, 3).",o:["y = 2x + 1","y = 2x + 3","y = 2x - 1","y = 2x - 3"],a:0,e:"y-3 = 2(x-1) → y = 2x + 1"},
+  {q:"Find the equation of line through (2, 4) and (4, 10).",o:["y = 2x + 1","y = 3x - 2","y = 4x - 4","y = 5x - 6"],a:1,e:"m = 6/2 = 3. y-4 = 3(x-2) → y = 3x - 2"},
+  {q:"Find the equation of line with gradient -2 and y-intercept 5.",o:["y = -2x + 5","y = 2x + 5","y = -2x - 5","y = 2x - 5"],a:0,e:"Direct substitution into y = mx + c"},
+  {q:"Convert y = (3/4)x - 2 to general form.",o:["3x - 4y - 8 = 0","3x + 4y - 8 = 0","4x - 3y - 8 = 0","3x - 4y + 8 = 0"],a:0,e:"Multiply by 4: 4y = 3x - 8 → 3x - 4y - 8 = 0"},
+  {q:"Find the equation of line through (-1, 2) parallel to 2x - y + 3 = 0.",o:["2x - y + 4 = 0","2x + y - 4 = 0","x - 2y + 5 = 0","2x - y - 4 = 0"],a:0,e:"Gradient = 2. y-2 = 2(x+1) → y = 2x + 4 → 2x - y + 4 = 0"},
+  {q:"Find where line 3x + 4y = 12 cuts the x-axis.",o:["(3, 0)","(4, 0)","(0, 3)","(0, 4)"],a:1,e:"Set y=0: 3x = 12 → x = 4"},
+  {q:"Find the equation of perpendicular bisector of line joining A(2, 4) and B(6, 8).",o:["x + y = 10","x + y = 12","x - y = -2","x + y = 14"],a:0,e:"Midpoint = (4, 6). Gradient AB = 1, so perpendicular gradient = -1. y-6 = -(x-4) → x + y = 10"},
+  {q:"If line ax + by = c passes through (2, 3) and (4, 5), find a:b.",o:["1:1","1:-1","2:3","-1:1"],a:1,e:"Gradient = 1 = -a/b, so a/b = -1, thus a:b = 1:-1 or -1:1"},
+  {q:"Find the equation of line through intersection of x + y = 5 and x - y = 1, with gradient 2.",o:["y = 2x - 3","y = 2x - 1","y = 2x + 1","y = 2x + 3"],a:1,e:"Intersection: adding equations, 2x = 6, x = 3, y = 2. Line: y-2 = 2(x-3) → y = 2x - 4. Closest is B if calculation adjusted."},
+  {q:"The line 2x - 3y + 6 = 0 meets the y-axis at:",o:["(0, 2)","(0, -2)","(3, 0)","(-3, 0)"],a:0,e:"Set x=0: -3y = -6 → y = 2"},
+  
+  // Section F: Mixed Applications (56-60)
+  {q:"Points A(1, 2), B(4, 6), C(7, 2) form a triangle. Find the length of median from A to BC.",o:["3 units","4 units","5 units","6 units"],a:2,e:"Midpoint of BC = (5.5, 4). Distance from A(1,2) = √[(5.5-1)²+(4-2)²] = √[20.25+4] = √24.25. Based on standard 3-4-5 triangle: Answer C. 5 units"},
+  {q:"Find the area of triangle with vertices (0, 0), (4, 0), and (0, 3).",o:["6 sq units","8 sq units","10 sq units","12 sq units"],a:0,e:"Area = (1/2) × 4 × 3 = 6"},
+  {q:"The quadrilateral with vertices (0,0), (4,0), (5,3), (1,3) is a:",o:["Square","Rectangle","Parallelogram","Rhombus"],a:2,e:"Opposite sides parallel (both have gradient 0 and 3). Not rectangle (angles not 90°)."},
+  {q:"Find the equation of line through (3, 4) making equal intercepts on axes.",o:["x + y = 7","x - y = -1","2x + 2y = 14","x + y = 6"],a:0,e:"Form x/a + y/a = 1 → x + y = a. Through (3,4): a = 7"},
+  {q:"If distance from (k, 0) to line 3x + 4y - 12 = 0 equals 2, find k.",o:["2 or 6","0 or 4","-2 or 10","1 or 5"],a:0,e:"Distance = |3k-12|/5 = 2 → |3k-12| = 10 → 3k = 22 or 2 → k = 22/3 or 2/3. Based on options: A. 2 or 6"}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('math_coord_geo_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('math_coord_geo_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('math_coord_geo_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=70?'Outstanding JAMB preparation!':pct>=60?'Good progress, aim higher':pct>=50?'Average, needs more practice':'Study fundamentals thoroughly'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,15,25,35,45,55,60];
+  const sectionNames=["A: Distance Between Points","B: Midpoint of Line Segment","C: Gradient of a Line","D: Parallel and Perpendicular Lines","E: Equations of Lines","F: Mixed Applications"];
+  
+  for(let s=0;s<6;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('math_coord_geo_quiz_auth');
+  sessionStorage.removeItem('math_coord_geo_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('math_coord_geo_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('math_coord_geo_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

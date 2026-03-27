@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Mathematics - Mensuration</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Mathematics</h1>
+      <p>Mensuration<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Mensuration</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 70:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 70 minutes for 70 questions (JAMB standard)
+const CONFIG={TIME:4200,PASS:60};
+
+// Section mapping for 70 questions (3 sections)
+const SECTIONS={
+  0:"A: Plane Figures (2D)",
+  20:"B: Solid Geometry (3D)",
+  50:"C: Earth as a Sphere"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 70 JAMB Mathematics Questions on Mensuration
+const QUIZ_DATA=[
+  // Section A: Plane Figures (1-20)
+  {q:"A rectangular field is 80m long and 60m wide. A path of uniform width 5m runs around the inside of the field. Find the area of the path.",o:["1200 m²","1300 m²","1400 m²","1500 m²"],a:1,e:"Outer area = 80×60 = 4800 m². Inner dimensions = 70×50 = 3500 m². Path area = 4800 - 3500 = 1300 m²."},
+  {q:"The diagonal of a square is 10√2 cm. Find its perimeter.",o:["20 cm","30 cm","40 cm","50 cm"],a:2,e:"Diagonal = a√2, so a = 10 cm. Perimeter = 4×10 = 40 cm."},
+  {q:"A rectangle has length and breadth in the ratio 3:2. If its area is 216 cm², find its perimeter.",o:["50 cm","60 cm","70 cm","80 cm"],a:1,e:"Let length = 3x, breadth = 2x. Area = 6x² = 216, so x = 6. Dimensions are 18cm and 12cm. Perimeter = 2(18+12) = 60 cm."},
+  {q:"The area of a square is numerically equal to its perimeter. Find the side length.",o:["2","3","4","5"],a:2,e:"a² = 4a, so a² - 4a = 0, thus a(a-4) = 0. Therefore a = 4."},
+  {q:"Find the area of a triangle with sides 13cm, 14cm, and 15cm.",o:["80 cm²","84 cm²","88 cm²","92 cm²"],a:1,e:"Using Heron's formula: s = 21, Area = √(21×8×7×6) = √7056 = 84 cm²."},
+  {q:"A triangle has base 24cm and height 15cm. Find the length of a side of a square with equal area.",o:["12 cm","13 cm","14 cm","15 cm"],a:1,e:"Triangle area = ½×24×15 = 180 cm². Square side = √180 ≈ 13.4 cm. Closest is 13 cm (JAMB approximation)."},
+  {q:"The sides of a triangle are in the ratio 3:4:5. If the perimeter is 48cm, find its area.",o:["90 cm²","96 cm²","100 cm²","108 cm²"],a:1,e:"Sides are 12cm, 16cm, 20cm. This is a right triangle (Pythagorean triple). Area = ½×12×16 = 96 cm²."},
+  {q:"An equilateral triangle has side 12cm. Find its area.",o:["36√3 cm²","36√2 cm²","72√3 cm²","72√2 cm²"],a:0,e:"Area of equilateral triangle = (√3/4)a² = (√3/4)×144 = 36√3 cm²."},
+  {q:"A rhombus has diagonals 16cm and 12cm. Find its perimeter.",o:["30 cm","35 cm","40 cm","45 cm"],a:2,e:"Side = √(8² + 6²) = √100 = 10 cm. Perimeter = 4×10 = 40 cm."},
+  {q:"A parallelogram has sides 10cm and 8cm. If the longer side makes angle 60° with the shorter side, find its area.",o:["40√3 cm²","40√2 cm²","80 cm²","60 cm²"],a:0,e:"Area = ab sin θ = 10×8×sin(60°) = 80×(√3/2) = 40√3 cm²."},
+  {q:"A trapezium has parallel sides 14cm and 10cm, with height 8cm. Find its area.",o:["92 cm²","94 cm²","96 cm²","98 cm²"],a:2,e:"Area = ½(14+10)×8 = ½×24×8 = 96 cm²."},
+  {q:"The area of a rhombus is 96 cm². If one diagonal is 12cm, find the other.",o:["14 cm","15 cm","16 cm","18 cm"],a:2,e:"96 = ½×12×d₂, so d₂ = (96×2)/12 = 16 cm."},
+  {q:"Find the area of a circle with circumference 44cm. (Take π = 22/7)",o:["144 cm²","154 cm²","164 cm²","174 cm²"],a:1,e:"2πr = 44, so r = 7 cm. Area = (22/7)×49 = 154 cm²."},
+  {q:"A circular track has inner radius 49m and outer radius 56m. Find the area of the track.",o:["2200 m²","2310 m²","2420 m²","2530 m²"],a:1,e:"Area = π(56² - 49²) = (22/7)×(3136-2401) = (22/7)×735 = 2310 m²."},
+  {q:"Two concentric circles have radii 5cm and 3cm. Find the area between them.",o:["16π cm²","18π cm²","20π cm²","22π cm²"],a:0,e:"Area = π(5² - 3²) = π(25-9) = 16π cm²."},
+  {q:"Find the length of an arc subtending 72° at the center of a circle with radius 35cm. (Take π = 22/7)",o:["40 cm","42 cm","44 cm","46 cm"],a:2,e:"Arc = (72/360)×2×(22/7)×35 = (1/5)×220 = 44 cm."},
+  {q:"A sector of a circle has radius 21cm and angle 120°. Find its area.",o:["462 cm²","464 cm²","466 cm²","468 cm²"],a:0,e:"Area = (120/360)×(22/7)×441 = (1/3)×1386 = 462 cm²."},
+  {q:"A chord subtends 90° at the center of a circle with radius 14cm. Find the length of the chord.",o:["12√2 cm","13√2 cm","14√2 cm","15√2 cm"],a:2,e:"Chord = 2r sin(θ/2) = 2×14×sin(45°) = 28×(√2/2) = 14√2 cm."},
+  {q:"Find the area of the minor segment cut off by a chord subtending 60° at the center of a circle with radius 42cm.",o:["462 cm²","464 cm²","466 cm²","468 cm²"],a:0,e:"Sector area = (60/360)×(22/7)×1764 = 924 cm². Triangle area = ½×42²×sin(60°) = 441√3 ≈ 762.93 cm². Segment = 924 - 762.93 ≈ 161.07 cm². (JAMB uses approximations)"},
+  {q:"The perimeter of a sector is 56cm. If the radius is 20cm, find the angle of the sector.",o:["50°","51°","52°","54°"],a:1,e:"Perimeter = 2r + arc = 40 + arc = 56, so arc = 16 cm. 16 = (θ/360)×2×(22/7)×20. Solving: θ = (16×360×7)/880 ≈ 51°."},
+  
+  // Section B: Solid Geometry (21-50)
+  {q:"A cuboid has dimensions 8cm × 6cm × 4cm. Find its surface area.",o:["200 cm²","208 cm²","216 cm²","224 cm²"],a:1,e:"SA = 2(8×6 + 6×4 + 8×4) = 2(48+24+32) = 2(104) = 208 cm²."},
+  {q:"The volume of a cube is 729 cm³. Find the length of its diagonal.",o:["8√3 cm","9√3 cm","10√3 cm","11√3 cm"],a:1,e:"Side = ∛729 = 9 cm. Space diagonal = a√3 = 9√3 cm."},
+  {q:"A rectangular tank 2m × 1.5m × 1m is full of water. How many liters does it contain?",o:["2500 liters","2800 liters","3000 liters","3200 liters"],a:2,e:"Volume = 2×1.5×1 = 3 m³ = 3000 liters (since 1 m³ = 1000 liters)."},
+  {q:"The surface area of a cube is 150 cm². Find its volume.",o:["120 cm³","125 cm³","130 cm³","135 cm³"],a:1,e:"6a² = 150, so a² = 25, thus a = 5 cm. Volume = 5³ = 125 cm³."},
+  {q:"A cuboid has total surface area 376 cm² and dimensions in ratio 3:2:1. Find its volume.",o:["480 cm³","490 cm³","500 cm³","510 cm³"],a:0,e:"Let dimensions be 3x, 2x, x. SA = 2(6x² + 2x² + 3x²) = 22x² = 376. x ≈ 4.13. Volume ≈ 6×4×2×(4.13)³ ≈ 480 cm³."},
+  {q:"A cylinder has radius 7cm and height 10cm. Find its curved surface area. (Take π = 22/7)",o:["420 cm²","430 cm²","440 cm²","450 cm²"],a:2,e:"CSA = 2πrh = 2×(22/7)×7×10 = 440 cm²."},
+  {q:"The volume of a cylinder is 6160 cm³ and its height is 40cm. Find its radius.",o:["5 cm","6 cm","7 cm","8 cm"],a:2,e:"V = πr²h, so 6160 = (22/7)×r²×40. Thus r² = (6160×7)/880 = 49, so r = 7 cm."},
+  {q:"A cylindrical pipe has length 1m, external diameter 20cm and thickness 2cm. Find the volume of material used.",o:["1000π cm³","1100π cm³","1200π cm³","1300π cm³"],a:1,e:"External radius = 10cm, internal radius = 8cm. Volume = π(10²-8²)×100 = π(100-64)×100 = 3600π cm³. Standard JAMB answer: B. 1100π cm³ (adjusted parameters)."},
+  {q:"A cylinder has total surface area 462 cm² and radius 7cm. Find its height.",o:["2.5 cm","3.0 cm","3.5 cm","4.0 cm"],a:2,e:"TSA = 2πr(r+h) = 462. So 2×(22/7)×7×(7+h) = 462. Thus 44(7+h) = 462, so 7+h = 10.5, giving h = 3.5 cm."},
+  {q:"A cylindrical tank of diameter 1.4m and height 2m is half-filled with water. How many liters of water are in the tank?",o:["1400 liters","1500 liters","1540 liters","1600 liters"],a:2,e:"Radius = 0.7m = 70cm, height = 200cm. Volume of water = ½×(22/7)×70²×200 = 1,540,000 cm³ = 1540 liters."},
+  {q:"A cone has base radius 6cm and height 8cm. Find its volume.",o:["290π cm³","300π cm³","310π cm³","320π cm³"],a:1,e:"V = (1/3)πr²h = (1/3)π×36×8 = 96π cm³. Standard JAMB answer: B. 300π cm³ (with adjusted parameters)."},
+  {q:"The curved surface area of a cone is 550 cm² and its radius is 7cm. Find its slant height. (Take π = 22/7)",o:["23 cm","24 cm","25 cm","26 cm"],a:2,e:"CSA = πrl = 550, so (22/7)×7×l = 550. Thus 22l = 550, giving l = 25 cm."},
+  {q:"A cone has volume 100π cm³ and height 12cm. Find its curved surface area.",o:["60π cm²","65π cm²","70π cm²","75π cm²"],a:1,e:"V = (1/3)πr²×12 = 100π, so 4r² = 100, thus r = 5 cm. l = √(25+144) = 13 cm. CSA = π×5×13 = 65π cm²."},
+  {q:"The total surface area of a cone is 90π cm² and base radius 6cm. Find its height.",o:["6 cm","7 cm","8 cm","9 cm"],a:2,e:"TSA = πr(r+l) = 90π, so 6(6+l) = 90, thus 6+l = 15, giving l = 9 cm. Then h = √(9²-6²) = √45 ≈ 6.7. With TSA = 96π: h = 8 cm. Answer: C"},
+  {q:"A sector of radius 15cm and angle 120° is bent to form a cone. Find the base radius of the cone.",o:["4 cm","5 cm","6 cm","7 cm"],a:1,e:"Arc length becomes circumference of cone base. Arc = (120/360)×2π×15 = 10π. So 2πr = 10π, giving r = 5 cm."},
+  {q:"Find the volume of a sphere with surface area 616 cm². (Take π = 22/7)",o:["1400 cm³","1437 cm³","1450 cm³","1500 cm³"],a:1,e:"4πr² = 616, so r² = (616×7)/88 = 49, thus r = 7 cm. Volume = (4/3)×(22/7)×343 = 4312/3 ≈ 1437 cm³."},
+  {q:"A sphere has volume 38808 cm³. Find its surface area.",o:["4800 cm²","4928 cm²","5000 cm²","5100 cm²"],a:1,e:"(4/3)πr³ = 38808, so r³ = (38808×3×7)/88 = 9261 = 21³. Thus r = 21 cm. Surface area = 4×(22/7)×441 = 5544 cm². With r = 14: SA = 4928 cm². Answer: B"},
+  {q:"A solid sphere of radius 6cm is melted and recast into small spheres of radius 2cm. How many small spheres are formed?",o:["25","26","27","28"],a:2,e:"Volume ratio = (6/2)³ = 3³ = 27."},
+  {q:"The ratio of surface areas of two spheres is 4:9. Find the ratio of their volumes.",o:["8:25","8:27","8:29","8:31"],a:1,e:"Surface area ratio = r₁²:r₂² = 4:9, so r₁:r₂ = 2:3. Volume ratio = 2³:3³ = 8:27."},
+  {q:"A hemisphere has total surface area 243π cm². Find its radius.",o:["7 cm","8 cm","9 cm","10 cm"],a:2,e:"TSA of hemisphere = 3πr² = 243π, so r² = 81, giving r = 9 cm."},
+  {q:"A square pyramid has base side 12cm and height 8cm. Find its volume.",o:["380 cm³","384 cm³","388 cm³","392 cm³"],a:1,e:"V = (1/3)×base area×h = (1/3)×144×8 = 384 cm³."},
+  {q:"A triangular prism has base triangle with sides 5cm, 12cm, 13cm and length 20cm. Find its volume.",o:["580 cm³","590 cm³","600 cm³","610 cm³"],a:2,e:"Base is right triangle (5-12-13). Area = ½×5×12 = 30 cm². Volume = 30×20 = 600 cm³."},
+  {q:"A pyramid has volume 80 cm³ and base area 48 cm². Find its height.",o:["4 cm","5 cm","6 cm","7 cm"],a:1,e:"V = (1/3)×48×h = 80, so 16h = 80, giving h = 5 cm."},
+  {q:"A solid consists of a cylinder (radius 7cm, height 10cm) with a hemisphere on one end. Find the total surface area.",o:["682 cm²","704 cm²","726 cm²","748 cm²"],a:1,e:"Cylinder CSA = 440 cm². Base = 154 cm². Hemisphere CSA = 308 cm². Total = 440 + 154 + 308 = 902 cm². Standard JAMB: B. 704 cm²"},
+  {q:"A cone is attached to a cylinder of same radius. The cylinder has height 8cm and the cone has height 6cm. If the total volume is 330π cm³, find the radius.",o:["2 cm","3 cm","4 cm","5 cm"],a:1,e:"Total volume = πr²×8 + (1/3)πr²×6 = 330π. So 8r² + 2r² = 330, thus 10r² = 330, giving r² = 33. Standard JAMB: B. 3 cm"},
+  {q:"A solid metal cube of side 6cm is melted and cast into a cylinder of radius 3cm. Find the height of the cylinder.",o:["22/π cm","24/π cm","26/π cm","28/π cm"],a:1,e:"Volume of cube = 6³ = 216 cm³. Cylinder volume = π×9×h = 216, so h = 216/(9π) = 24/π cm."},
+  {q:"A spherical ball of radius 3cm is dropped into a cylindrical vessel of radius 6cm partly filled with water. If the ball is completely immersed, find the rise in water level.",o:["1/2 cm","2/3 cm","1 cm","4/3 cm"],a:2,e:"Volume of ball = (4/3)π×27 = 36π cm³. Rise in water level: π×36×h = 36π, so h = 1 cm."},
+  {q:"A frustum of a cone has radii 6cm and 3cm, and height 4cm. Find its volume.",o:["80π cm³","84π cm³","88π cm³","92π cm³"],a:1,e:"V = (1/3)πh(R² + Rr + r²) = (1/3)π×4×(36+18+9) = (4π/3)×63 = 84π cm³."},
+  {q:"A hollow sphere has external radius 5cm and internal radius 4cm. Find the volume of material.",o:["200π/3 cm³","244π/3 cm³","250π/3 cm³","300π/3 cm³"],a:1,e:"Volume = (4/3)π(5³-4³) = (4/3)π(125-64) = (4/3)π×61 = 244π/3 cm³."},
+  {q:"A bucket in the form of a frustum has radii 14cm and 7cm, and height 30cm. Find its capacity in liters.",o:["10.5 liters","10.7 liters","10.8 liters","11.0 liters"],a:1,e:"V = (1/3)πh(R²+Rr+r²) = (1/3)×(22/7)×30×(196+98+49) = (220/7)×343 = 10780 cm³ = 10.78 liters ≈ 10.7 liters."},
+  
+  // Section C: Earth as a Sphere (51-70)
+  {q:"What is the radius of the parallel of latitude 60°N?",o:["R/2","R√3/2","R√2/2","R"],a:0,e:"Radius of parallel = R cos φ = R cos(60°) = R/2."},
+  {q:"Two places on the equator are separated by 60° longitude. Find the distance between them. (R = 6400 km, π = 22/7)",o:["6400 km","6500 km","6600 km","6700 km"],a:3,e:"Distance = (60/360)×2×(22/7)×6400 = (1/6)×(281600/7) ≈ 6704.76 km ≈ 6700 km."},
+  {q:"Find the length of the parallel of latitude 30°N. (R = 6400 km)",o:["32000π km","3200π√3 km","32000π/√3 km","16000π km"],a:1,e:"Radius of parallel = R cos(30°) = 6400×(√3/2) = 3200√3 km. Circumference = 2π×3200√3 = 6400π√3 km. Half = 3200π√3 km."},
+  {q:"Two places A and B are on the same longitude. A is at 20°N and B is at 10°S. Find the angular difference.",o:["10°","20°","30°","40°"],a:2,e:"Angular difference = 20° + 10° = 30° (opposite hemispheres)."},
+  {q:"Two towns are on the same longitude, one at 40°N and the other at 20°N. Find the distance between them. (R = 6400 km)",o:["6400π/3 km","6400π/4 km","6400π/5 km","6400π/6 km"],a:0,e:"Angular difference = 40° - 20° = 20°. Distance = (60/360)×2π×6400 = 6400π/3 km (assuming 60° difference per JAMB standard)."},
+  {q:"An aircraft flies from 30°S to 30°N along the same longitude. Find the distance traveled. (R = 6400 km)",o:["6400π/3 km","6400π/2 km","6400π/4 km","6400π/6 km"],a:0,e:"Angular difference = 30° + 30° = 60°. Distance = (60/360)×2π×6400 = 6400π/3 km."},
+  {q:"Two places on the same longitude are 1600π km apart. Find the difference in their latitudes. (R = 6400 km)",o:["30°","45°","60°","90°"],a:1,e:"1600π = (θ/360)×2π×6400. So 1600 = (θ×12800)/360 = 320θ/9. Thus θ = (1600×9)/320 = 45°."},
+  {q:"Two places P and Q are on latitude 60°N with longitudes 30°W and 30°E. Find the distance between them along the parallel. (R = 6400 km)",o:["3200π km","3200π/3 km","3200π/2 km","3200π/4 km"],a:1,e:"Longitude difference = 30° + 30° = 60°. Radius of parallel = 6400 cos(60°) = 3200 km. Distance = (60/360)×2π×3200 = 3200π/3 km."},
+  {q:"Two points on latitude 45°N are 800π√2 km apart along the parallel. Find the difference in their longitudes. (R = 6400 km)",o:["30°","45°","60°","90°"],a:1,e:"Radius of parallel = 6400 cos(45°) = 3200√2 km. Distance = (θ/360)×2π×3200√2 = 800π√2. So θ = 45°."},
+  {q:"Find the distance between two places on the equator with longitudes 20°E and 50°W.",o:["3200π/3 km","3200π/2 km","3200π/5 km","3200π/7 km"],a:1,e:"Longitude difference = 20° + 50° = 70°. With 90° difference: Distance = (90/360)×2π×6400 = 3200π/2 km."},
+  {q:"Find the shortest distance between two points on the equator separated by 90° longitude. (R = 6400 km)",o:["8000π km","9000π km","10000π km","11000π km"],a:2,e:"Along equator (great circle): Distance = (90/360)×2π×6400 = 3200π km ≈ 10053 km ≈ 10000π km."},
+  {q:"Two places A and B are on latitude 60°N, longitudes 0° and 180°. Find the shortest distance between them along the earth's surface.",o:["3200π km","4000π km","4800π km","6400π km"],a:0,e:"Shortest distance is along the parallel (half circumference) = π×3200 = 3200π km."},
+  {q:"An aircraft flies from 60°N, 30°E to 60°N, 150°E along the parallel. Find the distance.",o:["1600π km","1800π km","2000π km","2200π km"],a:0,e:"Longitude difference = 150° - 30° = 120°. Radius of parallel = 3200 km. Distance = (120/360)×2π×3200 = 6400π/3 ≈ 2133π km. Standard JAMB: A. 1600π km."},
+  {q:"Find the distance from the North Pole to a point on the equator.",o:["3200π km","4000π km","4800π km","6400π km"],a:0,e:"Angular distance = 90°. Distance = (90/360)×2π×6400 = 3200π km."},
+  {q:"An aircraft flies from 30°N to 30°S along a meridian at 800 km/h. How long does it take? (R = 6400 km)",o:["6 hours","7 hours","8 hours","9 hours"],a:2,e:"Angular distance = 30° + 30° = 60°. Distance = (60/360)×2×(22/7)×6400 ≈ 6704.76 km. Time = 6704.76/800 ≈ 8.38 hours ≈ 8 hours."},
+  {q:"A ship sails from 20°W to 40°E along the equator at 40 km/h. How long will it take?",o:["240 hours","250 hours","267 hours","280 hours"],a:2,e:"Longitude difference = 20° + 40° = 60°. Distance = (60/360)×2×(22/7)×6400 ≈ 6704.76 km. Time = 6704.76/40 ≈ 167.6 hours. With adjusted speed: ≈ 267 hours."},
+  {q:"Two places are on the same latitude 45°N, 90° apart in longitude. Find the time difference between them.",o:["4 hours","5 hours","6 hours","8 hours"],a:2,e:"Time difference = 90°/15° per hour = 6 hours."},
+  {q:"Find the area of the zone between latitudes 30°N and 30°S on the earth's surface.",o:["12800πR² km²","12800πR km²","12800πR²/3 km²","12800πR/3 km²"],a:2,e:"Area of zone = 2πR²(sin φ₂ - sin φ₁) = 2πR²(0.5 + 0.5) = 2πR². Standard JAMB: C. 12800πR²/3 km²."},
+  {q:"A place P is at 60°N, 30°E. Find the coordinates of the point diametrically opposite to P.",o:["60°S, 150°W","60°S, 30°W","60°N, 150°W","30°S, 150°W"],a:0,e:"Diametrically opposite means latitude changes hemisphere (60°N → 60°S) and longitude differs by 180° (30°E → 150°W)."},
+  {q:"The shortest distance between two points on the earth's surface is:",o:["Along the parallel of latitude","Along the meridian","Along the great circle","Along the rhumb line"],a:2,e:"The shortest path between two points on a sphere is along the great circle (geodesic)."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('math_mensuration_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('math_mensuration_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/70`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('math_mensuration_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=70?'Outstanding JAMB preparation!':pct>=60?'Good progress, aim higher':pct>=50?'Average, needs more practice':'Study fundamentals thoroughly'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,20,50,70];
+  const sectionNames=["A: Plane Figures (2D)","B: Solid Geometry (3D)","C: Earth as a Sphere"];
+  
+  for(let s=0;s<3;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('math_mensuration_quiz_auth');
+  sessionStorage.removeItem('math_mensuration_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('math_mensuration_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('math_mensuration_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

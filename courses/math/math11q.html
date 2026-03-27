@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Mathematics - Euclidean Geometry</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Mathematics</h1>
+      <p>Euclidean Geometry<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Euclidean Geometry</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 70:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 70 minutes for 70 questions (JAMB standard)
+const CONFIG={TIME:4200,PASS:60};
+
+// Section mapping for 70 questions (6 sections)
+const SECTIONS={
+  0:"A: Angles and Lines",
+  15:"B: Triangles",
+  30:"C: Polygons",
+  45:"D: Quadrilaterals",
+  52:"E: Circles",
+  65:"F: Construction & Misc"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 70 JAMB Mathematics Questions on Euclidean Geometry
+const QUIZ_DATA=[
+  // Section A: Angles and Lines (1-15)
+  {q:"Find the value of x if angles on a straight line are (2x + 10)° and (3x - 20)°.",o:["30°","38°","42°","50°"],a:1,e:"Angles on a straight line sum to 180°. So (2x + 10) + (3x - 20) = 180 → 5x - 10 = 180 → 5x = 190 → x = 38°"},
+  {q:"Two angles are complementary. If one angle is 35°, find the other.",o:["145°","55°","55°","65°"],a:1,e:"Complementary angles sum to 90°. Other angle = 90° - 35° = 55°"},
+  {q:"In the diagram, angle AOB = 130° where O is the center. Find the reflex angle AOB.",o:["50°","130°","230°","310°"],a:2,e:"Reflex angle = 360° - 130° = 230°"},
+  {q:"Find the angle between the hour hand and minute hand of a clock at 3:00.",o:["60°","90°","120°","150°"],a:1,e:"At 3:00, hour hand at 3, minute hand at 12. Each hour represents 30° (360°/12). 3 × 30° = 90°"},
+  {q:"If two lines intersect and one angle is 75°, find the vertically opposite angle.",o:["15°","105°","75°","285°"],a:2,e:"Vertically opposite angles are equal. 75°"},
+  {q:"Find x if angles at a point are x°, 2x°, 3x°, and 60°.",o:["30°","50°","60°","90°"],a:1,e:"Sum of angles at a point = 360°. x + 2x + 3x + 60 = 360 → 6x = 300 → x = 50°"},
+  {q:"In the diagram, AB || CD and a transversal cuts them. If corresponding angles are (3x + 20)° and (5x - 40)°, find x.",o:["20°","30°","40°","50°"],a:1,e:"Corresponding angles are equal: 3x + 20 = 5x - 40 → 60 = 2x → x = 30°"},
+  {q:"The supplement of an angle is three times the angle. Find the angle.",o:["30°","45°","45°","60°"],a:1,e:"Let angle = x. Supplement = 180 - x. Given 180 - x = 3x → 180 = 4x → x = 45°"},
+  {q:"Find the value of x if alternate angles are (2x + 15)° and (3x - 25)° with parallel lines.",o:["30°","40°","50°","60°"],a:1,e:"Alternate angles are equal: 2x + 15 = 3x - 25 → 40 = x → x = 40°"},
+  {q:"In triangle ABC, angles are in ratio 1:2:3. Find the largest angle.",o:["60°","80°","90°","120°"],a:2,e:"Sum of parts = 6. Largest angle = 3/6 × 180° = 90°"},
+  {q:"Find the angle between North-East and South-East directions.",o:["45°","90°","135°","180°"],a:1,e:"NE is 45° from North, SE is 45° from South (135° from North). Difference = 135° - 45° = 90°"},
+  {q:"If interior angles on same side of transversal are (x + 30)° and (2x + 60)° with parallel lines, find x.",o:["20°","30°","40°","50°"],a:1,e:"Co-interior angles sum to 180°: x + 30 + 2x + 60 = 180 → 3x + 90 = 180 → 3x = 90 → x = 30°"},
+  {q:"The angle of elevation of the top of a tower from a point 50m away is 45°. Find the tower height.",o:["25m","50m","50m","100m"],a:2,e:"tan 45° = height/50 → 1 = height/50 → height = 50m"},
+  {q:"Find x if vertically opposite angles are (3x - 10)° and (2x + 30)°.",o:["30°","40°","50°","60°"],a:1,e:"3x - 10 = 2x + 30 → x = 40°"},
+  {q:"In the diagram, angles around point O are 80°, 100°, 70°, and x°. Find x.",o:["100°","110°","120°","130°"],a:1,e:"Sum = 360°. 80 + 100 + 70 + x = 360 → 250 + x = 360 → x = 110°"},
+  
+  // Section B: Triangles (16-30)
+  {q:"In ΔABC, ∠A = 50°, ∠B = 60°. Find ∠C.",o:["50°","60°","70°","80°"],a:2,e:"Sum of angles = 180°. ∠C = 180 - 50 - 60 = 70°"},
+  {q:"An isosceles triangle has base angles of 65° each. Find the vertex angle.",o:["50°","50°","65°","115°"],a:1,e:"Vertex angle = 180 - (2 × 65) = 180 - 130 = 50°"},
+  {q:"In a right-angled triangle, one acute angle is 35°. Find the other acute angle.",o:["45°","55°","55°","65°"],a:2,e:"Other angle = 90 - 35 = 55°"},
+  {q:"The exterior angle of a triangle equals 110°. If one opposite interior angle is 40°, find the other.",o:["60°","70°","80°","140°"],a:1,e:"Exterior angle = sum of opposite interiors. 110 = 40 + x → x = 70°"},
+  {q:"In ΔPQR, PQ = PR and ∠P = 80°. Find ∠Q.",o:["40°","50°","60°","80°"],a:1,e:"Isosceles triangle: base angles equal. ∠Q = ∠R = (180 - 80)/2 = 50°"},
+  {q:"Find the third side of a right triangle with sides 6cm and 8cm (hypotenuse unknown).",o:["7cm","9cm","10cm","12cm"],a:2,e:"c² = 6² + 8² = 36 + 64 = 100 → c = 10cm"},
+  {q:"In an equilateral triangle, each angle equals:",o:["45°","60°","60°","90°"],a:1,e:"All angles in equilateral triangle = 60°"},
+  {q:"The sides of a triangle are 5cm, 12cm, 13cm. Find its area.",o:["30cm²","30cm²","60cm²","65cm²"],a:1,e:"Right triangle (5-12-13). Area = ½ × 5 × 12 = 30cm²"},
+  {q:"In ΔABC, ∠A:∠B:∠C = 2:3:4. Find ∠B.",o:["40°","60°","80°","120°"],a:1,e:"Sum of parts = 9. ∠B = 3/9 × 180 = 60°"},
+  {q:"An isosceles triangle has vertical angle 100°. Find each base angle.",o:["30°","40°","40°","80°"],a:2,e:"Base angles = (180 - 100)/2 = 40°"},
+  {q:"In the diagram, triangle ABC has AB extended to D. If ∠ABC = 70° and ∠BAC = 50°, find ∠CBD (exterior angle).",o:["110°","120°","130°","140°"],a:0,e:"Exterior ∠CBD = 180 - 70 = 110° (or ∠BCA = 60°, so 50 + 60 = 110°)"},
+  {q:"Find the perimeter of an equilateral triangle with side 8cm.",o:["16cm","24cm","32cm","64cm"],a:1,e:"Perimeter = 3 × 8 = 24cm"},
+  {q:"In a right triangle, hypotenuse = 25cm, one side = 7cm. Find the other side.",o:["18cm","20cm","24cm","26cm"],a:2,e:"a² = 25² - 7² = 625 - 49 = 576 → a = 24cm"},
+  {q:"The angles of a triangle are (x+10)°, (2x+20)°, and (3x-30)°. Find x.",o:["20°","30°","40°","50°"],a:1,e:"Sum = 180. x+10 + 2x+20 + 3x-30 = 180 → 6x = 180 → x = 30°"},
+  {q:"In ΔXYZ, XY = 8cm, YZ = 6cm, XZ = 10cm. The largest angle is at:",o:["X","Y","Y","Z"],a:1,e:"Largest angle opposite longest side (10cm is XZ, opposite Y). Answer: Y"},
+  
+  // Section C: Polygons (31-45)
+  {q:"Find the sum of interior angles of a hexagon.",o:["540°","720°","900°","1080°"],a:1,e:"Sum = (n-2) × 180 = (6-2) × 180 = 4 × 180 = 720°"},
+  {q:"Each interior angle of a regular octagon is:",o:["120°","135°","135°","150°"],a:1,e:"Each angle = (8-2) × 180 / 8 = 1080/8 = 135°"},
+  {q:"Find the number of sides of a polygon with interior angle sum 1260°.",o:["7","9","11","12°"],a:1,e:"(n-2) × 180 = 1260 → n-2 = 7 → n = 9"},
+  {q:"Each exterior angle of a regular polygon is 40°. Find the number of sides.",o:["7","8","9","10"],a:2,e:"n = 360/40 = 9 sides"},
+  {q:"Find the sum of exterior angles of a decagon.",o:["180°","360°","360°","720°"],a:2,e:"Sum of exterior angles of ANY convex polygon = 360°"},
+  {q:"A regular polygon has each interior angle of 156°. Find the number of sides.",o:["12","15","18","20"],a:1,e:"Exterior angle = 180 - 156 = 24°. n = 360/24 = 15"},
+  {q:"Find the number of diagonals in a heptagon (7 sides).",o:["7","14","14","21"],a:1,e:"Diagonals = n(n-3)/2 = 7(4)/2 = 14"},
+  {q:"In a regular pentagon, each interior angle equals:",o:["90°","108°","108°","120°"],a:1,e:"Each angle = (5-2) × 180 / 5 = 540/5 = 108°"},
+  {q:"Find x if interior angles of a quadrilateral are x°, 2x°, 3x°, and 60°.",o:["40°","50°","60°","80°"],a:1,e:"Sum = 360°. x + 2x + 3x + 60 = 360 → 6x = 300 → x = 50°"},
+  {q:"Each interior angle of a regular polygon is twice its exterior angle. Find the number of sides.",o:["5","6","8","10"],a:1,e:"Let exterior = x, interior = 2x. x + 2x = 180 → x = 60°. n = 360/60 = 6"},
+  {q:"Find the interior angle sum of a nonagon (9 sides).",o:["1080°","1260°","1440°","1620°"],a:1,e:"Sum = (9-2) × 180 = 7 × 180 = 1260°"},
+  {q:"A polygon has 20 diagonals. Find its number of sides.",o:["6","7","8","9"],a:2,e:"n(n-3)/2 = 20 → n² - 3n - 40 = 0 → (n-8)(n+5) = 0 → n = 8"},
+  {q:"Find each exterior angle of a regular dodecagon (12 sides).",o:["24°","30°","30°","36°"],a:2,e:"Exterior angle = 360/12 = 30°"},
+  {q:"The ratio of interior to exterior angle of a regular polygon is 3:1. Find the number of sides.",o:["6","7","8","10"],a:2,e:"Interior = 3x, exterior = x. 3x + x = 180 → x = 45°. n = 360/45 = 8"},
+  {q:"Find the value of x if angles of a pentagon are 100°, 120°, 110°, 130°, and x°.",o:["80°","100°","110°","120°"],a:0,e:"Sum = 540°. 100+120+110+130+x = 540 → 460 + x = 540 → x = 80°"},
+  
+  // Section D: Quadrilaterals (46-52)
+  {q:"In parallelogram ABCD, ∠A = 70°. Find ∠B.",o:["70°","110°","120°","140°"],a:1,e:"Consecutive angles in parallelogram are supplementary. ∠B = 180 - 70 = 110°"},
+  {q:"In a rectangle, one diagonal makes 35° with a side. Find the angle it makes with the adjacent side.",o:["35°","45°","55°","65°"],a:2,e:"Diagonal divides 90° corner. Other angle = 90 - 35 = 55°"},
+  {q:"In rhombus PQRS, ∠P = 80°. Find ∠Q.",o:["80°","100°","120°","160°"],a:1,e:"Adjacent angles in rhombus are supplementary. ∠Q = 180 - 80 = 100°"},
+  {q:"The diagonals of a square intersect at 90°. If one side is 6cm, find half the diagonal length.",o:["3cm","3√2 cm","3√2 cm","6√2 cm"],a:2,e:"Diagonal = 6√2. Half = 3√2 cm"},
+  {q:"In trapezium ABCD with AB || CD, ∠A = 80° and ∠D = 70°. Find ∠B.",o:["80°","100°","100°","110°"],a:2,e:"∠A + ∠B = 180° → ∠B = 180 - 80 = 100°"},
+  {q:"A kite has angles 90°, 100°, and two equal angles. Find each equal angle.",o:["75°","85°","90°","95°"],a:1,e:"Sum = 360°. Equal angles = (360 - 90 - 100)/2 = 170/2 = 85°"},
+  {q:"In parallelogram WXYZ, WX = 8cm, XY = 5cm. Find the perimeter.",o:["13cm","21cm","26cm","40cm"],a:2,e:"Perimeter = 2(8 + 5) = 2 × 13 = 26cm"},
+  
+  // Section E: Circles (53-65)
+  {q:"In a circle with center O, arc AB subtends 80° at center. Find the angle at circumference.",o:["20°","40°","80°","160°"],a:1,e:"Angle at circumference = ½ × angle at center = ½ × 80 = 40°"},
+  {q:"AB is diameter of circle, C is on circumference. If ∠CAB = 35°, find ∠ABC.",o:["35°","45°","55°","65°"],a:2,e:"Angle in semicircle = 90°. ∠ACB = 90°. So ∠ABC = 90 - 35 = 55°"},
+  {q:"In cyclic quadrilateral ABCD, ∠A = 100°. Find ∠C.",o:["60°","80°","80°","100°"],a:2,e:"Opposite angles in cyclic quad sum to 180°. ∠C = 180 - 100 = 80°"},
+  {q:"Chords AB and CD intersect at P inside circle. PA = 4cm, PB = 9cm, PC = 6cm. Find PD.",o:["4cm","5cm","6cm","8cm"],a:2,e:"PA × PB = PC × PD → 4 × 9 = 6 × PD → 36 = 6PD → PD = 6cm"},
+  {q:"From external point P, tangent PT = 12cm and secant PAB has PA = 9cm. Find AB.",o:["4cm","7cm","9cm","16cm"],a:1,e:"PT² = PA × PB → 144 = 9 × PB → PB = 16. AB = PB - PA = 16 - 9 = 7cm"},
+  {q:"In the diagram, tangent PA and chord AB. If ∠PAB = 40°, find angle in alternate segment.",o:["20°","40°","40°","80°"],a:2,e:"Alternate segment theorem: angle between tangent and chord = angle in alternate segment = 40°"},
+  {q:"Two chords AB and CD intersect at right angles inside circle. If PA = 3, PB = 8, PC = 4, find PD.",o:["4","6","8","12"],a:1,e:"PA × PB = PC × PD → 3 × 8 = 4 × PD → 24 = 4PD → PD = 6"},
+  {q:"In a circle, angle at center is 120°. Find the reflex angle at center.",o:["120°","180°","240°","300°"],a:2,e:"Reflex angle = 360 - 120 = 240°"},
+  {q:"Cyclic quadrilateral PQRS has ∠P = 85° and ∠Q = 95°. Find ∠R.",o:["85°","90°","95°","105°"],a:2,e:"∠P + ∠R = 180° → ∠R = 180 - 85 = 95°"},
+  {q:"Radius = 5cm, distance from center to chord = 3cm. Find chord length.",o:["4cm","6cm","8cm","10cm"],a:2,e:"Half chord = √(5² - 3²) = √16 = 4. Full chord = 8cm"},
+  {q:"In the diagram, angles subtended by same arc are 35° and x°. Find x.",o:["17.5°","35°","70°","140°"],a:1,e:"Angles in same segment are equal. x = 35°"},
+  {q:"Tangent PT touches circle at T, chord TN makes ∠PTN = 50°. Find ∠TMN where M is on major arc.",o:["25°","40°","50°","100°"],a:2,e:"Alternate segment theorem: ∠TMN = ∠PTN = 50°"},
+  {q:"Two circles intersect at P and Q. Common chord PQ = 8cm. If radii are 5cm and 6cm, find distance between centers (to nearest cm).",o:["5cm","6cm","7cm","8cm"],a:1,e:"Using intersecting chords geometry and Pythagorean theorem, distance ≈ 6cm"},
+  
+  // Section F: Construction & Misc (66-70)
+  {q:"To construct angle 60°, one draws arc from point on line, then with same radius:",o:["Draw another arc from different point","Draw arc from intersection point on first arc","Draw perpendicular bisector","Measure with protractor"],a:1,e:"Standard 60° construction: draw arc from O, then from intersection point A on arc with same radius draw arc to meet first arc at B. Join OB."},
+  {q:"To construct angle 45°, first construct:",o:["30° and bisect","90° and bisect","60° and add 15°","180° and trisect"],a:1,e:"45° = 90° ÷ 2. Construct 90° then bisect."},
+  {q:"Which instrument is NOT required for basic geometric constructions?",o:["Compass","Ruler","Protractor","Pencil"],a:2,e:"Protractor is for measuring, not constructing. Basic constructions use compass and ruler only."},
+  {q:"To construct perpendicular bisector of line AB:",o:["Draw arcs from A and B with different radii","Draw arcs from A and B with same radius (>½AB)","Draw angle bisector","Draw parallel lines"],a:1,e:"Standard method: arcs from A and B with radius > ½AB intersect above and below line, join intersections."},
+  {q:"The locus of points equidistant from two fixed points is:",o:["Circle","Perpendicular bisector of line joining them","Parallel line","Angle bisector"],a:1,e:"By definition, perpendicular bisector is equidistant from both endpoints."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('math_geometry_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('math_geometry_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/70`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('math_geometry_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=70?'Outstanding JAMB preparation!':pct>=60?'Good progress, aim higher':pct>=50?'Average, needs more practice':'Study fundamentals thoroughly'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,15,30,45,52,65,70];
+  const sectionNames=["A: Angles and Lines","B: Triangles","C: Polygons","D: Quadrilaterals","E: Circles","F: Construction & Misc"];
+  
+  for(let s=0;s<6;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('math_geometry_quiz_auth');
+  sessionStorage.removeItem('math_geometry_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('math_geometry_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('math_geometry_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

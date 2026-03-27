@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Mathematics - Coordinate Geometry</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+    .math{
+      font-weight:900;color:var(--accent-secondary)
+    }
+    .label{
+      fill:var(--text-primary);
+      font-size:11px;
+      font-weight:700
+    }
+    .axis{
+      stroke:var(--text-primary);
+      stroke-width:2
+    }
+    .grid{
+      stroke:var(--grid);
+      stroke-width:1
+    }
+    .line-soft{
+      stroke:var(--line);
+      stroke-width:3;
+      fill:none
+    }
+    .line-dash{
+      stroke:var(--line);
+      stroke-width:2;
+      stroke-dasharray:6 4;
+      fill:none
+    }
+    .mark{fill:var(--accent-secondary)}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">MATHEMATICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📐 Coordinate Geometry</h1>
+        <p>JAMB Mathematics • distance • midpoint • gradient • parallel and perpendicular lines • equations of straight lines</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Introduction to Coordinate Geometry</h2>
+        <p>This chapter focuses on points and lines on the Cartesian plane. You will learn how to find <strong>distance, midpoint, gradient, line relationships, and equations of straight lines</strong>.</p>
+        <p>Coordinate Geometry is very formula-based, so once you know the formulas and when to use them, most questions become direct.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Distance comes from Pythagoras’ theorem</li>
+            <li>Midpoint is found by averaging coordinates</li>
+            <li>Gradient tells how steep a line is</li>
+            <li>Parallel lines have equal gradients</li>
+            <li>Perpendicular lines have gradients whose product is <span class="math">-1</span></li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Most coordinate geometry problems are just geometry plus algebra. Sketch the points, then apply the correct formula carefully.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>📊 Complete Formula Summary</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Concept</th>
+              <th>Formula</th>
+              <th>Variables</th>
+            </tr>
+            <tr>
+              <td>Distance</td>
+              <td>d = √[(x₂-x₁)²+(y₂-y₁)²]</td>
+              <td>Two points (x₁,y₁), (x₂,y₂)</td>
+            </tr>
+            <tr>
+              <td>Midpoint</td>
+              <td>M = ((x₁+x₂)/2, (y₁+y₂)/2)</td>
+              <td>Average of coordinates</td>
+            </tr>
+            <tr>
+              <td>Gradient</td>
+              <td>m = (y₂-y₁)/(x₂-x₁)</td>
+              <td>Change in y over change in x</td>
+            </tr>
+            <tr>
+              <td>Parallel lines</td>
+              <td>m₁ = m₂</td>
+              <td>Same gradient</td>
+            </tr>
+            <tr>
+              <td>Perpendicular lines</td>
+              <td>m₁ × m₂ = -1</td>
+              <td>Negative reciprocals</td>
+            </tr>
+            <tr>
+              <td>Slope-intercept form</td>
+              <td>y = mx + c</td>
+              <td>m = gradient, c = y-intercept</td>
+            </tr>
+            <tr>
+              <td>Point-slope form</td>
+              <td>y - y₁ = m(x - x₁)</td>
+              <td>Through point (x₁,y₁)</td>
+            </tr>
+            <tr>
+              <td>Two-point form</td>
+              <td>(y-y₁)/(x-x₁) = (y₂-y₁)/(x₂-x₁)</td>
+              <td>Through two points</td>
+            </tr>
+            <tr>
+              <td>General form</td>
+              <td>ax + by + c = 0</td>
+              <td>Standard JAMB format</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Distance Between Points</h2>
+
+        <h3>Distance Formula</h3>
+        <div class="formula-box">
+          <div class="title">Distance formula</div>
+          <div class="line"><span class="math">d = √[(x₂-x₁)² + (y₂-y₁)²]</span></div>
+          <div class="line">This comes from Pythagoras’ theorem.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 1: Basic Distance</div>
+          <p>Find the distance between <span class="math">A(2,3)</span> and <span class="math">B(5,7)</span>.</p>
+          <p><span class="math">d = √[(5-2)² + (7-3)²]</span></p>
+          <p><span class="math">= √[3² + 4²] = √[9 + 16] = √25 = 5</span></p>
+          <div class="answer">Answer: 5 units</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Find an Unknown Coordinate</div>
+          <p>The distance between <span class="math">P(3,k)</span> and <span class="math">Q(7,1)</span> is <span class="math">5</span> units. Find <span class="math">k</span>.</p>
+          <p><span class="math">5 = √[(7-3)² + (1-k)²]</span></p>
+          <p><span class="math">5 = √[16 + (1-k)²]</span></p>
+          <p>Square both sides:</p>
+          <p><span class="math">25 = 16 + (1-k)²</span></p>
+          <p><span class="math">9 = (1-k)²</span></p>
+          <p><span class="math">1-k = ±3</span></p>
+          <p>Case 1: <span class="math">1-k = 3</span> → <span class="math">k = -2</span></p>
+          <p>Case 2: <span class="math">1-k = -3</span> → <span class="math">k = 4</span></p>
+          <div class="answer">Answer: k = -2 or 4</div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Distance on the coordinate plane</div>
+          <svg viewBox="0 0 340 220" aria-label="Distance diagram">
+            <line x1="30" y1="190" x2="310" y2="190" class="axis"/>
+            <line x1="50" y1="210" x2="50" y2="20" class="axis"/>
+            <line x1="110" y1="130" x2="230" y2="70" class="line-soft"/>
+            <line x1="110" y1="130" x2="230" y2="130" class="line-dash"/>
+            <line x1="230" y1="130" x2="230" y2="70" class="line-dash"/>
+            <circle cx="110" cy="130" r="4" class="mark"/>
+            <circle cx="230" cy="70" r="4" class="mark"/>
+            <text x="98" y="146" class="label">A</text>
+            <text x="236" y="68" class="label">B</text>
+            <text x="150" y="125" class="label">Δx</text>
+            <text x="236" y="106" class="label">Δy</text>
+          </svg>
+          <div class="diagram-caption">Distance between two points is the hypotenuse formed by the horizontal and vertical changes.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Midpoint of a Line Segment</h2>
+
+        <h3>Midpoint Formula</h3>
+        <div class="formula-box">
+          <div class="title">Midpoint formula</div>
+          <div class="line"><span class="math">M = ((x₁+x₂)/2, (y₁+y₂)/2)</span></div>
+          <div class="line">Average the x-coordinates and average the y-coordinates.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: Find Midpoint</div>
+          <p>Find the midpoint of the line joining <span class="math">A(4,6)</span> and <span class="math">B(8,10)</span>.</p>
+          <p><span class="math">Mₓ = (4+8)/2 = 6</span></p>
+          <p><span class="math">Mᵧ = (6+10)/2 = 8</span></p>
+          <div class="answer">Answer: M = (6, 8)</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 4: Find Endpoint from Midpoint</div>
+          <p><span class="math">M(5,3)</span> is the midpoint of <span class="math">AB</span>. If <span class="math">A = (2,1)</span>, find <span class="math">B</span>.</p>
+          <p>Let <span class="math">B = (x,y)</span></p>
+          <p><span class="math">5 = (2+x)/2</span> → <span class="math">10 = 2+x</span> → <span class="math">x = 8</span></p>
+          <p><span class="math">3 = (1+y)/2</span> → <span class="math">6 = 1+y</span> → <span class="math">y = 5</span></p>
+          <div class="answer">Answer: B = (8, 5)</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Gradient (Slope)</h2>
+
+        <h3>Gradient Formula</h3>
+        <div class="formula-box">
+          <div class="title">Gradient formula</div>
+          <div class="line"><span class="math">m = (y₂-y₁)/(x₂-x₁) = Δy/Δx</span></div>
+        </div>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Positive gradient means the line rises to the right</li>
+            <li>Negative gradient means the line falls to the right</li>
+            <li>Zero gradient means a horizontal line</li>
+            <li>Undefined gradient means a vertical line</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 5: Basic Gradient</div>
+          <p>Find the gradient through <span class="math">P(2,5)</span> and <span class="math">Q(6,13)</span>.</p>
+          <p><span class="math">m = (13-5)/(6-2) = 8/4 = 2</span></p>
+          <div class="answer">Answer: 2</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 6: Angle with the x-axis</div>
+          <p>A line makes an angle of <span class="math">45°</span> with the positive x-axis. Find its gradient.</p>
+          <p><span class="math">m = tan θ = tan 45° = 1</span></p>
+          <div class="answer">Answer: 1</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Parallel and Perpendicular Lines</h2>
+
+        <h3>Line Relationships</h3>
+        <div class="table-container">
+          <table class="summary-table" style="min-width:760px">
+            <tr>
+              <th>Relationship</th>
+              <th>Condition</th>
+              <th>Formula</th>
+            </tr>
+            <tr>
+              <td>Parallel</td>
+              <td>Same gradient</td>
+              <td>m₁ = m₂</td>
+            </tr>
+            <tr>
+              <td>Perpendicular</td>
+              <td>Negative reciprocals</td>
+              <td>m₁ × m₂ = -1</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+
+        <div class="example-box">
+          <div class="title">Example 7: Parallel Lines</div>
+          <p>Show that the line through <span class="math">A(1,2)</span> and <span class="math">B(4,8)</span> is parallel to the line through <span class="math">C(0,0)</span> and <span class="math">D(2,4)</span>.</p>
+          <p><strong>Gradient of AB:</strong></p>
+          <p><span class="math">m₁ = (8-2)/(4-1) = 6/3 = 2</span></p>
+          <p><strong>Gradient of CD:</strong></p>
+          <p><span class="math">m₂ = (4-0)/(2-0) = 4/2 = 2</span></p>
+          <p>Since <span class="math">m₁ = m₂</span>, the lines are parallel.</p>
+          <div class="answer">Answer: The lines are parallel</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 8: Perpendicular Gradient</div>
+          <p>Find the gradient of a line perpendicular to a line with gradient <span class="math">3/4</span>.</p>
+          <p><span class="math">m₂ = -1/m₁ = -4/3</span></p>
+          <div class="answer">Answer: -4/3</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Equations of Lines</h2>
+
+        <h3>Four Forms of Line Equations</h3>
+
+        <div class="formula-box">
+          <div class="title">1. Slope-intercept form</div>
+          <div class="line"><span class="math">y = mx + c</span></div>
+          <div class="line">Use when gradient and y-intercept are known.</div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">2. Point-slope form</div>
+          <div class="line"><span class="math">y - y₁ = m(x - x₁)</span></div>
+          <div class="line">Use when a point and gradient are known.</div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">3. Two-point form</div>
+          <div class="line"><span class="math">(y-y₁)/(x-x₁) = (y₂-y₁)/(x₂-x₁)</span></div>
+          <div class="line">Use when two points are known.</div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">4. General form</div>
+          <div class="line"><span class="math">ax + by + c = 0</span></div>
+          <div class="line">This is the standard JAMB form.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 9: Point-Slope Form</div>
+          <p>Find the equation of the line with gradient <span class="math">2</span> passing through <span class="math">(3,5)</span>.</p>
+          <p><span class="math">y - 5 = 2(x - 3)</span></p>
+          <p><span class="math">y - 5 = 2x - 6</span></p>
+          <p><span class="math">y = 2x - 1</span></p>
+          <p>General form: <span class="math">2x - y - 1 = 0</span></p>
+          <div class="answer">Answer: y = 2x - 1 or 2x - y - 1 = 0</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 10: Two-Point Form</div>
+          <p>Find the equation of the line through <span class="math">A(2,3)</span> and <span class="math">B(4,7)</span>.</p>
+          <p><strong>Step 1:</strong> Find the gradient</p>
+          <p><span class="math">m = (7-3)/(4-2) = 4/2 = 2</span></p>
+          <p><strong>Step 2:</strong> Use point-slope form with <span class="math">A(2,3)</span></p>
+          <p><span class="math">y - 3 = 2(x - 2)</span></p>
+          <p><span class="math">y - 3 = 2x - 4</span></p>
+          <p><span class="math">y = 2x - 1</span></p>
+          <div class="answer">Answer: y = 2x - 1</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔥 JAMB Past Question Style</h2>
+
+        <div class="example-box">
+          <div class="title">Type 1: Combined Concepts</div>
+          <p>The line joining <span class="math">P(3,4)</span> and <span class="math">Q(7,k)</span> has gradient <span class="math">2</span>. Find <span class="math">k</span> and the distance <span class="math">PQ</span>.</p>
+          <p><strong>Find k:</strong></p>
+          <p><span class="math">2 = (k-4)/(7-3) = (k-4)/4</span></p>
+          <p><span class="math">8 = k - 4</span></p>
+          <p><span class="math">k = 12</span></p>
+          <p><strong>Distance PQ:</strong></p>
+          <p><span class="math">d = √[(7-3)² + (12-4)²]</span></p>
+          <p><span class="math">= √[16 + 64] = √80 = 4√5</span></p>
+          <div class="answer">Answer: k = 12, PQ = 4√5</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Type 2: Perpendicular Bisector</div>
+          <p>Find the equation of the perpendicular bisector of <span class="math">AB</span> where <span class="math">A(2,4)</span> and <span class="math">B(6,8)</span>.</p>
+          <p><strong>Step 1:</strong> Midpoint</p>
+          <p><span class="math">M = ((2+6)/2, (4+8)/2) = (4,6)</span></p>
+          <p><strong>Step 2:</strong> Gradient of AB</p>
+          <p><span class="math">m = (8-4)/(6-2) = 1</span></p>
+          <p><strong>Step 3:</strong> Gradient of perpendicular line</p>
+          <p><span class="math">m⊥ = -1</span></p>
+          <p><strong>Step 4:</strong> Equation through midpoint</p>
+          <p><span class="math">y - 6 = -1(x - 4)</span></p>
+          <p><span class="math">y - 6 = -x + 4</span></p>
+          <p><span class="math">x + y - 10 = 0</span></p>
+          <div class="answer">Answer: x + y - 10 = 0</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>💡 Exam Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>How to score high in coordinate geometry</h4>
+          <ul>
+            <li>Always sketch a rough diagram</li>
+            <li>Be careful with negative signs</li>
+            <li>Simplify radicals properly, for example <span class="math">√50 = 5√2</span> and <span class="math">√80 = 4√5</span></li>
+            <li>When possible, write final line equations in general form</li>
+            <li>Include units for distances if the question gives units</li>
+          </ul>
+        </div>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Distance: use Pythagoras on coordinate differences</li>
+            <li>Midpoint: average x and average y</li>
+            <li>Gradient: rise over run</li>
+            <li>Parallel: same gradient</li>
+            <li>Perpendicular: product of gradients is <span class="math">-1</span></li>
+            <li>Point-slope form is often the most flexible line formula</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>✅ Pre-Exam Checklist</h2>
+
+        <div class="memory-tip">
+          <strong>🧠 Checklist</strong>
+          <p>Memorize the distance formula. Practise midpoint calculations in both directions. Revise gradient from two points. Know the conditions for parallel and perpendicular lines. Be comfortable with slope-intercept and point-slope forms. Practise converting line equations to general form. Work on perpendicular bisector problems. Revise radical simplification. Keep sketching coordinate diagrams to visualize questions better.</p>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Connects to:</strong> Loci and Trigonometry.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🌟 Final Revision Note</h2>
+
+        <div class="memory-tip">
+          <strong>Outstanding!</strong>
+          <p>You now have a complete guide to Coordinate Geometry with formulas, examples, line equations, and exam tips. Once you match the question to the right formula, this topic becomes very manageable.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise distance, midpoint, gradient, line equations, and perpendicular bisector questions today.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

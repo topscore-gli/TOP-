@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Mathematics - Locus</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+    .math{
+      font-weight:900;color:var(--accent-secondary)
+    }
+    .label{
+      fill:var(--text-primary);
+      font-size:11px;
+      font-weight:700
+    }
+    .axis{
+      stroke:var(--text-primary);
+      stroke-width:2
+    }
+    .line-soft{
+      stroke:var(--line);
+      stroke-width:3;
+      fill:none
+    }
+    .line-dash{
+      stroke:var(--line);
+      stroke-width:2;
+      stroke-dasharray:6 4;
+      fill:none
+    }
+    .curve{
+      stroke:var(--line);
+      stroke-width:3;
+      fill:none
+    }
+    .mark{fill:var(--accent-secondary)}
+    .fill-soft{fill:rgba(29,185,84,.22)}
+    .fill-soft-2{fill:rgba(78,205,196,.22)}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">MATHEMATICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📍 Locus</h1>
+        <p>JAMB Mathematics • perpendicular bisector • angle bisector • circle • parabola • conic sections • geometric conditions</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 What is a Locus?</h2>
+        <p>A <strong>locus</strong> is the path traced out by a point that moves according to a given rule or condition.</p>
+        <p>In simple terms, a locus is the set of all points that satisfy a particular geometric condition.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>“Equidistant from two points” usually gives a perpendicular bisector</li>
+            <li>“Constant distance from a point” usually gives a circle</li>
+            <li>“Equidistant from a point and a line” gives a parabola</li>
+            <li>Many locus questions become easier after making a quick sketch</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Locus is about turning words into geometry. Once you recognize the pattern, the answer is often a familiar line or curve.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>📘 Summary Table of Loci</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Condition</th>
+              <th>Locus</th>
+              <th>Key Features</th>
+            </tr>
+            <tr>
+              <td>Equidistant from 2 points</td>
+              <td>Perpendicular bisector</td>
+              <td>Passes through midpoint and is perpendicular to the line segment</td>
+            </tr>
+            <tr>
+              <td>Equidistant from 2 lines</td>
+              <td>Angle bisectors</td>
+              <td>Two lines bisecting the angles between the lines</td>
+            </tr>
+            <tr>
+              <td>Constant distance from a point</td>
+              <td>Circle</td>
+              <td>Center at the point, radius is the fixed distance</td>
+            </tr>
+            <tr>
+              <td>Constant distance from a line</td>
+              <td>Two parallel lines</td>
+              <td>One on each side of the given line</td>
+            </tr>
+            <tr>
+              <td>Equidistant from a point and a line</td>
+              <td>Parabola</td>
+              <td>Focus is the point, directrix is the line</td>
+            </tr>
+            <tr>
+              <td>Constant ratio e from focus and directrix</td>
+              <td>Conic section</td>
+              <td>e &lt; 1 ellipse, e = 1 parabola, e &gt; 1 hyperbola</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Equidistant from Two Points</h2>
+
+        <h3>Perpendicular Bisector</h3>
+        <p>The locus of points equidistant from two fixed points is the <strong>perpendicular bisector</strong> of the line joining them.</p>
+
+        <div class="formula-box">
+          <div class="title">Distance condition</div>
+          <div class="line"><span class="math">PA = PB</span></div>
+          <div class="line"><span class="math">√[(x-x₁)²+(y-y₁)²] = √[(x-x₂)²+(y-y₂)²]</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 1: Two Points</div>
+          <p>Find the locus of <span class="math">P(x,y)</span> equidistant from <span class="math">A(2,3)</span> and <span class="math">B(6,7)</span>.</p>
+          <p><span class="math">√[(x-2)²+(y-3)²] = √[(x-6)²+(y-7)²]</span></p>
+          <p>Square both sides:</p>
+          <p><span class="math">(x-2)²+(y-3)² = (x-6)²+(y-7)²</span></p>
+          <p>Expand and simplify:</p>
+          <p><span class="math">x²-4x+4+y²-6y+9 = x²-12x+36+y²-14y+49</span></p>
+          <p><span class="math">8x + 8y = 72</span></p>
+          <p><span class="math">x + y = 9</span></p>
+          <div class="answer">Answer: x + y = 9</div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Perpendicular bisector idea</div>
+          <svg viewBox="0 0 340 220" aria-label="Perpendicular bisector diagram">
+            <line x1="80" y1="150" x2="260" y2="70" class="line-soft"/>
+            <line x1="120" y1="40" x2="220" y2="180" class="line-dash"/>
+            <circle cx="80" cy="150" r="4" class="mark"/>
+            <circle cx="260" cy="70" r="4" class="mark"/>
+            <text x="68" y="168" class="label">A</text>
+            <text x="266" y="68" class="label">B</text>
+            <text x="170" y="115" class="label">Midpoint</text>
+          </svg>
+          <div class="diagram-caption">Every point on the perpendicular bisector is the same distance from A and B.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Equidistant from Two Lines</h2>
+
+        <h3>Angle Bisectors</h3>
+        <p>The locus of points equidistant from two intersecting lines is the pair of <strong>angle bisectors</strong> of the angles between the lines.</p>
+
+        <div class="formula-box">
+          <div class="title">Distance from point to line</div>
+          <div class="line"><span class="math">d = |ax + by + c| / √(a² + b²)</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Two Intersecting Lines</div>
+          <p>Find the locus equidistant from <span class="math">3x + 4y - 7 = 0</span> and <span class="math">5x - 12y + 3 = 0</span>.</p>
+          <p><span class="math">|3x+4y-7|/5 = |5x-12y+3|/13</span></p>
+          <p>This gives two cases.</p>
+          <p><strong>Case 1:</strong></p>
+          <p><span class="math">13(3x+4y-7) = 5(5x-12y+3)</span></p>
+          <p><span class="math">39x+52y-91 = 25x-60y+15</span></p>
+          <p><span class="math">14x + 112y - 106 = 0</span></p>
+          <p><span class="math">7x + 56y - 53 = 0</span></p>
+          <p><strong>Case 2:</strong></p>
+          <p><span class="math">13(3x+4y-7) = -5(5x-12y+3)</span></p>
+          <p><span class="math">39x+52y-91 = -25x+60y-15</span></p>
+          <p><span class="math">64x - 8y - 76 = 0</span></p>
+          <p><span class="math">16x - 2y - 19 = 0</span></p>
+          <div class="answer">Answer: 7x + 56y - 53 = 0 or 16x - 2y - 19 = 0</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Constant Distance from a Point</h2>
+
+        <h3>Circle</h3>
+        <p>The locus of a point at a fixed distance from a given point is a <strong>circle</strong>.</p>
+
+        <div class="formula-box">
+          <div class="title">Circle equation</div>
+          <div class="line"><span class="math">(x-a)² + (y-b)² = r²</span></div>
+          <div class="line">Center = <span class="math">(a,b)</span>, Radius = <span class="math">r</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: Circle Locus</div>
+          <p>Find the locus of a point always <span class="math">5</span> units from <span class="math">(2,-3)</span>.</p>
+          <p><span class="math">(x-2)² + (y+3)² = 25</span></p>
+          <p>Expand:</p>
+          <p><span class="math">x² - 4x + 4 + y² + 6y + 9 = 25</span></p>
+          <p><span class="math">x² + y² - 4x + 6y - 12 = 0</span></p>
+          <div class="answer">Answer: (x - 2)² + (y + 3)² = 25</div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Circle locus idea</div>
+          <svg viewBox="0 0 340 220" aria-label="Circle locus diagram">
+            <circle cx="170" cy="110" r="75" fill="none" stroke="var(--line)" stroke-width="3"/>
+            <circle cx="170" cy="110" r="4" class="mark"/>
+            <line x1="170" y1="110" x2="245" y2="110" class="line-soft"/>
+            <text x="177" y="106" class="label">Center</text>
+            <text x="200" y="102" class="label">r</text>
+          </svg>
+          <div class="diagram-caption">Every point on the circle is the same distance from the center.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Constant Distance from a Line</h2>
+
+        <h3>Parallel Lines</h3>
+        <p>The locus of points at a fixed distance from a line is a pair of <strong>parallel lines</strong>, one on each side of the given line.</p>
+
+        <div class="formula-box">
+          <div class="title">Parallel line condition</div>
+          <div class="line">If distance is <span class="math">d</span> from <span class="math">ax+by+c=0</span>, then:</div>
+          <div class="line"><span class="math">ax + by + c = ± d√(a²+b²)</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 4: Parallel Lines</div>
+          <p>Find the locus of points at distance <span class="math">3</span> units from the line <span class="math">4x - 3y + 5 = 0</span>.</p>
+          <p><span class="math">|4x - 3y + 5| / √(4² + (-3)²) = 3</span></p>
+          <p><span class="math">|4x - 3y + 5| / 5 = 3</span></p>
+          <p><span class="math">|4x - 3y + 5| = 15</span></p>
+          <p><strong>Case 1:</strong> <span class="math">4x - 3y + 5 = 15</span> → <span class="math">4x - 3y - 10 = 0</span></p>
+          <p><strong>Case 2:</strong> <span class="math">4x - 3y + 5 = -15</span> → <span class="math">4x - 3y + 20 = 0</span></p>
+          <div class="answer">Answer: 4x - 3y - 10 = 0 or 4x - 3y + 20 = 0</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Equidistant from a Point and a Line</h2>
+
+        <h3>Parabola</h3>
+        <p>A parabola is the locus of a point whose distance from a fixed point equals its distance from a fixed line.</p>
+
+        <div class="highlight-box">
+          <p><strong>Geometric meaning:</strong> The fixed point is the <strong>focus</strong> and the fixed line is the <strong>directrix</strong>.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 5: Parabola</div>
+          <p>Find the locus equidistant from the point <span class="math">(0,3)</span> and the line <span class="math">y = -3</span>.</p>
+          <p><span class="math">√[(x-0)²+(y-3)²] = |y+3|</span></p>
+          <p>Square both sides:</p>
+          <p><span class="math">x² + (y-3)² = (y+3)²</span></p>
+          <p><span class="math">x² + y² - 6y + 9 = y² + 6y + 9</span></p>
+          <p><span class="math">x² = 12y</span></p>
+          <div class="answer">Answer: x² = 12y</div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Parabola as point-line locus</div>
+          <svg viewBox="0 0 340 240" aria-label="Parabola diagram">
+            <line x1="40" y1="190" x2="300" y2="190" class="axis"/>
+            <line x1="170" y1="30" x2="170" y2="210" class="axis"/>
+            <line x1="60" y1="170" x2="280" y2="170" class="line-dash"/>
+            <path d="M90 170 Q170 40 250 170" class="curve"/>
+            <circle cx="170" cy="95" r="4" class="mark"/>
+            <text x="178" y="97" class="label">Focus</text>
+            <text x="210" y="166" class="label">Directrix</text>
+          </svg>
+          <div class="diagram-caption">A parabola contains all points equally distant from the focus and the directrix.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>📝 JAMB Practice Questions</h2>
+
+        <div class="example-box">
+          <div class="title">Question 1: Basic</div>
+          <p>Find the locus equidistant from <span class="math">A(1,2)</span> and <span class="math">B(5,6)</span>.</p>
+          <p><span class="math">√[(x-1)²+(y-2)²] = √[(x-5)²+(y-6)²]</span></p>
+          <p>After expanding and simplifying:</p>
+          <p><span class="math">8x + 8y = 56</span></p>
+          <p><span class="math">x + y = 7</span></p>
+          <div class="answer">Answer: x + y = 7</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Question 2: Intermediate</div>
+          <p>A point <span class="math">P</span> moves so that its distance from the origin is twice its distance from <span class="math">(3,0)</span>. Find the locus.</p>
+          <p><span class="math">√(x²+y²) = 2√[(x-3)²+y²]</span></p>
+          <p>Square both sides:</p>
+          <p><span class="math">x²+y² = 4[(x-3)²+y²]</span></p>
+          <p><span class="math">x²+y² = 4x² - 24x + 36 + 4y²</span></p>
+          <p><span class="math">0 = 3x² - 24x + 36 + 3y²</span></p>
+          <p><span class="math">x² - 8x + 12 + y² = 0</span></p>
+          <p><span class="math">(x-4)² + y² = 4</span></p>
+          <div class="answer">Answer: Circle with center (4,0) and radius 2</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Question 3: Advanced - Ellipse</div>
+          <p>Find the locus where the sum of distances from <span class="math">(-3,0)</span> and <span class="math">(3,0)</span> is always <span class="math">10</span>.</p>
+          <p>This is the definition of an ellipse.</p>
+          <p>Foci at <span class="math">(±3,0)</span>, so <span class="math">c = 3</span></p>
+          <p>Major axis <span class="math">2a = 10</span>, so <span class="math">a = 5</span></p>
+          <p><span class="math">b² = a² - c² = 25 - 9 = 16</span></p>
+          <p><span class="math">b = 4</span></p>
+          <p><span class="math">x²/25 + y²/16 = 1</span></p>
+          <div class="answer">Answer: x²/25 + y²/16 = 1</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>💡 Key Tips for JAMB</h2>
+
+        <div class="jamb-alert">
+          <h4>Best approach for locus questions</h4>
+          <ul>
+            <li>Always draw a quick sketch before solving</li>
+            <li>Use the distance formula correctly</li>
+            <li>Expand algebra carefully and collect like terms neatly</li>
+            <li>Check your final equation by testing a point if possible</li>
+            <li>Recognize the standard forms of circle, parabola, ellipse, and hyperbola</li>
+          </ul>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Distance formula reminder</div>
+          <div class="line"><span class="math">Distance = √[(x₂-x₁)² + (y₂-y₁)²]</span></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>⚡ Common JAMB Patterns</h2>
+
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Equidistant from two points</strong> → Perpendicular bisector</li>
+            <li><strong>Constant distance from point</strong> → Circle</li>
+            <li><strong>Sum of distances constant</strong> → Ellipse</li>
+            <li><strong>Difference of distances constant</strong> → Hyperbola</li>
+            <li><strong>Equidistant from point and line</strong> → Parabola</li>
+            <li><strong>Constant distance from line</strong> → Parallel lines</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>✅ Pre-Exam Checklist</h2>
+
+        <div class="memory-tip">
+          <strong>🧠 Checklist</strong>
+          <p>Memorize the distance formula. Understand how to derive the perpendicular bisector from equal distances. Know the two-case method for angle bisectors. Be comfortable writing the equation of a circle from center and radius. Revise how parallel lines arise from a constant distance to a line. Know the focus-directrix definition of a parabola. Recognize ellipse, parabola, and hyperbola from their geometric conditions. Practise algebraic expansion carefully.</p>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Connects to:</strong> Coordinate Geometry and Conic Sections.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🌟 Final Revision Note</h2>
+
+        <div class="memory-tip">
+          <strong>Excellent!</strong>
+          <p>You now have a complete guide to Locus with definitions, formulas, worked examples, standard patterns, and exam tips. Once you identify the condition in the question, the shape of the locus usually becomes clear very quickly.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise perpendicular bisectors, angle bisectors, circles, parabolas, and conic section locus questions today.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

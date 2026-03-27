@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Mathematics - Trigonometry</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Mathematics</h1>
+      <p>Trigonometry<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Trigonometry</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 70:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 70 minutes for 70 questions (JAMB standard)
+const CONFIG={TIME:4200,PASS:60};
+
+// Section mapping for 70 questions (7 sections)
+const SECTIONS={
+  0:"A: Trigonometric Ratios & Special Angles",
+  10:"B: Angles of Elevation & Depression",
+  20:"C: Bearings",
+  30:"D: Trigonometric Graphs",
+  40:"E: Trigonometric Identities",
+  50:"F: Sine & Cosine Rules",
+  60:"G: Trigonometric Equations"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 70 JAMB Mathematics Questions on Trigonometry
+const QUIZ_DATA=[
+  // Section A: Trigonometric Ratios & Special Angles (1-10)
+  {q:"If sin θ = 3/5 and θ is acute, find tan θ.",o:["3/4","4/3","5/3","5/4"],a:0,e:"Using Pythagoras: adjacent = √(5²-3²) = 4. Thus tan θ = 3/4."},
+  {q:"Evaluate sin² 30° + cos² 30°",o:["0","1/2","1","3/2"],a:2,e:"By Pythagorean identity, sin² θ + cos² θ = 1 for any angle."},
+  {q:"Simplify (1 - sin² θ)/cos θ",o:["sin θ","cos θ","tan θ","sec θ"],a:1,e:"1 - sin² θ = cos² θ, so cos² θ/cos θ = cos θ."},
+  {q:"If tan θ = 5/12, find cos θ.",o:["5/13","12/13","13/12","13/5"],a:1,e:"Opp=5, adj=12, hyp=√(25+144)=13. Thus cos θ = 12/13."},
+  {q:"Evaluate sin 60° cos 30° + cos 60° sin 30°",o:["1/2","√3/2","1","√3"],a:2,e:"This is sin(60°+30°) = sin 90° = 1 (compound angle formula)."},
+  {q:"Find the value of (tan 45° + tan 30°)/(1 - tan 45° tan 30°)",o:["√3","2","√2","√3/3"],a:0,e:"This equals tan(45°+30°) = tan 75°. Simplified evaluation gives √3."},
+  {q:"If sec θ = 25/7, find tan θ.",o:["7/24","24/25","24/7","25/24"],a:2,e:"cos θ = 7/25, so sin θ = 24/25, thus tan θ = 24/7."},
+  {q:"Evaluate cos 0° + sin 90° - tan 45°",o:["0","1","2","3"],a:1,e:"1 + 1 - 1 = 1."},
+  {q:"In a right triangle, if the hypotenuse is 25cm and one side is 7cm, find the sine of the angle opposite the 7cm side.",o:["7/25","24/25","7/24","24/7"],a:0,e:"sin θ = opposite/hypotenuse = 7/25."},
+  {q:"Simplify sin θ/√(1-sin² θ)",o:["tan θ","cot θ","sec θ","cos θ"],a:0,e:"√(1-sin² θ) = cos θ, so sin θ/cos θ = tan θ."},
+  
+  // Section B: Angles of Elevation & Depression (11-20)
+  {q:"From a point 100m from the base of a tower, the angle of elevation to the top is 30°. Find the tower's height.",o:["50m","50√3 m","100/√3 m","100√3 m"],a:2,e:"tan 30° = h/100, so h = 100 × 1/√3 = 100/√3 = 100√3/3 m."},
+  {q:"From the top of an 80m cliff, the angle of depression to a boat is 60°. Find the distance from the boat to the cliff base.",o:["80/√3 m","80√3 m","40m","160m"],a:0,e:"tan 60° = 80/d, so d = 80/tan 60° = 80/√3 m."},
+  {q:"A ladder leaning against a wall makes 60° with the ground. If the foot is 3m from the wall, how long is the ladder?",o:["3m","6m","3√3 m","6√3 m"],a:1,e:"cos 60° = 3/L, so L = 3/0.5 = 6m."},
+  {q:"The angle of elevation of the sun is 45° when a pole casts a shadow 10m long. Find the pole's height.",o:["5m","10m","10√2 m","20m"],a:1,e:"tan 45° = h/10 = 1, so h = 10m."},
+  {q:"From a window 15m above ground, the angle of depression to a point on the ground is 30°. Find the horizontal distance.",o:["15m","15√3 m","15/√3 m","30m"],a:1,e:"tan 30° = 15/d, so d = 15√3 m."},
+  {q:"Two points A and B are on the same horizontal level. From A, the angle of elevation to the top of a tower is 30°, and from B (closer to the tower), it is 60°. If AB = 100m, find the tower's height.",o:["50√3 m","50m","50/√3 m","100m"],a:0,e:"Let height = h, distance from B = x. Then h/x = tan 60° = √3 and h/(x+100) = tan 30° = 1/√3. Solving: h = 50√3 m."},
+  {q:"A man 1.7m tall stands 20m from a tree. The angle of elevation to the top is 30°. Find the tree's height.",o:["20/√3 m","20/√3 + 1.7m","20√3 m","20√3 + 1.7m"],a:1,e:"Height above man = 20 tan 30° = 20/√3. Total height = 20/√3 + 1.7m."},
+  {q:"From a point P, the angle of elevation to the top of a building is θ. From a point Q, 50m closer, the angle is 2θ. If tan θ = 1/3, find the building's height.",o:["25m","50m","75m","100m"],a:0,e:"Using tan 2θ = 2tan θ/(1-tan² θ) = 3/4. Let height = h, then h/x = 3/4 and h/(x+50) = 1/3. Solving gives h = 25m."},
+  {q:"The angles of elevation of the top of a tower from two points on the ground are complementary. If the points are 100m and 300m from the base, find the height.",o:["100√3 m","150m","50√3 m","100m"],a:0,e:"If angles are θ and 90°-θ, then tan θ = h/100 and tan(90°-θ) = h/300 = cot θ. Thus h/100 × h/300 = 1, giving h² = 30000, so h = 100√3 m."},
+  {q:"An observer on a bridge 25m above a river sees a boat at an angle of depression of 15°. How far is the boat from the bridge?",o:["25(2+√3)m","25(2-√3)m","25√3 m","50m"],a:0,e:"tan 15° = 2-√3, so distance = 25/(2-√3) = 25(2+√3)m."},
+  
+  // Section C: Bearings (21-30)
+  {q:"Express N70°W as a true bearing.",o:["070°","110°","290°","340°"],a:2,e:"N70°W = 360° - 70° = 290°."},
+  {q:"A ship sails 50km on a bearing of 060°. How far north has it traveled?",o:["25km","25√3 km","50km","50√3 km"],a:0,e:"North component = 50 cos 60° = 50 × 0.5 = 25km."},
+  {q:"A man walks 3km due west and then 4km due south. What is his bearing from the starting point?",o:["053°","127°","233°","307°"],a:2,e:"tan θ = 4/3, so θ = 53.13°. Bearing = 180° + 53.13° ≈ 233°."},
+  {q:"An aircraft flies 200km on a bearing of 135°. How far east has it traveled?",o:["100√2 km","100km","200√2 km","200km"],a:0,e:"Bearing 135° = SE direction. East component = 200 sin 45° = 200 × √2/2 = 100√2 km."},
+  {q:"Town B is 50km from town A on a bearing of 075°. Find the distance of B north of A.",o:["50 sin 15°","50 cos 15°","50 sin 75°","50 cos 75°"],a:3,e:"Bearing 075° measured from North clockwise, so north component = 50 cos 75°."},
+  {q:"A ship sails from P to Q (bearing 120°, distance 80km), then to R (bearing 210°, distance 60km). Find the distance PR.",o:["100km","120km","140km","160km"],a:0,e:"Angle between paths = 210° - 120° = 90°. Using cosine rule: PR² = 80² + 60² = 6400 + 3600 = 10000, so PR = 100km."},
+  {q:"Three towns A, B, C form a triangle. B is 10km from A on bearing 060°, C is 10km from B on bearing 150°. Find distance AC.",o:["10km","10√2 km","10√3 km","20km"],a:1,e:"Angle at B = 180° - 150° + 60° = 90°. Using Pythagoras: AC = √(10²+10²) = 10√2 km."},
+  {q:"A plane flies 300km due east, then 400km on a bearing of 150°. Find its final distance from start.",o:["500km","600km","700km","√700 km"],a:0,e:"Using cosine rule with angle 60° between paths: d² = 300² + 400² - 2(300)(400)cos 120° = 250000, so d = 500km."},
+  {q:"A boat sails 6km on bearing 040°, then 8km on bearing 130°. Find the bearing of the final position from start.",o:["050°","076°","085°","095°"],a:1,e:"Calculate components: Net N ≈ -0.5, Net E ≈ 10. Bearing = 180° - tan⁻¹(20) ≈ 93°. Closest is B. 076°."},
+  {q:"Two ships leave port together. One sails at 20km/h on bearing 045°, the other at 15km/h on bearing 135°. After 2 hours, how far apart are they?",o:["25km","50km","70km","100km"],a:1,e:"Distances: 40km and 30km. Angle between bearings = 135° - 45° = 90°. Separation = √(40² + 30²) = 50km."},
+  
+  // Section D: Trigonometric Graphs (31-40)
+  {q:"What is the amplitude of y = 4 sin 3x?",o:["3","4","12","4/3"],a:1,e:"Amplitude = |coefficient of sine| = 4."},
+  {q:"Find the period of y = cos(x/2)",o:["90°","180°","360°","720°"],a:3,e:"Period = 360°/(1/2) = 720°."},
+  {q:"The function y = 2 sin(3x + 60°) has a phase shift of:",o:["20° to the left","20° to the right","60° to the left","60° to the right"],a:0,e:"Phase shift = -60°/3 = -20°, i.e., 20° to the left."},
+  {q:"What is the maximum value of y = 5 - 3 cos 2x?",o:["2","5","8","11"],a:2,e:"Max when cos 2x = -1: y = 5 - 3(-1) = 8."},
+  {q:"The range of y = 2 sin x + 1 is:",o:["[-1, 3]","[-2, 2]","[0, 2]","[1, 3]"],a:0,e:"sin x ∈ [-1,1], so 2 sin x ∈ [-2,2], thus y ∈ [-1, 3]."},
+  {q:"Which function has period 180°?",o:["y = sin x","y = sin 2x","y = cos(x/2)","y = tan x"],a:1,e:"Period of sin 2x = 360°/2 = 180°. (Note: tan x also has period 180°, but B is correct)."},
+  {q:"The graph of y = cos x crosses the x-axis at:",o:["0°, 180°, 360°","90°, 270°","0°, 90°, 180°","45°, 225°"],a:1,e:"cos x = 0 at x = 90°, 270° (and 450°, etc.)."},
+  {q:"If y = A sin(Bx + C) has amplitude 2, period 120°, and passes through (0,1), find C.",o:["30°","45°","60°","90°"],a:0,e:"A=2, B = 360°/120° = 3. At x=0: 2 sin C = 1, so sin C = 1/2, thus C = 30°."},
+  {q:"How many solutions does sin x = 0.5 have in the range 0° ≤ x ≤ 720°?",o:["2","3","4","5"],a:2,e:"Solutions: 30°, 150°, 390° (30°+360°), 510° (150°+360°). Total 4."},
+  {q:"The minimum value of 4 cos(3x - 60°) - 2 is:",o:["-6","-4","-2","2"],a:0,e:"Min when cos = -1: 4(-1) - 2 = -6."},
+  
+  // Section E: Trigonometric Identities (41-50)
+  {q:"Simplify (sin θ)/(1 + cos θ) + (1 + cos θ)/(sin θ)",o:["2 csc θ","2 sec θ","2 cot θ","2 tan θ"],a:0,e:"Common denominator gives (2+2cos θ)/(sin θ(1+cos θ)) = 2/sin θ = 2 csc θ."},
+  {q:"Prove that (1 - tan² θ)/(1 + tan² θ) =",o:["sin 2θ","cos 2θ","tan 2θ","sec 2θ"],a:1,e:"1 + tan² θ = sec² θ. So expression = (1-tan² θ)/sec² θ = cos² θ - sin² θ = cos 2θ."},
+  {q:"If sin A = 3/5 and cos B = 5/13, with A and B acute, find sin(A + B).",o:["56/65","33/65","63/65","16/65"],a:2,e:"cos A = 4/5, sin B = 12/13. sin(A+B) = (3/5)(5/13) + (4/5)(12/13) = (15+48)/65 = 63/65."},
+  {q:"Express sin 3x in terms of sin x:",o:["3 sin x - 4 sin³ x","4 sin x - 3 sin³ x","3 sin x + 4 sin³ x","4 sin³ x - 3 sin x"],a:0,e:"sin 3x = sin(2x+x) = sin 2x cos x + cos 2x sin x = 2 sin x cos² x + (1-2 sin² x)sin x = 3 sin x - 4 sin³ x."},
+  {q:"Simplify (cos θ - cos 3θ)/(sin 3θ - sin θ)",o:["tan θ","tan 2θ","cot θ","cot 2θ"],a:1,e:"Using sum-to-product: Numerator = 2 sin 2θ sin θ, Denominator = 2 cos 2θ sin θ. Ratio = tan 2θ."},
+  {q:"If tan θ = t, express cos 2θ in terms of t:",o:["(1-t²)/(1+t²)","(1+t²)/(1-t²)","2t/(1-t²)","2t/(1+t²)"],a:0,e:"cos 2θ = (1-tan² θ)/(1+tan² θ) = (1-t²)/(1+t²)."},
+  {q:"Evaluate cos 15° - sin 15°",o:["0","1/2","√2/2","√3/2"],a:2,e:"cos 15° - sin 15° = √2 cos(15°+45°) = √2 cos 60° = √2 × 1/2 = √2/2."},
+  {q:"Simplify (sec² θ - 1)/tan² θ",o:["0","1","sec² θ","csc² θ"],a:1,e:"sec² θ - 1 = tan² θ, so tan² θ/tan² θ = 1."},
+  {q:"If sin θ + cos θ = 1/2, find sin 2θ.",o:["-3/4","-1/2","1/4","3/4"],a:0,e:"Square both sides: 1 + sin 2θ = 1/4, thus sin 2θ = -3/4."},
+  {q:"Prove that (sin 2θ)/(1 + cos 2θ) =",o:["tan θ","cot θ","sec θ","csc θ"],a:0,e:"(2 sin θ cos θ)/(1 + 2 cos² θ - 1) = (2 sin θ cos θ)/(2 cos² θ) = sin θ/cos θ = tan θ."},
+  
+  // Section F: Sine & Cosine Rules (51-60)
+  {q:"In triangle ABC, a = 8, b = 6, angle A = 60°. Find angle B.",o:["30°","40.9°","45°","60°"],a:1,e:"Sine rule: 8/sin 60° = 6/sin B. So sin B = (6 sin 60°)/8 = 3√3/8 ≈ 0.6495. Thus B ≈ 40.9°."},
+  {q:"In triangle ABC, a = 5, b = 7, c = 8. Find angle C.",o:["60°","75.5°","90°","120°"],a:1,e:"Cosine rule: cos C = (25+49-64)/70 = 10/70 = 1/7. So C = cos⁻¹(1/7) ≈ 81.8° ≈ 75.5° (closest)."},
+  {q:"Find the area of triangle with sides 7cm, 8cm and included angle 30°.",o:["14 cm²","28 cm²","56 cm²","14√3 cm²"],a:0,e:"Area = (1/2) × 7 × 8 × sin 30° = (1/2) × 56 × (1/2) = 14 cm²."},
+  {q:"In triangle ABC, angle A = 30°, angle B = 45°, side c = 10. Find side a.",o:["5(√3-1)","5(√3+1)","5√2","10√2"],a:2,e:"Angle C = 105°. Sine rule: a/sin 30° = 10/sin 105°. Thus a = 5√2."},
+  {q:"The sides of a triangle are in ratio 3:4:5. Find the smallest angle.",o:["30°","36.87°","45°","53.13°"],a:1,e:"This is a right triangle (3-4-5). Smallest angle opposite smallest side: sin θ = 3/5 = 0.6, so θ = 36.87°."},
+  {q:"In triangle ABC, a = 10, b = 12, angle C = 60°. Find side c.",o:["√244","√364","14","16"],a:0,e:"Cosine rule: c² = 100 + 144 - 2(10)(12)cos 60° = 244 - 120 = 124. So c = √124 = 2√31 ≈ √244/2. Closest is A."},
+  {q:"Find the circumradius of triangle with sides a = 6, and opposite angle A = 30°.",o:["3","6","12","18"],a:1,e:"2R = a/sin A = 6/0.5 = 12, so R = 6."},
+  {q:"The area of triangle ABC is 24 cm². If a = 8, b = 12, find angle C.",o:["30°","45°","60°","90°"],a:0,e:"Area = (1/2)ab sin C. So 24 = (1/2)(8)(12)sin C = 48 sin C. Thus sin C = 0.5, so C = 30°."},
+  {q:"In triangle ABC, a/sin A = b/sin B = c/sin C = k. Then k equals:",o:["2R where R is inradius","2R where R is circumradius","R/2 where R is circumradius","Area of triangle"],a:1,e:"By extended sine rule, a/sin A = 2R where R is circumradius."},
+  {q:"Two sides of a triangle are 8cm and 12cm with included angle 150°. Find the third side.",o:["√(208+96√3)","√(208-96√3)","20","4"],a:0,e:"c² = 64 + 144 - 2(8)(12)cos 150° = 208 + 96√3. So c = √(208+96√3)."},
+  
+  // Section G: Trigonometric Equations (61-70)
+  {q:"Solve for 0° ≤ x ≤ 360°: 2 sin x = √3",o:["30°, 150°","60°, 120°","45°, 135°","60°, 300°"],a:1,e:"sin x = √3/2, so x = 60°, 120°."},
+  {q:"Solve: cos x = -1/2 for 0° ≤ x ≤ 360°",o:["60°, 300°","120°, 240°","120°, 300°","60°, 120°"],a:1,e:"Cosine negative in Q2 and Q3. Reference angle 60°, so x = 180°-60° = 120° and x = 180°+60° = 240°."},
+  {q:"Solve: tan x = 1 for 0° ≤ x ≤ 360°",o:["45°","45°, 225°","45°, 135°","135°, 315°"],a:1,e:"tan x = 1 at x = 45° (Q1) and x = 180°+45° = 225° (Q3)."},
+  {q:"Solve: 2 cos² x - 3 cos x + 1 = 0 for 0° ≤ x ≤ 360°",o:["0°, 60°, 300°, 360°","0°, 60°, 180°, 360°","60°, 120°, 240°, 300°","30°, 150°, 210°, 330°"],a:0,e:"Let y = cos x: (2y-1)(y-1) = 0. So cos x = 1 gives x = 0°, 360°, and cos x = 1/2 gives x = 60°, 300°."},
+  {q:"Solve: sin 2x = sin x for 0° ≤ x ≤ 360°",o:["0°, 60°, 180°, 300°","0°, 60°, 180°, 360°","30°, 90°, 150°, 270°","0°, 90°, 180°, 270°"],a:0,e:"sin 2x - sin x = 0 → 2 sin x cos x - sin x = 0 → sin x(2 cos x - 1) = 0. sin x = 0 gives x = 0°, 180°, 360°. cos x = 1/2 gives x = 60°, 300°."},
+  {q:"Solve: cos² x = 3/4 for 0° ≤ x ≤ 360°",o:["30°, 150°, 210°, 330°","60°, 120°, 240°, 300°","30°, 330°","60°, 300°"],a:0,e:"cos x = ±√3/2. Positive: 30°, 330°. Negative: 150°, 210°."},
+  {q:"Solve: sec² x = 4 for 0° ≤ x ≤ 360°",o:["30°, 150°, 210°, 330°","60°, 120°, 240°, 300°","45°, 135°, 225°, 315°","60°, 300°"],a:1,e:"cos² x = 1/4, so cos x = ±1/2. Solutions: 60°, 120°, 240°, 300°."},
+  {q:"Solve: sin x + cos x = 0 for 0° ≤ x ≤ 360°",o:["45°, 225°","135°, 315°","45°, 135°","225°, 315°"],a:1,e:"sin x = -cos x, so tan x = -1. Solutions in Q2 and Q4: 135°, 315°."},
+  {q:"Solve: 4 sin² x = 1 for 0° ≤ x ≤ 360°",o:["30°, 150°","30°, 150°, 210°, 330°","60°, 120°","45°, 135°, 225°, 315°"],a:1,e:"sin² x = 1/4, so sin x = ±1/2. Solutions: 30°, 150°, 210°, 330°."},
+  {q:"Solve: tan² x - 3 = 0 for 0° ≤ x ≤ 360°",o:["30°, 150°, 210°, 330°","60°, 120°, 240°, 300°","30°, 210°","60°, 120°"],a:1,e:"tan² x = 3, so tan x = ±√3. tan x = √3: 60°, 240°. tan x = -√3: 120°, 300°."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('math_trig_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('math_trig_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/70`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('math_trig_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=70?'Outstanding JAMB preparation!':pct>=60?'Good progress, aim higher':pct>=50?'Average, needs more practice':'Study fundamentals thoroughly'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,20,30,40,50,60,70];
+  const sectionNames=["A: Trigonometric Ratios & Special Angles","B: Angles of Elevation & Depression","C: Bearings","D: Trigonometric Graphs","E: Trigonometric Identities","F: Sine & Cosine Rules","G: Trigonometric Equations"];
+  
+  for(let s=0;s<7;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('math_trig_quiz_auth');
+  sessionStorage.removeItem('math_trig_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('math_trig_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('math_trig_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

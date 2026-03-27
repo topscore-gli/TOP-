@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Mathematics - Mensuration</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+    .math{
+      font-weight:900;color:var(--accent-secondary)
+    }
+    .label{
+      fill:var(--text-primary);
+      font-size:11px;
+      font-weight:700
+    }
+    .axis{
+      stroke:var(--text-primary);
+      stroke-width:2
+    }
+    .line-soft{
+      stroke:var(--line);
+      stroke-width:3;
+      fill:none
+    }
+    .fill-soft{fill:rgba(29,185,84,.22)}
+    .fill-soft-2{fill:rgba(78,205,196,.22)}
+    .fill-soft-3{fill:rgba(255,107,107,.22)}
+    .mark{fill:var(--accent-secondary)}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">MATHEMATICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📦 Mensuration</h1>
+        <p>JAMB Mathematics • perimeter • area • surface area • volume • arcs • sectors • chords • earth geometry</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Introduction to Chapter 12</h2>
+        <p>This chapter explains how to calculate <strong>lengths, areas, surface areas, volumes, arc lengths, chord lengths, and distances on the earth’s surface</strong>.</p>
+        <p>Mensuration is one of the easiest topics to score in if you know the right formula, substitute carefully, and keep your units consistent.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Always identify the figure first before choosing a formula</li>
+            <li>Draw a sketch when one is not provided</li>
+            <li>Convert units before calculating</li>
+            <li>Composite figures should be broken into simpler shapes</li>
+            <li>For earth geometry, use <span class="math">R = 6400 km</span> unless another radius is given</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Mensuration is mostly formula application. The hard part is not the arithmetic — it is choosing the correct formula and using the right dimensions.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>📘 Complete Formula Summary</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Figure</th>
+              <th>Measure</th>
+              <th>Formula</th>
+            </tr>
+            <tr>
+              <td>Rectangle</td>
+              <td>Area</td>
+              <td>A = l × b</td>
+            </tr>
+            <tr>
+              <td>Rectangle</td>
+              <td>Perimeter</td>
+              <td>P = 2(l + b)</td>
+            </tr>
+            <tr>
+              <td>Square</td>
+              <td>Area</td>
+              <td>A = a²</td>
+            </tr>
+            <tr>
+              <td>Square</td>
+              <td>Perimeter</td>
+              <td>P = 4a</td>
+            </tr>
+            <tr>
+              <td>Triangle</td>
+              <td>Area</td>
+              <td>A = 1/2 × b × h</td>
+            </tr>
+            <tr>
+              <td>Triangle</td>
+              <td>Area (Heron)</td>
+              <td>A = √[s(s-a)(s-b)(s-c)]</td>
+            </tr>
+            <tr>
+              <td>Triangle</td>
+              <td>Perimeter</td>
+              <td>P = a + b + c</td>
+            </tr>
+            <tr>
+              <td>Parallelogram</td>
+              <td>Area</td>
+              <td>A = b × h</td>
+            </tr>
+            <tr>
+              <td>Rhombus</td>
+              <td>Area</td>
+              <td>A = 1/2 × d₁ × d₂</td>
+            </tr>
+            <tr>
+              <td>Trapezium</td>
+              <td>Area</td>
+              <td>A = 1/2(a + b) × h</td>
+            </tr>
+            <tr>
+              <td>Circle</td>
+              <td>Area</td>
+              <td>A = πr²</td>
+            </tr>
+            <tr>
+              <td>Circle</td>
+              <td>Circumference</td>
+              <td>C = 2πr = πd</td>
+            </tr>
+            <tr>
+              <td>Sector</td>
+              <td>Arc Length</td>
+              <td>L = (θ/360°) × 2πr</td>
+            </tr>
+            <tr>
+              <td>Sector</td>
+              <td>Area</td>
+              <td>A = (θ/360°) × πr²</td>
+            </tr>
+            <tr>
+              <td>Segment</td>
+              <td>Area</td>
+              <td>Segment = Sector - Triangle</td>
+            </tr>
+            <tr>
+              <td>Chord</td>
+              <td>Length</td>
+              <td>c = 2r sin(θ/2)</td>
+            </tr>
+            <tr>
+              <td>Cuboid</td>
+              <td>Volume</td>
+              <td>V = l × b × h</td>
+            </tr>
+            <tr>
+              <td>Cuboid</td>
+              <td>Surface Area</td>
+              <td>SA = 2(lb + bh + lh)</td>
+            </tr>
+            <tr>
+              <td>Cylinder</td>
+              <td>Volume</td>
+              <td>V = πr²h</td>
+            </tr>
+            <tr>
+              <td>Cylinder</td>
+              <td>Curved SA</td>
+              <td>CSA = 2πrh</td>
+            </tr>
+            <tr>
+              <td>Cylinder</td>
+              <td>Total SA</td>
+              <td>TSA = 2πr(r + h)</td>
+            </tr>
+            <tr>
+              <td>Cone</td>
+              <td>Volume</td>
+              <td>V = 1/3 πr²h</td>
+            </tr>
+            <tr>
+              <td>Cone</td>
+              <td>Curved SA</td>
+              <td>CSA = πrl</td>
+            </tr>
+            <tr>
+              <td>Cone</td>
+              <td>Total SA</td>
+              <td>TSA = πr(r + l)</td>
+            </tr>
+            <tr>
+              <td>Sphere</td>
+              <td>Volume</td>
+              <td>V = 4/3 πr³</td>
+            </tr>
+            <tr>
+              <td>Sphere</td>
+              <td>Surface Area</td>
+              <td>SA = 4πr²</td>
+            </tr>
+            <tr>
+              <td>Pyramid</td>
+              <td>Volume</td>
+              <td>V = 1/3 × Base Area × h</td>
+            </tr>
+            <tr>
+              <td>Prism</td>
+              <td>Volume</td>
+              <td>V = Base Area × h</td>
+            </tr>
+            <tr>
+              <td>Earth</td>
+              <td>Arc Length</td>
+              <td>Arc = (θ/360°) × 2πR</td>
+            </tr>
+            <tr>
+              <td>Earth</td>
+              <td>Distance on latitude</td>
+              <td>D = (θ/360°) × 2πR cos φ</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe left/right to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Plane Figures (2D Shapes)</h2>
+
+        <h3>Rectangles and Squares</h3>
+        <div class="example-box">
+          <div class="title">Example 1: Rectangle</div>
+          <p>A rectangular field is <span class="math">80 m</span> long and <span class="math">60 m</span> wide. Find its area and perimeter.</p>
+          <p><strong>Area:</strong> <span class="math">A = l × b = 80 × 60 = 4800 m²</span></p>
+          <p><strong>Perimeter:</strong> <span class="math">P = 2(80 + 60) = 2(140) = 280 m</span></p>
+          <div class="answer">Answer: Area = 4800 m², Perimeter = 280 m</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Square from its Diagonal</div>
+          <p>The diagonal of a square is <span class="math">10√2 cm</span>. Find its area.</p>
+          <p>For a square, diagonal = <span class="math">a√2</span></p>
+          <p><span class="math">a√2 = 10√2</span> so <span class="math">a = 10 cm</span></p>
+          <p><span class="math">Area = a² = 10² = 100 cm²</span></p>
+          <div class="answer">Answer: 100 cm²</div>
+        </div>
+
+        <h3>Triangles</h3>
+        <div class="formula-box">
+          <div class="title">Triangle formulas</div>
+          <div class="line"><span class="math">A = 1/2 × base × height</span></div>
+          <div class="line"><span class="math">A = √[s(s-a)(s-b)(s-c)]</span> where <span class="math">s = (a+b+c)/2</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: Heron’s Formula</div>
+          <p>Find the area of a triangle with sides <span class="math">13 cm</span>, <span class="math">14 cm</span>, and <span class="math">15 cm</span>.</p>
+          <p><span class="math">s = (13 + 14 + 15)/2 = 21</span></p>
+          <p><span class="math">A = √[21(21-13)(21-14)(21-15)]</span></p>
+          <p><span class="math">= √[21 × 8 × 7 × 6] = √7056 = 84 cm²</span></p>
+          <div class="answer">Answer: 84 cm²</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 4: Basic Triangle Area</div>
+          <p>Base = <span class="math">12 cm</span>, height = <span class="math">8 cm</span>.</p>
+          <p><span class="math">A = 1/2 × 12 × 8 = 48 cm²</span></p>
+          <div class="answer">Answer: 48 cm²</div>
+        </div>
+
+        <h3>Quadrilaterals</h3>
+        <div class="example-box">
+          <div class="title">Example 5: Rhombus</div>
+          <p>Diagonals are <span class="math">16 cm</span> and <span class="math">12 cm</span>. Find the area.</p>
+          <p><span class="math">A = 1/2 × 16 × 12 = 96 cm²</span></p>
+          <div class="answer">Answer: 96 cm²</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 6: Trapezium</div>
+          <p>Parallel sides are <span class="math">10 cm</span> and <span class="math">6 cm</span>, height is <span class="math">4 cm</span>.</p>
+          <p><span class="math">A = 1/2(10 + 6) × 4</span></p>
+          <p><span class="math">= 1/2 × 16 × 4 = 32 cm²</span></p>
+          <div class="answer">Answer: 32 cm²</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Circles, Arcs, Chords and Sectors</h2>
+
+        <div class="highlight-box">
+          <p><strong>Key definitions:</strong> Arc = part of circumference, chord = straight line joining two points on a circle, sector = “pizza slice”, segment = region between chord and arc.</p>
+        </div>
+
+        <h3>Arc Length and Sector Area</h3>
+        <div class="example-box">
+          <div class="title">Example 7: Arc Length</div>
+          <p>Find the arc length subtending <span class="math">60°</span> at the center of a circle of radius <span class="math">21 cm</span>. Use <span class="math">π = 22/7</span>.</p>
+          <p><span class="math">Arc = (θ/360°) × 2πr</span></p>
+          <p><span class="math">= 60/360 × 2 × 22/7 × 21</span></p>
+          <p><span class="math">= 1/6 × 132 = 22 cm</span></p>
+          <div class="answer">Answer: 22 cm</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 8: Sector Area</div>
+          <p>Find the area of a sector of radius <span class="math">14 cm</span> and angle <span class="math">90°</span>.</p>
+          <p><span class="math">A = 90/360 × 22/7 × 14²</span></p>
+          <p><span class="math">= 1/4 × 22/7 × 196</span></p>
+          <p><span class="math">= 1/4 × 616 = 154 cm²</span></p>
+          <div class="answer">Answer: 154 cm²</div>
+        </div>
+
+        <h3>Chord Length and Segment Area</h3>
+        <div class="example-box">
+          <div class="title">Example 9: Chord Length</div>
+          <p>A chord subtends <span class="math">120°</span> at the center of a circle of radius <span class="math">10 cm</span>.</p>
+          <p><span class="math">c = 2r sin(θ/2)</span></p>
+          <p><span class="math">= 2 × 10 × sin(60°)</span></p>
+          <p><span class="math">= 20 × √3/2 = 10√3 ≈ 17.32 cm</span></p>
+          <div class="answer">Answer: 10√3 cm or about 17.32 cm</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 10: Segment Area</div>
+          <p>A minor segment is formed by a chord subtending <span class="math">60°</span> in a circle of radius <span class="math">42 cm</span>.</p>
+          <p><strong>Sector area:</strong></p>
+          <p><span class="math">= 60/360 × 22/7 × 42² = 924 cm²</span></p>
+          <p><strong>Triangle area:</strong></p>
+          <p><span class="math">= 1/2 × 42² × sin(60°)</span></p>
+          <p><span class="math">= 1/2 × 1764 × √3/2 ≈ 763.83 cm²</span></p>
+          <p><strong>Segment area:</strong></p>
+          <p><span class="math">924 - 763.83 = 160.17 cm²</span></p>
+          <div class="answer">Answer: ≈ 160.17 cm²</div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Sector and chord idea</div>
+          <svg viewBox="0 0 340 230" aria-label="Sector and chord diagram">
+            <circle cx="170" cy="115" r="85" fill="none" stroke="var(--line)" stroke-width="3"/>
+            <line x1="170" y1="115" x2="240" y2="70" class="line-soft"/>
+            <line x1="170" y1="115" x2="250" y2="145" class="line-soft"/>
+            <line x1="240" y1="70" x2="250" y2="145" class="line-soft"/>
+            <path d="M170 115 L240 70 A85 85 0 0 1 250 145 Z" class="fill-soft"/>
+            <text x="185" y="108" class="label">θ</text>
+            <text x="232" y="112" class="label">Chord</text>
+            <text x="188" y="62" class="label">Arc</text>
+          </svg>
+          <div class="diagram-caption">Sector formulas use the fraction θ/360 of the whole circle.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Solid Geometry (3D Shapes)</h2>
+
+        <h3>Cuboids and Cylinders</h3>
+        <div class="example-box">
+          <div class="title">Example 11: Cuboid</div>
+          <p>A cuboid has dimensions <span class="math">8 cm × 6 cm × 4 cm</span>. Find its volume and surface area.</p>
+          <p><strong>Volume:</strong> <span class="math">V = 8 × 6 × 4 = 192 cm³</span></p>
+          <p><strong>Surface area:</strong></p>
+          <p><span class="math">SA = 2(8×6 + 6×4 + 8×4)</span></p>
+          <p><span class="math">= 2(48 + 24 + 32) = 2(104) = 208 cm²</span></p>
+          <div class="answer">Answer: Volume = 192 cm³, Surface Area = 208 cm²</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 12: Cylinder</div>
+          <p>Radius = <span class="math">7 cm</span>, height = <span class="math">10 cm</span>. Find the volume and total surface area.</p>
+          <p><strong>Volume:</strong></p>
+          <p><span class="math">V = 22/7 × 7² × 10 = 1540 cm³</span></p>
+          <p><strong>Curved surface area:</strong></p>
+          <p><span class="math">CSA = 2 × 22/7 × 7 × 10 = 440 cm²</span></p>
+          <p><strong>Total surface area:</strong></p>
+          <p><span class="math">TSA = 2 × 22/7 × 7 × (7 + 10) = 44 × 17 = 748 cm²</span></p>
+          <div class="answer">Answer: Volume = 1540 cm³, TSA = 748 cm²</div>
+        </div>
+
+        <h3>Cones and Spheres</h3>
+        <div class="example-box">
+          <div class="title">Example 13: Cone</div>
+          <p>Base radius = <span class="math">6 cm</span>, height = <span class="math">8 cm</span>. Find its volume and curved surface area.</p>
+          <p><strong>Slant height:</strong></p>
+          <p><span class="math">l = √(r² + h²) = √(36 + 64) = 10 cm</span></p>
+          <p><strong>Volume:</strong></p>
+          <p><span class="math">V = 1/3 × 22/7 × 6² × 8 = 6336/21 ≈ 301.71 cm³</span></p>
+          <p><strong>Curved surface area:</strong></p>
+          <p><span class="math">CSA = 22/7 × 6 × 10 = 1320/7 ≈ 188.57 cm²</span></p>
+          <div class="answer">Answer: Volume ≈ 301.71 cm³, CSA ≈ 188.57 cm²</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 14: Sphere</div>
+          <p>Radius = <span class="math">21 cm</span>. Find its volume and surface area.</p>
+          <p><strong>Volume:</strong></p>
+          <p><span class="math">V = 4/3 × 22/7 × 21³ = 38808 cm³</span></p>
+          <p><strong>Surface area:</strong></p>
+          <p><span class="math">SA = 4 × 22/7 × 21² = 5544 cm²</span></p>
+          <div class="answer">Answer: Volume = 38808 cm³, Surface Area = 5544 cm²</div>
+        </div>
+
+        <h3>Composite Figures</h3>
+        <div class="example-box">
+          <div class="title">Example 15: Cylinder with a Hemisphere on Top</div>
+          <p>A cylinder of radius <span class="math">7 cm</span> and height <span class="math">10 cm</span> has a hemisphere on top. Find its total surface area.</p>
+          <p><strong>Cylinder curved area:</strong> <span class="math">2 × 22/7 × 7 × 10 = 440 cm²</span></p>
+          <p><strong>Base area:</strong> <span class="math">22/7 × 7² = 154 cm²</span></p>
+          <p><strong>Hemisphere curved area:</strong> <span class="math">2 × 22/7 × 7² = 308 cm²</span></p>
+          <p><strong>Total:</strong> <span class="math">440 + 154 + 308 = 902 cm²</span></p>
+          <div class="answer">Answer: 902 cm²</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Earth as a Sphere</h2>
+
+        <div class="jamb-alert">
+          <h4>Key constants</h4>
+          <ul>
+            <li>Radius of Earth: <span class="math">R = 6400 km</span> unless stated otherwise</li>
+            <li>Great circle passes through the center of the Earth</li>
+            <li>Latitude runs from 0° to 90° North or South</li>
+            <li>Longitude runs from 0° to 180° East or West</li>
+          </ul>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Earth geometry formulas</div>
+          <div class="line"><span class="math">Along a great circle: D = (θ/360°) × 2πR</span></div>
+          <div class="line"><span class="math">Along a parallel of latitude: D = (θ/360°) × 2πR cos φ</span></div>
+          <div class="line"><span class="math">Radius of a parallel = R cos φ</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 16: Two Towns on the Same Longitude</div>
+          <p>Towns A and B are at <span class="math">30°N</span> and <span class="math">20°S</span> respectively on the same longitude. Find the distance between them. Use <span class="math">R = 6400 km</span>.</p>
+          <p>Angular difference = <span class="math">30° + 20° = 50°</span></p>
+          <p><span class="math">D = 50/360 × 2 × 22/7 × 6400</span></p>
+          <p><span class="math">≈ 5587.3 km</span></p>
+          <div class="answer">Answer: ≈ 5587.3 km</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 17: Two Points on the Same Latitude</div>
+          <p>Points P and Q lie on latitude <span class="math">60°N</span> with longitudes <span class="math">20°E</span> and <span class="math">40°E</span>.</p>
+          <p>Longitude difference = <span class="math">20°</span></p>
+          <p>Radius of parallel = <span class="math">6400 × cos 60° = 6400 × 0.5 = 3200 km</span></p>
+          <p><span class="math">D = 20/360 × 2 × 22/7 × 3200</span></p>
+          <p><span class="math">≈ 1117.46 km</span></p>
+          <div class="answer">Answer: ≈ 1117.46 km</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 18: Shortest Distance on the Equator</div>
+          <p>Two points on the equator are separated by <span class="math">90°</span> in longitude.</p>
+          <p><span class="math">D = 90/360 × 2 × 22/7 × 6400</span></p>
+          <p><span class="math">≈ 10057.14 km</span></p>
+          <div class="answer">Answer: ≈ 10057.14 km</div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Earth geometry idea</div>
+          <svg viewBox="0 0 340 220" aria-label="Earth geometry diagram">
+            <circle cx="170" cy="110" r="80" fill="none" stroke="var(--line)" stroke-width="3"/>
+            <line x1="170" y1="30" x2="170" y2="190" class="line-soft"/>
+            <line x1="90" y1="110" x2="250" y2="110" class="line-soft"/>
+            <ellipse cx="170" cy="75" rx="55" ry="18" fill="none" stroke="var(--accent-tertiary)" stroke-width="2"/>
+            <text x="177" y="55" class="label">Latitude φ</text>
+            <text x="178" y="120" class="label">Equator</text>
+            <text x="177" y="90" class="label">R cosφ</text>
+          </svg>
+          <div class="diagram-caption">Distances along a latitude use the smaller radius <span class="math">R cos φ</span>.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Exam Tips and Practice</h2>
+
+        <div class="jamb-alert">
+          <h4>JAMB Mensuration Strategy</h4>
+          <ul>
+            <li>Always draw a sketch if none is provided</li>
+            <li>Use <span class="math">π = 22/7</span> when the radius is divisible by 7; otherwise use <span class="math">π = 3.142</span> if needed</li>
+            <li>Convert all units to the same unit before solving</li>
+            <li>For composite figures, separate them into familiar shapes</li>
+            <li>For Earth questions, start by deciding whether it is a great-circle path or a latitude path</li>
+          </ul>
+        </div>
+
+        <div class="quick-facts">
+          <ul>
+            <li><span class="math">√2 ≈ 1.414</span></li>
+            <li><span class="math">√3 ≈ 1.732</span></li>
+            <li><span class="math">sin 30° = 0.5</span></li>
+            <li><span class="math">cos 30° = √3/2</span></li>
+            <li><span class="math">sin 45° = cos 45° = √2/2</span></li>
+            <li><span class="math">sin 60° = √3/2</span>, <span class="math">cos 60° = 0.5</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Practice Problems</h2>
+
+        <div class="example-box">
+          <div class="title">Q1: A sector has area 154 cm² and radius 14 cm. Find the angle.</div>
+          <p><span class="math">A = θ/360 × πr²</span></p>
+          <p><span class="math">154 = θ/360 × 22/7 × 14²</span></p>
+          <p><span class="math">154 = θ/360 × 616</span></p>
+          <p><span class="math">θ = 90°</span></p>
+          <div class="answer">Answer: 90°</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q2: A cone has volume 1232 cm³ and base radius 7 cm. Find the height.</div>
+          <p><span class="math">1232 = 1/3 × 22/7 × 7² × h</span></p>
+          <p><span class="math">1232 = 154/3 × h</span></p>
+          <p><span class="math">h = 24 cm</span></p>
+          <div class="answer">Answer: 24 cm</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q3: Two places lie on latitude 30°S with longitudes 15°E and 45°E. Find the distance between them.</div>
+          <p>Longitude difference = <span class="math">30°</span></p>
+          <p><span class="math">D = 30/360 × 2πR cos 30°</span></p>
+          <p>Using <span class="math">R = 6400 km</span> and <span class="math">cos 30° = √3/2</span>,</p>
+          <p><span class="math">D ≈ 3351 km</span></p>
+          <div class="answer">Answer: ≈ 3351 km</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q4: A tank measures 2 m × 1.5 m × 1 m and is full of water. How many liters does it contain?</div>
+          <p><span class="math">Volume = 2 × 1.5 × 1 = 3 m³</span></p>
+          <p><span class="math">1 m³ = 1000 L</span></p>
+          <p><span class="math">3 m³ = 3000 L</span></p>
+          <div class="answer">Answer: 3000 liters</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Pre-Exam Checklist</h2>
+
+        <div class="memory-tip">
+          <strong>🧠 Checklist</strong>
+          <p>Memorize all 2D area and perimeter formulas. Revise circle measures like arc, sector, segment, and chord. Learn 3D volume and surface area formulas well. Practise breaking composite solids into smaller shapes. Revise Earth geometry formulas for great circles and parallels. Be confident with unit conversion. Also know when to use <span class="math">22/7</span> and when to use <span class="math">3.142</span> for π.</p>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Connects to:</strong> Euclidean Geometry and Trigonometry.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Final Revision Note</h2>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete guide to Mensuration with formulas, worked examples, Earth geometry, and exam strategy. Once you identify the correct shape and formula, most mensuration questions become straightforward.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise 2D shapes, circles, 3D solids, composite figures, and Earth distance questions today.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>
