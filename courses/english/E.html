@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TopScore Mobile App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    :root {
+      --background: #1e1e2f;
+      --surface: #242438;
+      --shadow-in: #171723;
+      --shadow-out: #2a2a40;
+      --text: #ffffff;
+      --text-muted: #b5b5c8;
+      --accent: #1db954;
+      --danger: #ff6b6b;
+      --border-radius: 18px;
+    }
+
+    body.light {
+      --background: #e0e0e0;
+      --surface: #ececec;
+      --shadow-in: #bebebe;
+      --shadow-out: #ffffff;
+      --text: #2e2e2e;
+      --text-muted: #666666;
+      --accent: #1db954;
+      --danger: #ff6b6b;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 420px;
+      height: 780px;
+      background: var(--background);
+      border-radius: 28px;
+      box-shadow: 12px 12px 24px var(--shadow-in), -12px -12px 24px var(--shadow-out);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .app-scroll {
+      height: 100%;
+      overflow-y: auto;
+      padding-bottom: 90px;
+      scroll-behavior: smooth;
+    }
+
+    .neumorphic {
+      background: var(--background);
+      box-shadow: 6px 6px 12px var(--shadow-in), -6px -6px 12px var(--shadow-out);
+      border-radius: var(--border-radius);
+    }
+
+    .neumorphic-inset {
+      background: var(--background);
+      box-shadow: inset 4px 4px 8px var(--shadow-in), inset -4px -4px 8px var(--shadow-out);
+      border-radius: var(--border-radius);
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 50%;
+      background: var(--background);
+      color: var(--text);
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.96);
+      box-shadow: inset 4px 4px 8px var(--shadow-in), inset -4px -4px 8px var(--shadow-out);
+    }
+
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 16px;
+      background: var(--background);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .profile-upload {
+      position: relative;
+    }
+
+    .profile-upload input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .welcome {
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .welcome h2 {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .welcome p {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .right-icons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .section {
+      padding: 0 16px 16px;
+    }
+
+    .hero-slider {
+      margin: 0 16px 16px;
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+      border-radius: 20px;
+      box-shadow: 6px 6px 12px var(--shadow-in), -6px -6px 12px var(--shadow-out);
+    }
+
+    .slides {
+      display: flex;
+      height: 100%;
+      width: 100%;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .slide-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0.12));
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+    }
+
+    .slide-overlay h3 {
+      font-size: 18px;
+      color: white;
+    }
+
+    .search-bar {
+      margin: 0 16px 16px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-bar input {
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      width: 100%;
+      font-size: 15px;
+    }
+
+    .search-bar input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .card {
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .card-header h2 {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .text-btn {
+      border: none;
+      background: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .category-item {
+      text-align: center;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .category-icon {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 8px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out);
+      background: var(--background);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .category-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .category-item p {
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .dropdown {
+      display: none;
+      margin-top: 14px;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .dropdown.active {
+      display: block;
+    }
+
+    .topic-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .topic-item {
+      display: flex;
+      gap: 12px;
+      padding: 10px;
+      border-radius: 14px;
+      text-decoration: none;
+      color: var(--text);
+      box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out);
+    }
+
+    .topic-item img {
+      width: 110px;
+      height: 82px;
+      object-fit: cover;
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+
+    .topic-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .topic-content h3 {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .topic-content p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .action-btn {
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 3px 3px 6px var(--shadow-in);
+    }
+
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px 14px 14px;
+      background: var(--background);
+      display: flex;
+      justify-content: space-around;
+      align-items: end;
+      box-shadow: 0 -6px 14px rgba(0,0,0,0.12);
+    }
+
+    .nav-item {
+      text-align: center;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .nav-item .icon-btn {
+      margin: 0 auto 4px;
+    }
+
+    .nav-item p {
+      font-size: 11px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .nav-item.active {
+      color: var(--text);
+    }
+
+    .nav-item.active p {
+      opacity: 1;
+    }
+
+    .nav-item.center .icon-btn {
+      width: 52px;
+      height: 52px;
+      font-size: 24px;
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 0 18px rgba(29,185,84,0.45), 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 0;
+      }
+
+      .app-shell {
+        max-width: 100%;
+        height: 100vh;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body class="dark">
+  <div class="app-shell">
+    <div class="app-scroll">
+      <header class="top-bar">
+        <div class="profile-upload">
+          <button class="icon-btn" aria-label="Upload profile image">📷</button>
+          <input type="file" accept="image/*" id="profile-upload" />
+        </div>
+
+        <div class="welcome">
+          <h2>TopScore</h2>
+          <p>ENGLISH</p>
+        </div>
+
+        <div class="right-icons">
+          <button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">🌙</button>
+          <button class="icon-btn" aria-label="Launch">🚀</button>
+        </div>
+      </header>
+
+      <section class="hero-slider" aria-label="Featured content slider">
+        <div class="slides" id="slides">
+          <div class="slide">
+            <img src="./img/M1.png" alt="Featured learning banner 1">
+            <div class="slide-overlay"><h3>Boost your exam confidence</h3></div>
+          </div>
+          <div class="slide">
+            <img src="./img/M2.png" alt="Featured learning banner 2">
+            <div class="slide-overlay"><h3>Daily smart practice</h3></div>
+          </div>
+          <div class="slide">
+            <img src="./img/M3.png" alt="Featured learning banner 3">
+            <div class="slide-overlay"><h3>Track your TopScore progress</h3></div>
+          </div>
+          <div class="slide">
+            <img src="./img/M4.png" alt="Featured learning banner 4">
+            <div class="slide-overlay"><h3>Study anywhere, anytime</h3></div>
+          </div>
+          <div class="slide">
+            <img src="./img/Mi.png" alt="Featured learning banner 5">
+            <div class="slide-overlay"><h3>Learn by topics and quizzes</h3></div>
+          </div>
+        </div>
+      </section>
+
+      
+
+      <section class="section">
+
+        <div class="card neumorphic">
+          <div class="card-header">
+            <h2>Topics</h2>
+            <button class="text-btn">See More</button>
+          </div>
+
+          <div class="topic-list">
+            
+            <a class="topic-item" href="#">
+              <img src="./img/E1.png" alt="topic thumbnail">
+              <div class="topic-content">
+                <h3>Comprehension</h3>
+                <p>Read a passage and answer multiple-choice questions on main ideas, inferences, vocabulary, and author's purpose.</p>
+                <button class="action-btn">Study</button>
+              </div>
+            </a>
+
+            <a class="topic-item" href="#">
+              <img src="./img/E2.png" alt="topic thumbnail">
+              <div class="topic-content">
+                <h3>Synonyms</h3>
+                <p>Identify words with similar meanings from multiple-choice options. Tests vocabulary breadth, contextual usage, and precise semantic recognition in or outside passages.</p>
+                <button class="action-btn">Study</button>
+              </div>
+            </a>
+
+            <a class="topic-item" href="#">
+              <img src="./img/E3.png" alt="topic thumbnail">
+              <div class="topic-content">
+                <h3>Antonyms</h3>
+                <p>Identify words with opposite meanings from multiple-choice options. Tests vocabulary depth, contextual understanding, and ability to recognize contrasting semantic relationships.</p>
+                <button class="action-btn">Study</button>
+              </div>
+            </a>
+
+            <a class="topic-item" href="#">
+              <img src="./img/E4.png" alt="topic thumbnail">
+              <div class="topic-content">
+                <h3>Clause</h3>
+                <p>Identify and analyze sentence components containing a subject and verb. Tests recognition of main (independent) vs. subordinate (dependent) clauses, and their functions in sentence structure.</p>
+                <button class="action-btn">Study</button>
+              </div>
+            </a>
+
+            <a class="topic-item" href="#">
+              <img src="./img/E5.png" alt="topic thumbnail">
+              <div class="topic-content">
+                <h3>Word Classes And Concord</h3>
+                <p>Identify parts of speech—nouns, verbs, adjectives, adverbs, pronouns, prepositions, conjunctions, and interjections & Ensure grammatical agreement between sentence elements.</p>
+                <button class="action-btn">Study</button>
+              </div>
+            </a>
+
+            <a class="topic-item" href="#">
+              <img src="./img/E6.png" alt="topic thumbnail">
+              <div class="topic-content">
+                <h3>Grammar</h3>
+                <p>Apply rules governing sentence structure, word forms, and usage. Tests tenses, parts of speech, clauses, concord, voice, mood, and correct syntactic patterns in standard English.</p>
+                <button class="action-btn">Study</button>
+              </div>
+            </a>
+
+            <a class="topic-item" href="#">
+              <img src="./img/E7.png" alt="topic thumbnail">
+              <div class="topic-content">
+                <h3>Lexis and Structure</h3>
+                <p>Combined, they assess language proficiency through multiple-choice questions on word choice and grammatical accuracy.</p>
+                <button class="action-btn">Study</button>
+              </div>
+            </a>
+
+            <a class="topic-item" href="#">
+              <img src="./img/E8.png" alt="topic thumbnail">
+              <div class="topic-content">
+                <h3>Vowel Sounds</h3>
+                <p>Identify pure vowels (monophthongs) and gliding vowels (diphthongs) in words. Tests recognition of short vs. long vowel distinctions and correct pronunciation patterns in English.</p>
+                <button class="action-btn">Study</button>
+              </div>
+            </a>
+
+            <a class="topic-item" href="#">
+              <img src="./img/E9.png" alt="topic thumbnail">
+              <div class="topic-content">
+                <h3>Consonant Sounds</h3>
+                <p>Identify speech sounds produced with airflow obstruction. Tests recognition of voiced vs. voiceless pairs, plosives, fricatives, nasals, and their correct articulation in words.</p>
+                <button class="action-btn">Study</button>
+              </div>
+            </a>
+
+            <a class="topic-item" href="#">
+              <img src="./img/E10.png" alt="topic thumbnail">
+              <div class="topic-content">
+                <h3>Rhymes & Homophones</h3>
+                <p>Both assess phonological awareness and precise sound-meaning relationships in English.</p>
+                <button class="action-btn">Study</button>
+              </div>
+            </a>
+
+            <a class="topic-item" href="#">
+              <img src="./img/E11.png" alt="topic thumbnail">
+              <div class="topic-content">
+                <h3>Word Stress</h3>
+                <p>Identify the syllable with maximum emphasis in a word. Tests recognition of primary stress placement in mono-, di-, and polysyllabic words, distinguishing meaning and part of speech (e.g., RE-cord  vs. re-CORD ).</p>
+                <button class="action-btn">Study</button>
+              </div>
+            </a>
+
+            <a class="topic-item" href="#">
+              <img src="./img/E12.png" alt="topic thumbnail">
+              <div class="topic-content">
+                <h3>Emphatic Stress</h3>
+                <p>Identify the word given extra prominence in a sentence to highlight contrast, correct information, or strong emotion. Tests recognition of how stress shifts meaning by emphasizing specific words over others.</p>
+                <button class="action-btn">Study</button>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <div class="nav-item active">
+        <button class="icon-btn" aria-label="Chat">💬</button>
+        <p>Chat</p>
+      </div>
+
+      <div class="nav-item center">
+        <button class="icon-btn" aria-label="Favorite">⭐</button>
+        <p>Favorite</p>
+      </div>
+
+      <div class="nav-item">
+        <button class="icon-btn" aria-label="Library">📚</button>
+        <p>Library</p>
+      </div>
+    </nav>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const slides = document.getElementById('slides');
+    const slideItems = document.querySelectorAll('.slide');
+    const profileUpload = document.getElementById('profile-upload');
+    const viewAllBtn = document.getElementById('view-all');
+    const dropdown = document.getElementById('dropdown');
+    const navItems = document.querySelectorAll('.nav-item');
+
+    function setTheme(theme) {
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = body.classList.contains('light') ? 'dark' : 'light';
+      setTheme(newTheme);
+    });
+
+    profileUpload.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        console.log('Selected profile image:', file.name);
+      }
+    });
+
+    let slideIndex = 0;
+    function slideNext() {
+      slideIndex = (slideIndex + 1) % slideItems.length;
+      slides.style.transform = `translateX(-${slideIndex * 100}%)`;
+    }
+    setInterval(slideNext, 4000);
+
+    viewAllBtn.addEventListener('click', () => {
+      dropdown.classList.toggle('active');
+      viewAllBtn.textContent = dropdown.classList.contains('active') ? 'Hide' : 'View All';
+    });
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navItems.forEach(nav => nav.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
