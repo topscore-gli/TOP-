@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Introductory Electronics Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .hot{fill:rgba(255,107,107,.35);stroke:none}
+    .cool{fill:rgba(78,205,196,.30);stroke:none}
+    .north{fill:#ff6b6b}
+    .south{fill:#4ecdc4}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📡 Introductory Electronics</h1>
+        <p>JAMB Physics • band theory • semiconductors • diodes • rectification • transistors • amplification</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains band theory, classification of materials, intrinsic and extrinsic semiconductors, p-n junction diodes, rectification, transistors, and amplification for JAMB success.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Metals conduct easily because their bands overlap</li>
+            <li>Semiconductors have a small band gap</li>
+            <li>Diodes allow current mainly in one direction</li>
+            <li>Transistors are used for amplification and switching</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Electronics is built on controlling the movement of electrons and holes inside semiconductor materials.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Classification of Materials</h2>
+
+        <h3>Band theory concept</h3>
+        <p>Electrons occupy energy bands in solids. The two important bands are:</p>
+        <ul>
+          <li><strong>Valence band:</strong> where electrons are normally bound</li>
+          <li><strong>Conduction band:</strong> where electrons move freely and conduct</li>
+        </ul>
+        <p>The gap between them is called the <strong>band gap</strong> or forbidden energy gap.</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Material</th>
+              <th>Band Gap Size</th>
+              <th>Conductivity</th>
+              <th>Examples</th>
+            </tr>
+            <tr><td>Conductors</td><td>No gap or overlap</td><td>Very high</td><td>Copper, aluminium, silver</td></tr>
+            <tr><td>Semiconductors</td><td>Small gap</td><td>Moderate</td><td>Silicon, germanium</td></tr>
+            <tr><td>Insulators</td><td>Large gap</td><td>Very low</td><td>Rubber, glass, wood</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Band gap idea</div>
+          <svg viewBox="0 0 340 220" aria-label="Band theory diagram">
+            <rect x="35" y="40" width="70" height="20" class="cool"/>
+            <rect x="35" y="65" width="70" height="20" class="hot"/>
+            <text x="44" y="35" class="label">Metal</text>
+            <text x="43" y="56" class="label">CB/VB overlap</text>
+
+            <rect x="135" y="35" width="70" height="18" class="cool"/>
+            <rect x="135" y="90" width="70" height="18" class="hot"/>
+            <text x="132" y="25" class="label">Semiconductor</text>
+            <text x="145" y="75" class="label">small gap</text>
+
+            <rect x="235" y="25" width="70" height="18" class="cool"/>
+            <rect x="235" y="110" width="70" height="18" class="hot"/>
+            <text x="248" y="18" class="label">Insulator</text>
+            <text x="245" y="85" class="label">large gap</text>
+          </svg>
+          <div class="diagram-caption">The band gap determines how easily electrons can move and conduct electricity.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Intrinsic Semiconductors</h2>
+
+        <p>An intrinsic semiconductor is a pure semiconductor such as silicon or germanium with no deliberate impurity added.</p>
+
+        <ul>
+          <li>Electrons and holes are present in equal numbers</li>
+          <li>Conductivity increases with temperature</li>
+          <li>At 0 K it behaves like an insulator</li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>🧠 Memory aid</strong>
+          <p>When an electron leaves the valence band, it leaves a vacancy called a hole. A hole acts like a positive charge carrier.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Extrinsic Semiconductors</h2>
+
+        <p>Extrinsic semiconductors are formed by adding small amounts of impurity atoms through doping.</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Type</th>
+              <th>Dopant Added</th>
+              <th>Majority Carrier</th>
+              <th>Minority Carrier</th>
+              <th>Charge</th>
+            </tr>
+            <tr><td>n-type</td><td>Pentavalent impurity</td><td>Electrons</td><td>Holes</td><td>Neutral overall</td></tr>
+            <tr><td>p-type</td><td>Trivalent impurity</td><td>Holes</td><td>Electrons</td><td>Neutral overall</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="memory-tip">
+          <strong>🧠 Memory trick</strong>
+          <p>n-type means negative carriers are majority. p-type means positive holes are majority.</p>
+        </div>
+
+        <div class="highlight-box">
+          <p>Even after doping, both n-type and p-type semiconductors remain electrically neutral overall.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ The p-n Junction Diode</h2>
+
+        <h3>Formation of the junction</h3>
+        <ul>
+          <li>Electrons diffuse from n-side to p-side</li>
+          <li>Holes diffuse from p-side to n-side</li>
+          <li>A depletion region forms at the junction</li>
+          <li>A barrier potential develops</li>
+        </ul>
+
+        <p>Typical barrier potentials are about <span class="math">0.7 V</span> for silicon and <span class="math">0.3 V</span> for germanium.</p>
+
+        <div class="diagram-box">
+          <div class="diagram-title">p-n junction concept</div>
+          <svg viewBox="0 0 340 180" aria-label="PN junction diagram">
+            <rect x="45" y="55" width="105" height="70" class="hot"/>
+            <rect x="190" y="55" width="105" height="70" class="cool"/>
+            <rect x="150" y="55" width="40" height="70" class="obj"/>
+            <text x="92" y="95" class="label">p-type</text>
+            <text x="222" y="95" class="label">n-type</text>
+            <text x="144" y="142" class="label">depletion region</text>
+          </svg>
+          <div class="diagram-caption">The depletion region has very few free charge carriers.</div>
+        </div>
+
+        <h3>Biasing</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Bias Type</th>
+              <th>Connection</th>
+              <th>Behavior</th>
+              <th>Current Flow</th>
+            </tr>
+            <tr><td>Forward bias</td><td>Positive to p-side, negative to n-side</td><td>Depletion region narrows</td><td>High current flows</td></tr>
+            <tr><td>Reverse bias</td><td>Positive to n-side, negative to p-side</td><td>Depletion region widens</td><td>Very small current</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="memory-tip">
+          <strong>⚡ JAMB point</strong>
+          <p>A diode behaves like a one-way valve for current.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Rectification</h2>
+
+        <p>Rectification is the conversion of alternating current to direct current using diodes.</p>
+
+        <h3>Half-wave rectification</h3>
+        <ul>
+          <li>Uses one diode</li>
+          <li>Only one half-cycle of A.C. passes</li>
+          <li>Output is pulsating D.C.</li>
+        </ul>
+
+        <h3>Full-wave rectification</h3>
+        <ul>
+          <li>Uses both half-cycles of A.C.</li>
+          <li>Can be done with center-tap or bridge rectifier</li>
+          <li>Output frequency is twice the input frequency</li>
+        </ul>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Feature</th>
+              <th>Half-Wave</th>
+              <th>Full-Wave (Center-Tap)</th>
+              <th>Full-Wave (Bridge)</th>
+            </tr>
+            <tr><td>Diodes needed</td><td>1</td><td>2</td><td>4</td></tr>
+            <tr><td>Transformer</td><td>Simple</td><td>Center-tapped required</td><td>Simple</td></tr>
+            <tr><td>Output frequency</td><td>Same as input</td><td>2 × input</td><td>2 × input</td></tr>
+            <tr><td>Efficiency</td><td>Lower</td><td>Higher</td><td>Higher</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Half-wave vs full-wave output idea</div>
+          <svg viewBox="0 0 340 200" aria-label="Rectification waveform diagram">
+            <path d="M20 60 C35 30,50 30,65 60 S95 90,110 60 S140 30,155 60 S185 90,200 60 S230 30,245 60 S275 90,290 60" class="curve"/>
+            <text x="20" y="25" class="label">A.C. input</text>
+
+            <path d="M20 130 C35 100,50 100,65 130 M110 130 C125 100,140 100,155 130 M200 130 C215 100,230 100,245 130" class="curve"/>
+            <text x="20" y="95" class="label">Half-wave</text>
+
+            <path d="M20 185 C35 155,50 155,65 185 S95 215,110 185 S140 155,155 185 S185 215,200 185 S230 155,245 185 S275 215,290 185" class="curve"/>
+            <text x="20" y="150" class="label">Full-wave</text>
+          </svg>
+          <div class="diagram-caption">Full-wave rectification uses both halves of the input signal, giving smoother output than half-wave.</div>
+        </div>
+
+        <div class="highlight-box">
+          <p>Smoothing is done with a capacitor placed across the load to reduce ripple in the rectified output.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Transistors and Amplification</h2>
+
+        <h3>What is a transistor?</h3>
+        <p>A transistor is a three-layer semiconductor device used for amplification and switching.</p>
+
+        <h3>Types</h3>
+        <ul>
+          <li><strong>npn transistor:</strong> p-type between two n-type layers</li>
+          <li><strong>pnp transistor:</strong> n-type between two p-type layers</li>
+        </ul>
+
+        <h3>Terminals</h3>
+        <ul>
+          <li><strong>Emitter:</strong> heavily doped, emits carriers</li>
+          <li><strong>Base:</strong> thin and lightly doped, controls current</li>
+          <li><strong>Collector:</strong> collects carriers</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Transistor terminals</div>
+          <svg viewBox="0 0 340 220" aria-label="Transistor concept diagram">
+            <circle cx="170" cy="110" r="40" class="obj"/>
+            <line x1="170" y1="70" x2="170" y2="25" class="curve"/>
+            <line x1="130" y1="130" x2="80" y2="175" class="curve"/>
+            <line x1="210" y1="130" x2="260" y2="175" class="curve"/>
+            <text x="156" y="18" class="label">Collector</text>
+            <text x="50" y="185" class="label">Base</text>
+            <text x="245" y="185" class="label">Emitter</text>
+          </svg>
+          <div class="diagram-caption">A transistor has three terminals: emitter, base, and collector.</div>
+        </div>
+
+        <h3>Current gain</h3>
+        <div class="formula-box">
+          <div class="title">Current gain</div>
+          <div class="line"><span class="math">β = Ic/Ib</span></div>
+        </div>
+
+        <p>A small base current controls a much larger collector current. That is why a transistor can amplify.</p>
+
+        <div class="memory-tip">
+          <strong>🔊 Amplifier idea</strong>
+          <p>Small changes in base current produce large changes in collector current, so the output signal becomes stronger than the input signal.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Quick Revision Summary</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Concept</th>
+              <th>Key Point</th>
+            </tr>
+            <tr><td>Band gap</td><td>Energy difference between valence and conduction bands</td></tr>
+            <tr><td>Intrinsic semiconductor</td><td>Pure silicon or germanium</td></tr>
+            <tr><td>Extrinsic semiconductor</td><td>Doped semiconductor</td></tr>
+            <tr><td>n-type</td><td>Electrons are majority carriers</td></tr>
+            <tr><td>p-type</td><td>Holes are majority carriers</td></tr>
+            <tr><td>Diode</td><td>Conducts mainly in forward bias</td></tr>
+            <tr><td>Rectification</td><td>Converts A.C. to D.C.</td></tr>
+            <tr><td>Transistor</td><td>Used for amplification and switching</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>✅ JAMB Objectives Checklist</h2>
+
+        <div class="jamb-alert">
+          <h4>You should be able to</h4>
+          <ul>
+            <li>Differentiate conductors, semiconductors, and insulators</li>
+            <li>Distinguish intrinsic and extrinsic semiconductors</li>
+            <li>Explain electrons and holes as charge carriers</li>
+            <li>Differentiate n-type and p-type semiconductors</li>
+            <li>Explain forward and reverse bias in a diode</li>
+            <li>Relate diodes to rectification</li>
+            <li>Relate transistors to amplification</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>💡 Exam tips</strong>
+          <p>Do not mix them up: diodes rectify, transistors amplify. Also, JAMB likes forward bias versus reverse bias and the comparison between half-wave and full-wave rectification.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise band theory, intrinsic and extrinsic semiconductors, n-type and p-type materials, p-n junction biasing, rectification, transistor terminals, and current gain.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

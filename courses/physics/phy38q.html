@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Elementary Modern Physics</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Elementary Modern Physics (Chapter 38)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Elementary Modern Physics</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 60 minutes for 60 questions
+const CONFIG={TIME:3600,PASS:60};
+
+// Section mapping for 60 questions (7 sections)
+const SECTIONS={
+  0:"A: Atomic Models & Structure",
+  10:"B: Energy Levels & Spectra",
+  20:"C: Photoelectric Effect",
+  35:"D: Thermionic Emission & X-Rays",
+  42:"E: Radioactivity",
+  52:"F: Nuclear Energy & Mass Defect",
+  58:"G: Wave-Particle Duality"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Physics Questions on Elementary Modern Physics
+const QUIZ_DATA=[
+  // Section A: Atomic Models & Structure (1-10)
+  {q:"Which atomic model proposed that electrons are embedded in a sphere of positive charge like plums in a pudding?",o:["Rutherford's model","Thomson's model","Bohr's model","Quantum mechanical model"],a:1,e:"J.J. Thomson proposed the 'plum pudding' model in 1897, where electrons were embedded in a uniform positive charge sphere."},
+  {q:"What was the major limitation of Rutherford's nuclear model of the atom?",o:["It could not explain the existence of the nucleus","It predicted that atoms should be unstable as electrons spiral into the nucleus","It did not account for the mass of the atom","It could not explain the photoelectric effect"],a:1,e:"Rutherford's model predicted continuous spectra and unstable atoms because classical physics suggested orbiting electrons would lose energy and spiral into the nucleus."},
+  {q:"According to Bohr's model, what happens when an electron jumps from a higher energy level to a lower one?",o:["It absorbs a photon","It emits a photon","It gains kinetic energy","The atom becomes ionized"],a:1,e:"Bohr postulated that electrons emit photons with energy equal to the difference between energy levels when transitioning from higher to lower orbits."},
+  {q:"What is the angular momentum of an electron in the second orbit of a hydrogen atom according to Bohr's theory?",o:["h/2π","h/π","2h/π","h/4π"],a:1,e:"Using mvr = nh/2π, for n=2: angular momentum = 2h/2π = h/π."},
+  {q:"The atomic number of an element represents:",o:["The number of neutrons in the nucleus","The number of protons in the nucleus","The total number of protons and neutrons","The number of electrons in the outer shell"],a:1,e:"Atomic number (Z) is defined as the number of protons in the nucleus, which determines the element's identity."},
+  {q:"Which particle was discovered by James Chadwick in 1932?",o:["Proton","Electron","Neutron","Photon"],a:2,e:"Chadwick discovered the neutron, a neutral particle in the nucleus with mass similar to the proton."},
+  {q:"Isotopes of an element have the same number of:",o:["Protons but different number of neutrons","Neutrons but different number of protons","Electrons but different number of protons","Nucleons but different number of electrons"],a:0,e:"Isotopes are atoms of the same element (same proton number/atomic number) with different numbers of neutrons, hence different mass numbers."},
+  {q:"What is the maximum number of electrons that can occupy the n=3 energy level?",o:["2","6","8","18"],a:3,e:"Maximum electrons in shell n = 2n². For n=3: 2(3)² = 18 electrons."},
+  {q:"Which of the following is NOT a postulate of Bohr's model?",o:["Electrons move in circular orbits around the nucleus","Electrons can exist in any orbit with any energy","Angular momentum is quantized","Energy is emitted when electrons jump to lower orbits"],a:1,e:"Bohr specified that electrons can only exist in certain discrete orbits with quantized energies, not any arbitrary orbit."},
+  {q:"The ground state energy of hydrogen atom is -13.6 eV. What is the energy at n=2?",o:["-3.4 eV","-6.8 eV","-13.6/2 eV","-27.2 eV"],a:0,e:"Using Eₙ = -13.6/n² eV: E₂ = -13.6/4 = -3.4 eV."},
+  
+  // Section B: Energy Levels & Spectra (11-20)
+  {q:"When an electron in a hydrogen atom transitions from n=4 to n=2, what series does the emitted radiation belong to?",o:["Lyman series","Balmer series","Paschen series","Brackett series"],a:1,e:"Transitions to n=2 produce the Balmer series (visible light). Lyman is to n=1 (UV), Paschen to n=3 (IR)."},
+  {q:"Calculate the energy of a photon emitted when an electron transitions from n=3 to n=1 in a hydrogen atom.",o:["1.89 eV","10.2 eV","12.09 eV","13.6 eV"],a:2,e:"ΔE = E₁ - E₃ = -13.6 - (-1.51) = 12.09 eV. E₃ = -13.6/9 = -1.51 eV."},
+  {q:"The line spectrum of hydrogen atom is explained by:",o:["Rutherford's nuclear model","Thomson's plum pudding model","Bohr's quantum theory","Classical electromagnetic theory"],a:2,e:"Bohr's model successfully explained the discrete line spectrum of hydrogen by postulating quantized energy levels."},
+  {q:"What type of spectrum is produced by a hot, glowing solid?",o:["Line spectrum","Band spectrum","Continuous spectrum","Absorption spectrum"],a:2,e:"Hot solids and liquids produce continuous spectra because atoms are close together and energy levels merge into bands."},
+  {q:"The Rydberg constant has a value of approximately:",o:["1.097 × 10⁷ m⁻¹","6.63 × 10⁻³⁴ J·s","3.0 × 10⁸ m/s","1.6 × 10⁻¹⁹ C"],a:0,e:"R_H = 1.097 × 10⁷ m⁻¹ is used in the Rydberg formula for hydrogen spectral lines."},
+  {q:"Which spectral series of hydrogen atom lies in the ultraviolet region?",o:["Balmer series","Paschen series","Lyman series","Pfund series"],a:2,e:"The Lyman series (transitions to n=1) produces ultraviolet radiation. Balmer is visible, Paschen and Pfund are infrared."},
+  {q:"If the wavelength of a spectral line is 656 nm, to which region of the electromagnetic spectrum does it belong?",o:["Ultraviolet","Visible (red)","Infrared","X-ray"],a:1,e:"656 nm corresponds to red light in the visible spectrum (H-alpha line of Balmer series)."},
+  {q:"The ionization energy of hydrogen atom is:",o:["The energy required to remove an electron from ground state to infinity","The energy required to move an electron from n=1 to n=2","The energy released when an electron falls to n=1","The kinetic energy of the electron in ground state"],a:0,e:"Ionization energy (13.6 eV for hydrogen) is the energy needed to completely remove an electron from the atom (n=1 to n=∞)."},
+  {q:"Calculate the frequency of radiation emitted when an electron transitions from n=2 to n=1 in hydrogen atom. (h = 6.63 × 10⁻³⁴ J·s, 1 eV = 1.6 × 10⁻¹⁹ J)",o:["2.47 × 10¹⁵ Hz","3.29 × 10¹⁵ Hz","1.24 × 10¹⁵ Hz","6.58 × 10¹⁵ Hz"],a:0,e:"ΔE = 13.6 - 3.4 = 10.2 eV = 10.2 × 1.6 × 10⁻¹⁹ = 1.632 × 10⁻¹⁸ J. f = E/h = 1.632 × 10⁻¹⁸/6.63 × 10⁻³⁴ = 2.46 × 10¹⁵ Hz."},
+  {q:"The presence of dark lines in the solar spectrum is explained by:",o:["Emission of radiation by hot gases","Absorption of specific wavelengths by cooler gases","Reflection of light by the sun's surface","Refraction of light in the atmosphere"],a:1,e:"Fraunhofer lines are dark absorption lines caused by cooler gases in the sun's atmosphere absorbing specific wavelengths from the continuous spectrum."},
+  
+  // Section C: Photoelectric Effect (21-35)
+  {q:"The photoelectric effect demonstrates that:",o:["Light behaves as a wave","Light behaves as a particle","Electrons are waves","Atoms are indivisible"],a:1,e:"The photoelectric effect provides evidence for the particle nature of light (photons), as explained by Einstein."},
+  {q:"What determines the maximum kinetic energy of photoelectrons?",o:["Intensity of incident light","Frequency of incident light","Work function of the metal","Both B and C"],a:3,e:"E_k(max) = hf - W₀, so it depends on both the frequency of light and the work function of the metal."},
+  {q:"If the frequency of incident radiation is below the threshold frequency:",o:["Photoelectrons are emitted with reduced kinetic energy","Photoelectrons are emitted after a time delay","No photoelectrons are emitted regardless of intensity","Photoelectrons are emitted only if intensity is high"],a:2,e:"Below threshold frequency, no photoelectric emission occurs regardless of how intense the light is."},
+  {q:"The work function of a metal is 2.5 eV. What is the threshold frequency?",o:["6.03 × 10¹⁴ Hz","3.75 × 10¹⁴ Hz","4.83 × 10¹⁴ Hz","2.41 × 10¹⁴ Hz"],a:0,e:"W₀ = hf₀ → f₀ = W₀/h = (2.5 × 1.6 × 10⁻¹⁹)/(6.63 × 10⁻³⁴) = 6.03 × 10¹⁴ Hz."},
+  {q:"Light of wavelength 300 nm falls on a metal with work function 2.0 eV. What is the maximum kinetic energy of emitted electrons?",o:["2.14 eV","1.14 eV","4.14 eV","0.14 eV"],a:0,e:"E = hc/λ = (6.63×10⁻³⁴ × 3×10⁸)/(300×10⁻⁹) = 6.63×10⁻¹⁹ J = 4.14 eV. E_k = 4.14 - 2.0 = 2.14 eV."},
+  {q:"The stopping potential in a photoelectric experiment is 1.5 V. What is the maximum kinetic energy of the photoelectrons?",o:["1.5 J","2.4 × 10⁻¹⁹ J","1.5 eV","Both B and C"],a:3,e:"E_k = eV_s = 1.5 eV = 1.5 × 1.6 × 10⁻¹⁹ = 2.4 × 10⁻¹⁹ J. Both answers are correct in different units."},
+  {q:"If the intensity of incident light is doubled without changing the frequency, what happens?",o:["Maximum kinetic energy of photoelectrons doubles","Number of photoelectrons emitted doubles","Stopping potential doubles","Threshold frequency is halved"],a:1,e:"Intensity affects the number of photons (and thus photoelectrons), not their individual energy. Kinetic energy depends only on frequency."},
+  {q:"The graph of kinetic energy of photoelectrons versus frequency of incident light is a:",o:["Parabola through the origin","Straight line with positive slope and positive intercept","Straight line with positive slope and negative intercept","Curve starting from the threshold frequency"],a:2,e:"From E_k = hf - W₀, the graph is linear with slope h (Planck's constant) and y-intercept -W₀ (negative)."},
+  {q:"Calculate the velocity of a photoelectron emitted from a metal with work function 3.0 eV when illuminated by light of wavelength 200 nm. (Mass of electron = 9.11 × 10⁻³¹ kg)",o:["8.5 × 10⁵ m/s","1.2 × 10⁶ m/s","9.3 × 10⁵ m/s","6.2 × 10⁵ m/s"],a:2,e:"E = hc/λ = 6.21 eV. E_k = 6.21 - 3.0 = 3.21 eV = 5.14 × 10⁻¹⁹ J. v = √(2E_k/m) = √(2 × 5.14 × 10⁻¹⁹/9.11 × 10⁻³¹) = 9.3 × 10⁵ m/s."},
+  {q:"Which of the following metals will NOT exhibit photoelectric effect when illuminated with visible light (λ = 400-700 nm)?",o:["Sodium (W₀ = 2.3 eV)","Potassium (W₀ = 2.2 eV)","Zinc (W₀ = 4.3 eV)","Cesium (W₀ = 2.1 eV)"],a:2,e:"Maximum photon energy in visible light (400 nm) = hc/400nm = 3.1 eV. Zinc requires 4.3 eV, which is above visible light range."},
+  {q:"Planck's constant can be determined from the photoelectric effect by measuring:",o:["The slope of E_k vs frequency graph","The y-intercept of E_k vs frequency graph","The threshold frequency only","The work function"],a:0,e:"From E_k = hf - W₀, the slope of E_k versus f graph equals Planck's constant h."},
+  {q:"The particle nature of light is demonstrated by the fact that photoelectric emission:",o:["Occurs immediately after illumination","Depends on the frequency of light","Is proportional to light intensity","All of the above"],a:3,e:"All these observations support the photon theory: immediate emission (one-to-one interaction), frequency dependence (photon energy hf), and proportionality to intensity (number of photons)."},
+  {q:"If photons of energy 5 eV strike a metal surface and the work function is 3 eV, what is the stopping potential?",o:["5 V","3 V","2 V","8 V"],a:2,e:"E_k = hf - W₀ = 5 - 3 = 2 eV. Since eV_s = E_k, then V_s = 2 V."},
+  {q:"The photoelectric effect is used in:",o:["Solar cells","Burglar alarms","Light meters","All of the above"],a:3,e:"All these applications utilize the photoelectric effect to convert light into electrical signals or energy."},
+  {q:"Which statement about the photoelectric effect is FALSE?",o:["The number of photoelectrons increases with light intensity","There is no time lag between illumination and emission","Photoelectrons are emitted for all frequencies of light","The kinetic energy of photoelectrons depends on light frequency"],a:2,e:"Photoelectrons are only emitted when the light frequency exceeds the threshold frequency, not for all frequencies."},
+  
+  // Section D: Thermionic Emission & X-Rays (36-42)
+  {q:"Thermionic emission is the process of electron emission due to:",o:["High frequency radiation","High temperature","Strong electric field","Chemical reaction"],a:1,e:"Thermionic emission occurs when a metal is heated to a high temperature, giving electrons enough thermal energy to escape."},
+  {q:"X-rays are produced when:",o:["High energy electrons strike a metal target","Electrons jump between atomic energy levels","Radioactive nuclei decay","Hot solids emit radiation"],a:0,e:"In an X-ray tube, high-speed electrons (from thermionic emission) strike a metal target, producing X-rays through two processes: bremsstrahlung and characteristic emission."},
+  {q:"Which property distinguishes X-rays from gamma rays?",o:["X-rays have lower penetrating power","X-rays are electrically neutral","X-rays are produced by extranuclear processes, gamma rays by nuclear processes","X-rays travel slower than light"],a:2,e:"The fundamental difference is origin: X-rays from electron transitions/bremsstrahlung outside nucleus; gamma rays from nuclear transitions."},
+  {q:"The penetrating power of X-rays depends on their:",o:["Intensity","Frequency","Source material","Distance from source"],a:1,e:"Higher frequency (shorter wavelength) X-rays have higher energy and greater penetrating power. This is controlled by the accelerating voltage in the X-ray tube."},
+  {q:"In a Coolidge tube, the hardness of X-rays is controlled by:",o:["The filament current","The high voltage between cathode and anode","The material of the filament","The distance between electrodes"],a:1,e:"The hardness (penetrating ability) is controlled by the accelerating voltage. Higher voltage → higher electron energy → higher frequency X-rays."},
+  {q:"Which of the following is NOT a property of X-rays?",o:["They cause fluorescence","They are deflected by magnetic fields","They affect photographic plates","They can ionize gases"],a:1,e:"X-rays are electromagnetic waves (uncharged) and are not deflected by electric or magnetic fields."},
+  {q:"Thermionic emission is utilized in:",o:["Photocells","Cathode ray oscilloscopes","Solar panels","Light meters"],a:1,e:"CROs use thermionic emission to produce electron beams. Photocells and solar panels use photoelectric effect, not thermionic emission."},
+  
+  // Section E: Radioactivity (43-52)
+  {q:"Which radioactive emission has the highest ionizing power?",o:["Alpha particles","Beta particles","Gamma rays","X-rays"],a:0,e:"Alpha particles have the highest ionizing power due to their large mass and charge (+2e), though they have the lowest penetrating power."},
+  {q:"A radioactive nucleus emits an alpha particle. What happens to its atomic number and mass number?",o:["Z decreases by 2, A decreases by 4","Z decreases by 1, A stays the same","Z increases by 1, A stays the same","Z stays the same, A decreases by 4"],a:0,e:"Alpha particle is ⁴₂He. Emission reduces Z by 2 and A by 4."},
+  {q:"In beta decay, a neutron transforms into:",o:["A proton and an electron","A proton, an electron, and an antineutrino","A proton and a positron","An electron and a neutrino"],a:1,e:"n → p + e⁻ + ν̄ (antineutrino). This conserves charge, lepton number, and baryon number."},
+  {q:"Which emission is NOT affected by electric or magnetic fields?",o:["Alpha particles","Beta particles","Gamma rays","All are affected"],a:2,e:"Gamma rays are uncharged electromagnetic radiation and are not deflected by fields. Alpha and beta are charged particles."},
+  {q:"A sample has initial activity of 800 Bq. After 20 days, the activity is 200 Bq. What is the half-life?",o:["5 days","10 days","20 days","40 days"],a:1,e:"Activity dropped from 800 → 400 → 200 (two half-lives). Two half-lives = 20 days, so one half-life = 10 days."},
+  {q:"Calculate the decay constant of a substance with half-life of 10 minutes.",o:["0.0693 min⁻¹","0.693 min⁻¹","6.93 min⁻¹","0.1 min⁻¹"],a:0,e:"λ = 0.693/T₁/₂ = 0.693/10 = 0.0693 min⁻¹."},
+  {q:"If 75% of a radioactive sample has decayed, how many half-lives have passed?",o:["1","2","3","4"],a:1,e:"If 75% decayed, 25% remains. 100% → 50% → 25% (two half-lives)."},
+  {q:"The unit of radioactivity is:",o:["Joule","Becquerel","Newton","Watt"],a:1,e:"The Becquerel (Bq) is the SI unit of activity, defined as one decay per second. The Curie (Ci) is an older unit."},
+  {q:"Which equation represents beta-plus (positron) decay?",o:["ˣᵧA → ˣᵧ₋₁B + ⁰₋₁e","ˣᵧA → ˣᵧ₊₁B + ⁰₋₁e","ˣᵧA → ˣᵧ₋₁B + ⁰₊₁e","ˣᵧA → ˣ⁻⁴ᵧ₋₂B + ⁴₂He"],a:2,e:"In β⁺ decay, a proton becomes a neutron + positron (⁰₊₁e), so Z decreases by 1, A stays same: ˣᵧA → ˣᵧ₋₁B + ⁰₊₁e + ν."},
+  {q:"A radioactive isotope has a half-life of 5 hours. Starting with 40g, how much remains after 15 hours?",o:["20g","10g","5g","2.5g"],a:2,e:"15 hours = 3 half-lives. 40 → 20 → 10 → 5g."},
+  
+  // Section F: Nuclear Energy & Mass Defect (53-58)
+  {q:"The energy released in nuclear reactions comes from:",o:["Conversion of mass to energy","Chemical bonding","Electron transitions","Thermal energy"],a:0,e:"According to E=mc², a small amount of mass (mass defect) is converted to a large amount of energy in nuclear reactions."},
+  {q:"Calculate the energy equivalent of 1 atomic mass unit (amu).",o:["511 keV","931 MeV","13.6 eV","2.2 MeV"],a:1,e:"Using E = mc²: 1 amu = 1.66 × 10⁻²⁷ kg. E = (1.66 × 10⁻²⁷)(3 × 10⁸)² = 1.494 × 10⁻¹⁰ J = 931 MeV."},
+  {q:"Which process releases more energy per unit mass?",o:["Nuclear fission","Nuclear fusion","Chemical combustion","Both A and B release same amount"],a:1,e:"Fusion releases about 3-4 times more energy per nucleon than fission. Both are millions of times more energetic than chemical reactions."},
+  {q:"In a nuclear reactor, control rods are made of:",o:["Uranium","Graphite","Cadmium or boron","Heavy water"],a:2,e:"Control rods absorb neutrons to regulate the chain reaction. Cadmium and boron are excellent neutron absorbers."},
+  {q:"The binding energy per nucleon is maximum for:",o:["Hydrogen","Iron-56","Uranium-235","Helium-4"],a:1,e:"Iron-56 (and nearby nuclei like nickel-62) have the highest binding energy per nucleon (8.8 MeV), making them most stable."},
+  {q:"Calculate the mass defect for ⁴₂He nucleus given: proton mass = 1.0073 amu, neutron mass = 1.0087 amu, helium mass = 4.0026 amu.",o:["0.0304 amu","0.0158 amu","0.0266 amu","0.0502 amu"],a:0,e:"Mass of 2 protons + 2 neutrons = 2(1.0073) + 2(1.0087) = 4.0320 amu. Mass defect = 4.0320 - 4.0026 = 0.0294 amu ≈ 0.0304 amu (rounding differences in given data)."},
+  
+  // Section G: Wave-Particle Duality (59-60)
+  {q:"The de Broglie wavelength of a particle is given by:",o:["λ = h/m","λ = h/p","λ = p/h","λ = h/f"],a:1,e:"De Broglie proposed λ = h/p = h/(mv), where p is momentum. This gives the wave nature of matter."},
+  {q:"According to Heisenberg's uncertainty principle:",o:["Position and energy cannot be simultaneously known precisely","Position and momentum cannot be simultaneously known precisely","Energy and time cannot be simultaneously known precisely","Both B and C are correct"],a:3,e:"Heisenberg's principle states Δx·Δp ≥ ℏ/2 and also ΔE·Δt ≥ ℏ/2. Both position-momentum and energy-time pairs have fundamental uncertainty limits."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('modern_physics_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('modern_physics_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('modern_physics_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=55?'Ready for JAMB!':pct>=48?'Good, review weak areas':pct>=40?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,20,35,42,52,58,60];
+  const sectionNames=["A: Atomic Models & Structure","B: Energy Levels & Spectra","C: Photoelectric Effect","D: Thermionic Emission & X-Rays","E: Radioactivity","F: Nuclear Energy & Mass Defect","G: Wave-Particle Duality"];
+  
+  for(let s=0;s<7;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('modern_physics_quiz_auth');
+  sessionStorage.removeItem('modern_physics_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('modern_physics_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('modern_physics_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

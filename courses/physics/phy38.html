@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Elementary Modern Physics Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .hot{fill:rgba(255,107,107,.35);stroke:none}
+    .cool{fill:rgba(78,205,196,.30);stroke:none}
+    .north{fill:#ff6b6b}
+    .south{fill:#4ecdc4}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>⚛️ Elementary Modern Physics</h1>
+        <p>JAMB Physics • atomic models • spectra • photoelectric effect • radioactivity • nuclear energy • quantum ideas</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter covers atomic models, atomic structure, energy levels, photoelectric effect, radioactivity, nuclear energy, wave-particle duality, and uncertainty principle for JAMB success.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Bohr’s model is the most important atomic model for JAMB</li>
+            <li>Photoelectric effect supports particle nature of light</li>
+            <li>Radioactivity involves alpha, beta, and gamma emissions</li>
+            <li><span class="math">1 amu = 931 MeV</span></li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Modern physics explains the atom, light, nuclei, and matter using quantized energy and wave-particle behavior.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Models of the Atom and Their Limitations</h2>
+
+        <h3>Thomson’s plum pudding model</h3>
+        <p>The atom was pictured as a sphere of positive charge with electrons embedded in it.</p>
+        <p><strong>Limitation:</strong> It could not explain Rutherford’s alpha-particle scattering experiment.</p>
+
+        <h3>Rutherford’s nuclear model</h3>
+        <p>The atom has a tiny dense positive nucleus with electrons moving around it.</p>
+        <ul>
+          <li>Could not explain line spectra</li>
+          <li>Predicted unstable atoms</li>
+          <li>Could not explain why orbiting electrons do not lose energy continuously</li>
+        </ul>
+
+        <h3>Bohr’s model</h3>
+        <ul>
+          <li>Electrons move in fixed stationary orbits</li>
+          <li>Each orbit has a definite energy</li>
+          <li>Energy is emitted or absorbed when electrons jump between levels</li>
+          <li><span class="math">mvr = nh/2π</span></li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>⭐ JAMB focus</strong>
+          <p>Bohr’s model is the most testable one in this chapter, especially for hydrogen energy levels and spectra.</p>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Simple Bohr atom idea</div>
+          <svg viewBox="0 0 340 220" aria-label="Bohr model diagram">
+            <circle cx="170" cy="110" r="16" class="hot"/>
+            <circle cx="170" cy="110" r="45" class="curve"/>
+            <circle cx="170" cy="110" r="75" class="curve"/>
+            <circle cx="170" cy="110" r="105" class="curve"/>
+            <circle cx="215" cy="110" r="6" class="cool"/>
+            <circle cx="170" cy="35" r="6" class="cool"/>
+            <circle cx="65" cy="110" r="6" class="cool"/>
+            <text x="160" y="115" class="label">Nucleus</text>
+            <text x="220" y="105" class="label">n=1</text>
+            <text x="182" y="32" class="label">n=2</text>
+            <text x="40" y="105" class="label">n=3</text>
+          </svg>
+          <div class="diagram-caption">Bohr suggested that electrons occupy specific allowed energy levels.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Elementary Structure of the Atom</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Component</th>
+              <th>Location</th>
+              <th>Charge</th>
+              <th>Mass (kg)</th>
+              <th>Discoverer</th>
+            </tr>
+            <tr><td>Proton</td><td>Nucleus</td><td><span class="math">+e</span></td><td><span class="math">1.673 × 10⁻²⁷</span></td><td>Rutherford</td></tr>
+            <tr><td>Neutron</td><td>Nucleus</td><td>0</td><td><span class="math">1.675 × 10⁻²⁷</span></td><td>Chadwick</td></tr>
+            <tr><td>Electron</td><td>Orbitals</td><td><span class="math">-e</span></td><td><span class="math">9.11 × 10⁻³¹</span></td><td>Thomson</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <ul>
+          <li><strong>Atomic number (Z):</strong> number of protons</li>
+          <li><strong>Mass number (A):</strong> protons + neutrons</li>
+          <li><strong>Isotopes:</strong> same atomic number, different mass number</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Energy Levels and Spectra</h2>
+
+        <p>In hydrogen, the electron can occupy only certain energy levels.</p>
+
+        <div class="formula-box">
+          <div class="title">Energy of nth level</div>
+          <div class="line"><span class="math">Eₙ = -13.6/n² eV</span></div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Photon energy</div>
+          <div class="line"><span class="math">hf = E₂ - E₁</span></div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Rydberg formula</div>
+          <div class="line"><span class="math">1/λ = Rₕ(1/n₁² - 1/n₂²)</span></div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Hydrogen energy levels</div>
+          <svg viewBox="0 0 340 220" aria-label="Hydrogen energy levels">
+            <line x1="90" y1="170" x2="270" y2="170" class="curve"/>
+            <line x1="120" y1="135" x2="270" y2="135" class="curve"/>
+            <line x1="145" y1="105" x2="270" y2="105" class="curve"/>
+            <line x1="165" y1="80" x2="270" y2="80" class="curve"/>
+            <line x1="185" y1="55" x2="270" y2="55" class="curve"/>
+            <text x="55" y="174" class="label">n=1  -13.6 eV</text>
+            <text x="55" y="139" class="label">n=2  -3.4 eV</text>
+            <text x="55" y="109" class="label">n=3  -1.51 eV</text>
+            <text x="55" y="84" class="label">n=4  -0.85 eV</text>
+            <text x="55" y="59" class="label">n=∞   0 eV</text>
+          </svg>
+          <div class="diagram-caption">The electron emits a photon when it falls from a higher energy level to a lower one.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 1: Energy Levels</div>
+          <p>Find the energy of the photon emitted when an electron moves from <span class="math">n = 3</span> to <span class="math">n = 2</span> in hydrogen.</p>
+          <p><span class="math">E₃ = -13.6/9 = -1.51 eV</span></p>
+          <p><span class="math">E₂ = -13.6/4 = -3.40 eV</span></p>
+          <p><span class="math">ΔE = E₃ - E₂ = 1.89 eV</span></p>
+          <div class="answer">Answer: 1.89 eV</div>
+        </div>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Type</th>
+              <th>How Produced</th>
+              <th>Example</th>
+            </tr>
+            <tr><td>Line spectrum</td><td>Hot gas emitting light</td><td>Neon signs, sodium lamp</td></tr>
+            <tr><td>Band spectrum</td><td>Molecules</td><td>Flames and molecular gases</td></tr>
+            <tr><td>Continuous spectrum</td><td>Hot solids or liquids</td><td>Light bulb filament</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Thermionic and Photoelectric Emissions</h2>
+
+        <h3>Thermionic emission</h3>
+        <p>This is the emission of electrons from a heated metal surface.</p>
+        <p>Applications include cathode ray tubes, X-ray tubes, and electron guns.</p>
+
+        <h3>Photoelectric effect</h3>
+        <p>Electrons are emitted from a metal surface when light of sufficiently high frequency falls on it.</p>
+
+        <ul>
+          <li>No emission below threshold frequency</li>
+          <li>Maximum kinetic energy depends on frequency</li>
+          <li>Number of electrons depends on light intensity</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Einstein’s Equation and Stopping Potential</h2>
+
+        <div class="formula-box">
+          <div class="title">Einstein’s photoelectric equation</div>
+          <div class="line"><span class="math">hf = W₀ + ½mv²max</span></div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Stopping potential</div>
+          <div class="line"><span class="math">eVₛ = hf - W₀</span></div>
+          <div class="line"><span class="math">Vₛ = h(f - f₀)/e</span></div>
+        </div>
+
+        <div class="highlight-box">
+          <p>Work function <span class="math">W₀</span> is the minimum energy needed to remove an electron from the metal surface.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 2: Photoelectric Effect</div>
+          <p>Light of wavelength 400 nm falls on a metal of work function 2.0 eV. Find the photon energy, maximum kinetic energy, and threshold frequency.</p>
+          <p><span class="math">E = hc/λ = 3.11 eV</span></p>
+          <p><span class="math">Ek = 3.11 - 2.0 = 1.11 eV</span></p>
+          <p><span class="math">f₀ = W₀/h = 4.83 × 10¹⁴ Hz</span></p>
+          <div class="answer">Answers: 3.11 eV, 1.11 eV, 4.83 × 10¹⁴ Hz</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 3: Stopping Potential</div>
+          <p>For the same metal, find the stopping potential.</p>
+          <p><span class="math">Vₛ = 1.11 V</span></p>
+          <div class="answer">Answer: 1.11 V</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Applications of Thermionic and Photoelectric Effects</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Effect</th>
+              <th>Applications</th>
+            </tr>
+            <tr><td>Thermionic</td><td>X-ray tubes, CRO, electron microscopes, vacuum tubes</td></tr>
+            <tr><td>Photoelectric</td><td>Solar cells, burglar alarms, automatic lights, photocells, light meters, solar panels</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Production of X-Rays</h2>
+
+        <p>In a Coolidge tube, electrons from a heated cathode are accelerated towards a metal target by high voltage.</p>
+
+        <h3>Types of X-rays</h3>
+        <ul>
+          <li><strong>Characteristic X-rays:</strong> produced when inner-shell electrons are removed and replaced</li>
+          <li><strong>Bremsstrahlung:</strong> produced when fast electrons are suddenly decelerated</li>
+        </ul>
+
+        <h3>Properties of X-rays</h3>
+        <ul>
+          <li>High penetrating power</li>
+          <li>Travel in straight lines</li>
+          <li>Not deflected by electric or magnetic fields</li>
+          <li>Cause fluorescence</li>
+          <li>Ionize gases</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Radioactivity: Alpha, Beta and Gamma Rays</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Property</th>
+              <th>Alpha (α)</th>
+              <th>Beta (β)</th>
+              <th>Gamma (γ)</th>
+            </tr>
+            <tr><td>Nature</td><td>Helium nucleus</td><td>Fast electron</td><td>Electromagnetic wave</td></tr>
+            <tr><td>Charge</td><td>+2e</td><td>-e</td><td>0</td></tr>
+            <tr><td>Mass</td><td>4 amu</td><td>1/1840 amu</td><td>0</td></tr>
+            <tr><td>Ionizing power</td><td>Very high</td><td>Moderate</td><td>Very low</td></tr>
+            <tr><td>Penetrating power</td><td>Low</td><td>Moderate</td><td>High</td></tr>
+            <tr><td>Shielding</td><td>Paper</td><td>Aluminium</td><td>Lead</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="formula-box">
+          <div class="title">Decay equations</div>
+          <div class="line"><span class="math">Alpha: ᴬZX → ᴬ⁻⁴Z₋₂Y + ⁴₂α</span></div>
+          <div class="line"><span class="math">Beta: ᴬZX → ᴬZ₊₁Y + ⁰₋₁β + ν̄</span></div>
+          <div class="line"><span class="math">Gamma: ᴬZX* → ᴬZX + γ</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 4: Radioactive Decay</div>
+          <p>A radioactive isotope has half-life 10 days. If the initial mass is 80 g, how much remains after 30 days?</p>
+          <p><span class="math">n = 30/10 = 3</span></p>
+          <p><span class="math">N = 80(1/2)³ = 10 g</span></p>
+          <div class="answer">Answer: 10 g</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Half-Life and Decay Constant</h2>
+
+        <div class="formula-box">
+          <div class="title">Decay formulas</div>
+          <div class="line"><span class="math">N = N₀e^(-λt)</span></div>
+          <div class="line"><span class="math">N = N₀(1/2)^(t/T½)</span></div>
+          <div class="line"><span class="math">A = λN</span></div>
+          <div class="line"><span class="math">T½ = 0.693/λ</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 5: Decay Constant</div>
+          <p>Find the decay constant of a substance with half-life 5 years.</p>
+          <p><span class="math">λ = 0.693/5 = 0.139 year⁻¹</span></p>
+          <p><span class="math">λ = 4.39 × 10⁻⁹ s⁻¹</span></p>
+          <div class="answer">Answer: 0.139 year⁻¹ or 4.39 × 10⁻⁹ s⁻¹</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 6: Activity</div>
+          <p>A sample contains <span class="math">10²⁰</span> nuclei and has decay constant <span class="math">2 × 10⁻⁶ s⁻¹</span>. Find the activity.</p>
+          <p><span class="math">A = λN = 2 × 10⁻⁶ × 10²⁰ = 2 × 10¹⁴ Bq</span></p>
+          <div class="answer">Answer: 2 × 10¹⁴ Bq</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 Nuclear Energy: Fission and Fusion</h2>
+
+        <h3>Nuclear fission</h3>
+        <p>Fission is the splitting of a heavy nucleus into lighter nuclei with energy release.</p>
+        <p><span class="math">²³⁵₉₂U + ¹₀n → ¹⁴¹₅₆Ba + ⁹²₃₆Kr + 3¹₀n + Energy</span></p>
+
+        <h3>Nuclear fusion</h3>
+        <p>Fusion is the combination of light nuclei to form a heavier nucleus with energy release.</p>
+        <p><span class="math">²₁H + ³₁H → ⁴₂He + ¹₀n + Energy</span></p>
+
+        <div class="highlight-box">
+          <p>Fission powers nuclear reactors. Fusion powers the Sun.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 7: Energy from Fission</div>
+          <p>If the mass defect is 0.2 amu, calculate the energy released.</p>
+          <p><span class="math">E = 0.2 × 931 = 186.2 MeV</span></p>
+          <p><span class="math">= 2.98 × 10⁻¹¹ J</span></p>
+          <div class="answer">Answer: 186.2 MeV or 2.98 × 10⁻¹¹ J</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣1️⃣ Binding Energy and Mass Defect</h2>
+
+        <div class="formula-box">
+          <div class="title">Mass defect</div>
+          <div class="line"><span class="math">Δm = [Zmₚ + Nmₙ] - mₙucleus</span></div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Binding energy</div>
+          <div class="line"><span class="math">ΔE = Δmc²</span></div>
+          <div class="line"><span class="math">1 amu = 931 MeV</span></div>
+        </div>
+
+        <p>A nucleus with higher binding energy per nucleon is generally more stable.</p>
+
+        <div class="example-box">
+          <div class="title">Calculation 8: Binding Energy</div>
+          <p>Calculate binding energy per nucleon for helium-4 given <span class="math">mₚ = 1.0073 amu</span>, <span class="math">mₙ = 1.0087 amu</span>, and nuclear mass <span class="math">4.0015 amu</span>.</p>
+          <p><span class="math">Mass of separate nucleons = 2(1.0073) + 2(1.0087) = 4.0320 amu</span></p>
+          <p><span class="math">Δm = 4.0320 - 4.0015 = 0.0305 amu</span></p>
+          <p><span class="math">Binding energy = 0.0305 × 931 = 28.4 MeV</span></p>
+          <p><span class="math">Per nucleon = 28.4/4 = 7.1 MeV/nucleon</span></p>
+          <div class="answer">Answer: 7.1 MeV/nucleon</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣2️⃣ Wave-Particle Duality</h2>
+
+        <p>De Broglie proposed that matter has wave properties as well as particle properties.</p>
+
+        <div class="formula-box">
+          <div class="title">De Broglie wavelength</div>
+          <div class="line"><span class="math">λ = h/p = h/(mv)</span></div>
+        </div>
+
+        <p>Electron diffraction confirms the wave nature of electrons.</p>
+
+        <div class="example-box">
+          <div class="title">Calculation 9: De Broglie Wavelength</div>
+          <p>Find the de Broglie wavelength of an electron moving at <span class="math">2 × 10⁶ m/s</span>.</p>
+          <p><span class="math">λ = h/(mv)</span></p>
+          <p><span class="math">λ = 3.64 × 10⁻¹⁰ m = 0.364 nm</span></p>
+          <div class="answer">Answer: 3.64 × 10⁻¹⁰ m</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣3️⃣ Heisenberg Uncertainty Principle</h2>
+
+        <p>It is impossible to know the exact position and exact momentum of a particle at the same time.</p>
+
+        <div class="formula-box">
+          <div class="title">Uncertainty relation</div>
+          <div class="line"><span class="math">Δx · Δp ≥ h/(4π)</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 10: Uncertainty</div>
+          <p>An electron has speed <span class="math">5 × 10⁵ m/s</span> with uncertainty 1%. Find the minimum uncertainty in position.</p>
+          <p><span class="math">Δv = 0.01 × 5 × 10⁵ = 5 × 10³ m/s</span></p>
+          <p><span class="math">Δp = mΔv = 4.56 × 10⁻²⁷ kg·m/s</span></p>
+          <p><span class="math">Δx ≥ 6.63 × 10⁻³⁴ /(4π × 4.56 × 10⁻²⁷)</span></p>
+          <p><span class="math">Δx ≥ 1.16 × 10⁻⁸ m</span></p>
+          <div class="answer">Answer: 1.16 × 10⁻⁸ m</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Complete Formula Summary Table</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Topic</th>
+              <th>Formula</th>
+              <th>Variables</th>
+              <th>Units</th>
+            </tr>
+            <tr><td>Energy levels</td><td><span class="math">Eₙ = -13.6/n²</span></td><td>n = quantum number</td><td>eV</td></tr>
+            <tr><td>Photon energy</td><td><span class="math">E = hf = hc/λ</span></td><td>h, f, c, λ</td><td>J or eV</td></tr>
+            <tr><td>Photoelectric effect</td><td><span class="math">hf = W₀ + Eₖ</span></td><td>W₀ = work function</td><td>J or eV</td></tr>
+            <tr><td>Stopping potential</td><td><span class="math">Vₛ = (hf - W₀)/e</span></td><td>e = electron charge</td><td>V</td></tr>
+            <tr><td>Decay law</td><td><span class="math">N = N₀e^(-λt)</span></td><td>λ = decay constant</td><td>atoms</td></tr>
+            <tr><td>Half-life</td><td><span class="math">N = N₀(1/2)^(t/T½)</span></td><td>T½ = half-life</td><td>atoms</td></tr>
+            <tr><td>Half-life relation</td><td><span class="math">T½ = 0.693/λ</span></td><td>λ = decay constant</td><td>s, yr</td></tr>
+            <tr><td>Activity</td><td><span class="math">A = λN</span></td><td>N = number of nuclei</td><td>Bq</td></tr>
+            <tr><td>Mass-energy</td><td><span class="math">E = mc²</span></td><td>m = mass</td><td>J or MeV</td></tr>
+            <tr><td>Mass defect</td><td><span class="math">Δm = [Zmₚ + Nmₙ] - mₙucleus</span></td><td>Z, N</td><td>kg or amu</td></tr>
+            <tr><td>Binding energy</td><td><span class="math">Eb = Δmc²</span></td><td>Δm = mass defect</td><td>J or MeV</td></tr>
+            <tr><td>De Broglie</td><td><span class="math">λ = h/(mv)</span></td><td>m, v</td><td>m</td></tr>
+            <tr><td>Uncertainty</td><td><span class="math">ΔxΔp ≥ h/4π</span></td><td>Δx, Δp</td><td>m, kg·m/s</td></tr>
+            <tr><td>Rydberg</td><td><span class="math">1/λ = Rₕ(1/n₁² - 1/n₂²)</span></td><td>Rₕ constant</td><td>m⁻¹</td></tr>
+            <tr><td>Angular momentum</td><td><span class="math">mvr = nh/2π</span></td><td>n = quantum number</td><td>kg·m²/s</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>📝 Quick Revision Checklist</h2>
+
+        <div class="jamb-alert">
+          <h4>Must-know points</h4>
+          <ul>
+            <li>Atomic models: Thomson → Rutherford → Bohr</li>
+            <li>Photoelectric effect and Einstein’s equation</li>
+            <li>Alpha, beta, and gamma comparisons</li>
+            <li>Half-life and decay formulas</li>
+            <li>Fission versus fusion</li>
+            <li>Mass defect and binding energy</li>
+            <li>De Broglie wavelength and uncertainty principle</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>💡 Study tips</strong>
+          <p>Master the major formulas, compare nuclear radiations clearly, and practice half-life, photoelectric, and binding energy calculations often.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise Bohr’s model, energy levels, photoelectric equations, radioactive decay, half-life, nuclear energy, binding energy, de Broglie wavelength, and uncertainty principle.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

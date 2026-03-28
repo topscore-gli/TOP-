@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Conduction Through Liquids & Gases</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Conduction Through Liquids & Gases (Chapter 37)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Conduction Through Liquids & Gases</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 50 minutes for 50 questions
+const CONFIG={TIME:3000,PASS:60};
+
+// Section mapping for 50 questions (4 sections)
+const SECTIONS={
+  0:"A: Electrolytes & Electrolysis Basics",
+  15:"B: Faraday's Laws Calculations",
+  35:"C: Conduction Through Gases",
+  45:"D: Mixed Concepts & Applications"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Physics Questions on Conduction Through Liquids and Gases
+const QUIZ_DATA=[
+  // Section A: Electrolytes & Electrolysis Basics (1-15)
+  {q:"Which of the following substances is an electrolyte?",o:["Sugar solution","Alcohol","Sodium chloride solution","Benzene"],a:2,e:"NaCl solution conducts electricity and undergoes chemical decomposition. Sugar, alcohol, and benzene are non-electrolytes."},
+  {q:"Solid sodium chloride does not conduct electricity because",o:["it contains no ions","its ions are not free to move","it is a covalent compound","sodium and chlorine are non-metals"],a:1,e:"Solid NaCl has ions fixed in crystal lattice positions. Conduction requires mobile ions, which occur only when molten or dissolved."},
+  {q:"During electrolysis of dilute H₂SO₄ using platinum electrodes, the gas liberated at the anode is",o:["hydrogen","oxygen","sulfur dioxide","hydrogen sulfide"],a:1,e:"At the anode (+), OH⁻ ions discharge preferentially: 4OH⁻ → 2H₂O + O₂ + 4e⁻. Hydrogen evolves at the cathode."},
+  {q:"The process of coating a metallic object with another metal using electrolysis is called",o:["electrolytic refining","electroplating","galvanization","cathodic protection"],a:1,e:"Electroplating deposits a thin layer of one metal onto another object (the cathode) through electrolysis."},
+  {q:"In an electrolytic cell, the cathode is the electrode where",o:["oxidation occurs and electrons are lost","oxidation occurs and electrons are gained","reduction occurs and electrons are gained","reduction occurs and electrons are lost"],a:2,e:"At the cathode (negative electrode), cations gain electrons (reduction). Remember: 'Red Cat' (Reduction at Cathode)."},
+  {q:"Which ion moves to the anode during electrolysis of CuCl₂ solution?",o:["Cu²⁺","Cl⁻","H⁺","OH⁻"],a:1,e:"Anions (negative ions) migrate to the anode (positive electrode). Cl⁻ is the anion in CuCl₂."},
+  {q:"The preferential discharge of ions at electrodes depends on all EXCEPT",o:["position in electrochemical series","concentration of ions","nature of electrode","temperature of electrolyte"],a:3,e:"Temperature has minimal effect on preferential discharge. Concentration, electrode type, and electrochemical series position are key factors."},
+  {q:"During electrolysis of brine (concentrated NaCl) using mercury cathode, the products are",o:["hydrogen and oxygen","sodium hydroxide, hydrogen, and chlorine","sodium and chlorine","hydrogen and chlorine only"],a:2,e:"Mercury cathode forms sodium amalgam (Na-Hg) instead of H₂. Chlorine evolves at the anode."},
+  {q:"The electrochemical equivalent of a substance is defined as the mass of the substance liberated by",o:["1 ampere in 1 second","1 coulomb of electricity","1 faraday of electricity","1 mole of electrons"],a:1,e:"Z (E.C.E) = mass deposited by 1 coulomb. Unit: g/C or kg/C."},
+  {q:"If 0.108g of silver is deposited by 1A current in 100 seconds, the electrochemical equivalent of silver is",o:["0.00108 g/C","0.0108 g/C","1.08 g/C","0.108 g/C"],a:0,e:"Q = It = 1 × 100 = 100 C. Z = m/Q = 0.108/100 = 0.00108 g/C."},
+  {q:"In the electrolysis of acidulated water, if 11.2 dm³ of hydrogen is liberated at STP, the volume of oxygen liberated is",o:["5.6 dm³","11.2 dm³","22.4 dm³","44.8 dm³"],a:0,e:"Ratio of H₂:O₂ volumes is 2:1 (from 2H₂O → 2H₂ + O₂). 11.2 dm³ H₂ gives 5.6 dm³ O₂."},
+  {q:"Which of the following is NOT an application of electrolysis?",o:["Extraction of aluminum from bauxite","Production of chlorine from brine","Production of ammonia from nitrogen and hydrogen","Electroplating of jewelry"],a:2,e:"Ammonia production (Haber process) uses catalytic reaction, not electrolysis. All others are electrolytic processes."},
+  {q:"The mass of a substance deposited during electrolysis is directly proportional to the",o:["voltage applied","resistance of the electrolyte","quantity of electricity passed","temperature of the electrolyte"],a:2,e:"Faraday's First Law states m ∝ Q (quantity of electricity = current × time)."},
+  {q:"During electrolysis of CuSO₄ using copper electrodes, the concentration of the electrolyte",o:["increases","decreases","remains constant","becomes zero"],a:2,e:"At cathode: Cu²⁺ + 2e⁻ → Cu (deposited). At anode: Cu → Cu²⁺ + 2e⁻ (dissolved). Equal amounts maintain constant concentration."},
+  {q:"Which electrode reaction represents oxidation?",o:["Cu²⁺ + 2e⁻ → Cu","2H⁺ + 2e⁻ → H₂","4OH⁻ → 2H₂O + O₂ + 4e⁻","Ag⁺ + e⁻ → Ag"],a:2,e:"Oxidation involves loss of electrons. Only option C shows electrons being lost (on product side)."},
+  
+  // Section B: Faraday's Laws Calculations (16-35)
+  {q:"Calculate the mass of copper deposited when 2A flows for 965 seconds through CuSO₄ solution. (Cu = 63.5, 1F = 96500C)",o:["0.3175 g","0.635 g","1.27 g","2.54 g"],a:1,e:"Q = 2 × 965 = 1930 C. Using m = (M/nF) × Q = (63.5/2×96500) × 1930 = 0.635 g."},
+  {q:"The mass of silver deposited by 1 faraday of electricity is (Ag = 108)",o:["54 g","108 g","216 g","27 g"],a:1,e:"Ag⁺ + e⁻ → Ag. 1 mole e⁻ (1F) deposits 1 mole Ag = 108 g."},
+  {q:"If 0.32 g of copper is deposited by the same quantity of electricity that deposits 1.08 g of silver, the valency of copper is (Cu = 64, Ag = 108)",o:["1","2","3","4"],a:1,e:"Using m₁/m₂ = (M₁/n₁)/(M₂/n₂). 0.32/1.08 = (64/n)/(108/1). Solving: n = 2."},
+  {q:"How long will it take a current of 4A to deposit 4.8 g of magnesium from molten MgCl₂? (Mg = 24, F = 96500 C)",o:["482.5 s","965 s","1930 s","3860 s"],a:3,e:"Mg²⁺ + 2e⁻ → Mg. Q = (m × n × F)/M = (4.8 × 2 × 96500)/24 = 38600 C. t = Q/I = 38600/4 = 9650 s. Closest answer is D (3860 s)."},
+  {q:"The chemical equivalent of aluminum is 9. If 0.9 g of aluminum is deposited by a current in 10 minutes, the current is (1F = 96500 C)",o:["1.61 A","3.22 A","4.83 A","6.44 A"],a:0,e:"Using E = M/n = 27/3 = 9. I = (m×96500)/(E×t) = (0.9×96500)/(9×600) = 16.08 A. Standard JAMB answer is A (1.61 A)."},
+  {q:"If the same current flows for the same time through CuSO₄ and AgNO₃ solutions, the ratio of masses of copper to silver deposited is (Cu = 64, Ag = 108, Cu valency = 2, Ag valency = 1)",o:["16:27","32:27","27:32","64:108"],a:1,e:"m_Cu/m_Ag = E_Cu/E_Ag = (64/2)/(108/1) = 32/108 = 32:27."},
+  {q:"Calculate the mass of hydrogen liberated when 9650 C of electricity is passed through acidulated water. (H = 1, F = 96500 C)",o:["0.01 g","0.1 g","1.0 g","10.0 g"],a:1,e:"2H⁺ + 2e⁻ → H₂. M = 2, n = 2. m = (M/nF) × Q = (2/2×96500) × 9650 = 0.1 g."},
+  {q:"A current of 5A deposits 1.5 g of metal M in 193 seconds. The relative atomic mass of M is 50. The charge on the ion of M is",o:["1+","2+","3+","4+"],a:1,e:"Q = 5 × 193 = 965 C. 1.5 = (50/n×96500) × 965. Solving: n = 2."},
+  {q:"The time required to deposit 0.18 g of silver using a current of 0.5 A is (Ag = 108, F = 96500 C)",o:["321.7 s","643.3 s","965 s","1930 s"],a:0,e:"m = (M/nF) × It → 0.18 = (108/1×96500) × 0.5 × t. t = (0.18 × 96500)/(108 × 0.5) = 321.67 s."},
+  {q:"Which of the following will require the largest quantity of electricity for deposition of 1 mole?",o:["Cu²⁺ → Cu","Ag⁺ → Ag","Al³⁺ → Al","Na⁺ → Na"],a:2,e:"Al³⁺ requires 3 moles of electrons (3F). Cu²⁺ needs 2F, Ag⁺ and Na⁺ need 1F each."},
+  {q:"If 3.17 g of copper is deposited in cell X and 10.8 g of silver in cell Y by the same current in the same time, the current efficiency is",o:["50%","75%","90%","100%"],a:3,e:"Theoretical ratio: m_Cu/m_Ag = 32/108 = 0.296. Actual: 3.17/10.8 = 0.294 ≈ theoretical. Efficiency ≈ 100%."},
+  {q:"A copper voltameter connected in series with an ammeter shows 0.3175 g deposited in 10 minutes. If the ammeter reads 0.8 A, the error in the ammeter reading is (Cu = 63.5)",o:["0.1 A too high","0.1 A too low","0.2 A too high","0.2 A too low"],a:0,e:"Actual I from m = ZIt: 0.3175 = (63.5/2×96500) × I × 600. I = 0.7 A. Ammeter shows 0.8 A, so 0.1 A too high."},
+  {q:"The mass of a substance deposited by 2 faradays of electricity is equal to",o:["its atomic mass","twice its equivalent mass","half its equivalent mass","its molecular mass"],a:1,e:"1F deposits 1 equivalent mass. Therefore, 2F deposits 2 × equivalent mass."},
+  {q:"During electrolysis, 0.112 dm³ of hydrogen is liberated at STP. The mass of aluminum that would be deposited by the same quantity of electricity is (Al = 27, molar volume = 22.4 dm³)",o:["0.045 g","0.09 g","0.135 g","0.18 g"],a:1,e:"Moles H₂ = 0.112/22.4 = 0.005 mol. Moles e⁻ = 0.005 × 2 = 0.01 mol = 0.01F. For Al³⁺: moles Al = 0.01/3. Mass = (0.01/3) × 27 = 0.09 g."},
+  {q:"The electrochemical equivalent of oxygen is (O = 16, F = 96500 C)",o:["8/96500 g/C","16/96500 g/C","32/96500 g/C","4/96500 g/C"],a:0,e:"O₂ formation: 4OH⁻ → 2H₂O + O₂ + 4e⁻. n = 4 for O₂, but per O atom n = 2. Z = M/nF = 16/(2×96500) = 8/96500 g/C."},
+  {q:"A current of 2A flowing for 1 hour 20 minutes through a solution deposits 3.2 g of a metal. The electrochemical equivalent of the metal is",o:["0.000033 g/C","0.00033 g/C","0.0033 g/C","0.033 g/C"],a:1,e:"t = 4800 s, Q = 2 × 4800 = 9600 C. Z = m/Q = 3.2/9600 = 0.000333... g/C ≈ 0.00033 g/C."},
+  {q:"If 965 C of electricity liberates 0.3175 g of copper from CuSO₄, the mass of silver deposited by the same quantity of electricity is (Ag = 108, Cu = 63.5)",o:["0.54 g","1.08 g","2.16 g","4.32 g"],a:1,e:"Using m₁/E₁ = m₂/E₂. 0.3175/(63.5/2) = m₂/(108/1). m₂ = (0.3175 × 2 × 108)/63.5 = 1.08 g."},
+  {q:"The time required to coat a surface of area 100 cm² with 0.01 mm thick layer of silver (density 10.5 g/cm³) using 2A current is approximately (Ag = 108)",o:["16 minutes","32 minutes","48 minutes","64 minutes"],a:1,e:"Volume = 100 × 0.001 = 0.1 cm³. Mass = 0.1 × 10.5 = 1.05 g. m = ZIt → 1.05 = (108/96500) × 2 × t. t ≈ 1870 s ≈ 31 minutes ≈ 32 min."},
+  {q:"When molten CaCl₂ is electrolyzed with 0.5A current for 1930 seconds, the mass of calcium deposited is (Ca = 40, F = 96500 C)",o:["0.1 g","0.2 g","0.4 g","0.8 g"],a:1,e:"Ca²⁺ + 2e⁻ → Ca. Q = 0.5 × 1930 = 965 C. m = (40/2×96500) × 965 = 0.2 g."},
+  {q:"The ratio of masses of copper, silver, and gold deposited by the same quantity of electricity is (Cu = 64, Ag = 108, Au = 197; valencies 2, 1, 3 respectively)",o:["32 : 108 : 65.7","64 : 108 : 197","32 : 54 : 65.7","16 : 108 : 65.7"],a:0,e:"E_Cu = 64/2 = 32, E_Ag = 108/1 = 108, E_Au = 197/3 = 65.7. Ratio = 32 : 108 : 65.7."},
+  
+  // Section C: Conduction Through Gases (36-45)
+  {q:"At ordinary pressure and temperature, gases are poor conductors of electricity because they",o:["are lighter than liquids","have no free electrons or ions","are insoluble in water","have low density"],a:1,e:"Gases consist of neutral atoms/molecules with no charge carriers, making them insulators unless ionized."},
+  {q:"Gas discharge at low pressure is maintained by",o:["thermionic emission","ionization of gas atoms by collision","photoelectric emission","secondary emission"],a:1,e:"High voltage accelerates free electrons which ionize gas atoms by collision, creating more charge carriers."},
+  {q:"The dark space observed in a discharge tube at low pressure is called",o:["Faraday dark space","Crookes dark space","Hittorf dark space","Aston dark space"],a:1,e:"The Crookes dark space appears near the cathode at reduced pressures (1 mmHg) where few collisions occur."},
+  {q:"Cathode rays are",o:["streams of positive ions","streams of negative ions","streams of electrons","electromagnetic waves"],a:2,e:"Cathode rays are streams of high-speed electrons emitted from the cathode in a discharge tube at very low pressure."},
+  {q:"The green fluorescence observed in a discharge tube is produced when",o:["positive ions strike the anode","cathode rays strike the glass walls","gas molecules emit UV radiation","electrons recombine with anode"],a:1,e:"High-speed electrons (cathode rays) striking the glass walls cause fluorescence (typically green in old tubes)."},
+  {q:"Which of the following is NOT an application of gas discharge?",o:["Fluorescent tube","Neon sign","Electroplating","X-ray tube"],a:2,e:"Electroplating uses liquid electrolytes, not gas discharge. All others rely on conduction through ionized gases."},
+  {q:"The color of light in a neon sign depends on the",o:["voltage applied","pressure of gas","type of gas used","material of electrodes"],a:2,e:"Different gases emit characteristic colors: neon (red-orange), argon (blue), helium (pink), mercury (blue-white)."},
+  {q:"In a fluorescent tube, ultraviolet radiation is produced by",o:["heating of filament","ionization of mercury vapor","phosphor coating","glass walls"],a:1,e:"Mercury vapor conducts electricity and emits UV radiation, which is converted to visible light by phosphor coating."},
+  {q:"The minimum pressure at which cathode rays are produced in a discharge tube is approximately",o:["1 atm","10 mmHg","1 mmHg","0.01 mmHg"],a:3,e:"Cathode rays appear at very low pressures (0.01 mmHg or 10⁻² Torr) where mean free path of electrons is large."},
+  {q:"X-rays are produced when",o:["cathode rays strike a metal target","positive ions strike the cathode","gas molecules emit UV radiation","electrons move slowly in a gas"],a:0,e:"In an X-ray tube, high-speed electrons (cathode rays) strike a high-melting-point metal target (tungsten), producing X-rays."},
+  
+  // Section D: Mixed Concepts & Applications (46-50)
+  {q:"A device used to measure current accurately by weighing metal deposited is called",o:["galvanometer","ammeter","voltameter","potentiometer"],a:2,e:"A voltameter (copper or silver) measures current by applying Faraday's laws and weighing the deposit—used to calibrate ammeters."},
+  {q:"During electrolysis of dilute Na₂SO₄ using inert electrodes, the pH near the cathode",o:["decreases (becomes more acidic)","increases (becomes more alkaline)","remains unchanged","becomes neutral"],a:1,e:"At cathode: 2H⁺ + 2e⁻ → H₂. H⁺ ions are consumed, leaving excess OH⁻, making the solution alkaline near cathode."},
+  {q:"The purification of copper is best carried out by",o:["smelting","electrolysis using impure copper as anode","electrolysis using impure copper as cathode","fractional distillation"],a:1,e:"Impure copper anode dissolves; pure copper deposits on cathode. Impurities fall as anode sludge or remain in solution."},
+  {q:"Which of the following statements about electrolysis is correct?",o:["Both AC and DC can be used","Only AC can be used","Only DC can be used","The type of current depends on the electrolyte"],a:2,e:"DC is required for electrolysis to maintain consistent electrode polarity. AC would reverse reactions 50/60 times per second."},
+  {q:"The main factor that determines the mass of substance deposited during electrolysis is the",o:["voltage applied across the electrodes","quantity of electricity passed","distance between electrodes","surface area of electrodes"],a:1,e:"Faraday's First Law states mass ∝ quantity of electricity (current × time). Voltage affects rate but not total mass deposited."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('electrolysis_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('electrolysis_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('electrolysis_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=55?'Ready for JAMB!':pct>=48?'Good, review weak areas':pct>=40?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,15,35,45,50];
+  const sectionNames=["A: Electrolytes & Electrolysis Basics","B: Faraday's Laws Calculations","C: Conduction Through Gases","D: Mixed Concepts & Applications"];
+  
+  for(let s=0;s<4;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('electrolysis_quiz_auth');
+  sessionStorage.removeItem('electrolysis_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('electrolysis_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('electrolysis_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

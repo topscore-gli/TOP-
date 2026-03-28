@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Simple A.C. Circuits</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Simple A.C. Circuits (Chapter 36)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Simple A.C. Circuits</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 80:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 80 minutes for 80 questions
+const CONFIG={TIME:4800,PASS:60};
+
+// Section mapping for 80 questions (7 sections)
+const SECTIONS={
+  0:"A: RMS and Peak Values",
+  10:"B: Inductive Reactance",
+  20:"C: Capacitive Reactance",
+  30:"D: Impedance and Series Circuits",
+  50:"E: Power in A.C. Circuits",
+  60:"F: Resonance",
+  70:"G: Parallel Circuits & Advanced Concepts"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 80 JAMB Physics Questions on Simple A.C. Circuits
+const QUIZ_DATA=[
+  // Section A: RMS and Peak Values (1-10)
+  {q:"An alternating current has a peak value of 10A. What is its RMS value?",o:["7.07A","14.14A","5.00A","20.00A"],a:0,e:"I_rms = I_0/√2 = 10/1.414 = 7.07A"},
+  {q:"The RMS value of an alternating voltage is 220V. Calculate the peak value.",o:["155.6V","311.0V","440.0V","110.0V"],a:1,e:"V_0 = V_rms × √2 = 220 × 1.414 = 311.1V ≈ 311V"},
+  {q:"If the instantaneous value of an A.C. voltage is given by V = 200sin(100πt) volts, what is the RMS value of the voltage?",o:["100V","141.4V","200V","282.8V"],a:1,e:"From equation, V_0 = 200V. Therefore V_rms = 200/√2 = 141.4V"},
+  {q:"The peak value of an alternating current is 5A. What is the mean value over half a cycle?",o:["3.18A","5.00A","2.50A","7.07A"],a:0,e:"I_av = 2I_0/π = (2 × 5)/3.142 = 3.18A"},
+  {q:"An A.C. supply is represented by I = 20sin(120πt). What is the frequency of the supply?",o:["20Hz","60Hz","120Hz","30Hz"],a:1,e:"ω = 120π = 2πf, therefore f = 120π/2π = 60Hz"},
+  {q:"The ratio of peak value to RMS value for a sinusoidal A.C. is:",o:["√2","1/√2","2","1/2"],a:0,e:"I_0/I_rms = √2 ≈ 1.414"},
+  {q:"A 220V (RMS) A.C. supply is connected across a resistor. What is the maximum voltage across the resistor?",o:["220V","311V","156V","440V"],a:1,e:"V_0 = V_rms√2 = 220 × 1.414 = 311V"},
+  {q:"The RMS value of an alternating current is 2A. What is the peak-to-peak value?",o:["2.83A","4.00A","5.66A","8.00A"],a:2,e:"I_0 = 2√2 = 2.828A. Peak-to-peak = 2 × 2.828 = 5.66A"},
+  {q:"An A.C. voltage has a frequency of 50Hz and peak value 300V. What is the instantaneous voltage at t = 10ms?",o:["0V","150V","300V","212V"],a:0,e:"At t = 10ms (quarter period), ωt = π/2, so V = 300sin(π/2) = 0V (crossing zero)"},
+  {q:"Which of the following equations represents an A.C. current with frequency 50Hz and RMS value 10A?",o:["I = 10sin(50πt)","I = 14.14sin(100πt)","I = 10sin(100πt)","I = 14.14sin(50πt)"],a:1,e:"I_0 = 10√2 = 14.14A, and ω = 2π × 50 = 100π rad/s"},
+  
+  // Section B: Inductive Reactance (11-20)
+  {q:"Calculate the inductive reactance of a 0.5H inductor connected to a 50Hz supply.",o:["15.7Ω","31.4Ω","157Ω","314Ω"],a:2,e:"X_L = 2πfL = 2 × 3.142 × 50 × 0.5 = 157Ω"},
+  {q:"An inductor has a reactance of 100Ω at 50Hz. What is its inductance?",o:["0.16H","0.32H","3.18H","1.59H"],a:1,e:"L = X_L/(2πf) = 100/(2 × 3.142 × 50) = 100/314.2 = 0.318H ≈ 0.32H"},
+  {q:"At what frequency will a 2H inductor have a reactance of 628Ω?",o:["25Hz","50Hz","100Hz","200Hz"],a:1,e:"f = X_L/(2πL) = 628/(2 × 3.142 × 2) = 628/12.57 = 50Hz"},
+  {q:"The inductive reactance of a coil is 50Ω at 100Hz. What is the reactance at 200Hz?",o:["25Ω","50Ω","100Ω","200Ω"],a:2,e:"X_L ∝ f. If frequency doubles, reactance doubles: 50 × 2 = 100Ω"},
+  {q:"A coil has inductance 0.1H and resistance 10Ω. If connected to a D.C. 10V supply, what current flows?",o:["0.1A","1.0A","10A","100A"],a:1,e:"For D.C., X_L = 0 (since f = 0). Current I = V/R = 10/10 = 1A"},
+  {q:"In a pure inductor, the current:",o:["Leads the voltage by 90°","Lags the voltage by 90°","Is in phase with voltage","Leads the voltage by 45°"],a:1,e:"In an inductor, current lags voltage by 90° (ELI: EMF leads current in inductor)"},
+  {q:"An inductor of 0.2H is connected to a 150V, 60Hz supply. Calculate the current through the inductor.",o:["0.50A","1.00A","1.99A","3.98A"],a:2,e:"X_L = 2π × 60 × 0.2 = 75.4Ω. I = 150/75.4 = 1.99A"},
+  {q:"The energy stored in an inductor carrying current is given by:",o:["½CV²","½LI²","I²R","V²/R"],a:1,e:"Energy stored in magnetic field of inductor = ½LI²"},
+  {q:"A 0.4H inductor is connected to a 100V variable frequency supply. At what frequency is the current 2A?",o:["19.9Hz","39.8Hz","79.6Hz","159.2Hz"],a:0,e:"X_L = V/I = 100/2 = 50Ω. f = 50/(2π × 0.4) = 50/2.513 = 19.9Hz"},
+  {q:"Which graph correctly shows the relationship between inductive reactance and frequency?",o:["Straight line through origin","Hyperbola","Parabola","Horizontal line"],a:0,e:"X_L = 2πfL, so X_L is directly proportional to f (linear relationship)"},
+  
+  // Section C: Capacitive Reactance (21-30)
+  {q:"Calculate the capacitive reactance of a 10μF capacitor at 50Hz.",o:["159Ω","318Ω","636Ω","1000Ω"],a:1,e:"X_C = 1/(2πfC) = 1/(2 × 3.142 × 50 × 10×10⁻⁶) = 1/0.003142 = 318.3Ω"},
+  {q:"A capacitor has a reactance of 500Ω at 100Hz. What is its capacitance?",o:["3.18μF","6.37μF","31.8μF","63.7μF"],a:0,e:"C = 1/(2πfX_C) = 1/(2 × 3.142 × 100 × 500) = 1/314200 = 3.18×10⁻⁶F = 3.18μF"},
+  {q:"At what frequency will a 20μF capacitor have a reactance of 400Ω?",o:["9.95Hz","19.9Hz","39.8Hz","79.6Hz"],a:1,e:"f = 1/(2πCX_C) = 1/(2 × 3.142 × 20×10⁻⁶ × 400) = 1/0.05027 = 19.9Hz"},
+  {q:"The capacitive reactance of a capacitor is 100Ω at 50Hz. What is the reactance at 100Hz?",o:["25Ω","50Ω","100Ω","200Ω"],a:1,e:"X_C ∝ 1/f. If frequency doubles, reactance halves: 100/2 = 50Ω"},
+  {q:"In a pure capacitor, the current:",o:["Lags the voltage by 90°","Leads the voltage by 90°","Is in phase with voltage","Lags the voltage by 45°"],a:1,e:"In a capacitor, current leads voltage by 90° (ICE: Current leads EMF in capacitor)"},
+  {q:"A 50μF capacitor is connected to a 230V, 50Hz supply. Calculate the current.",o:["0.72A","1.44A","3.62A","7.23A"],a:2,e:"X_C = 1/(2π × 50 × 50×10⁻⁶) = 63.7Ω. I = 230/63.7 = 3.61A"},
+  {q:"The reactance of a capacitor at 100Hz is 50Ω. What is the reactance at 400Hz?",o:["12.5Ω","25Ω","100Ω","200Ω"],a:0,e:"X_C ∝ 1/f. Frequency increases 4 times, so reactance becomes 50/4 = 12.5Ω"},
+  {q:"A capacitor stores energy in its:",o:["Magnetic field","Electric field","Resistance","Inductance"],a:1,e:"Capacitors store energy in the electric field between plates"},
+  {q:"What capacitance will give a reactance of 1000Ω at 50Hz?",o:["1.59μF","3.18μF","6.37μF","15.9μF"],a:1,e:"C = 1/(2π × 50 × 1000) = 1/314200 = 3.18μF"},
+  {q:"Which statement about capacitive reactance is correct?",o:["It increases with frequency","It decreases with frequency","It is independent of frequency","It increases with capacitance"],a:1,e:"X_C = 1/(2πfC), so as f increases, X_C decreases"},
+  
+  // Section D: Impedance and Series Circuits (31-50)
+  {q:"A 30Ω resistor and 40Ω inductive reactance are connected in series. What is the impedance?",o:["10Ω","50Ω","70Ω","1200Ω"],a:1,e:"Z = √(R² + X_L²) = √(30² + 40²) = √(900 + 1600) = √2500 = 50Ω"},
+  {q:"In a series R-L circuit with R = 60Ω and X_L = 80Ω, what is the phase angle?",o:["36.9°","53.1°","90°","0°"],a:1,e:"tanφ = X_L/R = 80/60 = 1.333, so φ = tan⁻¹(1.333) = 53.1°"},
+  {q:"A series R-C circuit has R = 40Ω and X_C = 30Ω. Calculate the impedance.",o:["10Ω","50Ω","70Ω","1200Ω"],a:1,e:"Z = √(R² + X_C²) = √(40² + 30²) = √(1600 + 900) = √2500 = 50Ω"},
+  {q:"In a series R-L-C circuit, R = 10Ω, X_L = 30Ω, X_C = 20Ω. Find the impedance.",o:["14.1Ω","22.4Ω","60Ω","10Ω"],a:0,e:"Z = √(10² + (30-20)²) = √(100 + 100) = √200 = 14.1Ω"},
+  {q:"A series circuit has R = 30Ω, X_L = 40Ω, X_C = 80Ω. Calculate the impedance.",o:["30Ω","50Ω","70Ω","90Ω"],a:1,e:"Z = √(30² + (40-80)²) = √(900 + 1600) = √2500 = 50Ω"},
+  {q:"In a series R-L-C circuit, the current leads the voltage. This means:",o:["X_L > X_C","X_C > X_L","X_L = X_C","R = 0"],a:1,e:"When X_C > X_L, the circuit is capacitive and current leads voltage"},
+  {q:"A 100V, 50Hz supply is connected to a series circuit of R = 20Ω and X_L = 15Ω. Calculate the current.",o:["2.0A","3.0A","4.0A","5.0A"],a:2,e:"Z = √(20² + 15²) = √625 = 25Ω. I = 100/25 = 4A"},
+  {q:"For the circuit in question 37, what is the phase angle?",o:["36.9° lagging","53.1° lagging","36.9° leading","53.1° leading"],a:0,e:"tanφ = 15/20 = 0.75, so φ = 36.9°. Since it's inductive (X_L present), current lags"},
+  {q:"A series R-C circuit draws 2A from a 100V, 50Hz supply. If R = 30Ω, what is X_C?",o:["30Ω","40Ω","50Ω","60Ω"],a:1,e:"Z = V/I = 100/2 = 50Ω. X_C = √(Z² - R²) = √(2500 - 900) = √1600 = 40Ω"},
+  {q:"In a series R-L circuit, V_R = 80V and V_L = 60V. What is the supply voltage?",o:["60V","80V","100V","140V"],a:2,e:"V = √(V_R² + V_L²) = √(80² + 60²) = √(6400 + 3600) = √10000 = 100V"},
+  {q:"A series circuit has Z = 50Ω, R = 30Ω, and X_L = 40Ω. What is the power factor?",o:["0.60","0.75","0.80","1.00"],a:0,e:"cosφ = R/Z = 30/50 = 0.6"},
+  {q:"In a series R-L-C circuit, the impedance is minimum when:",o:["R = 0","X_L = X_C","f = 0","C = 0"],a:1,e:"At resonance when X_L = X_C, Z = R (minimum possible)"},
+  {q:"A 200V A.C. supply is connected across a series circuit of R = 60Ω and X_C = 80Ω. Calculate the voltage across the resistor.",o:["80V","120V","160V","200V"],a:1,e:"Z = √(60² + 80²) = 100Ω. I = 200/100 = 2A. V_R = IR = 2 × 60 = 120V"},
+  {q:"For the circuit in question 43, what is the voltage across the capacitor?",o:["80V","120V","160V","200V"],a:2,e:"V_C = IX_C = 2 × 80 = 160V"},
+  {q:"A coil has resistance 30Ω and inductance 0.127H (approx 0.13H). At what frequency is its impedance 50Ω?",o:["25Hz","50Hz","100Hz","200Hz"],a:1,e:"X_L = √(50² - 30²) = √(2500 - 900) = √1600 = 40Ω. f = 40/(2π × 0.127) = 50.2Hz ≈ 50Hz"},
+  {q:"In a series circuit, the power dissipated is 100W when the current is 2A. What is the resistance?",o:["25Ω","50Ω","100Ω","200Ω"],a:0,e:"P = I²R, so R = P/I² = 100/4 = 25Ω"},
+  {q:"A series R-L-C circuit has R = 10Ω, X_L = 20Ω, X_C = 10Ω. The phase angle is:",o:["26.6° lagging","45.0° lagging","63.4° lagging","90.0° lagging"],a:1,e:"tanφ = (X_L - X_C)/R = 10/10 = 1, so φ = 45°. Since X_L > X_C, current lags"},
+  {q:"A circuit has power factor 0.8 and impedance 50Ω. What is the resistance?",o:["30Ω","40Ω","50Ω","62.5Ω"],a:1,e:"cosφ = R/Z, so R = Zcosφ = 50 × 0.8 = 40Ω"},
+  {q:"In a series R-C circuit, the current leads the voltage by 45°. If R = 100Ω, what is X_C?",o:["50Ω","70.7Ω","100Ω","141.4Ω"],a:2,e:"tan(45°) = X_C/R = 1, so X_C = R = 100Ω"},
+  {q:"A 100Ω resistor, 0.318H inductor, and 15.9μF capacitor are connected in series to a 200V, 50Hz supply. What is the impedance?",o:["70.7Ω","100Ω","141.4Ω","200Ω"],a:2,e:"X_L = 2π × 50 × 0.318 = 100Ω. X_C = 1/(2π × 50 × 15.9×10⁻⁶) = 200Ω. Z = √(100² + (100-200)²) = √20000 = 141.4Ω"},
+  
+  // Section E: Power in A.C. Circuits (51-60)
+  {q:"A circuit takes 5A from a 200V supply at power factor 0.6. Calculate the real power.",o:["200W","400W","600W","1000W"],a:2,e:"P = VIcosφ = 200 × 5 × 0.6 = 600W"},
+  {q:"For the circuit in question 51, what is the apparent power?",o:["200VA","600VA","800VA","1000VA"],a:3,e:"S = VI = 200 × 5 = 1000VA"},
+  {q:"A series circuit has R = 40Ω and X_L = 30Ω. If the current is 3A, calculate the power dissipated.",o:["90W","270W","360W","450W"],a:2,e:"Power is only dissipated in resistance. P = I²R = 9 × 40 = 360W"},
+  {q:"The power factor of a circuit is 0.5. This means:",o:["The current leads voltage by 60°","The current lags voltage by 60°","The phase angle is 30°","The circuit is purely resistive"],a:1,e:"cosφ = 0.5, so φ = 60°. Usually lagging (inductive) unless specified"},
+  {q:"A circuit has V = 100V, I = 2A, and phase angle 30°. Calculate the reactive power.",o:["100VAR","173VAR","200VAR","346VAR"],a:0,e:"Q = VIsinφ = 100 × 2 × sin(30°) = 200 × 0.5 = 100VAR"},
+  {q:"In a pure inductor, the average power consumed is:",o:["I²X_L","½LI²","Zero","VI"],a:2,e:"In pure inductor, current lags voltage by 90°, so cos(90°) = 0, and P = VIcosφ = 0"},
+  {q:"A 200V A.C. supply is connected to a coil with impedance 50Ω and resistance 30Ω. Calculate the power dissipated.",o:["240W","480W","800W","1333W"],a:1,e:"I = 200/50 = 4A. P = I²R = 16 × 30 = 480W"},
+  {q:"The power factor of a series R-L circuit with R = 60Ω and X_L = 80Ω is:",o:["0.60","0.75","0.80","1.00"],a:0,e:"Z = √(60² + 80²) = 100Ω. cosφ = 60/100 = 0.6"},
+  {q:"A circuit draws 10A from a 400V supply and dissipates 2kW. What is the power factor?",o:["0.25","0.50","0.75","1.00"],a:1,e:"cosφ = P/(VI) = 2000/(400 × 10) = 2000/4000 = 0.5"},
+  {q:"In an A.C. circuit, the power factor can be improved by:",o:["Adding more resistance","Adding a capacitor in parallel","Increasing the frequency","Decreasing the voltage"],a:1,e:"Capacitors provide leading reactive power to cancel lagging reactive power of inductors, improving power factor"},
+  
+  // Section F: Resonance (61-70)
+  {q:"Calculate the resonant frequency of a circuit with L = 1H and C = 10μF.",o:["15.9Hz","31.8Hz","50.3Hz","100Hz"],a:2,e:"f_0 = 1/(2π√(LC)) = 1/(2π√(1 × 10×10⁻⁶)) = 1/(2π × 3.16×10⁻³) = 50.3Hz"},
+  {q:"A series R-L-C circuit has L = 0.5H and C = 20μF. At resonance, the impedance is:",o:["Zero","Equal to R","Infinite","√(L/C)"],a:1,e:"At resonance, X_L = X_C, so they cancel and Z = R"},
+  {q:"At resonance in a series R-L-C circuit, which statement is correct?",o:["Current is minimum","Power factor is zero","Current and voltage are in phase","Impedance is maximum"],a:2,e:"At resonance, φ = 0, so current and voltage are in phase, and power factor = 1"},
+  {q:"The resonant frequency of a circuit is 100Hz. If the capacitance is doubled, what is the new resonant frequency?",o:["50Hz","70.7Hz","141.4Hz","200Hz"],a:1,e:"f_0 ∝ 1/√C. If C doubles, f_0 becomes 100/√2 = 70.7Hz"},
+  {q:"A circuit has L = 0.1H and resonates at 50Hz. What is the capacitance?",o:["10.1μF","50.7μF","101μF","507μF"],a:2,e:"C = 1/(4π²f²L) = 1/(4 × 9.87 × 2500 × 0.1) = 1/9870 = 101.3μF"},
+  {q:"At resonance, the current in a series R-L-C circuit is limited only by:",o:["The inductance","The capacitance","The resistance","The frequency"],a:2,e:"At resonance, Z = R, so current I = V/R is limited only by resistance"},
+  {q:"A series circuit has R = 10Ω, L = 0.2H, C = 100μF. At 50Hz, is the circuit:",o:["At resonance","Capacitive","Inductive","Purely resistive"],a:2,e:"X_L = 62.8Ω, X_C = 31.8Ω. Since X_L > X_C, circuit is inductive"},
+  {q:"The Q-factor of a resonant circuit is given by:",o:["R/(2πfL)","2πfL/R","(1/R)√(L/C)","Both B and C"],a:3,e:"Q = ωL/R = (1/R)√(L/C) (both forms are equivalent at resonance)"},
+  {q:"A circuit resonates at 1kHz with L = 2.5mH. What is the capacitance?",o:["1.01μF","10.1μF","101μF","1000μF"],a:1,e:"C = 1/(4π²f²L) = 1/(4 × 9.87 × 10⁶ × 0.0025) = 1/98700 = 10.1μF"},
+  {q:"At resonance, the voltage across the inductor in a series circuit can be:",o:["Equal to the supply voltage","Less than the supply voltage","Greater than the supply voltage","Zero"],a:2,e:"At resonance, V_L = IX_L = (V/R)X_L. Since Q = X_L/R, V_L = QV, and Q can be >> 1"},
+  
+  // Section G: Parallel Circuits & Advanced Concepts (71-80)
+  {q:"In a parallel R-L circuit, the voltage across each branch is:",o:["Different","The same","In phase","90° out of phase"],a:1,e:"In parallel circuits, voltage across all branches is the same"},
+  {q:"A resistor and inductor are connected in parallel to an A.C. supply. The current in the resistive branch is 3A, and in the inductive branch is 4A. What is the total current?",o:["1A","5A","7A","12A"],a:1,e:"Currents are 90° out of phase, so I = √(3² + 4²) = √(9+16) = √25 = 5A"},
+  {q:"In a parallel A.C. circuit, the admittance is measured in:",o:["Ohms","Siemens","Henrys","Farads"],a:1,e:"Admittance Y = 1/Z is measured in Siemens (S), the inverse of impedance"},
+  {q:"A coil has resistance 20Ω and reactance 15Ω. What is its impedance?",o:["5Ω","25Ω","35Ω","625Ω"],a:1,e:"Z = √(R² + X_L²) = √(400 + 225) = √625 = 25Ω"},
+  {q:"The unit of inductive reactance is:",o:["Henry","Ohm","Farad","Siemens"],a:1,e:"Reactance, like resistance and impedance, is measured in Ohms (Ω)"},
+  {q:"An A.C. circuit has V = 100sin(100πt) volts and I = 5sin(100πt - π/3) amps. What is the power factor?",o:["0.5","0.707","0.866","1.0"],a:0,e:"Phase angle φ = π/3 = 60°. cos(60°) = 0.5"},
+  {q:"For the circuit in question 76, what is the average power?",o:["125W","250W","433W","500W"],a:0,e:"V_rms = 100/√2 = 70.7V, I_rms = 5/√2 = 3.54A. P = 70.7 × 3.54 × 0.5 = 125W. Or using peak values: P = (V_0I_0/2)cosφ = (100×5/2)×0.5 = 125W"},
+  {q:"A choke coil is used in fluorescent lamps to:",o:["Increase voltage","Limit current","Store charge","Convert A.C. to D.C."],a:1,e:"A choke (inductor) provides high reactance to limit current without wasting power as heat"},
+  {q:"The reactance of a 1μF capacitor at 50Hz is:",o:["159Ω","3182Ω","5000Ω","10000Ω"],a:1,e:"X_C = 1/(2π × 50 × 1×10⁻⁶) = 1/(3.142×10⁻⁴) = 3183Ω"},
+  {q:"Which combination gives the highest impedance at 50Hz?",o:["R = 100Ω, L = 1H, C = 100μF","R = 100Ω, L = 0.1H, C = 10μF","R = 50Ω, L = 2H, C = 50μF","R = 200Ω, L = 0.5H, C = 200μF"],a:2,e:"A: X_L = 314Ω, X_C = 31.8Ω, Z = 298Ω. B: X_L = 31.4Ω, X_C = 318Ω, Z = 304Ω. C: X_L = 628Ω, X_C = 63.7Ω, Z = 566Ω (highest). D: X_L = 157Ω, X_C = 15.9Ω, Z = 244Ω"}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('ac_circuits_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('ac_circuits_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/80`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('ac_circuits_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=55?'Ready for JAMB!':pct>=48?'Good, review weak areas':pct>=40?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,20,30,50,60,70,80];
+  const sectionNames=["A: RMS and Peak Values","B: Inductive Reactance","C: Capacitive Reactance","D: Impedance and Series Circuits","E: Power in A.C. Circuits","F: Resonance","G: Parallel Circuits & Advanced Concepts"];
+  
+  for(let s=0;s<7;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('ac_circuits_quiz_auth');
+  sessionStorage.removeItem('ac_circuits_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('ac_circuits_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('ac_circuits_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Conduction Through Liquids and Gases Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:500px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .hot{fill:rgba(255,107,107,.35);stroke:none}
+    .cool{fill:rgba(78,205,196,.30);stroke:none}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🧪 Conduction Through Liquids and Gases</h1>
+        <p>JAMB Physics • electrolysis • Faraday’s laws • electroplating • gas discharge • practical applications</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains conduction of electricity through liquids and gases, electrolysis, Faraday’s laws, electroplating, gas discharge, and common applications for JAMB success.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Liquids conduct by movement of ions</li>
+            <li>Gases conduct only after ionization</li>
+            <li>Electrolysis causes chemical decomposition</li>
+            <li><span class="math">96,500 C = 1 Faraday</span></li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Conduction in liquids and gases is very different from conduction in metals because it depends on ions, electrons, and chemical change.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔬 Part A: Conduction Through Liquids</h2>
+
+        <h3>1. Electrolytes vs Non-Electrolytes</h3>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Electrolytes</th>
+              <th>Non-Electrolytes</th>
+            </tr>
+            <tr><td>Conduct when molten or dissolved</td><td>Do not conduct in ordinary conditions</td></tr>
+            <tr><td>Undergo chemical decomposition</td><td>No chemical change during current flow</td></tr>
+            <tr><td>Contain mobile ions</td><td>Contain molecules only</td></tr>
+            <tr><td>Examples: acids, bases, salts</td><td>Examples: sugar, alcohol, benzene, distilled water</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="highlight-box">
+          <p>Solid ionic compounds like sodium chloride do not conduct because the ions are fixed in place. They conduct only when molten or dissolved.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ The Concept of Electrolysis</h2>
+
+        <p>Electrolysis is the decomposition of a chemical compound by passing direct current through its molten state or solution.</p>
+
+        <h3>Electrolytic cell setup</h3>
+        <ul>
+          <li><strong>Anode (+):</strong> positive electrode, oxidation occurs here</li>
+          <li><strong>Cathode (−):</strong> negative electrode, reduction occurs here</li>
+          <li><strong>Electrolyte:</strong> liquid containing ions</li>
+          <li><strong>D.C. source:</strong> drives the ions to the electrodes</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Simple electrolytic cell</div>
+          <svg viewBox="0 0 340 220" aria-label="Electrolytic cell diagram">
+            <rect x="80" y="70" width="180" height="100" rx="8" class="obj"/>
+            <line x1="120" y1="30" x2="120" y2="125" class="curve"/>
+            <line x1="220" y1="30" x2="220" y2="125" class="curve"/>
+            <circle cx="120" cy="25" r="12" class="hot"/>
+            <circle cx="220" cy="25" r="12" class="cool"/>
+            <text x="115" y="29" class="label">+</text>
+            <text x="216" y="29" class="label">−</text>
+            <text x="95" y="145" class="label">Electrolyte</text>
+            <text x="95" y="55" class="label">Anode</text>
+            <text x="205" y="55" class="label">Cathode</text>
+            <text x="135" y="100" class="label">anions →</text>
+            <text x="165" y="120" class="label">← cations</text>
+          </svg>
+          <div class="diagram-caption">Positive ions move to the cathode, while negative ions move to the anode.</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Memory aid</strong>
+          <p>CAT-ions go to the CAT-hode.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Faraday’s Laws of Electrolysis</h2>
+
+        <h3>First law</h3>
+        <p>The mass of substance deposited is directly proportional to the quantity of electricity passed.</p>
+
+        <div class="formula-box">
+          <div class="title">Faraday’s first law</div>
+          <div class="line"><span class="math">m = ZIt = ZQ</span></div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Electrochemical equivalent</div>
+          <div class="line"><span class="math">Z = M/(n × 96,500)</span></div>
+        </div>
+
+        <h3>Second law</h3>
+        <p>When the same quantity of electricity passes through different electrolytes, the masses deposited are proportional to their equivalent masses.</p>
+
+        <div class="formula-box">
+          <div class="title">Faraday’s second law</div>
+          <div class="line"><span class="math">m₁/m₂ = E₁/E₂</span></div>
+          <div class="line"><span class="math">E = M/n</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 1: Mass Deposited</div>
+          <p>Calculate the mass of copper deposited when 2 A flows through CuSO₄ for 30 minutes. Take <span class="math">Cu = 64</span>, <span class="math">n = 2</span>.</p>
+          <p><span class="math">Q = It = 2 × (30 × 60) = 3600 C</span></p>
+          <p><span class="math">Z = 64/(2 × 96,500)</span></p>
+          <p><span class="math">m = ZQ = (64 × 3600)/193,000 = 1.19 g</span></p>
+          <div class="answer">Answer: 1.19 g</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 2: Using Second Law</div>
+          <p>If 0.54 g of silver is deposited in the same time as 0.16 g of copper, find the equivalent mass of copper. Take silver equivalent mass as 108.</p>
+          <p><span class="math">0.16/0.54 = Ecu/108</span></p>
+          <p><span class="math">Ecu = (0.16 × 108)/0.54 = 32</span></p>
+          <div class="answer">Answer: 32</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Applications of Electrolysis</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Application</th>
+              <th>How It Works</th>
+            </tr>
+            <tr><td>Electroplating</td><td>Coats a metal object with a thin layer of another metal</td></tr>
+            <tr><td>Purification of metals</td><td>Impure metal is anode, pure metal is cathode</td></tr>
+            <tr><td>Calibration of ammeters</td><td>Current is measured using metal deposited in a voltameter</td></tr>
+            <tr><td>Extraction of metals</td><td>Reactive metals are extracted by electrolysis of molten compounds</td></tr>
+            <tr><td>Production of chemicals</td><td>Brine electrolysis produces chlorine, hydrogen, and sodium hydroxide</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <h3>Electroplating example: silver-plating a spoon</h3>
+        <ul>
+          <li>Spoon = cathode</li>
+          <li>Silver bar = anode</li>
+          <li>Electrolyte = silver nitrate solution</li>
+          <li>Silver deposits on the spoon</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>⚡ Part B: Conduction Through Gases</h2>
+
+        <h3>1. Discharge Through Gases</h3>
+        <p>Gases are normally insulators because they have no free ions or electrons. They conduct only after ionization.</p>
+
+        <h3>How gases become conductors</h3>
+        <ul>
+          <li><strong>High voltage:</strong> ionizes gas atoms</li>
+          <li><strong>Low pressure:</strong> allows charges to move more easily</li>
+          <li><strong>Ionization:</strong> produces positive ions and free electrons</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Discharge tube idea</div>
+          <svg viewBox="0 0 340 180" aria-label="Discharge tube diagram">
+            <rect x="30" y="55" width="280" height="70" rx="35" class="obj"/>
+            <line x1="65" y1="70" x2="65" y2="110" class="curve"/>
+            <line x1="275" y1="70" x2="275" y2="110" class="curve"/>
+            <circle cx="65" cy="90" r="8" class="hot"/>
+            <circle cx="275" cy="90" r="8" class="cool"/>
+            <text x="45" y="45" class="label">Anode</text>
+            <text x="255" y="45" class="label">Cathode</text>
+            <path d="M85 90 C125 60,165 120,205 90 S255 60,265 90" class="curve"/>
+          </svg>
+          <div class="diagram-caption">At low pressure and high voltage, gases glow and conduct because of ionization.</div>
+        </div>
+
+        <h3>Observations at different pressures</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Pressure</th>
+              <th>Observation</th>
+            </tr>
+            <tr><td>Atmospheric pressure</td><td>No discharge</td></tr>
+            <tr><td>10 mmHg</td><td>Thin reddish streamers</td></tr>
+            <tr><td>1 mmHg</td><td>Glow fills the tube with dark spaces</td></tr>
+            <tr><td>0.01 mmHg</td><td>Cathode rays appear and glass fluoresces</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Applications of Conduction Through Gases</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Device</th>
+              <th>Application</th>
+            </tr>
+            <tr><td>Fluorescent tube</td><td>Mercury vapour produces UV, phosphor coating gives visible light</td></tr>
+            <tr><td>Neon sign</td><td>Ionized gas glows with characteristic colours</td></tr>
+            <tr><td>X-ray tube</td><td>Fast electrons hit a metal target and produce X-rays</td></tr>
+            <tr><td>CRO</td><td>Electron beams display electrical signals</td></tr>
+            <tr><td>CRT screen</td><td>Electron beams scan screen to produce images</td></tr>
+            <tr><td>Lightning</td><td>Natural discharge through ionized air</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Summary Table of Formulas</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Law/Concept</th>
+              <th>Formula</th>
+              <th>Variables</th>
+            </tr>
+            <tr><td>Quantity of electricity</td><td><span class="math">Q = It</span></td><td>Q = charge, I = current, t = time</td></tr>
+            <tr><td>Faraday’s first law</td><td><span class="math">m = ZQ = ZIt</span></td><td>m = mass, Z = electrochemical equivalent</td></tr>
+            <tr><td>Electrochemical equivalent</td><td><span class="math">Z = M/(nF)</span></td><td>M = molar mass, n = valency</td></tr>
+            <tr><td>Equivalent mass</td><td><span class="math">E = M/n</span></td><td>E = equivalent mass</td></tr>
+            <tr><td>Faraday’s second law</td><td><span class="math">m₁/m₂ = E₁/E₂</span></td><td>m = masses, E = equivalent masses</td></tr>
+            <tr><td>Alternative form</td><td><span class="math">m₁/m₂ = (M₁/n₁)/(M₂/n₂)</span></td><td>M = molar mass, n = valency</td></tr>
+            <tr><td>Number of Faradays</td><td><span class="math">Q/F = It/96,500</span></td><td>F = Faraday constant</td></tr>
+            <tr><td>Moles deposited</td><td><span class="math">m/M = Q/(nF)</span></td><td>Links mass and charge</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 JAMB Exam Focus</h2>
+
+        <div class="jamb-alert">
+          <h4>What you must know</h4>
+          <ul>
+            <li>Distinguish electrolytes from non-electrolytes</li>
+            <li>Know what happens at anode and cathode</li>
+            <li>Apply Faraday’s laws in calculations</li>
+            <li>Understand electroplating and metal purification</li>
+            <li>Know why gases conduct only under special conditions</li>
+            <li>Recognize devices that use gas discharge</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Quick memory tips</strong>
+          <p>REDuction at CAThode, ANode is OXidation. Also remember: <span class="math">96,500 C = 1 Faraday</span>.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>📝 Quick Practice Questions</h2>
+
+        <div class="example-box">
+          <div class="title">Q1. Calculate the mass of silver deposited when 3 A flows for 20 minutes. Take Ag = 108, n = 1.</div>
+          <p><span class="math">Q = It = 3 × 1200 = 3600 C</span></p>
+          <p><span class="math">Z = 108/96,500</span></p>
+          <p><span class="math">m = ZQ ≈ 4.02 g</span></p>
+          <div class="answer">Answer: 4.02 g</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q2. How many Faradays are required to deposit 1 mole of Al from Al³⁺?</div>
+          <p>Since aluminium has valency 3, it needs 3 moles of electrons.</p>
+          <div class="answer">Answer: 3 Faradays</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Q3. Why does NaCl conduct when molten but not when solid?</div>
+          <p>In solid NaCl, ions are fixed in a crystal lattice. When molten, the ions become free to move and carry charge.</p>
+          <div class="answer">Answer: Because the ions become mobile when molten</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Conduction of Electricity Through Liquids and Gases. This chapter is important because it combines electrochemistry, current flow, ionization, and many real-life applications in one exam-friendly topic.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise electrolysis, Faraday’s laws, equivalent mass, electroplating, gas discharge conditions, and applications like fluorescent tubes and X-ray tubes.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

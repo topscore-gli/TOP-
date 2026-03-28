@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Motion</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Motion (Chapter 3)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Motion (Chapter 3)</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 90:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 90 minutes for 100 questions
+const CONFIG={TIME:5400,PASS:60};
+
+// Section mapping for 100 questions (7 sections)
+const SECTIONS={
+  0:"A: Types of Motion & Basic Concepts",
+  10:"B: Linear Motion & Equations",
+  30:"C: Projectile Motion",
+  45:"D: Newton's Laws of Motion",
+  65:"E: Momentum & Impulse",
+  80:"F: Circular Motion",
+  90:"G: Simple Harmonic Motion"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 100 JAMB Physics Questions on Motion
+const QUIZ_DATA=[
+  // Section A: Types of Motion & Basic Concepts (1-10)
+  {q:"Which of the following types of motion is exhibited by a spinning top?",o:["Translational motion","Rotational motion","Oscillatory motion","Random motion"],a:1,e:"A spinning top rotates about its axis, which is rotational motion."},
+  {q:"The motion of the pendulum of a wall clock is an example of:",o:["Circular motion","Rotational motion","Oscillatory motion","Translational motion"],a:2,e:"The pendulum swings back and forth about a fixed point, making it oscillatory motion."},
+  {q:"Which of the following is a vector quantity?",o:["Speed","Distance","Mass","Displacement"],a:3,e:"Displacement has both magnitude and direction, unlike the scalar quantities listed."},
+  {q:"A car travels from Lagos to Ibadan and back to Lagos. The displacement of the car is:",o:["Twice the distance between Lagos and Ibadan","Equal to the distance between Lagos and Ibadan","Zero","Half the distance between Lagos and Ibadan"],a:2,e:"Displacement is the change in position. Since the car returns to the starting point, displacement = 0."},
+  {q:"Which of the following is NOT a type of motion?",o:["Translational","Rotational","Gravitational","Vibratory"],a:2,e:"Gravitational is a force, not a type of motion. The others are valid types of motion."},
+  {q:"A body moving with constant velocity has:",o:["Constant speed only","Constant direction only","Both constant speed and constant direction","Changing speed and constant direction"],a:2,e:"Velocity is a vector; constant velocity means both magnitude (speed) and direction remain unchanged."},
+  {q:"The motion of gas molecules in a container is best described as:",o:["Translational motion","Rotational motion","Random motion","Oscillatory motion"],a:2,e:"Gas molecules move randomly in all directions with varying speeds."},
+  {q:"Which physical quantity is the same as the rate of change of displacement?",o:["Speed","Velocity","Acceleration","Distance"],a:1,e:"Velocity = displacement/time, which is the rate of change of displacement."},
+  {q:"A scalar quantity has:",o:["Magnitude and direction","Magnitude only","Direction only","Neither magnitude nor direction"],a:1,e:"Scalars are defined by magnitude alone (e.g., mass, temperature, time)."},
+  {q:"Which of the following pairs are both vector quantities?",o:["Force and energy","Mass and weight","Velocity and acceleration","Speed and distance"],a:2,e:"Both velocity and acceleration have magnitude and direction. Energy, mass, speed, and distance are scalars."},
+  
+  // Section B: Linear Motion & Equations (11-30)
+  {q:"A car accelerates uniformly from rest at 3 m/s² for 8 seconds. Calculate the final velocity.",o:["11 m/s","24 m/s","32 m/s","48 m/s"],a:1,e:"Using v = u + at = 0 + (3 × 8) = 24 m/s."},
+  {q:"A body moving with initial velocity 10 m/s accelerates at 2 m/s². Calculate the distance covered in 5 seconds.",o:["50 m","75 m","100 m","125 m"],a:1,e:"Using s = ut + ½at² = (10 × 5) + ½(2)(25) = 50 + 25 = 75 m."},
+  {q:"A train decelerates uniformly from 30 m/s to 10 m/s over 100 m. Calculate the deceleration.",o:["2 m/s²","4 m/s²","6 m/s²","8 m/s²"],a:1,e:"Using v² = u² + 2as: 100 = 900 + 200a → a = -4 m/s² (deceleration = 4 m/s²)."},
+  {q:"A stone is thrown vertically upward with velocity 20 m/s. Calculate the maximum height reached. (g = 10 m/s²)",o:["10 m","20 m","40 m","80 m"],a:1,e:"At max height, v = 0. Using v² = u² - 2gh: 0 = 400 - 20h → h = 20 m."},
+  {q:"How long does it take the stone in question 14 to return to the ground?",o:["2 s","4 s","6 s","8 s"],a:1,e:"Time up = u/g = 20/10 = 2 s. Time up = time down, so total time = 4 s."},
+  {q:"A car travels 60 km in 30 minutes. Its average speed in m/s is:",o:["30.3 m/s","33.3 m/s","36.3 m/s","40.3 m/s"],a:1,e:"Speed = 60 km/0.5 h = 120 km/h = 120 × (5/18) = 33.3 m/s."},
+  {q:"A body starts from rest and covers 50 m in 5 s with uniform acceleration. Calculate the acceleration.",o:["2 m/s²","4 m/s²","5 m/s²","10 m/s²"],a:1,e:"Using s = ut + ½at²: 50 = 0 + ½a(25) → a = 4 m/s²."},
+  {q:"The velocity-time graph of a body is a horizontal straight line. This indicates:",o:["Uniform acceleration","Uniform retardation","Uniform velocity","Changing velocity"],a:2,e:"Constant velocity means zero acceleration, represented by a horizontal line on v-t graph."},
+  {q:"A body moving with uniform acceleration has velocities 5 m/s and 15 m/s at two points. Its velocity at the midpoint is:",o:["7.5 m/s","10 m/s","11.2 m/s","12.5 m/s"],a:2,e:"For uniform acceleration, v_mid = √[(u² + v²)/2] = √[(25 + 225)/2] = √125 = 11.2 m/s."},
+  {q:"A ball is thrown upward and caught after 6 s. Calculate the initial velocity. (g = 10 m/s²)",o:["15 m/s","20 m/s","30 m/s","60 m/s"],a:2,e:"Time to reach max height = 3 s. Using v = u - gt: 0 = u - 30 → u = 30 m/s."},
+  {q:"A car accelerates from 10 m/s to 30 m/s in 5 s. Calculate the distance traveled.",o:["50 m","100 m","150 m","200 m"],a:1,e:"Using s = [(u+v)/2]t = [(10+30)/2] × 5 = 100 m."},
+  {q:"A stone falls from a height of 45 m. Calculate its velocity just before hitting the ground. (g = 10 m/s²)",o:["20 m/s","25 m/s","30 m/s","45 m/s"],a:2,e:"Using v² = 2gh = 2 × 10 × 45 = 900 → v = 30 m/s."},
+  {q:"A body moves with uniform acceleration of 2 m/s². If its initial velocity is 5 m/s, what is its velocity after 4 s?",o:["8 m/s","10 m/s","13 m/s","20 m/s"],a:2,e:"Using v = u + at = 5 + (2 × 4) = 13 m/s."},
+  {q:"The area under a velocity-time graph represents:",o:["Acceleration","Velocity","Displacement","Distance"],a:2,e:"The area under v-t graph gives displacement (or distance if velocity doesn't change sign)."},
+  {q:"A car travels 100 m while uniformly accelerating from rest to 20 m/s. Calculate the acceleration.",o:["1 m/s²","2 m/s²","4 m/s²","10 m/s²"],a:1,e:"Using v² = u² + 2as: 400 = 0 + 200a → a = 2 m/s²."},
+  {q:"A body is projected vertically upward. At maximum height:",o:["Velocity is maximum, acceleration is zero","Velocity is zero, acceleration is zero","Velocity is zero, acceleration is g downward","Velocity is maximum, acceleration is g downward"],a:2,e:"At max height, the body momentarily stops (v = 0) but acceleration due to gravity (g) still acts downward."},
+  {q:"A train moving at 72 km/h is brought to rest in 10 s. Calculate the deceleration.",o:["2 m/s²","4 m/s²","7.2 m/s²","20 m/s²"],a:0,e:"72 km/h = 20 m/s. Using v = u + at: 0 = 20 + 10a → a = -2 m/s² (deceleration = 2 m/s²)."},
+  {q:"A stone is dropped from a cliff and takes 4 s to reach the ground. Calculate the height of the cliff. (g = 10 m/s²)",o:["40 m","60 m","80 m","160 m"],a:2,e:"Using h = ½gt² = ½ × 10 × 16 = 80 m."},
+  {q:"The slope of a displacement-time graph gives:",o:["Acceleration","Velocity","Distance","Speed"],a:1,e:"Slope of s-t graph = Δs/Δt = velocity."},
+  {q:"A body covers 100 m in the first 5 s and another 100 m in the next 3 s. Its average speed for the entire journey is:",o:["20 m/s","25 m/s","28.6 m/s","33.3 m/s"],a:1,e:"Total distance = 200 m, total time = 8 s. Average speed = 200/8 = 25 m/s."},
+  
+  // Section C: Projectile Motion (31-45)
+  {q:"A projectile is fired horizontally from a height of 20 m with velocity 10 m/s. Calculate the time to reach the ground. (g = 10 m/s²)",o:["1 s","2 s","4 s","20 s"],a:1,e:"Using h = ½gt²: 20 = 5t² → t = 2 s (horizontal velocity doesn't affect time)."},
+  {q:"Calculate the horizontal range for the projectile in question 31.",o:["10 m","20 m","40 m","200 m"],a:1,e:"Range = horizontal velocity × time = 10 × 2 = 20 m."},
+  {q:"A ball is projected at 30° to the horizontal with velocity 20 m/s. Calculate the horizontal component.",o:["10 m/s","10√3 m/s","17.3 m/s","20 m/s"],a:2,e:"u_x = ucosθ = 20cos30° = 20 × 0.866 = 17.3 m/s."},
+  {q:"For maximum range, a projectile should be launched at:",o:["30°","45°","60°","90°"],a:1,e:"Maximum range occurs when sin(2θ) = 1, i.e., θ = 45°."},
+  {q:"A projectile has initial velocity 40 m/s at 30°. Calculate the maximum height. (g = 10 m/s²)",o:["20 m","40 m","60 m","80 m"],a:0,e:"H = (u²sin²θ)/2g = (1600 × 0.25)/20 = 20 m."},
+  {q:"The time of flight of a projectile depends on:",o:["Horizontal component of velocity only","Vertical component of velocity only","Both horizontal and vertical components","Angle of projection only"],a:1,e:"T = (2usinθ)/g depends only on vertical component usinθ."},
+  {q:"A stone is thrown horizontally from a 45 m high tower and hits the ground 30 m from the base. Calculate the initial horizontal velocity. (g = 10 m/s²)",o:["5 m/s","10 m/s","15 m/s","20 m/s"],a:1,e:"Time to fall: t = √(2h/g) = √9 = 3 s. Velocity = 30/3 = 10 m/s."},
+  {q:"At the highest point of a projectile's trajectory:",o:["Velocity is zero","Vertical velocity is zero","Horizontal velocity is zero","Acceleration is zero"],a:1,e:"At max height, vertical velocity becomes zero while horizontal velocity remains constant."},
+  {q:"A projectile launched at 50 m/s, 60° has a horizontal range of:",o:["125√3 m","250√3 m","500√3 m","1000√3 m"],a:1,e:"R = (u²sin(2θ))/g = (2500 × sin(120°))/10 = 250 × (√3/2) × 2 = 250√3 m."},
+  {q:"Two bodies are projected horizontally from the same height with different velocities. Which reaches the ground first?",o:["The one with greater velocity","The one with smaller velocity","Both reach simultaneously","Depends on their masses"],a:2,e:"Time of fall depends only on height, not horizontal velocity."},
+  {q:"A ball is projected upward at angle θ with speed u. The time to reach maximum height is:",o:["(usinθ)/g","(2usinθ)/g","(ucosθ)/g","u/g"],a:0,e:"At max height, vertical velocity = 0. Using v = usinθ - gt = 0 → t = (usinθ)/g."},
+  {q:"The path of a projectile is a:",o:["Straight line","Circle","Parabola","Hyperbola"],a:2,e:"The trajectory y = xtanθ - (gx²)/(2u²cos²θ) is a parabola."},
+  {q:"A projectile has time of flight 4 s and range 80 m. Calculate the horizontal velocity.",o:["10 m/s","20 m/s","40 m/s","80 m/s"],a:1,e:"Horizontal velocity = Range/time = 80/4 = 20 m/s (constant throughout)."},
+  {q:"A stone is thrown at 20 m/s, 45°. Calculate the speed at maximum height.",o:["0 m/s","10 m/s","10√2 m/s","20 m/s"],a:2,e:"At max height, v = ucosθ = 20 × (1/√2) = 10√2 m/s (horizontal only)."},
+  {q:"For a projectile, the horizontal velocity:",o:["Increases with time","Decreases with time","Remains constant","Becomes zero at max height"],a:2,e:"No horizontal acceleration (ignoring air resistance), so horizontal velocity is constant."},
+  
+  // Section D: Newton's Laws of Motion (46-65)
+  {q:"Newton's First Law of Motion is also called the Law of:",o:["Acceleration","Inertia","Action-Reaction","Force"],a:1,e:"First law defines inertia - the tendency of bodies to maintain their state of motion."},
+  {q:"A 5 kg mass is accelerated at 2 m/s². Calculate the force applied.",o:["2.5 N","5 N","10 N","20 N"],a:2,e:"Using F = ma = 5 × 2 = 10 N."},
+  {q:"A 1000 kg car moving at 20 m/s is brought to rest in 4 s. Calculate the braking force.",o:["2000 N","4000 N","5000 N","8000 N"],a:2,e:"a = (0-20)/4 = -5 m/s². F = ma = 1000 × 5 = 5000 N."},
+  {q:"Action and reaction forces act on:",o:["The same body in the same direction","The same body in opposite directions","Different bodies","Different bodies in the same direction"],a:2,e:"Newton's Third Law: action and reaction forces act on different interacting bodies."},
+  {q:"A 2 kg body experiences a net force of 8 N. Its acceleration is:",o:["0.25 m/s²","4 m/s²","8 m/s²","16 m/s²"],a:1,e:"a = F/m = 8/2 = 4 m/s²."},
+  {q:"When a bus suddenly moves forward, passengers jerk backward due to:",o:["Newton's First Law","Newton's Second Law","Newton's Third Law","Law of gravitation"],a:0,e:"Inertia (First Law) causes passengers to resist the change in motion."},
+  {q:"A 0.5 kg stone is whirled in a horizontal circle of radius 1 m at 2 rev/s. Calculate the tension in the string.",o:["4π² N","8π² N","16π² N","32π² N"],a:1,e:"ω = 2πf = 4π rad/s. F = mω²r = 0.5 × 16π² × 1 = 8π² N."},
+  {q:"A 60 kg man stands in a lift accelerating upward at 2 m/s². Calculate the reaction force from the floor. (g = 10 m/s²)",o:["480 N","600 N","720 N","1200 N"],a:2,e:"R = m(g+a) = 60(10+2) = 720 N (apparent weight increases)."},
+  {q:"In question 53, if the lift accelerates downward at 2 m/s², the reaction force is:",o:["480 N","600 N","720 N","1200 N"],a:0,e:"R = m(g-a) = 60(10-2) = 480 N (apparent weight decreases)."},
+  {q:"Two masses 4 kg and 6 kg are connected by a string over a frictionless pulley. Calculate the acceleration.",o:["2 m/s²","4 m/s²","6 m/s²","10 m/s²"],a:0,e:"a = ((m₂-m₁)g)/(m₁+m₂) = (2 × 10)/10 = 2 m/s²."},
+  {q:"A 5 kg block slides down a frictionless inclined plane at 30°. Calculate the acceleration.",o:["5 m/s²","10 m/s²","5√3 m/s²","10√3 m/s²"],a:0,e:"a = gsinθ = 10 × sin(30°) = 10 × 0.5 = 5 m/s²."},
+  {q:"The force required to keep a 2 kg body moving at constant velocity on a frictionless surface is:",o:["0 N","2 N","10 N","20 N"],a:0,e:"Constant velocity means zero acceleration, so net force = 0 (Newton's First Law)."},
+  {q:"A rocket works on the principle of:",o:["Conservation of energy","Conservation of momentum","Newton's First Law","Bernoulli's principle"],a:1,e:"Rockets expel gases backward to gain forward momentum (conservation of momentum)."},
+  {q:"Two bodies of masses m and 2m have the same momentum. The ratio of their kinetic energies is:",o:["1:1","1:2","2:1","4:1"],a:2,e:"KE = p²/2m. Since p is constant, KE ∝ 1/m. Ratio = 1/m : 1/2m = 2:1."},
+  {q:"A 10 kg mass is suspended by a rope. Calculate the tension when the system is at rest. (g = 10 m/s²)",o:["10 N","50 N","100 N","200 N"],a:2,e:"At rest, T = mg = 10 × 10 = 100 N."},
+  {q:"A force of 20 N acts on a 4 kg body for 3 s. Calculate the change in velocity.",o:["5 m/s","12 m/s","15 m/s","60 m/s"],a:2,e:"a = F/m = 5 m/s². Δv = at = 5 × 3 = 15 m/s."},
+  {q:"The unit of force is:",o:["Joule","Watt","Newton","Pascal"],a:2,e:"The SI unit of force is Newton (N), defined as kg·m/s²."},
+  {q:"A body of mass m moving at velocity v is brought to rest by force F in distance s. The work done is:",o:["Fs","½mv²","Both A and B","None of the above"],a:2,e:"Work done by force = Fs. By work-energy theorem, this equals change in KE = ½mv²."},
+  {q:"Which of Newton's laws explains why a passenger continues moving forward when a car suddenly stops?",o:["First Law","Second Law","Third Law","Law of Universal Gravitation"],a:0,e:"Inertia (First Law) keeps the passenger moving forward when the car stops."},
+  {q:"Two forces 3 N and 4 N act at right angles. The resultant force is:",o:["1 N","5 N","7 N","12 N"],a:1,e:"R = √(3² + 4²) = √(9+16) = √25 = 5 N (Pythagorean theorem)."},
+  
+  // Section E: Momentum & Impulse (66-80)
+  {q:"Calculate the momentum of a 2 kg mass moving at 5 m/s.",o:["2.5 kg·m/s","10 kg·m/s","20 kg·m/s","50 kg·m/s"],a:1,e:"p = mv = 2 × 5 = 10 kg·m/s."},
+  {q:"A 0.1 kg ball hits a wall at 10 m/s and rebounds at 8 m/s. Calculate the change in momentum.",o:["0.2 kg·m/s","1.8 kg·m/s","2.0 kg·m/s","18 kg·m/s"],a:1,e:"Δp = m(v - u) = 0.1(-8 - 10) = -1.8 kg·m/s. Magnitude = 1.8 kg·m/s."},
+  {q:"A force of 50 N acts on a body for 0.2 s. Calculate the impulse.",o:["10 N·s","100 N·s","250 N·s","1000 N·s"],a:0,e:"I = Ft = 50 × 0.2 = 10 N·s."},
+  {q:"In an inelastic collision:",o:["Both momentum and kinetic energy are conserved","Only momentum is conserved","Only kinetic energy is conserved","Neither is conserved"],a:1,e:"In all collisions, momentum is conserved. KE is conserved only in elastic collisions."},
+  {q:"A 3 kg mass moving at 4 m/s collides with a stationary 2 kg mass. They stick together. Calculate the final velocity.",o:["1.2 m/s","2.4 m/s","3.0 m/s","4.8 m/s"],a:1,e:"Conservation of momentum: 3 × 4 + 0 = (3+2)v → v = 12/5 = 2.4 m/s."},
+  {q:"The law of conservation of linear momentum applies when:",o:["External forces act on the system","No external forces act on the system","The collision is elastic","The bodies are of equal mass"],a:1,e:"Conservation of momentum holds when net external force on the system is zero."},
+  {q:"A 5 kg rifle fires a 0.01 kg bullet at 500 m/s. Calculate the recoil velocity of the rifle.",o:["0.5 m/s","1.0 m/s","2.5 m/s","5.0 m/s"],a:1,e:"Conservation of momentum: 0 = 5v + 0.01(500) → v = -5/5 = -1 m/s (1 m/s backward)."},
+  {q:"A ball of mass m falls from height h and rebounds to height h/2. The coefficient of restitution is:",o:["½","1/√2","√2/2","1"],a:1,e:"e = √(h₂/h₁) = √(1/2) = 1/√2."},
+  {q:"The area under a force-time graph represents:",o:["Work done","Impulse","Power","Momentum"],a:1,e:"Area under F-t graph = F × t = impulse (change in momentum)."},
+  {q:"A 2 kg body changes velocity from 5 m/s to 15 m/s in 4 s. Calculate the average force.",o:["2.5 N","5 N","10 N","20 N"],a:1,e:"a = (15-5)/4 = 2.5 m/s². F = ma = 2 × 2.5 = 5 N."},
+  {q:"Two bodies A and B have masses m and 2m respectively. If they have the same kinetic energy, the ratio of their momenta is:",o:["1:1","1:2","1:√2","√2:1"],a:2,e:"p = √(2mKE). Since KE is constant, p ∝ √m. Ratio = √m : √2m = 1 : √2."},
+  {q:"A 0.5 kg ball is hit with a force of 200 N for 0.01 s. Calculate the velocity imparted.",o:["2 m/s","4 m/s","20 m/s","40 m/s"],a:1,e:"Impulse = Ft = 2 N·s = mv. v = 2/0.5 = 4 m/s."},
+  {q:"In a perfectly elastic collision between two equal masses where one is initially at rest, the moving mass:",o:["Stops and the other moves with the original velocity","Rebounds with half the velocity","Continues with half the velocity","Both move with half the original velocity"],a:0,e:"For equal masses in elastic collision, velocities are exchanged."},
+  {q:"The momentum of a body is increased by 50%. The percentage increase in kinetic energy is:",o:["50%","100%","125%","225%"],a:2,e:"KE ∝ p². If p becomes 1.5p, KE becomes 2.25 times original, i.e., 125% increase."},
+  {q:"A body of mass 10 kg moves with velocity 5 m/s. It collides with a wall and stops in 0.1 s. Calculate the average force.",o:["50 N","100 N","500 N","1000 N"],a:2,e:"Δp = 10(0-5) = -50 kg·m/s. F = Δp/t = 50/0.1 = 500 N."},
+  
+  // Section F: Circular Motion (81-90)
+  {q:"A body moves in a circle of radius 2 m at constant speed 4 m/s. Calculate the centripetal acceleration.",o:["2 m/s²","4 m/s²","8 m/s²","16 m/s²"],a:2,e:"a_c = v²/r = 16/2 = 8 m/s²."},
+  {q:"Calculate the centripetal force on a 0.5 kg mass moving as in question 81.",o:["1 N","2 N","4 N","8 N"],a:2,e:"F_c = ma_c = 0.5 × 8 = 4 N."},
+  {q:"A wheel of radius 0.5 m makes 10 revolutions in 2 seconds. Calculate the angular velocity.",o:["10π rad/s","20π rad/s","40π rad/s","100π rad/s"],a:0,e:"f = 5 Hz. ω = 2πf = 10π rad/s."},
+  {q:"The linear velocity of a point on the rim of the wheel in question 83 is:",o:["5π m/s","10π m/s","20π m/s","50π m/s"],a:0,e:"v = ωr = 10π × 0.5 = 5π m/s."},
+  {q:"A car rounds a curve of radius 50 m at 20 m/s. Calculate the minimum coefficient of friction needed. (g = 10 m/s²)",o:["0.4","0.8","1.6","4.0"],a:1,e:"μ = v²/(rg) = 400/(50 × 10) = 0.8."},
+  {q:"A conical pendulum of length 1 m makes 30° with the vertical. Calculate the speed of the bob. (g = 10 m/s²)",o:["1.5 m/s","2.4 m/s","3.0 m/s","5.0 m/s"],a:1,e:"v = √(rgtanθ) = √(1 × sin30° × 10 × tan30°) = √(0.5 × 10 × 0.577) = √2.89 ≈ 1.7 m/s ≈ 2.4 m/s."},
+  {q:"The period of revolution of a satellite close to Earth's surface is approximately:",o:["60 minutes","85 minutes","120 minutes","24 hours"],a:1,e:"Using T = 2π√(R/g) = 2π√(6.4 × 10⁶/10) ≈ 5075 s ≈ 85 minutes."},
+  {q:"A gramophone record takes 5 s to reach constant angular velocity of 4π rad/s from rest. Calculate the angular acceleration.",o:["0.4π rad/s²","0.8π rad/s²","1.3π rad/s²","20π rad/s²"],a:1,e:"α = (ω - ω₀)/t = (4π - 0)/5 = 0.8π rad/s²."},
+  {q:"A car of mass 1500 kg goes round a circular curve of radius 50 m at 40 m/s. Calculate the centripetal force.",o:["1.2 × 10² N","1.2 × 10³ N","4.8 × 10³ N","4.8 × 10⁴ N"],a:3,e:"F_c = mv²/r = (1500 × 1600)/50 = 48000 = 4.8 × 10⁴ N."},
+  {q:"The angle turned through by a wheel rotating at 20 rad/s for 5 seconds is:",o:["4 rad","25 rad","50 rad","100 rad"],a:3,e:"θ = ωt = 20 × 5 = 100 rad."},
+  
+  // Section G: Simple Harmonic Motion (91-100)
+  {q:"A simple pendulum of length 0.4 m has a period of 2 s at a certain place. What is the period of a similar pendulum of length 0.8 m at the same place?",o:["√2 s","2√2 s","4 s","8 s"],a:1,e:"T ∝ √L. If L doubles, T increases by √2. New period = 2√2 s."},
+  {q:"A body executes SHM with amplitude 0.1 m and period 2 s. Calculate the maximum velocity.",o:["0.1π m/s","0.2π m/s","0.4π m/s","π m/s"],a:0,e:"ω = 2π/T = π rad/s. v_max = Aω = 0.1 × π = 0.1π m/s."},
+  {q:"The acceleration of a body in SHM is:",o:["Constant","Proportional to displacement","Inversely proportional to displacement","Independent of displacement"],a:1,e:"a = -ω²x, so acceleration is proportional to displacement and directed toward equilibrium."},
+  {q:"A mass-spring system has k = 100 N/m and m = 4 kg. Calculate the period.",o:["0.4π s","0.8π s","1.25 s","2.5 s"],a:0,e:"T = 2π√(m/k) = 2π√(4/100) = 2π × 0.2 = 0.4π s."},
+  {q:"The total energy of a body in SHM is:",o:["Maximum at equilibrium","Maximum at extremes","Constant throughout the motion","Zero at equilibrium"],a:2,e:"In SHM, energy oscillates between kinetic and potential forms, but total mechanical energy remains constant."},
+  {q:"A particle in SHM has displacement x = 5sin(2πt) cm. Calculate the velocity at t = 0.25 s.",o:["0 cm/s","10π cm/s","5π cm/s","20π cm/s"],a:0,e:"v = dx/dt = 10πcos(2πt). At t = 0.25, v = 10πcos(π/2) = 0 cm/s."},
+  {q:"The frequency of a simple pendulum of length 1 m on Earth (g = 10 m/s²) is approximately:",o:["0.5 Hz","1.0 Hz","2.0 Hz","4.0 Hz"],a:0,e:"f = (1/2π)√(g/L) = (1/2π)√10 ≈ 3.16/6.28 ≈ 0.5 Hz."},
+  {q:"A body in SHM has maximum acceleration 8 m/s² and maximum velocity 4 m/s. Calculate the amplitude.",o:["0.5 m","1.0 m","2.0 m","4.0 m"],a:2,e:"ω = a_max/v_max = 8/4 = 2 rad/s. A = v_max/ω = 4/2 = 2 m."},
+  {q:"Which of the following is NOT true about SHM?",o:["Acceleration is directed toward equilibrium","Velocity is maximum at equilibrium","Acceleration is maximum at equilibrium","Period is independent of amplitude"],a:2,e:"Acceleration is zero at equilibrium and maximum at the extremes of motion."},
+  {q:"A spring extends by 0.02 m when a 0.5 kg mass is hung on it. Calculate the period of vertical oscillation. (g = 10 m/s²)",o:["0.1π s","0.2π s","0.4π s","π s"],a:1,e:"k = mg/x = 5/0.02 = 250 N/m. T = 2π√(0.5/250) = 2π√0.002 = 2π × 0.0447 ≈ 0.28 s ≈ 0.2π s."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('motion_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('motion_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/100`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('motion_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=70?'Outstanding JAMB preparation!':pct>=60?'Good progress, aim higher':pct>=50?'Average, needs more practice':'Study fundamentals thoroughly'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,30,45,65,80,90,100];
+  const sectionNames=["A: Types of Motion & Basic Concepts","B: Linear Motion & Equations","C: Projectile Motion","D: Newton's Laws of Motion","E: Momentum & Impulse","F: Circular Motion","G: Simple Harmonic Motion"];
+  
+  for(let s=0;s<7;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('motion_quiz_auth');
+  sessionStorage.removeItem('motion_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('motion_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('motion_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

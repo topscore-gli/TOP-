@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Electromagnetic Induction</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Electromagnetic Induction<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Electromagnetic Induction</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 70:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 70 minutes for 70 questions
+const CONFIG={TIME:4200,PASS:60};
+
+// Section mapping for 70 questions (5 sections)
+const SECTIONS={
+  0:"A: Fundamental Concepts",
+  15:"B: Calculations - Faraday's Law",
+  30:"C: Transformers & Applications",
+  45:"D: Advanced Concepts & Calculations",
+  60:"E: Conceptual & Problem Solving"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 70 JAMB Physics Questions on Electromagnetic Induction
+const QUIZ_DATA=[
+  // Section A: Fundamental Concepts (1-15)
+  {q:"Electromagnetic induction was discovered by:",o:["Isaac Newton","Michael Faraday","James Clerk Maxwell","Heinrich Lenz"],a:1,e:"Michael Faraday discovered electromagnetic induction in 1831."},
+  {q:"The magnitude of induced e.m.f is directly proportional to:",o:["The resistance of the coil","The rate of change of magnetic flux","The diameter of the wire","The temperature of the coil"],a:1,e:"This is Faraday's First Law: e.m.f ∝ rate of change of magnetic flux linkage."},
+  {q:"Lenz's Law is a consequence of the law of conservation of:",o:["Momentum","Energy","Charge","Mass"],a:1,e:"Lenz's Law ensures energy conservation; work must be done to induce current."},
+  {q:"The negative sign in Faraday's equation ε = -N(dΦ/dt) represents:",o:["The magnitude of e.m.f","The direction of induced current (Lenz's Law)","The resistance of the coil","The number of turns"],a:1,e:"The negative sign indicates the induced current opposes the change producing it."},
+  {q:"Magnetic flux is measured in:",o:["Tesla","Weber","Henry","Ampere"],a:1,e:"Magnetic flux (Φ) is measured in Webers (Wb); 1 Wb = 1 T·m²."},
+  {q:"The unit of self-inductance is:",o:["Ohm","Henry","Farad","Watt"],a:1,e:"Self-inductance (L) is measured in Henry (H)."},
+  {q:"Which of the following does NOT affect the magnitude of induced e.m.f?",o:["Number of turns in the coil","Strength of magnetic field","Resistance of the coil","Speed of rotation"],a:2,e:"Resistance affects current, not the induced e.m.f (though it affects I = V/R)."},
+  {q:"The maximum e.m.f in a rotating coil generator occurs when the coil is:",o:["Perpendicular to the magnetic field","Parallel to the magnetic field","At 45° to the magnetic field","At rest"],a:1,e:"Maximum flux cutting rate occurs when coil is parallel to field (sinθ = 1)."},
+  {q:"Eddy currents are produced in:",o:["Insulators","Vacuum","Solid conducting materials","Gases"],a:2,e:"Eddy currents are circulating currents induced in solid conductors."},
+  {q:"To reduce eddy current losses in a transformer core, the core is:",o:["Made of plastic","Laminated","Painted black","Heated"],a:1,e:"Lamination (thin insulated sheets) increases resistance to eddy currents."},
+  {q:"The self-inductance of a coil depends on:",o:["The current flowing through it","The number of turns and core material","The voltage across it","The resistance of the coil"],a:1,e:"L = μN²A/l; depends on geometry and permeability (μ), not on current."},
+  {q:"Mutual inductance between two coils is maximum when:",o:["They are far apart","They are wound on the same core","They are perpendicular to each other","They carry DC current"],a:1,e:"Maximum flux linkage occurs when coils share the same magnetic core."},
+  {q:"Which device operates on the principle of self-induction?",o:["Transformer","Induction coil","Electric motor","Generator"],a:1,e:"Induction coil uses self-induction to produce high voltage from low voltage DC."},
+  {q:"The energy stored in an inductor is given by:",o:["½CV²","½LI²","I²Rt","VIt"],a:1,e:"Energy stored in magnetic field = ½LI² (analogous to ½CV² for capacitors)."},
+  {q:"Back e.m.f in an inductor opposes:",o:["Only the increase in current","Only the decrease in current","Any change in current","The resistance of the circuit"],a:2,e:"Back e.m.f opposes both increase (Lenz's Law) and decrease of current."},
+  
+  // Section B: Calculations - Faraday's Law (16-30)
+  {q:"A coil of 100 turns experiences a change in magnetic flux from 0.02 Wb to 0.08 Wb in 0.5 s. Calculate the induced e.m.f.",o:["4 V","8 V","12 V","16 V"],a:2,e:"ε = N(ΔΦ/Δt) = 100 × (0.06/0.5) = 12 V"},
+  {q:"An e.m.f of 24 V is induced in a 200-turn coil when the flux changes at 0.12 Wb/s. Calculate the number of turns.",o:["100","200","300","400"],a:1,e:"N = (ε × Δt)/ΔΦ = 24/0.12 = 200 turns"},
+  {q:"A conductor of length 0.4 m moves at 25 m/s perpendicular to a magnetic field of 0.5 T. Calculate the induced e.m.f.",o:["2 V","5 V","10 V","20 V"],a:1,e:"ε = Blv = 0.5 × 0.4 × 25 = 5 V"},
+  {q:"A rectangular coil of 50 turns, area 0.02 m², rotates at 10 rev/s in a field of 0.3 T. Calculate maximum e.m.f.",o:["6π V","12π V","18π V","24π V"],a:0,e:"ε_max = NBA(2πf) = 50 × 0.3 × 0.02 × 20π = 6π V"},
+  {q:"A coil of self-inductance 0.5 H carries a current changing at 4 A/s. Calculate the back e.m.f.",o:["0.5 V","1.0 V","2.0 V","4.0 V"],a:2,e:"ε = L(dI/dt) = 0.5 × 4 = 2.0 V"},
+  {q:"Two coils have mutual inductance 0.4 H. If current in the primary changes from 2 A to 10 A in 0.2 s, calculate e.m.f in secondary.",o:["8 V","16 V","24 V","32 V"],a:1,e:"ε_s = M(ΔI/Δt) = 0.4 × (8/0.2) = 0.4 × 40 = 16 V"},
+  {q:"A transformer has 800 primary turns and 200 secondary turns. If primary voltage is 240 V, calculate secondary voltage.",o:["480 V","120 V","60 V","30 V"],a:2,e:"V_s/V_p = N_s/N_p → V_s = 240 × (200/800) = 60 V"},
+  {q:"A step-down transformer has turns ratio 10:1. If input current is 2 A, calculate output current (assuming 100% efficiency).",o:["0.2 A","2 A","10 A","20 A"],a:3,e:"I_s/I_p = N_p/N_s = 10 → I_s = 2 × 10 = 20 A"},
+  {q:"A transformer is 90% efficient. If input power is 1000 W and output voltage is 200 V, calculate output current.",o:["4.0 A","4.5 A","5.0 A","5.5 A"],a:1,e:"Output power = 0.9 × 1000 = 900 W; I = 900/200 = 4.5 A"},
+  {q:"Calculate the magnetic flux through a coil of area 0.05 m² placed perpendicular to a field of 0.4 T.",o:["0.01 Wb","0.02 Wb","0.04 Wb","0.08 Wb"],a:1,e:"Φ = BA = 0.4 × 0.05 = 0.02 Wb (cos0° = 1)"},
+  {q:"A solenoid has 500 turns, length 0.25 m, cross-sectional area 4×10⁻⁴ m². Calculate its self-inductance (μ₀ = 4π×10⁻⁷ H/m).",o:["5.03×10⁻⁴ H","2.51×10⁻⁴ H","1.26×10⁻⁴ H","6.28×10⁻⁵ H"],a:0,e:"L = μ₀N²A/l = (4π×10⁻⁷ × 250000 × 4×10⁻⁴)/0.25 = 5.03×10⁻⁴ H"},
+  {q:"An aircraft with wing span 50 m flies at 200 m/s perpendicular to Earth's magnetic field of 4×10⁻⁵ T. Calculate wing-tip voltage.",o:["0.2 V","0.4 V","0.6 V","0.8 V"],a:1,e:"ε = Blv = 4×10⁻⁵ × 50 × 200 = 0.4 V"},
+  {q:"A coil of 150 turns and resistance 5 Ω has magnetic flux changing at 0.3 Wb/s. Calculate the induced current.",o:["6 A","9 A","12 A","15 A"],a:1,e:"ε = 150 × 0.3 = 45 V; I = 45/5 = 9 A"},
+  {q:"A generator produces maximum e.m.f of 240 V. What is the instantaneous e.m.f when the coil is at 30° to the magnetic field?",o:["120 V","208 V","240 V","277 V"],a:1,e:"ε = ε_max sinθ = 240 × sin(60°) = 240 × 0.866 = 207.8 ≈ 208 V"},
+  {q:"The energy stored in a 2 H inductor carrying 3 A current is:",o:["3 J","6 J","9 J","18 J"],a:2,e:"E = ½LI² = ½ × 2 × 9 = 9 J"},
+  
+  // Section C: Transformers & Applications (31-45)
+  {q:"Which of the following CANNOT be transformed using a transformer?",o:["240 V, 50 Hz AC","12 V AC","9 V DC","110 V, 60 Hz AC"],a:2,e:"Transformers require changing magnetic flux; DC produces constant flux."},
+  {q:"The core of a transformer is made of soft iron to:",o:["Reduce hysteresis loss","Increase resistance","Decrease permeability","Increase eddy currents"],a:0,e:"Soft iron has low hysteresis loss (narrow B-H loop) and high permeability."},
+  {q:"Copper losses in a transformer are due to:",o:["Eddy currents in the core","Resistance of windings","Leakage of magnetic flux","Hysteresis in the core"],a:1,e:"I²R heating in primary and secondary windings causes copper losses."},
+  {q:"A step-up transformer increases:",o:["Both voltage and current","Voltage but decreases current","Current but decreases voltage","Power"],a:1,e:"Step-up: V_s > V_p, therefore I_s < I_p (conservation of energy)."},
+  {q:"The efficiency of a transformer is typically high because:",o:["It has no moving parts","It uses DC current","It has no core","It operates at low frequency"],a:0,e:"No mechanical losses (friction/windage) since there are no moving parts."},
+  {q:"Which device converts mechanical energy to electrical energy using electromagnetic induction?",o:["Electric motor","Transformer","Dynamo/generator","Induction coil"],a:2,e:"Dynamo/generator: mechanical rotation → electrical energy via induction."},
+  {q:"In an induction coil, the secondary has many more turns than the primary to:",o:["Increase current","Produce high voltage","Reduce resistance","Increase power"],a:1,e:"High turns ratio (N_s/N_p) produces high voltage output (V_s/V_p = N_s/N_p)."},
+  {q:"The spark plug in a car ignition system receives high voltage from:",o:["Battery directly","Dynamo","Induction coil","Starter motor"],a:2,e:"Induction coil steps up 12V battery voltage to 20,000V for spark."},
+  {q:"Eddy currents are useful in:",o:["Transformer cores","Induction heating","Electric motors","Generators"],a:1,e:"Eddy current heating is used in induction furnaces and cookers."},
+  {q:"A moving coil microphone works on the principle of:",o:["Motor effect","Electromagnetic induction","Thermionic emission","Photoelectric effect"],a:1,e:"Sound waves move coil in magnetic field, inducing audio-frequency e.m.f."},
+  {q:"In a DC generator, the split-ring commutator:",o:["Increases the e.m.f","Reverses current direction every half rotation","Reduces friction","Increases the speed"],a:1,e:"Commutator reverses coil connections to maintain unidirectional (DC) output."},
+  {q:"The back e.m.f in a DC motor is maximum when:",o:["The motor starts","The motor runs at full speed","The load increases","The power is switched off"],a:1,e:"Back e.m.f ∝ speed; maximum at full speed (ε = Blv)."},
+  {q:"A metal detector works using:",o:["X-rays","Eddy currents induced in metal objects","Radioactive decay","Ultrasonic waves"],a:1,e:"Changing magnetic field induces eddy currents in metal, detected by receiver coil."},
+  {q:"Which material is best for transformer core laminations?",o:["Steel","Soft iron","Copper","Aluminum"],a:1,e:"Soft iron: high permeability, low hysteresis, suitable for lamination."},
+  {q:"The main cause of humming noise in transformers is:",o:["Loose connections","Magnetostriction of core","Air flow","Oil circulation"],a:1,e:"Magnetostriction (dimensional change of ferromagnetic material) causes vibration at 2× supply frequency."},
+  
+  // Section D: Advanced Concepts & Calculations (46-60)
+  {q:"A coil has inductance 0.2 H and resistance 10 Ω. When connected to 20 V DC, the final steady current is:",o:["0.5 A","1.0 A","2.0 A","4.0 A"],a:2,e:"At steady state, inductance has no effect: I = V/R = 20/10 = 2 A"},
+  {q:"The time constant of an LR circuit with L = 0.4 H and R = 8 Ω is:",o:["0.02 s","0.05 s","0.2 s","3.2 s"],a:1,e:"τ = L/R = 0.4/8 = 0.05 s"},
+  {q:"In an AC generator, if the speed of rotation doubles, the maximum e.m.f:",o:["Remains the same","Doubles","Halves","Quadruples"],a:1,e:"ε_max = NBAω and ω = 2πf; if speed doubles, ω doubles."},
+  {q:"A transformer has primary voltage 200 V, secondary voltage 1000 V. If primary current is 5 A and efficiency is 80%, calculate secondary current.",o:["0.5 A","0.8 A","1.0 A","1.25 A"],a:1,e:"Input power = 200 × 5 = 1000 W; Output power = 800 W; I_s = 800/1000 = 0.8 A"},
+  {q:"The reactance of a 0.5 H inductor at 50 Hz is:",o:["25 Ω","50 Ω","100 Ω","157 Ω"],a:3,e:"X_L = 2πfL = 2π × 50 × 0.5 = 50π ≈ 157 Ω"},
+  {q:"A coil of 1000 turns, area 5 cm², is in a field of 0.2 T. Calculate flux linkage when plane is perpendicular to field.",o:["0.01 Wb-turns","0.1 Wb-turns","1.0 Wb-turns","10 Wb-turns"],a:1,e:"Flux linkage = NBA = 1000 × 0.2 × 5×10⁻⁴ = 0.1 Wb-turns"},
+  {q:"An e.m.f of 10 V is induced when current changes at 50 A/s in a coil. Calculate self-inductance.",o:["0.1 H","0.2 H","0.5 H","5.0 H"],a:1,e:"L = ε/(dI/dt) = 10/50 = 0.2 H"},
+  {q:"A metal plate swings through a magnetic field. The eddy currents produced will:",o:["Accelerate the plate","Slow down the plate","Have no effect on motion","Heat the magnet"],a:1,e:"Lenz's Law: eddy currents oppose the change (motion), causing damping."},
+  {q:"In a transformer, if the secondary is open-circuited, the primary current is:",o:["Very large","Very small (magnetizing current only)","Zero","Infinite"],a:1,e:"No load on secondary means only small magnetizing current flows in primary."},
+  {q:"The ratio of primary to secondary turns of a step-down transformer is 5:1. If input power is 1000 W at 200 V, find secondary current (100% efficient).",o:["5 A","10 A","25 A","50 A"],a:2,e:"V_s = 200/5 = 40 V; I_s = 1000/40 = 25 A"},
+  {q:"A conductor moves parallel to magnetic field lines. The induced e.m.f is:",o:["Maximum","Zero","Depends on speed","Depends on resistance"],a:1,e:"No flux cutting when moving parallel to field (ε = Blvsinθ, θ = 0°)."},
+  {q:"The energy dissipated as heat in an inductor when current decreases from 4 A to 0 in a circuit is stored originally as:",o:["Electric potential energy","Magnetic field energy","Kinetic energy","Thermal energy"],a:1,e:"Energy in inductor: E = ½LI² (stored in magnetic field)."},
+  {q:"A coil rotates at 50 Hz. How many times per second does the induced e.m.f reach maximum?",o:["25","50","100","200"],a:2,e:"e.m.f is maximum twice per cycle (positive and negative peaks); 50 Hz × 2 = 100 times/s."},
+  {q:"Two coils are placed close together. When current in first coil changes, e.m.f is induced in second due to:",o:["Self-induction","Mutual induction","Eddy currents","Hysteresis"],a:1,e:"Changing current in one coil induces e.m.f in nearby coil via mutual induction."},
+  {q:"A 240 V/12 V transformer has 1200 primary turns. Calculate secondary turns.",o:["30","60","120","240"],a:1,e:"N_s/1200 = 12/240 = 1/20; N_s = 60 turns"},
+  
+  // Section E: Conceptual & Problem Solving (61-70)
+  {q:"Which statement about transformers is CORRECT?",o:["They work with AC and DC","Step-up transformers increase power","They can produce energy","Energy losses occur due to resistance and eddy currents"],a:3,e:"Transformers have copper and iron losses; they neither create energy nor work with DC."},
+  {q:"A magnet is dropped through a copper tube. It falls:",o:["Faster than in air","At same rate as in air","Slower than in air","With acceleration greater than g"],a:2,e:"Lenz's Law: induced eddy currents create opposing field, slowing the magnet."},
+  {q:"In electromagnetic induction, the induced current depends on:",o:["Only the magnetic field strength","Only the rate of flux change","Both rate of flux change and circuit resistance","Only the number of turns"],a:2,e:"e.m.f depends on rate of flux change; current depends on e.m.f and resistance (I = ε/R)."},
+  {q:"A coil connected to a galvanometer is moved towards a stationary magnet. The galvanometer shows deflection because:",o:["The coil is charged","Magnetic flux through coil is changing","The magnet is moving","Temperature is changing"],a:1,e:"Relative motion changes flux linkage, inducing e.m.f and current."},
+  {q:"The purpose of the brushes in a DC generator is to:",o:["Increase the speed","Provide electrical contact with commutator","Cool the machine","Reduce sparking"],a:1,e:"Brushes (usually carbon) maintain sliding contact to extract current from commutator."},
+  {q:"An ideal transformer has turns ratio 2:1. If secondary current is 6 A, primary current is:",o:["3 A","6 A","12 A","24 A"],a:0,e:"I_p/I_s = N_s/N_p = 1/2; I_p = 6/2 = 3 A"},
+  {q:"The frequency of AC produced by a generator with 4 poles rotating at 1500 rpm is:",o:["25 Hz","50 Hz","100 Hz","150 Hz"],a:1,e:"f = PN/120 = (4 × 1500)/120 = 50 Hz"},
+  {q:"Which factor does NOT affect the inductance of a solenoid?",o:["Number of turns","Length of solenoid","Current flowing through it","Cross-sectional area"],a:2,e:"L = μN²A/l; inductance is a geometric property, independent of current."},
+  {q:"A real transformer has efficiency less than 100% due to:",o:["Conservation of energy","Energy losses","Ohm's Law","Lenz's Law"],a:1,e:"Copper losses, eddy currents, hysteresis, and flux leakage reduce efficiency."},
+  {q:"The direction of induced e.m.f in a conductor moving through magnetic field is determined by:",o:["Faraday's Law","Lenz's Law","Fleming's Right-hand rule","Fleming's Left-hand rule"],a:2,e:"Fleming's Right-hand rule (thumb = motion, first finger = field, second finger = current) gives direction of induced current."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('em_induction_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('em_induction_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/70`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('em_induction_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=50?'Ready for JAMB!':pct>=42?'Good, review weak areas':pct>=35?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,15,30,45,60,70];
+  const sectionNames=["A: Fundamental Concepts","B: Calculations - Faraday's Law","C: Transformers & Applications","D: Advanced Concepts & Calculations","E: Conceptual & Problem Solving"];
+  
+  for(let s=0;s<5;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('em_induction_quiz_auth');
+  sessionStorage.removeItem('em_induction_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('em_induction_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('em_induction_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

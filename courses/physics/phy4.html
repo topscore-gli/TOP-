@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Gravitational Field Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1220px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:4;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🌍 Gravitational Field</h1>
+        <p>JAMB Physics • gravitation • field strength • potential • escape velocity • satellites • Kepler’s laws</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains how masses attract one another, how gravitational field strength works, why gravitational potential is negative, and how planets and satellites move.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Gravitational force is always attractive</li>
+            <li>Field strength falls with distance</li>
+            <li>Potential is negative</li>
+            <li>Satellite motion depends on gravity</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Gravity is weak between small objects, but it dominates when masses become huge — like planets, moons, and stars.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Newton’s Law of Universal Gravitation</h2>
+        <p>Every particle in the universe attracts every other particle with a force that is directly proportional to the product of their masses and inversely proportional to the square of the distance between them.</p>
+
+        <div class="formula-box">
+          <div class="title">Gravitational force formula</div>
+          <div class="line"><span class="math">F = Gm₁m₂ / r²</span></div>
+          <div class="line"><strong>G</strong> = 6.67 × 10⁻¹¹ Nm²kg⁻²</div>
+          <div class="line"><strong>m₁, m₂</strong> = masses</div>
+          <div class="line"><strong>r</strong> = distance between centres</div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Two masses attracting each other</div>
+          <svg viewBox="0 0 340 160" aria-label="Gravitation force diagram">
+            <circle cx="90" cy="80" r="28" class="obj"/>
+            <circle cx="250" cy="80" r="36" class="obj"/>
+            <line x1="118" y1="80" x2="214" y2="80" class="curve"/>
+            <text x="78" y="84" class="label">m₁</text>
+            <text x="238" y="84" class="label">m₂</text>
+            <text x="160" y="70" class="label">r</text>
+            <text x="132" y="100" class="label">Attractive force</text>
+          </svg>
+          <div class="diagram-caption">The force acts along the line joining the centres of the two masses.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 1: Force Between Two Masses</div>
+          <p>Find the gravitational force between 100 kg and 200 kg masses 2 m apart.</p>
+          <p><strong>Step 1:</strong> <span class="math">F = (6.67×10⁻¹¹)(100)(200)/2²</span></p>
+          <p><strong>Step 2:</strong> <span class="math">F = (6.67×10⁻¹¹)(20,000)/4</span></p>
+          <p><strong>Step 3:</strong> <span class="math">F = 3.335 × 10⁻⁷ N</span></p>
+          <div class="answer">Answer: 3.335 × 10⁻⁷ N</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Gravitational Field Strength</h2>
+        <p>Gravitational field strength at a point is the force per unit mass on a small test mass placed there.</p>
+
+        <div class="formula-box">
+          <div class="title">Field strength formula</div>
+          <div class="line"><span class="math">g = F/m = GM/r²</span></div>
+        </div>
+
+        <p>Its unit is <strong>N/kg</strong> or <strong>m/s²</strong>.</p>
+
+        <div class="highlight-box">
+          <p>On Earth’s surface, <span class="math">g ≈ 9.8 m/s²</span> or sometimes <span class="math">10 m/s²</span> in JAMB calculations.</p>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">g decreases with distance</div>
+          <svg viewBox="0 0 340 190" aria-label="Field strength with height">
+            <circle cx="100" cy="120" r="55" class="obj"/>
+            <circle cx="220" cy="55" r="10" fill="rgba(255,107,107,.35)" stroke="var(--accent-secondary)" stroke-width="2"/>
+            <line x1="100" y1="120" x2="220" y2="55" class="curve"/>
+            <text x="78" y="124" class="label">Earth</text>
+            <text x="225" y="50" class="label">Satellite</text>
+            <text x="150" y="82" class="label">r = R + h</text>
+          </svg>
+          <div class="diagram-caption">As distance from Earth’s centre increases, gravitational field strength decreases.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Field Strength at Height</div>
+          <p>Calculate g at 640 km above Earth’s surface.</p>
+          <p><strong>Step 1:</strong> <span class="math">R = 6400 km, h = 640 km</span></p>
+          <p><strong>Step 2:</strong> <span class="math">gₕ/g = (R/(R+h))² = (6400/7040)² = (10/11)² = 100/121</span></p>
+          <p><strong>Step 3:</strong> <span class="math">gₕ = 9.8 × 100/121 ≈ 8.1 m/s²</span></p>
+          <div class="answer">Answer: 8.1 m/s²</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Gravitational Potential</h2>
+        <p>Gravitational potential at a point is the work done in bringing a unit mass from infinity to that point.</p>
+
+        <div class="formula-box">
+          <div class="title">Potential formula</div>
+          <div class="line"><span class="math">V = -GM/r</span></div>
+        </div>
+
+        <p>The negative sign is very important.</p>
+        <ul>
+          <li>Potential at infinity is taken as zero</li>
+          <li>Potential near a mass is negative</li>
+          <li>The field does work when a body falls inward</li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>🧠 Why negative?</strong>
+          <p>You must supply energy to remove a mass completely from the gravitational field to infinity.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: Gravitational Potential at Earth’s Surface</div>
+          <p><strong>Step 1:</strong> <span class="math">V = -(6.67×10⁻¹¹)(6.0×10²⁴)/(6.4×10⁶)</span></p>
+          <p><strong>Step 2:</strong> <span class="math">V = -6.25 × 10⁷ Jkg⁻¹</span></p>
+          <div class="answer">Answer: -6.25 × 10⁷ Jkg⁻¹ = -62.5 MJkg⁻¹</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Escape Velocity</h2>
+        <p>Escape velocity is the minimum speed needed for an object to leave a planet’s gravitational field without further propulsion.</p>
+
+        <div class="formula-box">
+          <div class="title">Escape velocity formula</div>
+          <div class="line"><span class="math">vₑ = √(2GM/R)</span></div>
+          <div class="line">or <span class="math">vₑ = √(2gR)</span></div>
+        </div>
+
+        <div class="highlight-box">
+          <p>Escape velocity does <strong>not</strong> depend on the mass of the object being launched.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 4: Earth’s Escape Velocity</div>
+          <p><strong>Step 1:</strong> Use <span class="math">vₑ = √(2GM/R)</span></p>
+          <p><strong>Step 2:</strong> Substitute Earth values</p>
+          <p><strong>Step 3:</strong> <span class="math">vₑ ≈ 11,200 m/s</span></p>
+          <div class="answer">Answer: about 11.2 km/s</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Quick memory value</strong>
+          <p>Earth’s escape velocity is about <strong>11 km/s</strong>.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Satellite Motion</h2>
+        <p>For a satellite moving in a circular orbit, gravity provides the centripetal force.</p>
+
+        <div class="formula-box">
+          <div class="title">Satellite formulas</div>
+          <div class="line"><span class="math">GMm/r² = mv²/r</span></div>
+          <div class="line"><span class="math">v = √(GM/r)</span></div>
+          <div class="line"><span class="math">T² = 4π²r³/GM</span></div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Satellite in circular orbit</div>
+          <svg viewBox="0 0 340 220" aria-label="Satellite orbit diagram">
+            <circle cx="170" cy="110" r="45" class="obj"/>
+            <circle cx="170" cy="110" r="85" class="curve"/>
+            <circle cx="255" cy="110" r="8" fill="rgba(255,107,107,.35)" stroke="var(--accent-secondary)" stroke-width="2"/>
+            <line x1="170" y1="110" x2="255" y2="110" class="curve"/>
+            <path d="M255 110 Q245 80 215 70" class="pathline"/>
+            <text x="155" y="115" class="label">Earth</text>
+            <text x="261" y="111" class="label">sat</text>
+            <text x="205" y="100" class="label">r</text>
+            <text x="220" y="65" class="label">v</text>
+          </svg>
+          <div class="diagram-caption">The satellite moves tangentially, while gravity pulls it inward and keeps it in orbit.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 5: Geostationary Satellite</div>
+          <p>A geostationary satellite has period 24 hours. Find its orbital radius.</p>
+          <p><strong>Step 1:</strong> <span class="math">T = 24 × 3600 = 86400 s</span></p>
+          <p><strong>Step 2:</strong> Use <span class="math">T² = 4π²r³/GM</span></p>
+          <p><strong>Step 3:</strong> Solving gives <span class="math">r ≈ 4.23 × 10⁷ m</span></p>
+          <p><strong>Step 4:</strong> Height above Earth = <span class="math">4.23×10⁷ - 6.4×10⁶ ≈ 3.59×10⁷ m</span></p>
+          <div class="answer">Answer: orbital radius ≈ 42,300 km, height ≈ 35,900 km</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Kepler’s Laws of Planetary Motion</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Law</th>
+              <th>Statement</th>
+              <th>Meaning</th>
+            </tr>
+            <tr>
+              <td>First Law</td>
+              <td>Planets move in elliptical orbits with the Sun at one focus</td>
+              <td>Orbits are not perfect circles</td>
+            </tr>
+            <tr>
+              <td>Second Law</td>
+              <td>The line joining planet and Sun sweeps equal areas in equal times</td>
+              <td>Planets move faster when closer to the Sun</td>
+            </tr>
+            <tr>
+              <td>Third Law</td>
+              <td><span class="math">T² ∝ r³</span></td>
+              <td>The ratio <span class="math">T²/r³</span> is constant for planets about the same central body</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="highlight-box">
+          <p>Kepler’s third law is especially useful for satellite and orbital period calculations in JAMB.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Complete Formula Summary</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Concept</th>
+              <th>Formula</th>
+              <th>Units</th>
+              <th>Notes</th>
+            </tr>
+            <tr><td>Newton’s law</td><td>F = Gm₁m₂/r²</td><td>N</td><td>Always attractive</td></tr>
+            <tr><td>Field strength</td><td>g = GM/r²</td><td>N/kg or m/s²</td><td>At Earth’s surface: g = GM/R²</td></tr>
+            <tr><td>Gravitational potential</td><td>V = -GM/r</td><td>J/kg</td><td>Negative, zero at infinity</td></tr>
+            <tr><td>Potential energy</td><td>U = -GMm/r</td><td>J</td><td>U = mV</td></tr>
+            <tr><td>Escape velocity</td><td>vₑ = √(2GM/R) = √(2gR)</td><td>m/s</td><td>Independent of object mass</td></tr>
+            <tr><td>Orbital velocity</td><td>v = √(GM/r)</td><td>m/s</td><td>For circular orbit</td></tr>
+            <tr><td>Orbital period</td><td>T = 2π√(r³/GM)</td><td>s</td><td>Kepler’s third law</td></tr>
+            <tr><td>Relation of g and G</td><td>g = GM/R²</td><td>m/s²</td><td>Connects local and universal gravity</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Important Relationships</h2>
+
+        <h3>If distance doubles</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Quantity</th>
+              <th>Effect</th>
+            </tr>
+            <tr><td>Gravitational force</td><td>Becomes 1/4</td></tr>
+            <tr><td>Field strength</td><td>Becomes 1/4</td></tr>
+            <tr><td>Potential</td><td>Becomes 1/2 in magnitude, less negative</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <h3>Variation of g</h3>
+        <div class="formula-box">
+          <div class="title">At height h</div>
+          <div class="line"><span class="math">gₕ = GM/(R+h)²</span></div>
+          <div class="line">For small h: <span class="math">gₕ ≈ g(1 - 2h/R)</span></div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">At depth d</div>
+          <div class="line"><span class="math">g_d = g(1 - d/R)</span></div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Very important point</strong>
+          <p><strong>g is maximum at Earth’s surface.</strong> It decreases both above the surface and below the surface.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ JAMB-Style Practice Problems</h2>
+
+        <div class="example-box">
+          <div class="title">Problem 1: Proportionality</div>
+          <p>If gravitational force between two masses is F and the distance is halved, what is the new force?</p>
+          <p><strong>Step 1:</strong> <span class="math">F ∝ 1/r²</span></p>
+          <p><strong>Step 2:</strong> If <span class="math">r → r/2</span>, then force becomes <span class="math">4F</span></p>
+          <div class="answer">Answer: 4F</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Problem 2: Energy to Move Satellite</div>
+          <p>Find the energy needed to move a 1000 kg satellite from Earth’s surface to orbit of radius 2R.</p>
+          <p><strong>Step 1:</strong> Change in potential energy = <span class="math">GMm(1/R - 1/2R)</span></p>
+          <p><strong>Step 2:</strong> <span class="math">= GMm/2R = ½mgR</span></p>
+          <p><strong>Step 3:</strong> <span class="math">= ½(1000)(9.8)(6.4×10⁶)</span></p>
+          <p><strong>Step 4:</strong> <span class="math">= 3.14 × 10¹⁰ J</span></p>
+          <div class="answer">Answer: 3.14 × 10¹⁰ J</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Problem 3: Binary System</div>
+          <p>Two stars of mass 4M and M rotate about a common centre of mass at separation d. The period comes out as:</p>
+          <p><span class="math">T² = 4π²d³ / 5GM</span></p>
+          <div class="answer">Key result: <span class="math">T² = 4π²d³ / 5GM</span></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 Common Mistakes to Avoid</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Mistake</th>
+              <th>Correction</th>
+            </tr>
+            <tr><td>Using diameter instead of radius</td><td>Always use the distance between centres</td></tr>
+            <tr><td>Forgetting G is very small</td><td>Expect tiny forces for ordinary objects</td></tr>
+            <tr><td>Confusing object mass with Earth’s mass</td><td>In <span class="math">g = GM/r²</span>, M is the central body’s mass</td></tr>
+            <tr><td>Ignoring negative sign of potential</td><td>Potential is always negative</td></tr>
+            <tr><td>Thinking escape velocity depends on projectile mass</td><td>It does not</td></tr>
+            <tr><td>Using h instead of R+h</td><td>Distance from centre is <span class="math">r = R + h</span></td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣1️⃣ Quick Revision Checklist</h2>
+        <ul>
+          <li>Can state Newton’s law of gravitation</li>
+          <li>Can derive and use <span class="math">g = GM/R²</span></li>
+          <li>Understands why gravitational potential is negative</li>
+          <li>Can derive and use escape velocity</li>
+          <li>Can apply Kepler’s third law</li>
+          <li>Knows that orbital speed decreases as radius increases</li>
+          <li>Knows geostationary satellites have period of 24 hours</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣2️⃣ JAMB Exam Focus</h2>
+
+        <div class="jamb-alert">
+          <h4>What to focus on most</h4>
+          <ul>
+            <li>Satellite motion questions</li>
+            <li>Escape velocity calculations</li>
+            <li>Field strength and potential formulas</li>
+            <li>Distance-squared proportionality questions</li>
+            <li>Kepler’s laws, especially the third law</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a full JAMB-style guide to Gravitational Field. This topic connects strongly with motion, energy, and satellite physics, so understanding it well gives you an advantage in several exam areas.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise F = Gm₁m₂/r², g = GM/r², V = -GM/r, escape velocity, orbital speed, and Kepler’s third law.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>
