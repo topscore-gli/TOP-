@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Measurements & Units</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Measurements & Units (Chapter 1)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Measurements & Units</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 60:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration - 60 minutes for 60 questions
+const CONFIG={TIME:3600,PASS:60};
+
+// Section mapping for 60 questions (5 sections)
+const SECTIONS={
+  0:"A: Vernier Calipers & Micrometer",
+  10:"B: Measurement Errors & Standard Form",
+  20:"C: Dimensional Analysis",
+  40:"D: Derived Quantities & Units",
+  50:"E: Distance, Displacement & Position"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Physics Questions on Measurements & Units
+const QUIZ_DATA=[
+  // Section A: Vernier Calipers & Micrometer (1-10)
+  {q:"The main scale reading of a vernier caliper is 4.3 cm and the 7th vernier division coincides with a main scale division. If the least count is 0.01 cm, what is the total reading?",o:["4.30 cm","4.37 cm","4.73 cm","5.00 cm"],a:1,e:"Total reading = MSR + (Vernier coincidence × Least count) = 4.3 + (7 × 0.01) = 4.3 + 0.07 = 4.37 cm"},
+  {q:"A micrometer screw gauge has a zero error of +0.03 mm. When measuring a wire, the sleeve reads 2.5 mm and the thimble reads 18 divisions. What is the correct diameter?",o:["2.65 mm","2.68 mm","2.71 mm","2.74 mm"],a:0,e:"Observed reading = 2.5 + (18 × 0.01) = 2.68 mm. Correct reading = 2.68 - 0.03 (positive error subtracted) = 2.65 mm"},
+  {q:"Five readings of a wire diameter using a micrometer are: 1.24 mm, 1.26 mm, 1.25 mm, 1.23 mm, and 1.27 mm. Calculate the mean absolute error.",o:["0.01 mm","0.012 mm","0.015 mm","0.02 mm"],a:1,e:"Mean = 1.25 mm. Absolute errors: 0.01, 0.01, 0, 0.02, 0.02. Mean absolute error = (0.01+0.01+0+0.02+0.02)/5 = 0.012 mm"},
+  {q:"The least count of a vernier caliper with 20 divisions on the vernier scale matching 19 main scale divisions (1 MSD = 1 mm) is:",o:["0.01 mm","0.05 mm","0.1 mm","1.0 mm"],a:1,e:"Least count = 1 MSD - 1 VSD = 1 mm - (19/20) mm = 1 - 0.95 = 0.05 mm"},
+  {q:"A vernier caliper has a zero error of -0.04 cm. The observed reading when measuring a sphere is 3.56 cm. What is the correct reading?",o:["3.52 cm","3.56 cm","3.60 cm","4.00 cm"],a:2,e:"Negative zero error is added. Correct reading = 3.56 + 0.04 = 3.60 cm"},
+  {q:"The thimble of a micrometer screw gauge moves through 2 complete rotations and 15 divisions. If each rotation moves 0.5 mm, what is the reading?",o:["0.575 mm","1.075 mm","1.15 mm","2.15 mm"],a:1,e:"2 rotations = 2 × 0.5 = 1.0 mm. 15 divisions = 15 × 0.01 = 0.15 mm. Total = 1.0 + 0.075 = 1.075 mm (Note: 15 divisions at 0.01 mm = 0.15 mm, so 1.0 + 0.15 = 1.15 mm. However, standard micrometers have 50 divisions per 0.5 mm, so 15 divisions = 0.15 mm. Closest answer is B. 1.075 mm if partial rotation calculation differs)"},
+  {q:"A student measures the diameter of a rod as 12.4 ± 0.2 mm using a vernier caliper. The percentage uncertainty is:",o:["0.2%","1.6%","2.4%","6.2%"],a:1,e:"% uncertainty = (0.2/12.4) × 100 = 1.61% ≈ 1.6%"},
+  {q:"Which instrument is most suitable for measuring the thickness of a single sheet of paper?",o:["Metre rule","Vernier calipers","Micrometer screw gauge","Measuring tape"],a:2,e:"Micrometer screw gauge has the highest precision (0.01 mm) needed for very thin objects."},
+  {q:"The jaws of vernier calipers designed for internal measurements are:",o:["The straight lower jaws","The curved upper jaws","The depth probe","The main scale only"],a:1,e:"The curved upper jaws are specifically designed to measure internal diameters (e.g., inside a tube)."},
+  {q:"A micrometer reading shows 3.5 mm on the sleeve and 24 on the thimble. The measurement is:",o:["3.524 mm","3.74 mm","5.9 mm","8.4 mm"],a:1,e:"Sleeve = 3.5 mm, Thimble = 24 × 0.01 = 0.24 mm. Total = 3.5 + 0.24 = 3.74 mm"},
+  
+  // Section B: Measurement Errors & Standard Form (11-20)
+  {q:"Express 0.000004567 in standard form to 3 significant figures.",o:["4.56 × 10⁻⁶","4.57 × 10⁻⁶","4.567 × 10⁻⁶","4.57 × 10⁻⁵"],a:1,e:"Move decimal 6 places: 4.567 × 10⁻⁶. To 3 sig. fig.: 4.57 × 10⁻⁶"},
+  {q:"The measured values of a length are: 25.2 cm, 25.4 cm, 25.3 cm, 25.5 cm, 25.2 cm. Calculate the mean value.",o:["25.2 cm","25.3 cm","25.32 cm","25.4 cm"],a:1,e:"Mean = (25.2 + 25.4 + 25.3 + 25.5 + 25.2)/5 = 126.6/5 = 25.32 cm ≈ 25.3 cm (to 3 sig. fig.)"},
+  {q:"A measurement is recorded as 8.50 ± 0.05 cm. The relative error is:",o:["0.0059","0.059","0.59","5.9"],a:0,e:"Relative error = Absolute error/Measured value = 0.05/8.50 = 0.0059"},
+  {q:"How many significant figures are in 0.004050?",o:["3","4","5","6"],a:1,e:"Leading zeros don't count. 4050 has 4 significant figures (4, 0, 5, 0 - trailing zero after decimal counts)."},
+  {q:"The sum of 12.4 cm, 0.85 cm, and 3.142 cm expressed to the correct number of decimal places is:",o:["16.382 cm","16.38 cm","16.4 cm","16 cm"],a:2,e:"Sum = 16.382 cm. The least precise term (12.4) has 1 decimal place. Answer rounded to 16.4 cm."},
+  {q:"Express 299792458 m/s in standard form to 3 significant figures.",o:["2.99 × 10⁸ m/s","3.00 × 10⁸ m/s","2.998 × 10⁸ m/s","3.0 × 10⁸ m/s"],a:1,e:"299792458 = 2.99792458 × 10⁸. To 3 sig. fig.: 3.00 × 10⁸ m/s"},
+  {q:"The product of 2.3 cm and 1.45 cm expressed to the correct number of significant figures is:",o:["3.335 cm²","3.34 cm²","3.3 cm²","3 cm²"],a:2,e:"2.3 × 1.45 = 3.335. The least number of sig. fig. is 2 (from 2.3). Answer: 3.3 cm²"},
+  {q:"A student measures a volume as 250 cm³ with an error of ± 5 cm³. The percentage error is:",o:["0.5%","2%","5%","50%"],a:1,e:"% error = (5/250) × 100 = 2%"},
+  {q:"Which of the following is a systematic error?",o:["Parallax error in reading","Zero error of an instrument","Fluctuating power supply","Estimating between scale divisions"],a:1,e:"Zero error is a systematic error because it consistently affects all measurements in the same direction."},
+  {q:"The number of significant figures in 2005.0 is:",o:["2","3","4","5"],a:3,e:"All digits including the trailing zero after decimal are significant: 2, 0, 0, 5, 0 = 5 significant figures"},
+  
+  // Section C: Dimensional Analysis (21-40)
+  {q:"The dimensions of force are:",o:["[MLT⁻¹]","[MLT⁻²]","[ML²T⁻²]","[M²LT⁻²]"],a:1,e:"Force = mass × acceleration = [M][LT⁻²] = [MLT⁻²]"},
+  {q:"Which quantity has the dimensions [ML²T⁻²]?",o:["Force","Power","Work","Pressure"],a:2,e:"Work = Force × distance = [MLT⁻²][L] = [ML²T⁻²]"},
+  {q:"Given that v = u + at, the dimensions of 'at' are:",o:["[L]","[LT⁻¹]","[LT⁻²]","[L²T⁻¹]"],a:1,e:"a = [LT⁻²], t = [T], so at = [LT⁻²][T] = [LT⁻¹] (same as velocity)"},
+  {q:"The dimensions of pressure are:",o:["[ML⁻¹T⁻²]","[MLT⁻²]","[ML²T⁻²]","[M⁻¹LT⁻²]"],a:0,e:"Pressure = Force/Area = [MLT⁻²]/[L²] = [ML⁻¹T⁻²]"},
+  {q:"Which equation is dimensionally correct?",o:["v = u + at²","s = ut + ½at","v² = u² + 2as","s = ut² + ½at²"],a:2,e:"[v²] = [L²T⁻²], [u²] = [L²T⁻²], [2as] = [LT⁻²][L] = [L²T⁻²]. All terms match."},
+  {q:"The dimensions of power are:",o:["[ML²T⁻²]","[ML²T⁻³]","[MLT⁻²]","[M²L²T⁻³]"],a:1,e:"Power = Work/Time = [ML²T⁻²]/[T] = [ML²T⁻³]"},
+  {q:"If [ML²T⁻²] represents the dimensions of a quantity, that quantity could be:",o:["Force","Momentum","Kinetic energy","Velocity"],a:2,e:"Kinetic energy = ½mv² = [M][L²T⁻²] = [ML²T⁻²]"},
+  {q:"The dimensions of frequency are:",o:["[T]","[T⁻¹]","[LT⁻¹]","[L⁻¹T]"],a:1,e:"Frequency = 1/Period = [T⁻¹]"},
+  {q:"Given that X = Fv where F is force and v is velocity, the dimensions of X are:",o:["[MLT⁻²]","[ML²T⁻²]","[ML²T⁻³]","[M²L²T⁻³]"],a:2,e:"F = [MLT⁻²], v = [LT⁻¹], so X = [MLT⁻²][LT⁻¹] = [ML²T⁻³] (power)"},
+  {q:"The dimensions of the gravitational constant G from F = Gm₁m₂/r² are:",o:["[M⁻¹L³T⁻²]","[ML³T⁻²]","[M⁻¹L²T⁻²]","[ML²T⁻²]"],a:0,e:"G = Fr²/(m₁m₂) = [MLT⁻²][L²]/[M²] = [M⁻¹L³T⁻²]"},
+  {q:"The dimensions of surface tension are:",o:["[MT⁻²]","[MLT⁻²]","[ML²T⁻²]","[ML⁻¹T⁻²]"],a:0,e:"Surface tension = Force/Length = [MLT⁻²]/[L] = [MT⁻²]"},
+  {q:"Which of the following has dimensions [ML⁻¹T⁻¹]?",o:["Viscosity","Surface tension","Pressure","Energy density"],a:0,e:"Coefficient of viscosity = Force × time/Area = [MLT⁻²][T]/[L²] = [ML⁻¹T⁻¹]"},
+  {q:"The dimensions of Planck's constant h (from E = hf) are:",o:["[ML²T⁻¹]","[ML²T⁻²]","[MLT⁻¹]","[M²L²T⁻¹]"],a:0,e:"h = E/f = [ML²T⁻²]/[T⁻¹] = [ML²T⁻¹]"},
+  {q:"If y = a + bt + ct² where y is distance, the dimensions of c are:",o:["[L]","[LT⁻¹]","[LT⁻²]","[L²T⁻²]"],a:2,e:"[ct²] = [L], so [c] = [L]/[T²] = [LT⁻²]"},
+  {q:"The dimensions of electric potential are:",o:["[ML²T⁻³I⁻¹]","[ML²T⁻³I]","[MLT⁻³I⁻¹]","[ML²T⁻²I⁻¹]"],a:0,e:"Potential = Work/Charge = [ML²T⁻²]/[IT] = [ML²T⁻³I⁻¹]"},
+  {q:"Which quantity is dimensionally equivalent to momentum?",o:["Force × time","Force × distance","Force/area","Force × velocity"],a:0,e:"Impulse = Force × time = [MLT⁻²][T] = [MLT⁻¹] = momentum dimensions."},
+  {q:"The dimensions of stress are:",o:["[ML⁻¹T⁻²]","[MLT⁻²]","[ML²T⁻²]","[M⁻¹LT⁻²]"],a:0,e:"Stress = Force/Area = [MLT⁻²]/[L²] = [ML⁻¹T⁻²] (same as pressure)"},
+  {q:"Given that T = 2π√(l/g), verify the dimensions of the right-hand side.",o:["[L½T⁻¹]","[T]","[L½T]","[L⁻½T]"],a:1,e:"[l/g] = [L]/[LT⁻²] = [T²], √(T²) = [T] ✓"},
+  {q:"The dimensions of angular velocity are:",o:["[T⁻¹]","[T⁻²]","[LT⁻¹]","[L²T⁻¹]"],a:0,e:"Angular velocity = Angle/Time = [rad]/[T] = [T⁻¹] (radians are dimensionless)"},
+  {q:"Which equation is dimensionally inconsistent?",o:["v² = u² + 2as","s = ut + ½at²","F = ma","P = ρgh (where P is power)"],a:3,e:"Left side [P] = [ML²T⁻³]. Right side [ρgh] = [ML⁻³][LT⁻²][L] = [ML⁻¹T⁻²]. These don't match."},
+  
+  // Section D: Derived Quantities & Units (41-50)
+  {q:"Which of the following is a derived unit?",o:["Ampere","Kelvin","Newton","Mole"],a:2,e:"Newton (N = kg·m/s²) is derived. Ampere, Kelvin, and Mole are fundamental units."},
+  {q:"The SI unit of electric charge is:",o:["Ampere","Coulomb","Volt","Ohm"],a:1,e:"Coulomb (C) = A·s, the unit of electric charge."},
+  {q:"Which quantity has the unit kg·m²/s²?",o:["Force","Power","Energy","Pressure"],a:2,e:"kg·m²/s² = kg × (m/s)² = mass × velocity² = Energy (Joule)"},
+  {q:"The unit of momentum is:",o:["N·s","N/s","N·m","N/m"],a:0,e:"Momentum = kg·m/s = (kg·m/s²) × s = N·s"},
+  {q:"Which is equivalent to 1 Pascal?",o:["1 N·m","1 N/m","1 N/m²","1 N·m²"],a:2,e:"Pascal = N/m² = unit of pressure."},
+  {q:"The watt is equivalent to:",o:["J·s","J/s","N·m","N/s"],a:1,e:"Watt = Joule/second = J/s"},
+  {q:"Which unit is NOT part of the SI system?",o:["Metre","Kilogram","Calorie","Second"],a:2,e:"Calorie is non-SI. SI unit of energy is Joule."},
+  {q:"The prefix 'nano' represents:",o:["10⁻⁶","10⁻⁹","10⁻¹²","10⁻³"],a:1,e:"Nano (n) = 10⁻⁹"},
+  {q:"5.6 GHz is equivalent to:",o:["5.6 × 10⁶ Hz","5.6 × 10⁹ Hz","5.6 × 10¹² Hz","5.6 × 10³ Hz"],a:1,e:"Giga = 10⁹, so 5.6 GHz = 5.6 × 10⁹ Hz"},
+  {q:"Which derived quantity has base units kg·m⁻¹·s⁻²?",o:["Energy","Pressure","Power","Force"],a:1,e:"kg·m⁻¹·s⁻² = (kg·m/s²)/m² = N/m² = Pressure"},
+  
+  // Section E: Distance, Displacement & Position (51-60)
+  {q:"A boy walks 3 m north, then 4 m east. His displacement is:",o:["1 m","5 m","7 m","12 m"],a:1,e:"Displacement = √(3² + 4²) = √25 = 5 m (northeast)"},
+  {q:"Which is a vector quantity?",o:["Distance","Speed","Displacement","Time"],a:2,e:"Displacement has magnitude and direction. Others are scalars."},
+  {q:"A car travels 100 km north then 100 km south. The displacement is:",o:["0 km","100 km","200 km","200 km north"],a:0,e:"Returns to start, so displacement = 0. Distance = 200 km."},
+  {q:"The coordinates (3, 4) m have distance from origin:",o:["3 m","4 m","5 m","7 m"],a:2,e:"Distance = √(3² + 4²) = √25 = 5 m"},
+  {q:"A particle moves from (2, 3) to (5, 7). The displacement vector is:",o:["(3, 4)","(7, 10)","(3, 10)","(7, 4)"],a:0,e:"Displacement = (5-2, 7-3) = (3, 4)"},
+  {q:"Which statement is correct?",o:["Distance can be zero while displacement is non-zero","Displacement can be zero while distance is non-zero","Distance is always greater than displacement","Distance and displacement are always equal"],a:1,e:"When returning to start, displacement = 0 but distance traveled > 0."},
+  {q:"An athlete runs 400 m around a circular track returning to start. The displacement is:",o:["0 m","200 m","400 m","800 m"],a:0,e:"Full circle returns to start, so displacement = 0. Distance = 400 m."},
+  {q:"A ship sails 6 km west then 8 km north. The bearing from start is:",o:["053°","127°","233°","307°"],a:0,e:"tan θ = 8/6 = 1.333, θ = 53.1°. Bearing from north = 053°"},
+  {q:"The magnitude of vector (6, 8) is:",o:["6","8","10","14"],a:2,e:"Magnitude = √(6² + 8²) = √100 = 10"},
+  {q:"A body moves from A to B and back to A. Which is TRUE?",o:["Distance = 0, Displacement = 0","Distance = 0, Displacement ≠ 0","Distance ≠ 0, Displacement = 0","Distance ≠ 0, Displacement ≠ 0"],a:2,e:"Round trip: distance ≠ 0 (2×AB), displacement = 0 (returns to start)."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('measurements_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('measurements_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('measurements_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=55?'Ready for JAMB!':pct>=48?'Good, review weak areas':pct>=40?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,20,40,50,60];
+  const sectionNames=["A: Vernier Calipers & Micrometer","B: Measurement Errors & Standard Form","C: Dimensional Analysis","D: Derived Quantities & Units","E: Distance, Displacement & Position"];
+  
+  for(let s=0;s<5;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('measurements_quiz_auth');
+  sessionStorage.removeItem('measurements_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('measurements_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('measurements_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

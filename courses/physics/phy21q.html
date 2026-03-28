@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Propagation of Sound Wave</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Propagation of Sound Wave (Chapter 21)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Propagation of Sound Wave</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3000,PASS:60}; // 50 minutes for 50 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Nature & Properties of Sound",
+  10:"B: Speed of Sound & Calculations",
+  25:"C: Echo & Reverberation",
+  35:"D: Wave Characteristics & Applications",
+  45:"E: Advanced Concepts"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Physics Propagation of Sound Wave Questions
+const QUIZ_DATA=[
+  // Section A: Nature and Properties of Sound (1-10)
+  {q:"Sound waves are classified as longitudinal waves because the particles of the medium vibrate",o:["perpendicular to the direction of wave propagation","parallel to the direction of wave propagation","in circular motion about the direction of wave propagation","at random to the direction of wave propagation"],a:1,e:"In longitudinal waves, particles vibrate parallel to the direction of wave travel, creating compressions and rarefactions."},
+  {q:"Which of the following properties demonstrates that sound is a mechanical wave?",o:["It can be reflected","It requires a material medium for propagation","It undergoes refraction","It can be diffracted"],a:1,e:"Mechanical waves require a material medium to travel; this is the defining characteristic that distinguishes them from electromagnetic waves."},
+  {q:"The frequency range of audible sound for a healthy human ear is",o:["0 Hz – 20 Hz","20 Hz – 20,000 Hz","20,000 Hz – 100,000 Hz","Above 20,000 Hz"],a:1,e:"The normal human hearing range is 20 Hz (lowest) to 20,000 Hz (highest). Below 20 Hz is infrasound; above 20,000 Hz is ultrasound."},
+  {q:"Sound travels fastest in which of the following media?",o:["Air","Water","Steel","Alcohol"],a:2,e:"Sound travels fastest in solids due to higher elasticity and closer molecular spacing. Speed order: solids > liquids > gases."},
+  {q:"A tuning fork produces sound by",o:["heating the surrounding air","vibrating at its natural frequency","creating a vacuum around it","absorbing sound from the environment"],a:1,e:"Tuning forks produce sound when struck, causing them to vibrate at their specific natural frequency."},
+  {q:"Which phenomenon occurs when sound waves bend around obstacles?",o:["Reflection","Refraction","Diffraction","Interference"],a:2,e:"Diffraction is the bending of waves around obstacles or through openings. Sound diffracts noticeably due to its longer wavelength."},
+  {q:"The speed of sound in air at 0°C is approximately",o:["331 m/s","340 m/s","343 m/s","380 m/s"],a:0,e:"The standard speed of sound in air at 0°C is 331 m/s. At room temperature (25°C), it is approximately 340 m/s."},
+  {q:"Sound cannot travel through a vacuum because",o:["there are no particles to compress and rarefy","the temperature is too low","sound waves travel too fast","vacuum absorbs all sound energy"],a:0,e:"Sound requires a medium with particles that can vibrate. A vacuum has no particles, so sound cannot propagate."},
+  {q:"When sound passes from air into water, which property remains unchanged?",o:["Speed","Wavelength","Frequency","Amplitude"],a:2,e:"Frequency is determined by the source and remains constant when sound crosses media boundaries. Speed and wavelength change."},
+  {q:"The distance between two consecutive compressions in a sound wave is called",o:["amplitude","period","wavelength","frequency"],a:2,e:"Wavelength is the distance between corresponding points on consecutive waves, such as compression to compression or rarefaction to rarefaction."},
+  
+  // Section B: Speed of Sound and Calculations (11-25)
+  {q:"Calculate the speed of sound in air at 35°C.",o:["340 m/s","352 m/s","361 m/s","373 m/s"],a:1,e:"Using v = 331 + 0.6T = 331 + 0.6(35) = 331 + 21 = 352 m/s."},
+  {q:"A sound wave has a frequency of 440 Hz and a wavelength of 0.75 m. Calculate its speed.",o:["330 m/s","340 m/s","350 m/s","587 m/s"],a:0,e:"Using v = fλ = 440 × 0.75 = 330 m/s."},
+  {q:"If the speed of sound in air is 340 m/s, what is the wavelength of a sound with frequency 850 Hz?",o:["0.25 m","0.40 m","2.5 m","4.0 m"],a:1,e:"λ = v/f = 340/850 = 0.4 m."},
+  {q:"A ship's sonar detects an echo from the seabed 3 seconds after transmission. If the speed of sound in seawater is 1500 m/s, the depth of the sea is",o:["500 m","1000 m","2250 m","4500 m"],a:2,e:"d = vt/2 = (1500 × 3)/2 = 4500/2 = 2250 m. The factor of 2 accounts for the round trip."},
+  {q:"An echo is heard 4 seconds after a shout. If the speed of sound is 330 m/s, how far is the reflecting surface?",o:["82.5 m","660 m","825 m","1320 m"],a:1,e:"d = vt/2 = (330 × 4)/2 = 660 m."},
+  {q:"The speed of sound in a gas is directly proportional to the",o:["pressure of the gas","density of the gas","square root of the absolute temperature","volume of the gas"],a:2,e:"v = √(γRT/M), showing speed is proportional to √T (absolute temperature)."},
+  {q:"A man stands between two parallel cliffs 1020 m apart. He fires a gun and hears the first echo after 3 seconds. The speed of sound is",o:["170 m/s","340 m/s","510 m/s","680 m/s"],a:1,e:"Distance to nearer cliff = 1020/2 = 510 m (assuming equal distances). v = 2d/t = (2 × 510)/3 = 340 m/s."},
+  {q:"If the temperature of air increases from 20°C to 40°C, the speed of sound will",o:["remain constant","increase by 12 m/s","increase by 24 m/s","decrease by 12 m/s"],a:1,e:"Change in speed = 0.6 × ΔT = 0.6 × 20 = 12 m/s."},
+  {q:"A sound wave travels 1.7 km in 5 seconds. Its speed is",o:["340 m/s","425 m/s","680 m/s","850 m/s"],a:0,e:"v = d/t = 1700/5 = 340 m/s."},
+  {q:"The minimum distance required between a sound source and a reflector to hear a distinct echo is approximately",o:["1.7 m","17 m","34 m","340 m"],a:1,e:"The human ear needs at least 0.1 s to distinguish sounds. At 340 m/s, d = vt/2 = (340 × 0.1)/2 = 17 m."},
+  {q:"A bat emits ultrasound at 50,000 Hz. If the speed of sound is 340 m/s, the wavelength is",o:["0.0068 m","0.068 m","6.8 mm","6.8 cm"],a:0,e:"λ = v/f = 340/50000 = 0.0068 m = 6.8 mm."},
+  {q:"Sound travels at 5000 m/s in steel. The time taken for sound to travel 2.5 km through steel is",o:["0.5 s","2.0 s","5.0 s","10.0 s"],a:0,e:"t = d/v = 2500/5000 = 0.5 s."},
+  {q:"If the density of a gas increases while pressure remains constant, the speed of sound in the gas will",o:["increase","decrease","remain unchanged","become zero"],a:1,e:"From v = √(γP/ρ), speed is inversely proportional to √ρ. Increased density decreases speed."},
+  {q:"A stone is dropped into a well 80 m deep. How long after release is the splash heard? (Speed of sound = 340 m/s, g = 10 m/s²)",o:["4.00 s","4.12 s","4.24 s","4.47 s"],a:2,e:"Time to fall: s = ½gt², so t₁ = √(2×80/10) = 4 s. Time for sound to travel up: t₂ = 80/340 = 0.235 s. Total time = 4.235 s ≈ 4.24 s."},
+  {q:"The ratio of the speed of sound in hydrogen to that in oxygen at the same temperature is approximately (γ is same for both)",o:["1:1","1:4","2:1","4:1"],a:3,e:"v ∝ 1/√M. Molar mass of H₂ = 2, O₂ = 32. Ratio = √(32/2) = √16 = 4:1."},
+  
+  // Section C: Echo and Reverberation (26-35)
+  {q:"An echo sounder in a ship sends a pulse and receives its echo from the seabed after 0.4 seconds. If the speed of sound in water is 1500 m/s, the depth is",o:["150 m","300 m","600 m","750 m"],a:1,e:"d = vt/2 = (1500 × 0.4)/2 = 300 m."},
+  {q:"Reverberation differs from echo in that reverberation",o:["involves only one reflection","occurs when reflected sound arrives too quickly to be distinguished","requires a larger reflecting surface","only occurs in liquids"],a:1,e:"Reverberation is multiple reflections arriving within 0.1 seconds, merging with the original sound. Echoes arrive after 0.1 seconds and are distinct."},
+  {q:"A man stands 510 m from a cliff and shouts. How long until he hears the echo? (Speed of sound = 340 m/s)",o:["1.5 s","2.0 s","3.0 s","4.0 s"],a:2,e:"t = 2d/v = (2 × 510)/340 = 1020/340 = 3 s."},
+  {q:"In a large hall, excessive reverberation can be reduced by",o:["adding smooth concrete walls","installing sound-absorbing materials","increasing the height of the ceiling","removing all windows"],a:1,e:"Sound-absorbing materials (curtains, carpets, acoustic panels) reduce multiple reflections and reverberation."},
+  {q:"A soldier fires two shots 2 seconds apart between two parallel cliffs. He hears the first echo after 3 seconds and the second echo of the first shot after 5 seconds. The distance between the cliffs is (Speed of sound = 340 m/s)",o:["340 m","680 m","850 m","1360 m"],a:3,e:"First cliff: d₁ = (340 × 3)/2 = 510 m. Second cliff from first shot: d₂ = (340 × 5)/2 = 850 m. Total distance = 510 + 850 = 1360 m."},
+  {q:"An echo is heard when sound is reflected from a surface at least",o:["1.7 m away","17 m away","34 m away","170 m away"],a:1,e:"Minimum distance = vt/2 = (340 × 0.1)/2 = 17 m, where 0.1 s is the minimum time for distinct perception."},
+  {q:"A hunter hears an echo 6 seconds after firing a gun. If the speed of sound is 330 m/s, the distance to the reflecting hill is",o:["495 m","990 m","1980 m","3960 m"],a:1,e:"d = vt/2 = (330 × 6)/2 = 990 m."},
+  {q:"Which of the following is NOT a factor affecting the speed of sound in air?",o:["Temperature","Humidity","Frequency of the sound","Wind speed"],a:2,e:"The speed of sound in a medium is independent of frequency (for normal conditions). Different frequencies travel at the same speed."},
+  {q:"A submarine emits a sonar pulse and receives an echo after 8 seconds from an underwater cliff. If the speed of sound in seawater is 1450 m/s, the distance to the cliff is",o:["1.81 km","2.90 km","5.80 km","11.6 km"],a:2,e:"d = vt/2 = (1450 × 8)/2 = 5800 m = 5.8 km."},
+  {q:"The persistence of sound in a hall after the source has stopped producing sound is called",o:["echo","reverberation","resonance","interference"],a:1,e:"Reverberation is the prolongation of sound due to multiple reflections in an enclosed space after the source stops."},
+  
+  // Section D: Wave Characteristics and Applications (36-45)
+  {q:"Ultrasound is used in medical imaging because it",o:["travels faster than audible sound","can penetrate tissues and reflect from boundaries","is louder than audible sound","has longer wavelength than audible sound"],a:1,e:"Ultrasound reflects at tissue boundaries, allowing imaging of internal structures. Its short wavelength provides good resolution."},
+  {q:"The wavelength of a sound wave produced by a tuning fork of frequency 512 Hz in air (v = 340 m/s) is approximately",o:["0.66 m","1.51 m","1.66 m","2.20 m"],a:0,e:"λ = v/f = 340/512 = 0.664 m ≈ 0.66 m."},
+  {q:"When sound travels from air into water, which quantity increases?",o:["Frequency","Period","Wavelength","Amplitude"],a:2,e:"Frequency remains constant, but speed increases in water, so wavelength λ = v/f increases."},
+  {q:"A sound of frequency 1000 Hz has a speed of 330 m/s in air. What is its wavelength in water where the speed is 1485 m/s?",o:["0.33 m","0.75 m","1.48 m","4.5 m"],a:2,e:"Frequency stays 1000 Hz. In water: λ = 1485/1000 = 1.485 m ≈ 1.48 m."},
+  {q:"SONAR is an acronym for",o:["Sound Navigation and Ranging","Sonic Navigation and Radiation","Sound Neutralization and Ranging","Sonic Neutralization and Radiation"],a:0,e:"SONAR stands for Sound Navigation and Ranging, used to detect underwater objects and measure depths."},
+  {q:"The quality of sound that distinguishes a note played on a piano from the same note played on a violin is called",o:["loudness","pitch","intensity","timbre"],a:3,e:"Timbre (or quality) is the characteristic that allows us to distinguish between sounds of the same pitch and loudness from different sources."},
+  {q:"A sound wave has intensity I at a distance r from the source. At distance 2r, the intensity is",o:["I/2","I/4","2I","4I"],a:1,e:"Intensity follows inverse square law: I ∝ 1/r². At 2r, intensity becomes I/4."},
+  {q:"The loudness of a sound depends on its",o:["frequency","amplitude","speed","wavelength"],a:1,e:"Loudness is the subjective perception of sound intensity, which depends on the amplitude of the wave."},
+  {q:"A dog whistle produces sound at 25,000 Hz. This frequency is classified as",o:["infrasound","audible sound","ultrasound","supersonic"],a:2,e:"Frequencies above 20,000 Hz are ultrasound, inaudible to humans but audible to dogs and used in dog whistles."},
+  {q:"Which application uses the Doppler effect with sound waves?",o:["Ultrasound imaging","Speed detection by traffic police","Echo sounding","Noise cancellation"],a:1,e:"Traffic police use Doppler radar (or sonar) to detect speed based on frequency shift of reflected waves."},
+  
+  // Section E: Advanced Concepts and Mixed Calculations (46-50)
+  {q:"A train moving at 30 m/s sounds a whistle of frequency 500 Hz as it approaches a stationary observer. The speed of sound is 330 m/s. The apparent frequency heard is approximately",o:["455 Hz","500 Hz","550 Hz","600 Hz"],a:2,e:"Using Doppler effect: f' = f × v/(v-v_s) = 500 × 330/(330-30) = 500 × 330/300 = 550 Hz."},
+  {q:"Two boys stand 680 m apart. One fires a gun and the other hears the sound directly and as an echo from a cliff 340 m behind the shooter, 2 seconds later. The speed of sound is",o:["330 m/s","340 m/s","350 m/s","360 m/s"],a:1,e:"Direct sound time = 680/v. Echo travels 340 + 680 + 340 = 1360 m. Time difference = 2 s. So 1360/v - 680/v = 2, giving 680/v = 2, thus v = 340 m/s."},
+  {q:"A sound wave has a pressure amplitude of 2 Pa and travels through air of density 1.2 kg/m³ at 340 m/s. The intensity is approximately",o:["0.01 W/m²","0.1 W/m²","1.0 W/m²","10 W/m²"],a:0,e:"Using I = p_max²/(2ρv) = 4/(2 × 1.2 × 340) = 4/816 = 0.0049 W/m². Closest is A (0.01 W/m²)."},
+  {q:"An auditorium has reverberation time 2 seconds. If the total absorption is doubled, the new reverberation time becomes",o:["0.5 s","1 s","2 s","4 s"],a:1,e:"Reverberation time T ∝ 1/A where A is absorption. If absorption doubles, time halves: 2/2 = 1 s."},
+  {q:"A man fires a gun and hears an echo after 2 seconds from a nearby cliff and another echo after 3 seconds from a distant cliff. If the speed of sound is 330 m/s, the distance between the two cliffs is",o:["165 m","330 m","495 m","825 m"],a:3,e:"Distance to first cliff = (330 × 2)/2 = 330 m. Distance to second cliff = (330 × 3)/2 = 495 m. If man is between cliffs, total distance = 330 + 495 = 825 m."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('sound_wave_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('sound_wave_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('sound_wave_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,25,35,45,50];
+  const sectionNames=["A: Nature & Properties of Sound","B: Speed of Sound & Calculations","C: Echo & Reverberation","D: Wave Characteristics & Applications","E: Advanced Concepts"];
+  
+  for(let s=0;s<5;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('sound_wave_quiz_auth');
+  sessionStorage.removeItem('sound_wave_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('sound_wave_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('sound_wave_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

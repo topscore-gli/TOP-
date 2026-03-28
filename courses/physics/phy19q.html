@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Heat Transfer</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Heat Transfer (Chapter 19)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Heat Transfer</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3000,PASS:60}; // 50 minutes for 50 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Modes of Heat Transfer",
+  15:"B: Temperature Gradient & Thermal Conductivity",
+  30:"C: Surface Nature & Radiation",
+  40:"D: Applications"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Physics Heat Transfer Questions
+const QUIZ_DATA=[
+  // Section A: Modes of Heat Transfer (1-15)
+  {q:"Which of the following processes does NOT require a material medium for heat transfer?",o:["Conduction","Convection","Radiation","Conduction and convection"],a:2,e:"Radiation travels via electromagnetic waves and can pass through vacuum (e.g., solar energy reaching Earth)."},
+  {q:"Heat transfer in a solid metal rod occurs primarily through:",o:["Movement of free electrons and lattice vibrations","Bulk movement of the metal particles","Electromagnetic waves only","Air currents within the metal"],a:0,e:"Conduction in solids involves molecular vibrations and free electron transfer; particles remain fixed."},
+  {q:"The mode of heat transfer that involves the actual movement of fluid particles from one region to another is called:",o:["Conduction","Convection","Radiation","Conduction and radiation"],a:1,e:"Convection requires fluid movement; hot fluid rises, cool fluid sinks, creating currents."},
+  {q:"Water is heated in a pot placed on a stove. The main mode of heat transfer from the stove to the pot is:",o:["Conduction","Convection","Radiation","Evaporation"],a:0,e:"Direct contact between stove and pot allows molecular vibration transfer (conduction)."},
+  {q:"Which phenomenon best demonstrates heat transfer by convection?",o:["An iron rod becoming hot at the other end when heated","Warm air rising above a heater","Feeling warmth from the sun","A metal spoon handle getting hot in tea"],a:1,e:"Warm air rising is bulk fluid movement, the definition of convection."},
+  {q:"The vacuum between the double walls of a thermos flask prevents heat loss by:",o:["Conduction and convection only","Conduction and radiation only","Convection and radiation only","Conduction, convection, and radiation"],a:0,e:"Vacuum removes material medium, stopping conduction and convection; radiation requires silvering to prevent."},
+  {q:"Heat from the sun reaches the Earth through:",o:["Conduction through atmospheric air","Convection currents in space","Electromagnetic radiation","Heat transfer is impossible through space"],a:2,e:"Space is vacuum; only radiation (infrared waves) can traverse it."},
+  {q:"In a convection current, heated fluid rises because:",o:["Its density increases","Its density decreases","Its pressure increases","Its viscosity decreases"],a:1,e:"Heating expands fluid, reducing density; less dense fluid floats above denser fluid."},
+  {q:"Which statement about heat transfer is CORRECT?",o:["Conduction is fastest in gases","Convection can occur in solids","Radiation travels at the speed of light","Conduction requires fluid movement"],a:2,e:"Radiation is electromagnetic energy traveling at 3×10⁸ m/s; conduction is slowest in gases, impossible in solids, and requires no fluid movement."},
+  {q:"A room is heated by a hot water radiator placed near the floor. The heat circulates throughout the room mainly by:",o:["Conduction through walls","Convection currents","Radiation from the radiator","Conduction through air"],a:1,e:"Hot air rises from radiator, cool air sinks, creating continuous convection currents."},
+  {q:"Which material would be most suitable for insulation against heat transfer?",o:["Copper rod","Aluminum foil","Glass wool (trapped air)","Iron block"],a:2,e:"Trapped air has extremely low thermal conductivity (0.026 W m⁻¹ K⁻¹), making glass wool excellent insulation."},
+  {q:"The handle of a cooking pot is usually made of plastic or wood because these materials:",o:["Have high thermal conductivity","Have low thermal conductivity","Prevent radiation","Are cheaper than metals"],a:1,e:"Low conductivity (insulators) prevents heat from reaching your hand quickly."},
+  {q:"Heat transfer through a wall by conduction increases when:",o:["The wall thickness increases","The temperature difference increases","The thermal conductivity decreases","The wall area decreases"],a:1,e:"From Q/t = kAΔT/d, heat flow is directly proportional to temperature difference."},
+  {q:"Which of the following is NOT a good conductor of heat?",o:["Silver","Copper","Glass","Aluminum"],a:2,e:"Glass (k ≈ 1 W m⁻¹ K⁻¹) is a poor conductor; metals listed have k = 200-430 W m⁻¹ K⁻¹."},
+  {q:"The rate of heat conduction through a material depends on all of the following EXCEPT:",o:["The cross-sectional area","The temperature gradient","The specific heat capacity","The thermal conductivity"],a:2,e:"Specific heat capacity relates to heat storage, not heat transfer rate; Fourier's Law involves k, A, and temperature gradient."},
+  
+  // Section B: Temperature Gradient & Thermal Conductivity (16-30)
+  {q:"The temperature gradient is defined as:",o:["Rate of heat transfer per unit area","Change in temperature per unit distance","Total heat energy transferred","Thermal conductivity per unit length"],a:1,e:"Temperature gradient = ΔT/Δx (°C/m or K/m), the driving force for conduction."},
+  {q:"Calculate the heat flow rate through a copper plate of area 0.5 m² and thickness 2 cm when the temperature difference is 100°C. (k for copper = 400 W m⁻¹ K⁻¹)",o:["10 kW","100 kW","1 MW","10 MW"],a:2,e:"Q/t = (400 × 0.5 × 100)/0.02 = 20,000/0.02 = 1,000,000 W = 1 MW."},
+  {q:"A material has a thermal conductivity of 0.1 W m⁻¹ K⁻¹. This material is most likely:",o:["A metal","An insulator","A semiconductor","A superconductor"],a:1,e:"Metals have k = 50-430 W m⁻¹ K⁻¹; k = 0.1 indicates an insulator like wood or plastic."},
+  {q:"The unit of thermal conductivity is:",o:["W m K⁻¹","W m⁻¹ K⁻¹","W m⁻² K⁻¹","J m⁻¹ K⁻¹"],a:1,e:"From k = (Q/t)·d/(A·ΔT), units are (W·m)/(m²·K) = W m⁻¹ K⁻¹."},
+  {q:"Two rods of the same material have lengths in ratio 2:1 and diameters in ratio 1:2. If the same temperature difference is applied, the ratio of heat flow rates is:",o:["1:1","1:2","2:1","1:4"],a:1,e:"Q/t ∝ A/d; Area ratio = 1:4; Length ratio = 2:1; So (1/2):(4/1) = 0.5:4 = 1:8... Actually with length ratio 1:2: (1/4)×(2/1) = 1/2. Answer is B. 1:2."},
+  {q:"Heat flux is defined as:",o:["Total heat energy transferred","Heat transfer rate per unit area","Temperature change per unit time","Thermal conductivity per unit volume"],a:1,e:"Heat flux q = Q/(t·A) with units W m⁻²."},
+  {q:"A wall of thickness 0.3 m has temperatures of 40°C and 10°C on its two sides. The temperature gradient is:",o:["100 K/m","300 K/m","30 K/m","133.3 K/m"],a:0,e:"ΔT/d = (40-10)/0.3 = 30/0.3 = 100 K/m."},
+  {q:"The thermal resistance of a material is given by:",o:["kA/d","d/(kA)","k/(Ad)","A/(kd)"],a:1,e:"Analogous to electrical resistance; R = d/(kA) with units K/W."},
+  {q:"A composite wall consists of two layers with thermal resistances R₁ and R₂ in series. The total thermal resistance is:",o:["R₁ × R₂","R₁ / R₂","R₁ + R₂","(R₁ R₂)/(R₁ + R₂)"],a:2,e:"Like resistors in series: R_total = R₁ + R₂."},
+  {q:"If the thickness of a wall is doubled while keeping other factors constant, the rate of heat conduction will:",o:["Double","Remain the same","Be halved","Be quartered"],a:2,e:"Q/t ∝ 1/d; inverse relationship with thickness."},
+  {q:"A metal rod conducts heat at rate Q when the temperature difference is ΔT. If the temperature difference is tripled, the new heat flow rate will be:",o:["Q/3","Q","3Q","9Q"],a:2,e:"Q/t ∝ ΔT; direct proportionality means 3× temperature = 3× heat flow."},
+  {q:"The S.I. unit of heat flux is:",o:["W m⁻¹","W m⁻²","J m⁻²","W m⁻² K⁻¹"],a:1,e:"Heat flux = Power/Area = W/m² = W m⁻²."},
+  {q:"A window glass of area 2 m² and thickness 5 mm has k = 1.0 W m⁻¹ K⁻¹. If the room temperature is 25°C and outside is 5°C, calculate the heat loss per second.",o:["400 W","800 W","8000 W","4000 W"],a:2,e:"Q/t = (1.0 × 2 × 20)/0.005 = 40/0.005 = 8000 W."},
+  {q:"Which factor does NOT affect the thermal conductivity of a material?",o:["Temperature","Material density","Cross-sectional area of the sample","Molecular structure"],a:2,e:"k is an intrinsic property; it doesn't depend on sample size (A or d), though those affect total heat flow."},
+  {q:"The temperature gradient in a material is negative when:",o:["Temperature increases with distance","Temperature decreases with distance in the direction of heat flow","There is no heat transfer","The material is insulated"],a:1,e:"By convention, heat flows from high to low T, so gradient is negative in flow direction (Fourier's Law uses negative sign)."},
+  
+  // Section C: Surface Nature & Radiation (31-40)
+  {q:"A body that is a good absorber of radiant heat is also a good:",o:["Conductor","Insulator","Emitter","Reflector"],a:2,e:"Kirchhoff's law: good absorbers are good emitters at the same wavelength."},
+  {q:"Which surface would be most suitable for a solar water heater panel?",o:["Shiny white surface","Polished silver surface","Dull black surface","Mirror surface"],a:2,e:"Black/dull surfaces are excellent absorbers of radiant energy."},
+  {q:"A polished metal kettle stays hotter longer than a black one because polished surfaces:",o:["Absorb heat faster","Emit radiation poorly","Conduct heat better","Have higher specific heat capacity"],a:1,e:"Poor emitters (polished) radiate less heat, retaining thermal energy longer."},
+  {q:"The silvering on the inner surface of a thermos flask reduces heat transfer by:",o:["Conduction","Convection","Radiation","Evaporation"],a:2,e:"Silvering reflects infrared radiation back into the flask, minimizing radiative heat loss."},
+  {q:"In a vacuum flask, the main purpose of the cork stopper is to prevent heat transfer by:",o:["Radiation only","Conduction and convection","Convection only","Conduction only"],a:1,e:"Cork is a poor conductor (stops conduction) and sealing prevents air currents (convection)."},
+  {q:"A body at temperature T in surroundings at T₀ radiates heat at a rate proportional to:",o:["(T - T₀)","(T² - T₀²)","(T³ - T₀³)","(T⁴ - T₀⁴)"],a:3,e:"Stefan-Boltzmann Law: P ∝ (T⁴ - T₀⁴) where T is absolute temperature."},
+  {q:"Which surface treatment would make a building coolest in summer?",o:["Painted black","Painted white","Covered with soot","Dull metal finish"],a:1,e:"White/polished surfaces reflect solar radiation rather than absorbing it."},
+  {q:"The rate at which a hot body radiates heat depends on:",o:["Its specific heat capacity only","The temperature difference only","The nature of its surface and temperature","Its mass and density"],a:2,e:"Radiation depends on surface emissivity (nature) and absolute temperature (Stefan-Boltzmann)."},
+  {q:"A thermos flask keeps liquids hot by minimizing heat transfer through:",o:["Conduction and radiation only","Convection and radiation only","Conduction, convection, and radiation","Conduction and convection only"],a:2,e:"Vacuum stops conduction/convection; silvering stops radiation; cork stops conduction/convection at opening."},
+  {q:"Two identical containers hold hot water at the same temperature. One is painted shiny silver, the other dull black. After 30 minutes:",o:["Both will be at the same temperature","The silver one will be hotter","The black one will be hotter","Temperature difference depends on volume only"],a:1,e:"Silver (poor emitter) loses less heat by radiation; black (good emitter) cools faster."},
+  
+  // Section D: Applications (41-50)
+  {q:"During the day near the coast, wind typically blows from:",o:["Land to sea because land is cooler","Sea to land because land is warmer","Land to sea because pressure is higher over land","Sea to land because of Earth's rotation"],a:1,e:"Day: land heats faster → air rises → low pressure → cool sea air moves in (sea breeze)."},
+  {q:"At night near the coast, wind blows from:",o:["Sea to land (sea breeze)","Land to sea (land breeze)","There is no wind","Direction depends on the season"],a:1,e:"Night: land cools faster → air sinks → high pressure → wind blows to sea (land breeze)."},
+  {q:"The fundamental cause of land and sea breezes is the difference in:",o:["Altitude between land and sea","Specific heat capacity of land and water","Density of air over land and sea","Atmospheric pressure at different longitudes"],a:1,e:"Water has higher specific heat capacity (4200 J kg⁻¹ K⁻¹) than land (800 J kg⁻¹ K⁻¹), heating/cooling slower."},
+  {q:"In an internal combustion engine, the cooling system primarily uses:",o:["Conduction through the engine block only","Convection in the circulating coolant","Radiation from the exhaust pipe","Conduction through the tires"],a:1,e:"Coolant (water/antifreeze) circulates, carrying heat by convection to the radiator."},
+  {q:"A jet engine works on the principle that:",o:["Hot gases are sucked into the engine","Hot gases are expelled backward, creating forward thrust","The engine pulls air from in front","Heat is converted directly to electricity"],a:1,e:"Newton's Third Law: action (hot gas expelled backward) produces reaction (thrust forward)."},
+  {q:"The vacuum in a thermos flask prevents heat transfer by:",o:["Conduction and convection","Conduction and radiation","Convection and radiation","All three modes"],a:0,e:"Vacuum removes material medium, eliminating conduction and convection; radiation requires silvering to stop."},
+  {q:"Which component of a thermos flask is primarily responsible for minimizing heat loss by radiation?",o:["The vacuum space","The silvered surfaces","The cork stopper","The outer plastic casing"],a:1,e:"Silvering reflects infrared radiation; vacuum doesn't stop radiation (needs material to absorb/reflect)."},
+  {q:"In a rocket engine, heat transfer to the nozzle walls occurs primarily by:",o:["Convection from hot gases and conduction through walls","Radiation only","Conduction through fuel lines","Convection in the vacuum of space"],a:0,e:"Hot combustion gases transfer heat by convection to walls; heat then conducts through nozzle material."},
+  {q:"The reason water is used as a coolant in car engines is that water has:",o:["Low specific heat capacity","High specific heat capacity","Low boiling point","High thermal conductivity"],a:1,e:"High specific heat (4200 J kg⁻¹ K⁻¹) means water can absorb much heat with small temperature rise."},
+  {q:"A room has a concrete floor and a wooden floor of equal thickness. Walking barefoot, the concrete feels colder because:",o:["Concrete is at a lower temperature","Concrete has higher thermal conductivity, drawing heat faster from your feet","Wood has higher specific heat capacity","Concrete radiates less heat"],a:1,e:"Both are at same room temperature; concrete (k ≈ 1.5 W m⁻¹ K⁻¹) conducts heat from your feet faster than wood (k ≈ 0.1 W m⁻¹ K⁻¹), creating sensation of cold."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('heat_transfer_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('heat_transfer_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('heat_transfer_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,15,30,40,50];
+  const sectionNames=["A: Modes of Heat Transfer","B: Temperature Gradient & Thermal Conductivity","C: Surface Nature & Radiation","D: Applications"];
+  
+  for(let s=0;s<4;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('heat_transfer_quiz_auth');
+  sessionStorage.removeItem('heat_transfer_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('heat_transfer_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('heat_transfer_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

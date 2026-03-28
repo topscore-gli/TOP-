@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Vapours</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Vapours (Chapter 17)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Vapours</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3000,PASS:60}; // 50 minutes for 50 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Saturated & Unsaturated Vapours",
+  10:"B: S.V.P and Boiling",
+  20:"C: Determination of S.V.P",
+  25:"D: Dew, Mist, Fog & Rain",
+  32:"E: Humidity & Relative Humidity",
+  42:"F: Hygrometry"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Physics Vapours Questions
+const QUIZ_DATA=[
+  // Section A: Saturated and Unsaturated Vapours (1-10)
+  {q:"A vapour which is in dynamic equilibrium with its own liquid is said to be",o:["unsaturated","saturated","superheated","ionized"],a:1,e:"A saturated vapour exists in dynamic equilibrium where the rate of evaporation equals the rate of condensation, and it is in contact with its own liquid."},
+  {q:"Which of the following statements about unsaturated vapour is correct?",o:["It obeys Boyle's law","Its pressure remains constant when compressed","It is in contact with its own liquid","It cannot be converted to saturated vapour"],a:0,e:"Unsaturated vapour behaves like an ideal gas and obeys gas laws including Boyle's law. Only saturated vapour has constant pressure when compressed."},
+  {q:"When a saturated vapour is compressed at constant temperature, its pressure",o:["increases","decreases","remains constant","becomes zero"],a:2,e:"Saturated vapour pressure depends only on temperature. At constant temperature, compression causes some vapour to condense, maintaining constant pressure."},
+  {q:"The pressure exerted by a saturated vapour depends on",o:["the volume of the container","the amount of liquid present","the temperature","the presence of other gases"],a:2,e:"Saturated vapour pressure (S.V.P) is a function of temperature only. It increases with temperature and is independent of volume, amount of liquid, or other gases."},
+  {q:"A saturated vapour can be made unsaturated by",o:["increasing the temperature","decreasing the volume","adding more liquid","removing some vapour"],a:0,e:"Increasing temperature raises the saturation point, making the previously saturated vapour unsaturated as it can now hold more vapour."},
+  {q:"In a closed container, dynamic equilibrium between a liquid and its vapour is reached when",o:["all the liquid has evaporated","the rate of evaporation equals the rate of condensation","the temperature stops changing","the pressure becomes zero"],a:1,e:"Dynamic equilibrium is defined as the state where the rate of molecules leaving the liquid (evaporation) equals the rate returning (condensation)."},
+  {q:"Which property distinguishes saturated from unsaturated vapour?",o:["Colour","Density","Response to compression","Chemical composition"],a:2,e:"When compressed, saturated vapour pressure remains constant (excess condenses), while unsaturated vapour pressure increases (obeys Boyle's law)."},
+  {q:"An unsaturated vapour can be made saturated by: I. Adding more vapour, II. Reducing the temperature, III. Increasing the volume",o:["I only","II only","I and II only","I, II and III"],a:2,e:"Adding more vapour or cooling reduces the capacity to hold vapour, causing saturation. Increasing volume would make it more unsaturated."},
+  {q:"The saturation vapour pressure of a liquid increases with temperature because",o:["more molecules have enough energy to escape","the density of the liquid decreases","the atmospheric pressure increases","the volume of the vapour increases"],a:0,e:"Higher temperature gives more liquid molecules sufficient kinetic energy to escape into the vapour phase, increasing equilibrium vapour pressure."},
+  {q:"At constant temperature, if the volume above a liquid is increased, the saturated vapour will become",o:["supersaturated","unsaturated","condensed","ionized"],a:1,e:"Increasing volume reduces vapour density below saturation point, causing some liquid to evaporate until saturation is restored or all liquid evaporates, leaving unsaturated vapour."},
+  
+  // Section B: Saturated Vapour Pressure and Boiling (11-20)
+  {q:"Water boils at a temperature where its saturated vapour pressure is equal to",o:["the critical pressure","the external pressure","760 mmHg always","zero"],a:1,e:"Boiling occurs when S.V.P equals the external (atmospheric) pressure, allowing bubbles to form throughout the liquid."},
+  {q:"At sea level, water boils at 100°C. On a mountain top where atmospheric pressure is lower, water will boil at",o:["100°C","a temperature above 100°C","a temperature below 100°C","0°C"],a:2,e:"Lower external pressure means water's S.V.P reaches it at a lower temperature, so boiling point decreases with altitude."},
+  {q:"The boiling point of a liquid can be increased by",o:["decreasing the quantity of liquid","using a container with larger surface area","increasing the external pressure","stirring the liquid continuously"],a:2,e:"Higher external pressure requires higher temperature for S.V.P to match it, raising the boiling point (principle of pressure cookers)."},
+  {q:"In a pressure cooker, food cooks faster because",o:["more heat is supplied","the boiling point of water is raised","the food is under pressure","steam is not allowed to escape"],a:1,e:"Increased pressure raises water's boiling point above 100°C, providing higher temperature for faster cooking."},
+  {q:"If the atmospheric pressure is 750 mmHg and the S.V.P of water at 98°C is 750 mmHg, at what temperature will water boil?",o:["100°C","98°C","96°C","102°C"],a:1,e:"Boiling occurs when S.V.P = atmospheric pressure = 750 mmHg, which happens at 98°C according to the given data."},
+  {q:"The S.V.P of water at 20°C is 17.5 mmHg. What is the boiling point of water when the atmospheric pressure is 17.5 mmHg?",o:["0°C","20°C","100°C","It will not boil"],a:1,e:"Water boils when its S.V.P equals external pressure. At 20°C, S.V.P = 17.5 mmHg, so it boils at 20°C when external pressure is 17.5 mmHg."},
+  {q:"Which of the following graphs correctly represents the variation of saturated vapour pressure with temperature?",o:["A straight line through the origin","A curve increasing exponentially","A horizontal straight line","A curve decreasing with temperature"],a:1,e:"S.V.P increases rapidly (exponentially) with temperature, not linearly, as more molecules gain escape energy at higher temperatures."},
+  {q:"At standard atmospheric pressure (760 mmHg), water boils at 100°C. If the pressure is reduced to 526 mmHg, the boiling point will be approximately",o:["90°C","85°C","95°C","80°C"],a:0,e:"Lower pressure means boiling occurs at lower temperature. S.V.P of water is approximately 526 mmHg at about 90°C."},
+  {q:"The critical temperature of a substance is the temperature above which",o:["it cannot exist as a liquid","it cannot exist as a gas","the saturated vapour pressure is maximum","the substance decomposes"],a:0,e:"Above critical temperature, a gas cannot be liquefied by pressure alone; it exists as a supercritical fluid."},
+  {q:"When water is heated in an open vessel, the temperature stops rising at 100°C because",o:["all the heat is used to break molecular bonds","the heat supplied is used as latent heat of vaporization","the vessel loses heat to the surroundings","convection currents stop at 100°C"],a:1,e:"At boiling point, additional heat goes into phase change (latent heat) rather than increasing kinetic energy (temperature)."},
+  
+  // Section C: Determination of S.V.P (21-25)
+  {q:"In a barometer tube experiment to determine S.V.P, water is introduced into the vacuum above the mercury column. The mercury level falls from 760 mm to 720 mm. The S.V.P of water at that temperature is",o:["760 mmHg","720 mmHg","40 mmHg","1480 mmHg"],a:2,e:"S.V.P = Difference in mercury levels = 760 - 720 = 40 mmHg. The vapour pressure supports this difference."},
+  {q:"In the barometer tube method, if the height of the mercury column decreases when a volatile liquid is introduced, this shows that",o:["the liquid is denser than mercury","the vapour exerts pressure","the temperature has increased","air has entered the tube"],a:1,e:"The liquid evaporates and the vapour exerts downward pressure on the mercury, causing the column to fall."},
+  {q:"When determining S.V.P using a barometer tube, the space above the mercury must be",o:["filled with air","evacuated (Torricellian vacuum)","filled with water","at atmospheric pressure"],a:1,e:"A true Torricellian vacuum (space with no air) is needed so that only the vapour pressure affects the mercury column."},
+  {q:"In an S.V.P experiment, the mercury column stands at 750 mm. After introducing ether, the level drops to 680 mm. What is the S.V.P of ether?",o:["750 mmHg","680 mmHg","70 mmHg","1430 mmHg"],a:2,e:"S.V.P = 750 - 680 = 70 mmHg. Ether is more volatile than water, so it has higher S.V.P at room temperature."},
+  {q:"The barometer tube method for determining S.V.P is based on the principle that",o:["liquids evaporate at all temperatures","saturated vapour exerts a definite pressure","mercury is denser than water","gases exert pressure on container walls"],a:1,e:"The method relies on measuring the pressure exerted by saturated vapour in equilibrium with its liquid."},
+  
+  // Section D: Dew, Mist, Fog and Rain Formation (26-32)
+  {q:"Dew is formed when",o:["water vapour condenses on cold surfaces","rain falls on grass","fog lifts from the ground","plants release water through transpiration"],a:0,e:"Dew forms when air cools to dew point and water vapour condenses on cold surfaces like grass or car roofs."},
+  {q:"Fog differs from mist in that fog",o:["forms at higher altitudes","has visibility less than 1 km","consists of ice crystals","only forms in winter"],a:1,e:"Fog is essentially thick mist with very low visibility (<1 km), while mist allows visibility of 1-2 km."},
+  {q:"The temperature at which air becomes saturated with water vapour is called the",o:["critical temperature","boiling point","dew point","freezing point"],a:2,e:"Dew point is the temperature at which air is saturated (100% relative humidity) and condensation begins."},
+  {q:"Rain is formed when",o:["dew evaporates","water droplets in clouds combine and become too heavy","fog condenses on dust particles","temperature increases above 100°C"],a:1,e:"Cloud droplets coalesce around condensation nuclei until too heavy to remain suspended, falling as rain."},
+  {q:"Mist is composed of",o:["water vapour","tiny ice crystals","tiny water droplets suspended in air","smoke particles"],a:2,e:"Mist consists of microscopic water droplets suspended near the ground when warm, moist air meets cooler air."},
+  {q:"On a cold morning, water droplets form on the outside of a glass containing cold water because",o:["water diffuses through the glass","the air near the glass is cooled below dew point","the glass is porous","cold water condenses on the glass"],a:1,e:"The cold glass cools surrounding air to below dew point, causing water vapour in the air to condense on the surface."},
+  {q:"Which of the following is NOT necessary for the formation of rain?",o:["Cooling of air to dew point","Presence of condensation nuclei","Increase in atmospheric pressure","Saturation of air with water vapour"],a:2,e:"Rain formation requires cooling, saturation, and condensation nuclei, but not necessarily an increase in pressure."},
+  
+  // Section E: Humidity and Relative Humidity (33-42)
+  {q:"Relative humidity is defined as the ratio of",o:["mass of water vapour to mass of dry air","actual vapour pressure to saturation vapour pressure","dew point to air temperature","absolute humidity to specific humidity"],a:1,e:"Relative humidity = (Actual vapour density/pressure ÷ Saturation vapour density/pressure) × 100%."},
+  {q:"If the relative humidity of air is 100%, then the",o:["air temperature is 100°C","dew point equals the air temperature","air contains no water vapour","atmospheric pressure is 760 mmHg"],a:1,e:"100% relative humidity means air is saturated, so dew point = actual air temperature."},
+  {q:"The mass of water vapour present in a unit volume of air is called",o:["relative humidity","absolute humidity","specific humidity","dew point"],a:1,e:"Absolute humidity is the actual mass of water vapour per cubic metre of air (g/m³)."},
+  {q:"On a certain day, the temperature is 30°C and the dew point is 20°C. If S.V.P at 30°C is 31.8 mmHg and at 20°C is 17.5 mmHg, the relative humidity is",o:["55.0%","60.2%","65.5%","70.1%"],a:0,e:"R.H = (S.V.P at dew point/S.V.P at air temp) × 100 = (17.5/31.8) × 100 = 55.0%."},
+  {q:"If the relative humidity is high, it means that",o:["the air is very hot","the air is close to saturation","it will definitely rain","the atmospheric pressure is low"],a:1,e:"High relative humidity (close to 100%) indicates air is nearly saturated with water vapour."},
+  {q:"The relative humidity of air can be decreased by",o:["cooling the air","adding water vapour","heating the air","compressing the air"],a:2,e:"Heating air increases its capacity to hold vapour (saturation point rises), so relative humidity decreases even though absolute humidity stays constant."},
+  {q:"If the mass of water vapour in 1 m³ of air is 15 g and the air is saturated when it contains 30 g/m³, the relative humidity is",o:["15%","30%","50%","100%"],a:2,e:"R.H = (15/30) × 100% = 50%."},
+  {q:"The dew point of air is 15°C when the actual temperature is 25°C. This means",o:["the air contains maximum vapour at 25°C","the air would be saturated if cooled to 15°C","the relative humidity is 15%","the air temperature will fall to 15°C"],a:1,e:"Dew point is the temperature to which air must be cooled to become saturated; here, cooling to 15°C would cause saturation."},
+  {q:"When temperature rises while absolute humidity remains constant, relative humidity",o:["increases","decreases","remains constant","becomes 100%"],a:1,e:"Higher temperature increases saturation capacity, so the same amount of vapour represents a smaller percentage of capacity."},
+  {q:"If S.V.P at 25°C is 23.8 mmHg and the actual vapour pressure is 14.3 mmHg, the relative humidity is approximately",o:["40%","50%","60%","70%"],a:2,e:"R.H = (14.3/23.8) × 100 = 60.08% ≈ 60%."},
+  
+  // Section F: Hygrometry (43-50)
+  {q:"A wet and dry bulb hygrometer works on the principle that",o:["evaporation causes cooling","warm air rises","water boils at 100°C","metals expand when heated"],a:0,e:"Evaporation from the wet bulb requires latent heat, cooling the bulb. The rate depends on humidity."},
+  {q:"In a wet and dry bulb hygrometer, if the relative humidity is 100%, the temperature difference between the two bulbs will be",o:["maximum","minimum (zero)","10°C","dependent on air pressure"],a:1,e:"At 100% humidity, no evaporation occurs from the wet bulb, so both thermometers read the same temperature."},
+  {q:"When using a wet and dry bulb hygrometer, a large difference between the readings indicates",o:["high relative humidity","low relative humidity","high atmospheric pressure","low temperature"],a:1,e:"Large temperature difference means rapid evaporation from wet bulb, which occurs when air is dry (low relative humidity)."},
+  {q:"The wet bulb thermometer of a hygrometer reads 18°C while the dry bulb reads 25°C. This indicates",o:["the air is saturated","the relative humidity is low","the dew point is 25°C","evaporation is not occurring"],a:1,e:"The 7°C difference indicates rapid evaporation, characteristic of low relative humidity."},
+  {q:"To determine relative humidity using a hygrometer, one needs",o:["only the wet bulb temperature","only the dry bulb temperature","both wet and dry bulb temperatures","the barometric pressure"],a:2,e:"Both temperatures are needed to calculate the difference, which is then used with hygrometric tables to find relative humidity."},
+  {q:"If the wet and dry bulb thermometers read the same temperature, this indicates that",o:["the instrument is faulty","the relative humidity is 100%","the air temperature is 0°C","evaporation is rapid"],a:1,e:"Equal readings mean no cooling from evaporation, which only happens when air is already saturated (100% relative humidity)."},
+  {q:"The hair hygrometer operates on the principle that",o:["hair expands when heated","hair changes length with humidity","hair conducts electricity when wet","hair colour changes with moisture"],a:1,e:"Human hair absorbs moisture and lengthens with increasing relative humidity; this property is used to measure humidity."},
+  {q:"Which instrument is most suitable for directly measuring relative humidity?",o:["Barometer","Thermometer","Hygrometer","Manometer"],a:2,e:"A hygrometer is specifically designed to measure humidity. The wet and dry bulb type uses evaporation rates, while others use hair or electronic sensors."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('vapours_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('vapours_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('vapours_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,20,25,32,42,50];
+  const sectionNames=["A: Saturated & Unsaturated Vapours","B: S.V.P and Boiling","C: Determination of S.V.P","D: Dew, Mist, Fog & Rain","E: Humidity & Relative Humidity","F: Hygrometry"];
+  
+  for(let s=0;s<6;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('vapours_quiz_auth');
+  sessionStorage.removeItem('vapours_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('vapours_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('vapours_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Structure of Matter and Kinetic Theory Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1400px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:4;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .hot{fill:rgba(255,107,107,.32);stroke:none}
+    .cool{fill:rgba(78,205,196,.30);stroke:none}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>⚛️ Structure of Matter and Kinetic Theory</h1>
+        <p>JAMB Physics • atoms • molecules • Brownian motion • diffusion • surface tension • capillarity • gas theory</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains atoms and molecules, molecular theory, Brownian motion, diffusion, surface tension, capillarity, adhesion, cohesion, angle of contact, and how kinetic theory explains gases and phase changes.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Atoms are the basic units of elements</li>
+            <li>Molecules are groups of atoms that can exist independently</li>
+            <li>Molecular motion explains many everyday effects</li>
+            <li>Kinetic theory links temperature to particle motion</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Matter is made of tiny moving particles, and many visible physical effects are explained by how these particles move and interact.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Atoms and Molecules</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Term</th>
+              <th>Definition</th>
+              <th>Key Points</th>
+            </tr>
+            <tr>
+              <td>Atom</td>
+              <td>Smallest particle of an element that can take part in a chemical reaction</td>
+              <td>Contains protons, neutrons, and electrons</td>
+            </tr>
+            <tr>
+              <td>Molecule</td>
+              <td>Smallest particle of a substance that can exist independently and keep its chemical properties</td>
+              <td>May be monoatomic, diatomic, or polyatomic</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="memory-tip">
+          <strong>🧠 Memory tip</strong>
+          <p><strong>Atom</strong> = single unit. <strong>Molecule</strong> = bonded group of atoms.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Molecular Theory</h2>
+        <p>Molecular theory says matter is made of tiny particles that are always moving and interacting. This helps explain several physical phenomena.</p>
+
+        <h3>a) Brownian Motion</h3>
+        <p>Brownian motion is the random zigzag motion of tiny particles suspended in a fluid.</p>
+        <ul>
+          <li>Caused by irregular collisions with fluid molecules</li>
+          <li>Shows that molecules are in constant motion</li>
+          <li>Observed by Robert Brown</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Brownian motion</div>
+          <svg viewBox="0 0 340 200" aria-label="Brownian motion diagram">
+            <rect x="40" y="35" width="260" height="120" class="obj"/>
+            <path d="M80 120 L95 98 L115 110 L130 85 L160 100 L180 75 L200 95 L225 70 L250 90" class="curve"/>
+            <circle cx="250" cy="90" r="7" class="hot"/>
+            <circle cx="75" cy="60" r="4" class="cool"/>
+            <circle cx="120" cy="65" r="4" class="cool"/>
+            <circle cx="160" cy="55" r="4" class="cool"/>
+            <circle cx="220" cy="58" r="4" class="cool"/>
+            <circle cx="260" cy="65" r="4" class="cool"/>
+            <circle cx="90" cy="140" r="4" class="cool"/>
+            <circle cx="140" cy="130" r="4" class="cool"/>
+            <circle cx="195" cy="138" r="4" class="cool"/>
+            <circle cx="245" cy="128" r="4" class="cool"/>
+          </svg>
+          <div class="diagram-caption">The visible suspended particle moves randomly because invisible molecules strike it unevenly.</div>
+        </div>
+
+        <h3>b) Diffusion</h3>
+        <p>Diffusion is the spreading of molecules from a region of high concentration to a region of low concentration until they are evenly distributed.</p>
+
+        <ul>
+          <li>Examples: perfume smell spreading, ink in water, cooking aroma</li>
+          <li>Faster at higher temperature</li>
+          <li>Lighter molecules diffuse faster</li>
+          <li>Fastest in gases, slower in liquids, slowest in solids</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Diffusion</div>
+          <svg viewBox="0 0 340 180" aria-label="Diffusion diagram">
+            <rect x="45" y="45" width="250" height="90" class="obj"/>
+            <circle cx="90" cy="90" r="6" class="hot"/>
+            <circle cx="105" cy="80" r="6" class="hot"/>
+            <circle cx="110" cy="102" r="6" class="hot"/>
+            <circle cx="160" cy="88" r="6" class="cool"/>
+            <circle cx="190" cy="72" r="6" class="cool"/>
+            <circle cx="205" cy="105" r="6" class="cool"/>
+            <circle cx="240" cy="86" r="6" class="cool"/>
+          </svg>
+          <div class="diagram-caption">Particles spread from crowded regions to less crowded regions until the mixture becomes uniform.</div>
+        </div>
+
+        <h3>c) Surface Tension</h3>
+        <p>Surface tension is the force acting per unit length at right angles to an imaginary line on the liquid surface.</p>
+        <p>Molecules on the surface experience a net inward pull due to cohesion, making the surface act like a stretched skin.</p>
+
+        <h3>d) Capillarity</h3>
+        <p>Capillarity is the rise or fall of a liquid in a narrow tube due to the balance between adhesive and cohesive forces.</p>
+
+        <h3>e) Adhesion vs Cohesion</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Property</th>
+              <th>Definition</th>
+              <th>Example</th>
+            </tr>
+            <tr><td>Adhesion</td><td>Attraction between unlike molecules</td><td>Water sticking to glass</td></tr>
+            <tr><td>Cohesion</td><td>Attraction between like molecules</td><td>Water droplets forming</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <h3>f) Angle of Contact</h3>
+        <p>The angle of contact is the angle between the tangent to the liquid surface and the solid surface, measured inside the liquid.</p>
+
+        <ul>
+          <li>Water in glass gives an acute angle, so it wets the surface</li>
+          <li>Mercury in glass gives an obtuse angle, so it does not wet the surface</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Real-Life Applications</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Concept</th>
+              <th>Real-Life Application</th>
+            </tr>
+            <tr><td>Surface tension</td><td>Detergents reduce surface tension during washing</td></tr>
+            <tr><td>Capillarity</td><td>Oil rising in lamp wicks, water in plant stems</td></tr>
+            <tr><td>Diffusion</td><td>Gas exchange in lungs, making tea</td></tr>
+            <tr><td>Adhesion</td><td>Paint on walls, tape sticking</td></tr>
+            <tr><td>Cohesion</td><td>Droplet formation, water streams</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Kinetic Theory of Gases</h2>
+        <p>The kinetic theory explains gases in terms of particles moving randomly and continuously.</p>
+
+        <h3>Assumptions of kinetic theory</h3>
+        <ul>
+          <li>Gas molecules are tiny particles in constant random motion</li>
+          <li>The volume of the molecules is negligible compared with container volume</li>
+          <li>There are no intermolecular forces except during collisions</li>
+          <li>Collisions are perfectly elastic</li>
+          <li>Average kinetic energy is proportional to absolute temperature</li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>🧠 Key rule</strong>
+          <p>Higher absolute temperature means greater average kinetic energy of molecules.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Explaining Physical Phenomena with Kinetic Theory</h2>
+
+        <h3>a) Pressure exerted by a gas</h3>
+        <p>Gas pressure is produced when molecules collide with the walls of the container.</p>
+
+        <div class="formula-box">
+          <div class="title">Pressure formula</div>
+          <div class="line"><span class="math">P = ⅓ρc²</span></div>
+        </div>
+
+        <p>Pressure increases when:</p>
+        <ul>
+          <li>There are more molecules</li>
+          <li>Temperature increases</li>
+          <li>Volume decreases</li>
+        </ul>
+
+        <h3>b) Boyle’s law explanation</h3>
+        <p>At constant temperature, reducing volume makes molecules hit the walls more often, so pressure increases.</p>
+
+        <div class="formula-box">
+          <div class="title">Boyle’s law</div>
+          <div class="line"><span class="math">P ∝ 1/V</span></div>
+          <div class="line"><span class="math">P₁V₁ = P₂V₂</span></div>
+        </div>
+
+        <h3>c) Charles’s law explanation</h3>
+        <p>At constant pressure, increasing temperature makes molecules move faster, so the gas expands and volume increases.</p>
+
+        <div class="formula-box">
+          <div class="title">Charles’s law</div>
+          <div class="line"><span class="math">V ∝ T</span></div>
+          <div class="line"><span class="math">V₁/T₁ = V₂/T₂</span></div>
+        </div>
+
+        <h3>d) Melting</h3>
+        <p>When heated, particles in a solid vibrate more strongly until they break free from fixed positions and form a liquid.</p>
+
+        <h3>e) Boiling</h3>
+        <p>At boiling point, molecules gain enough energy to overcome intermolecular forces and form vapour bubbles throughout the liquid.</p>
+
+        <h3>f) Vaporization / Evaporation</h3>
+        <p>Evaporation happens at the surface at any temperature. Fast molecules escape and remove energy, producing cooling.</p>
+
+        <h3>g) Temperature changes</h3>
+        <p>Temperature measures the average kinetic energy of molecules.</p>
+        <ul>
+          <li>Higher temperature → faster molecules</li>
+          <li>Lower temperature → slower molecules</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Sample Calculation</h2>
+
+        <div class="example-box">
+          <div class="title">Charles’s Law Application</div>
+          <p>A gas occupies 300 cm³ at 27°C. What is its volume at 127°C if pressure is constant?</p>
+          <p><strong>Step 1:</strong> Convert to Kelvin</p>
+          <p><span class="math">T₁ = 27 + 273 = 300 K</span></p>
+          <p><span class="math">T₂ = 127 + 273 = 400 K</span></p>
+          <p><strong>Step 2:</strong> Use <span class="math">V₁/T₁ = V₂/T₂</span></p>
+          <p><span class="math">300/300 = V₂/400</span></p>
+          <p><span class="math">V₂ = 400 cm³</span></p>
+          <div class="answer">Answer: 400 cm³</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Quick Revision Summary</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Concept</th>
+              <th>Key Idea</th>
+            </tr>
+            <tr><td>Atoms</td><td>Smallest unit of an element</td></tr>
+            <tr><td>Molecules</td><td>Group of atoms; smallest independent unit of a substance</td></tr>
+            <tr><td>Brownian motion</td><td>Random motion showing molecules exist and move</td></tr>
+            <tr><td>Diffusion</td><td>Spreading from high to low concentration</td></tr>
+            <tr><td>Surface tension</td><td>Surface behaves like elastic skin</td></tr>
+            <tr><td>Capillarity</td><td>Rise or fall in narrow tubes</td></tr>
+            <tr><td>Adhesion</td><td>Attraction between different molecules</td></tr>
+            <tr><td>Cohesion</td><td>Attraction between same molecules</td></tr>
+            <tr><td>Boyle’s law</td><td><span class="math">P ∝ 1/V</span></td></tr>
+            <tr><td>Charles’s law</td><td><span class="math">V ∝ T</span></td></tr>
+            <tr><td>Evaporation</td><td>Surface process; causes cooling</td></tr>
+            <tr><td>Boiling</td><td>Bulk process at fixed temperature</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Common JAMB Exam Traps</h2>
+        <ul>
+          <li>Do not confuse an atom with a molecule: O is an atom, O₂ is a molecule</li>
+          <li>Do not confuse diffusion with osmosis</li>
+          <li>Evaporation is different from boiling</li>
+          <li>Adhesion is between unlike molecules; cohesion is between like molecules</li>
+          <li>Kinetic theory assumes negligible molecular volume and no intermolecular forces for ideal gases</li>
+        </ul>
+
+        <div class="jamb-alert">
+          <h4>High-yield reminder</h4>
+          <ul>
+            <li>JAMB likes concept comparisons in this chapter</li>
+            <li>Be ready to explain gas laws using molecular motion</li>
+            <li>Link every phenomenon to particle behavior</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Recommended Study Strategy</h2>
+        <ul>
+          <li>Understand the ideas first before memorizing definitions</li>
+          <li>Draw particle diagrams for solids, liquids, and gases</li>
+          <li>Use everyday examples like perfume, dew, and droplets</li>
+          <li>Practice repeated JAMB past questions on comparison topics</li>
+          <li>Explain each concept in terms of particle motion</li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Structure of Matter and Kinetic Theory. This topic is a major foundation chapter because it explains many later ideas in gases, heat, and matter using particle motion.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise atoms vs molecules, Brownian motion, diffusion, surface tension, capillarity, and kinetic theory assumptions.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Structure of Matter & Kinetic Theory</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Structure of Matter & Kinetic Theory (Chapter 18)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Structure of Matter & Kinetic Theory</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3000,PASS:60}; // 50 minutes for 50 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Atoms, Molecules & Molecular Theory",
+  25:"B: Kinetic Theory of Gases"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Physics Structure of Matter & Kinetic Theory Questions
+const QUIZ_DATA=[
+  // Section A: Atoms, Molecules & Molecular Theory (1-25)
+  {q:"The smallest particle of an element that can take part in a chemical reaction is called",o:["A molecule","An atom","A compound","A mixture"],a:1,e:"An atom is the smallest unit of an element that retains its chemical properties and participates in chemical reactions."},
+  {q:"Which of the following correctly distinguishes between an atom and a molecule?",o:["An atom is larger than a molecule","A molecule consists of two or more atoms bonded together","An atom cannot exist independently but a molecule can","Atoms are only found in solids while molecules are found in liquids"],a:1,e:"A molecule is formed when two or more atoms are chemically bonded. Atoms can exist independently (in noble gases), but molecules are defined as groups of atoms."},
+  {q:"Water (H₂O) is an example of",o:["A monoatomic molecule","A diatomic molecule","A triatomic molecule","A polyatomic molecule"],a:3,e:"H₂O contains 3 atoms (2 hydrogen + 1 oxygen), making it polyatomic. Monoatomic = 1 atom, diatomic = 2 atoms."},
+  {q:"The random motion of pollen grains suspended in water was first observed by",o:["Albert Einstein","Robert Brown","Isaac Newton","James Clerk Maxwell"],a:1,e:"Robert Brown (botanist) observed this in 1827, now called Brownian motion."},
+  {q:"Brownian motion provides evidence that",o:["Matter is composed of discrete particles","Particles of matter are in continuous random motion","Both A and B","Particles are stationary"],a:2,e:"Brownian motion proves molecules exist (matter is particulate) and that they move randomly and continuously."},
+  {q:"Diffusion occurs because molecules",o:["Are stationary","Move from regions of low concentration to high concentration","Move randomly from regions of high concentration to low concentration","Are attracted by gravity"],a:2,e:"Diffusion is the net movement of molecules from high to low concentration due to random molecular motion."},
+  {q:"A gas jar containing brown nitrogen dioxide is placed upside down over a gas jar containing air. After some time, both jars become uniformly brown. This phenomenon is called",o:["Osmosis","Diffusion","Brownian motion","Surface tension"],a:1,e:"This classic experiment demonstrates diffusion of gases. NO₂ (heavier, brown) mixes with air (lighter, colorless) due to molecular motion."},
+  {q:"Diffusion occurs more rapidly in gases than in liquids because",o:["Gas molecules are heavier","Gas molecules move faster and are further apart","Gas molecules are more cohesive","Gas molecules are larger"],a:1,e:"Gas molecules have higher kinetic energy, move faster, and have more space between them, allowing quicker spreading."},
+  {q:"The spreading of the scent of perfume throughout a room is an example of",o:["Osmosis","Diffusion","Capillarity","Surface tension"],a:1,e:"Perfume molecules move randomly from high concentration (bottle) to low concentration (air)."},
+  {q:"Surface tension in liquids is caused by",o:["Adhesive forces between liquid and container","Cohesive forces between surface molecules being pulled inward","Gravitational pull on surface molecules","Repulsive forces between molecules"],a:1,e:"Surface molecules experience a net inward pull because they have no molecules above them, creating a 'skin' effect."},
+  {q:"A needle can be made to float on water despite being denser than water because of",o:["Adhesion","Surface tension","Diffusion","Viscosity"],a:1,e:"The water surface acts like an elastic skin due to surface tension, supporting the needle's weight."},
+  {q:"Detergents are added to water to help in washing because they",o:["Increase the surface tension of water","Decrease the surface tension of water","Increase the viscosity of water","Decrease the density of water"],a:1,e:"Detergents reduce surface tension, allowing water to spread and penetrate fabrics more easily to remove dirt."},
+  {q:"The rise of water in a narrow glass tube dipped in water is due to",o:["Cohesion being greater than adhesion","Adhesion being greater than cohesion","Surface tension being zero","Gravitational force"],a:1,e:"Water rises because adhesive forces (water-glass) are stronger than cohesive forces (water-water), causing the liquid to climb the walls."},
+  {q:"Mercury does not wet glass because",o:["Adhesion between mercury and glass is greater than cohesion in mercury","Cohesion in mercury is greater than adhesion between mercury and glass","Surface tension of mercury is zero","Mercury is denser than glass"],a:1,e:"Mercury's strong cohesive forces cause it to form droplets rather than spread on glass (obtuse angle of contact)."},
+  {q:"The angle of contact for water on clean glass is",o:["0°","90°","Greater than 90°","180°"],a:0,e:"Water wets glass completely, giving an acute angle (approximately 0° for pure water on clean glass)."},
+  {q:"The angle of contact for mercury on glass is",o:["0°","Less than 90°","Greater than 90°","Exactly 90°"],a:2,e:"Mercury forms an obtuse angle (about 130-140°) with glass because it doesn't wet the surface."},
+  {q:"Capillary action is utilized in",o:["The spreading of oil on water","The rise of oil in the wick of a lamp","The floating of a needle on water","The mixing of gases"],a:1,e:"Oil rises through the narrow spaces in the wick due to capillary action (adhesion > cohesion)."},
+  {q:"Water moves up the xylem vessels of plants due to",o:["Osmosis only","Capillarity and transpiration pull","Diffusion only","Gravitational force"],a:1,e:"Capillary action in narrow tubes plus transpiration (evaporation from leaves) pulls water upward."},
+  {q:"Cohesion is the force of attraction between",o:["Molecules of different substances","Molecules of the same substance","Atoms and electrons","Protons and neutrons"],a:1,e:"Cohesion is the intermolecular force between like molecules (e.g., water-water)."},
+  {q:"Adhesion is responsible for",o:["Water droplets forming spheres","Water sticking to a glass surface","Mercury forming globules","Oil floating on water"],a:1,e:"Adhesion is the attraction between different substances (water molecules and glass molecules)."},
+  {q:"When two clean glass plates are pressed together with water between them, they stick together because of",o:["Surface tension","Atmospheric pressure and adhesion","Cohesion only","Diffusion"],a:1,e:"Water forms a thin film; adhesion holds it to glass, and atmospheric pressure pushes the plates together when air is excluded."},
+  {q:"The spherical shape of small mercury droplets is due to",o:["Strong adhesive forces between mercury and air","Strong cohesive forces within mercury","Gravitational force","Brownian motion"],a:1,e:"Mercury's strong cohesion pulls its surface into the smallest possible area (sphere) to minimize surface energy."},
+  {q:"Which of the following phenomena is NOT explained by the kinetic molecular theory?",o:["Brownian motion","Surface tension","Radioactivity","Diffusion"],a:2,e:"Radioactivity involves nuclear processes (protons, neutrons), not molecular motion. The others are explained by molecular theory."},
+  {q:"The fact that solids have definite shape but liquids do not is explained by the kinetic theory as due to",o:["Solids having stronger intermolecular forces than liquids","Solids having weaker intermolecular forces than liquids","Solids having larger molecules than liquids","Solids being heavier than liquids"],a:0,e:"In solids, strong intermolecular forces hold molecules in fixed positions; in liquids, weaker forces allow molecules to flow."},
+  {q:"According to the kinetic theory, the temperature of a gas is a measure of",o:["The total potential energy of the molecules","The average kinetic energy of the molecules","The volume of the container","The pressure exerted by the molecules"],a:1,e:"Temperature is directly proportional to the average kinetic energy of the gas molecules."},
+  
+  // Section B: Kinetic Theory of Gases (26-50)
+  {q:"Which of the following is NOT an assumption of the kinetic theory of gases?",o:["Gas molecules are in continuous random motion","The volume of the molecules is negligible compared to the container volume","Intermolecular forces are significant between collisions","Collisions between molecules are perfectly elastic"],a:2,e:"Kinetic theory assumes intermolecular forces are negligible except during collisions."},
+  {q:"According to the kinetic theory, gas pressure is caused by",o:["The weight of gas molecules","Molecules colliding with each other","Molecules colliding with the walls of the container","The gravitational pull on the gas"],a:2,e:"Pressure results from the force of molecules hitting the container walls per unit area."},
+  {q:"Boyle's Law states that for a fixed mass of gas at constant temperature",o:["Pressure is directly proportional to volume","Pressure is inversely proportional to volume","Volume is directly proportional to temperature","Pressure is directly proportional to temperature"],a:1,e:"P ∝ 1/V or PV = constant at constant temperature."},
+  {q:"A gas occupies 500 cm³ at 100 kPa. If the temperature remains constant and the pressure increases to 250 kPa, what is the new volume?",o:["200 cm³","1250 cm³","2000 cm³","200 cm³"],a:0,e:"Using Boyle's Law: P₁V₁ = P₂V₂ → 100 × 500 = 250 × V₂ → V₂ = 200 cm³."},
+  {q:"The mathematical expression for Boyle's Law is",o:["P₁/V₁ = P₂/V₂","P₁V₁ = P₂V₂","V₁/T₁ = V₂/T₂","P₁/T₁ = P₂/T₂"],a:1,e:"Boyle's Law states PV = constant, so P₁V₁ = P₂V₂."},
+  {q:"Charles's Law states that for a fixed mass of gas at constant pressure",o:["Volume is inversely proportional to temperature","Volume is directly proportional to absolute temperature","Pressure is directly proportional to temperature","Volume is independent of temperature"],a:1,e:"V ∝ T (in Kelvin) or V/T = constant at constant pressure."},
+  {q:"A gas occupies 300 cm³ at 27°C. What will be its volume at 127°C if pressure is kept constant?",o:["400 cm³","1270 cm³","127 cm³","225 cm³"],a:0,e:"Convert to Kelvin: T₁ = 300 K, T₂ = 400 K. Using Charles's Law: 300/300 = V₂/400 → V₂ = 400 cm³."},
+  {q:"Which temperature scale must be used when applying Charles's Law?",o:["Celsius","Fahrenheit","Kelvin","Any scale"],a:2,e:"Absolute temperature (Kelvin) must be used because volume is directly proportional to absolute temperature, not Celsius."},
+  {q:"At absolute zero temperature (0 K or -273°C)",o:["Water freezes","All molecular motion ceases","Gases liquefy","Ice melts"],a:1,e:"Absolute zero is the theoretical temperature at which all molecular motion stops (kinetic energy = 0)."},
+  {q:"The kinetic theory explains that when a gas is heated at constant volume, the pressure increases because",o:["The molecules expand","The molecules move faster and collide more frequently and violently with the walls","The number of molecules increases","The volume of the container decreases"],a:1,e:"Higher temperature increases molecular speed and kinetic energy, causing more frequent and forceful wall collisions."},
+  {q:"When the volume of a gas is reduced at constant temperature, the pressure increases according to kinetic theory because",o:["The molecules become larger","The molecules collide more frequently with the walls","The temperature actually increases","The mass of the gas increases"],a:1,e:"Smaller volume means molecules travel shorter distances between wall collisions, hitting walls more often."},
+  {q:"The process by which a solid changes directly to a gas is called",o:["Evaporation","Sublimation","Condensation","Fusion"],a:1,e:"Sublimation (e.g., dry ice → CO₂ gas; iodine crystals → iodine vapor)."},
+  {q:"During melting, the temperature of a pure substance remains constant because",o:["Heat is not being supplied","The heat energy supplied is used to overcome intermolecular forces, not to raise kinetic energy","The substance is cooling down","The molecules stop moving"],a:1,e:"Latent heat of fusion breaks bonds holding molecules in fixed positions without increasing temperature (kinetic energy)."},
+  {q:"The temperature at which a liquid boils depends on",o:["Only the nature of the liquid","Only the atmospheric pressure","Both the nature of the liquid and the atmospheric pressure","The volume of the liquid"],a:2,e:"Different liquids have different boiling points, and boiling point increases with increased atmospheric pressure."},
+  {q:"Water boils at a lower temperature at high altitudes because",o:["The temperature is lower there","The atmospheric pressure is lower","The water is purer","There is less oxygen"],a:1,e:"Lower atmospheric pressure means molecules need less energy to escape the liquid surface, so boiling occurs at lower temperature."},
+  {q:"Evaporation causes cooling because",o:["Heat is lost to the atmosphere","The fastest-moving molecules escape, leaving behind molecules with lower average kinetic energy","The liquid expands","Air currents carry heat away"],a:1,e:"Escaping molecules take away high kinetic energy, reducing the average kinetic energy (temperature) of remaining liquid."},
+  {q:"Which of the following will increase the rate of evaporation of a liquid?",o:["Decreasing the surface area","Increasing the temperature","Increasing the humidity","Decreasing the wind speed"],a:1,e:"Higher temperature gives molecules more energy to escape. (Increasing surface area, decreasing humidity, and increasing wind speed also help, but only B is listed correctly.)"},
+  {q:"The difference between evaporation and boiling is that",o:["Evaporation occurs at the surface while boiling occurs throughout the liquid","Evaporation occurs at a specific temperature while boiling occurs at any temperature","Boiling causes cooling while evaporation does not","Evaporation is a chemical change while boiling is physical"],a:0,e:"Evaporation is a surface phenomenon at any temperature; boiling is bulk phenomenon at boiling point."},
+  {q:"Saturated vapor pressure of a liquid depends on",o:["The volume of the vapor","The temperature only","The surface area of the liquid","The atmospheric pressure"],a:1,e:"SVP depends only on temperature (nature of liquid). It is independent of volume or surface area."},
+  {q:"When a liquid is in dynamic equilibrium with its vapor in a closed container",o:["No evaporation is taking place","The rate of evaporation equals the rate of condensation","All the liquid has evaporated","The vapor is unsaturated"],a:1,e:"Dynamic equilibrium means opposing processes occur at equal rates: molecules evaporate and condense at same rate."},
+  {q:"The pressure exerted by a gas is given by the kinetic theory formula P = (1/3)ρc², where c² represents",o:["The average speed of the molecules","The mean square speed of the molecules","The root mean square speed of the molecules","The square of the average speed"],a:1,e:"c² is the mean square speed (average of velocity squared). The root mean square would be √c²."},
+  {q:"If the absolute temperature of a gas is doubled, the average kinetic energy of its molecules",o:["Remains the same","Is halved","Is doubled","Is quadrupled"],a:2,e:"Average kinetic energy ∝ absolute temperature (KE = (3/2)kT). Double T = double KE."},
+  {q:"The root mean square velocity of gas molecules is",o:["Directly proportional to the square root of absolute temperature","Inversely proportional to absolute temperature","Independent of temperature","Directly proportional to the square of absolute temperature"],a:0,e:"cᵣₘₛ = √(3kT/m), so cᵣₘₛ ∝ √T."},
+  {q:"Real gases behave most like ideal gases at",o:["High pressure and low temperature","Low pressure and high temperature","High pressure and high temperature","Low pressure and low temperature"],a:1,e:"At low pressure (molecules far apart, negligible volume) and high temperature (high speed, intermolecular forces negligible)."},
+  {q:"Which of the following statements about the molecules of an ideal gas is correct?",o:["They have zero kinetic energy at 0°C","They exert attractive forces on each other","They have negligible volume compared to the container volume","They move in circular paths only"],a:2,e:"Ideal gas molecules are point masses with negligible volume. They have kinetic energy at all temperatures above absolute zero, exert no forces on each other, and move randomly in straight lines."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('structure_matter_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('structure_matter_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('structure_matter_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,25,50];
+  const sectionNames=["A: Atoms, Molecules & Molecular Theory","B: Kinetic Theory of Gases"];
+  
+  for(let s=0;s<2;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('structure_matter_quiz_auth');
+  sessionStorage.removeItem('structure_matter_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('structure_matter_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('structure_matter_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

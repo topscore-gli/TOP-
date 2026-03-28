@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Scalars and Vectors Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1180px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .arrow{stroke:var(--line);stroke-width:3;fill:none;marker-end:url(#arrowhead)}
+    .arrow2{stroke:var(--accent-tertiary);stroke-width:3;fill:none;marker-end:url(#arrowhead2)}
+    .arrow3{stroke:var(--accent-secondary);stroke-width:3;fill:none;marker-end:url(#arrowhead3)}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📚 Scalars & Vectors</h1>
+        <p>JAMB Physics • classification • vector addition • components • displacement • position • units</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter teaches you how to distinguish between scalar and vector quantities, resolve vectors into components, add vectors correctly, and understand position, distance, and displacement.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Scalars have magnitude only</li>
+            <li>Vectors have magnitude and direction</li>
+            <li>Distance is scalar</li>
+            <li>Displacement is vector</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Easy memory rule</strong>
+          <p>If direction matters, think <strong>vector</strong>. If only size matters, think <strong>scalar</strong>.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Scalars and Vectors</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Concept</th>
+              <th>Definition</th>
+              <th>Key Characteristic</th>
+            </tr>
+            <tr>
+              <td>Scalar</td>
+              <td>Physical quantity with magnitude only</td>
+              <td>Needs number and unit only</td>
+            </tr>
+            <tr>
+              <td>Vector</td>
+              <td>Physical quantity with magnitude and direction</td>
+              <td>Needs number, unit, and direction</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <h3>Examples of Scalars</h3>
+        <ul>
+          <li>Mass</li>
+          <li>Time</li>
+          <li>Temperature</li>
+          <li>Speed</li>
+          <li>Distance</li>
+          <li>Energy</li>
+          <li>Volume</li>
+          <li>Density</li>
+          <li>Pressure</li>
+          <li>Electric current</li>
+        </ul>
+
+        <h3>Examples of Vectors</h3>
+        <ul>
+          <li>Velocity</li>
+          <li>Displacement</li>
+          <li>Force</li>
+          <li>Acceleration</li>
+          <li>Weight</li>
+          <li>Momentum</li>
+          <li>Electric field</li>
+          <li>Gravitational field</li>
+        </ul>
+
+        <div class="highlight-box">
+          <p><strong>Example:</strong> 20 m/s is not complete for velocity. You must say something like <strong>20 m/s north</strong>.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Vector Representation</h2>
+        <p>Vectors can be shown in diagrams, symbols, and component form.</p>
+
+        <h3>Graphical representation</h3>
+        <ul>
+          <li>A vector is drawn as an arrow</li>
+          <li>The length shows the magnitude</li>
+          <li>The arrowhead shows the direction</li>
+        </ul>
+
+        <h3>Mathematical representation</h3>
+        <ul>
+          <li>Arrow notation: <strong>F⃗</strong>, <strong>v⃗</strong></li>
+          <li>Component form: <strong>(Fx, Fy)</strong></li>
+          <li>Unit-vector form: <strong>Fxî + Fyĵ</strong></li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Vector as an arrow</div>
+          <svg viewBox="0 0 340 170" aria-label="Vector arrow diagram">
+            <defs>
+              <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="var(--line)"></polygon>
+              </marker>
+            </defs>
+            <line x1="50" y1="125" x2="250" y2="55" class="arrow"/>
+            <text x="145" y="75" class="label">Vector A</text>
+            <text x="36" y="134" class="label">Tail</text>
+            <text x="256" y="55" class="label">Head</text>
+          </svg>
+          <div class="diagram-caption">The arrow shows both size and direction. That is why vectors are different from scalars.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Vector Addition</h2>
+        <p>When two or more vectors act together, we can combine them to get the <strong>resultant</strong>.</p>
+
+        <h3>Method 1: Parallelogram Law</h3>
+        <p>If two vectors act at a point, the diagonal of the parallelogram formed by them gives the resultant.</p>
+
+        <div class="formula-box">
+          <div class="title">General resultant formula</div>
+          <div class="line"><span class="math">R = √(A² + B² + 2ABcosθ)</span></div>
+        </div>
+
+        <h3>Method 2: Triangle Law</h3>
+        <p>Place the vectors head-to-tail. The resultant is drawn from the tail of the first to the head of the second.</p>
+
+        <h3>Method 3: Component Method</h3>
+        <p>This is the safest and most important method for JAMB.</p>
+
+        <div class="formula-box">
+          <div class="title">Component method steps</div>
+          <div class="line"><span class="math">R<sub>x</sub> = A<sub>x</sub> + B<sub>x</sub> + ...</span></div>
+          <div class="line"><span class="math">R<sub>y</sub> = A<sub>y</sub> + B<sub>y</sub> + ...</span></div>
+          <div class="line"><span class="math">R = √(R<sub>x</sub>² + R<sub>y</sub>²)</span></div>
+          <div class="line"><span class="math">θ = tan⁻¹(R<sub>y</sub>/R<sub>x</sub>)</span></div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Vector addition by components</div>
+          <svg viewBox="0 0 340 200" aria-label="Vector addition components">
+            <defs>
+              <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="var(--accent-tertiary)"></polygon>
+              </marker>
+              <marker id="arrowhead3" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="var(--accent-secondary)"></polygon>
+              </marker>
+            </defs>
+            <line x1="40" y1="160" x2="300" y2="160" class="axis"/>
+            <line x1="40" y1="160" x2="40" y2="25" class="axis"/>
+            <line x1="40" y1="160" x2="170" y2="160" class="arrow2"/>
+            <line x1="170" y1="160" x2="170" y2="70" class="arrow3"/>
+            <line x1="40" y1="160" x2="170" y2="70" class="arrow"/>
+            <text x="95" y="175" class="label">Rₓ</text>
+            <text x="178" y="120" class="label">Rᵧ</text>
+            <text x="90" y="100" class="label">R</text>
+          </svg>
+          <div class="diagram-caption">First resolve into horizontal and vertical parts, then combine them using Pythagoras.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Special Cases of Vector Addition</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Angle Between Vectors</th>
+              <th>Formula</th>
+              <th>Meaning</th>
+            </tr>
+            <tr>
+              <td>0°</td>
+              <td>R = A + B</td>
+              <td>Same direction, maximum resultant</td>
+            </tr>
+            <tr>
+              <td>180°</td>
+              <td>R = |A - B|</td>
+              <td>Opposite direction, minimum resultant</td>
+            </tr>
+            <tr>
+              <td>90°</td>
+              <td>R = √(A² + B²)</td>
+              <td>Perpendicular vectors</td>
+            </tr>
+            <tr>
+              <td>θ</td>
+              <td>R = √(A² + B² + 2ABcosθ)</td>
+              <td>General case</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Worked Examples on Vectors</h2>
+
+        <div class="example-box">
+          <div class="title">Example 1: Two Perpendicular Forces</div>
+          <p>Two forces of 3 N and 4 N act at right angles. Find the resultant.</p>
+          <p><strong>Step 1:</strong> Use <span class="math">R = √(3² + 4²)</span></p>
+          <p><strong>Step 2:</strong> <span class="math">R = √(9 + 16) = √25 = 5 N</span></p>
+          <p><strong>Step 3:</strong> Direction: <span class="math">tanθ = 4/3</span></p>
+          <p><strong>Step 4:</strong> <span class="math">θ = 53.1°</span></p>
+          <div class="answer">Answer: 5 N at 53.1° to the 3 N force</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Vector Components</div>
+          <p>A displacement of 100 m makes 30° with the horizontal. Find its components.</p>
+          <p><strong>Step 1:</strong> Horizontal = <span class="math">100cos30° = 86.6 m</span></p>
+          <p><strong>Step 2:</strong> Vertical = <span class="math">100sin30° = 50 m</span></p>
+          <div class="answer">Answers: 86.6 m horizontally, 50 m vertically</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: Multiple Vectors</div>
+          <p>A = 5 m at 0°, B = 3 m at 90°, C = 4 m at 180°</p>
+          <p><strong>Step 1:</strong> <span class="math">Rₓ = 5 + 0 - 4 = 1</span></p>
+          <p><strong>Step 2:</strong> <span class="math">Rᵧ = 0 + 3 + 0 = 3</span></p>
+          <p><strong>Step 3:</strong> <span class="math">R = √(1² + 3²) = √10 = 3.16 m</span></p>
+          <p><strong>Step 4:</strong> <span class="math">θ = tan⁻¹(3/1) = 71.6°</span></p>
+          <div class="answer">Answer: 3.16 m at 71.6° from the positive x-axis</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 4: Relative Velocity</div>
+          <p>A boat moves north at 5 m/s across a river flowing east at 3 m/s. Find the resultant velocity.</p>
+          <p><strong>Step 1:</strong> Represent as <span class="math">3î + 5ĵ</span></p>
+          <p><strong>Step 2:</strong> Magnitude = <span class="math">√(3² + 5²) = √34 = 5.83 m/s</span></p>
+          <p><strong>Step 3:</strong> Direction = <span class="math">tan⁻¹(5/3) = 59.0°</span></p>
+          <div class="answer">Answer: 5.83 m/s at 59.0° north of east</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Measurement, Position, Distance and Displacement</h2>
+
+        <h3>Position</h3>
+        <p>Position tells where an object is relative to a reference point.</p>
+
+        <h3>Distance</h3>
+        <p>Distance is the total path length travelled. It is a <strong>scalar</strong>.</p>
+
+        <h3>Displacement</h3>
+        <p>Displacement is the straight-line change in position from start to finish. It is a <strong>vector</strong>.</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Concept</th>
+              <th>Definition</th>
+              <th>Nature</th>
+              <th>Unit</th>
+            </tr>
+            <tr>
+              <td>Position</td>
+              <td>Location relative to origin</td>
+              <td>Vector</td>
+              <td>m</td>
+            </tr>
+            <tr>
+              <td>Distance</td>
+              <td>Total path length</td>
+              <td>Scalar</td>
+              <td>m</td>
+            </tr>
+            <tr>
+              <td>Displacement</td>
+              <td>Change in position</td>
+              <td>Vector</td>
+              <td>m</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Distance vs displacement</div>
+          <svg viewBox="0 0 340 210" aria-label="Distance displacement path diagram">
+            <defs>
+              <marker id="arrowhead4" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                <polygon points="0 0, 10 3.5, 0 7" fill="var(--accent-secondary)"></polygon>
+              </marker>
+            </defs>
+            <circle cx="60" cy="150" r="4" class="mark"/>
+            <circle cx="250" cy="70" r="4" class="mark"/>
+            <path d="M60 150 L160 150 L160 70 L250 70" stroke="var(--accent-tertiary)" stroke-width="4" fill="none"/>
+            <line x1="60" y1="150" x2="250" y2="70" stroke="var(--accent-secondary)" stroke-width="3" marker-end="url(#arrowhead4)"/>
+            <text x="44" y="166" class="label">Start</text>
+            <text x="254" y="68" class="label">Finish</text>
+            <text x="95" y="143" class="label">Distance path</text>
+            <text x="125" y="102" class="label">Displacement</text>
+          </svg>
+          <div class="diagram-caption">Distance follows the actual path. Displacement is the straight line from start to finish.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Coordinate Systems</h2>
+
+        <h3>1-Dimension</h3>
+        <p>Position is given by <strong>x</strong>. Displacement is:</p>
+        <div class="formula-box">
+          <div class="title">1D displacement</div>
+          <div class="line"><span class="math">Δx = x<sub>f</sub> - x<sub>i</sub></span></div>
+        </div>
+
+        <h3>2-Dimension</h3>
+        <p>Position is given by coordinates <strong>(x, y)</strong>.</p>
+
+        <div class="formula-box">
+          <div class="title">2D displacement</div>
+          <div class="line"><span class="math">Δr⃗ = (x<sub>f</sub> - x<sub>i</sub>)î + (y<sub>f</sub> - y<sub>i</sub>)ĵ</span></div>
+          <div class="line"><span class="math">Magnitude = √((Δx)² + (Δy)²)</span></div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Position on x-y plane</div>
+          <svg viewBox="0 0 340 210" aria-label="Coordinate system diagram">
+            <line x1="40" y1="170" x2="310" y2="170" class="axis"/>
+            <line x1="40" y1="170" x2="40" y2="20" class="axis"/>
+            <circle cx="100" cy="125" r="4" class="mark"/>
+            <circle cx="220" cy="65" r="4" class="mark"/>
+            <line x1="100" y1="125" x2="220" y2="65" class="line"/>
+            <text x="87" y="118" class="label">A(2,3)</text>
+            <text x="225" y="60" class="label">B(5,7)</text>
+            <text x="145" y="88" class="label">Δr⃗</text>
+          </svg>
+          <div class="diagram-caption">Displacement in 2D is found by subtracting the coordinates of the start point from the finish point.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Worked Examples on Distance and Displacement</h2>
+
+        <div class="example-box">
+          <div class="title">Example 5: Distance vs Displacement</div>
+          <p>A student walks 400 m east, 300 m north, 400 m west, and 300 m south.</p>
+          <p><strong>Step 1:</strong> Distance = 400 + 300 + 400 + 300 = 1400 m</p>
+          <p><strong>Step 2:</strong> East-West displacement = 400 - 400 = 0</p>
+          <p><strong>Step 3:</strong> North-South displacement = 300 - 300 = 0</p>
+          <div class="answer">Answers: Distance = 1400 m, Displacement = 0 m</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 6: Displacement in 2D</div>
+          <p>A particle moves from A(2,3) to B(5,7).</p>
+          <p><strong>Step 1:</strong> Δx = 5 - 2 = 3</p>
+          <p><strong>Step 2:</strong> Δy = 7 - 3 = 4</p>
+          <p><strong>Step 3:</strong> Vector = <span class="math">3î + 4ĵ</span></p>
+          <p><strong>Step 4:</strong> Magnitude = <span class="math">√(3² + 4²) = 5 m</span></p>
+          <p><strong>Step 5:</strong> Direction = <span class="math">tan⁻¹(4/3) = 53.1°</span></p>
+          <div class="answer">Answer: 5 m at 53.1°</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 7: Average Speed vs Average Velocity</div>
+          <p>A car travels 60 km north in 1 hour, then 80 km east in 2 hours.</p>
+          <p><strong>Step 1:</strong> Total distance = 60 + 80 = 140 km</p>
+          <p><strong>Step 2:</strong> Total time = 3 h</p>
+          <p><strong>Step 3:</strong> Average speed = 140/3 = 46.7 km/h</p>
+          <p><strong>Step 4:</strong> Displacement = <span class="math">√(60² + 80²) = 100 km</span></p>
+          <p><strong>Step 5:</strong> Average velocity = 100/3 = 33.3 km/h</p>
+          <div class="answer">Answers: 46.7 km/h, and 33.3 km/h at 53.1° east of north</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Units and Prefixes</h2>
+
+        <h3>SI Base Units</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Quantity</th>
+              <th>Unit</th>
+              <th>Symbol</th>
+            </tr>
+            <tr><td>Length</td><td>metre</td><td>m</td></tr>
+            <tr><td>Mass</td><td>kilogram</td><td>kg</td></tr>
+            <tr><td>Time</td><td>second</td><td>s</td></tr>
+            <tr><td>Electric current</td><td>ampere</td><td>A</td></tr>
+            <tr><td>Temperature</td><td>kelvin</td><td>K</td></tr>
+            <tr><td>Amount of substance</td><td>mole</td><td>mol</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <h3>Common Prefixes</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Prefix</th>
+              <th>Symbol</th>
+              <th>Multiplier</th>
+            </tr>
+            <tr><td>Giga</td><td>G</td><td>10⁹</td></tr>
+            <tr><td>Mega</td><td>M</td><td>10⁶</td></tr>
+            <tr><td>Kilo</td><td>k</td><td>10³</td></tr>
+            <tr><td>Centi</td><td>c</td><td>10⁻²</td></tr>
+            <tr><td>Milli</td><td>m</td><td>10⁻³</td></tr>
+            <tr><td>Micro</td><td>μ</td><td>10⁻⁶</td></tr>
+            <tr><td>Nano</td><td>n</td><td>10⁻⁹</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="example-box">
+          <div class="title">Example 8: Unit Conversion</div>
+          <p>Convert 72 km/h to m/s.</p>
+          <p><strong>Step 1:</strong> <span class="math">72 × 1000 / 3600</span></p>
+          <p><strong>Step 2:</strong> <span class="math">72 × 5/18 = 20 m/s</span></p>
+          <div class="answer">Answer: 20 m/s</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Quick trick</strong>
+          <p>To convert <strong>km/h to m/s</strong>, multiply by <strong>5/18</strong>. To convert <strong>m/s to km/h</strong>, multiply by <strong>18/5</strong>.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 Summary Formula Table</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Topic</th>
+              <th>Formula</th>
+              <th>Use</th>
+            </tr>
+            <tr><td>General resultant</td><td>R = √(A² + B² + 2ABcosθ)</td><td>Parallelogram law</td></tr>
+            <tr><td>Perpendicular vectors</td><td>R = √(A² + B²)</td><td>Pythagoras</td></tr>
+            <tr><td>Vector components</td><td>Vx = Vcosθ, Vy = Vsinθ</td><td>Resolving vectors</td></tr>
+            <tr><td>Resultant from components</td><td>R = √(Rx² + Ry²)</td><td>Component method</td></tr>
+            <tr><td>Direction</td><td>θ = tan⁻¹(Ry/Rx)</td><td>Angle with x-axis</td></tr>
+            <tr><td>Displacement</td><td>s⃗ = r⃗f - r⃗i</td><td>Change in position</td></tr>
+            <tr><td>2D magnitude</td><td>s = √((Δx)² + (Δy)²)</td><td>Magnitude of displacement</td></tr>
+            <tr><td>Average velocity</td><td>v⃗avg = Δs⃗/Δt</td><td>Vector quantity</td></tr>
+            <tr><td>Average speed</td><td>vavg = Total distance/Δt</td><td>Scalar quantity</td></tr>
+            <tr><td>Unit conversion</td><td>km/h → m/s = ×5/18</td><td>Common JAMB conversion</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣1️⃣ JAMB Exam Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>How to avoid common mistakes</h4>
+          <ul>
+            <li>Always check if direction is required</li>
+            <li>If it is a vector, magnitude alone is incomplete</li>
+            <li>Draw a sketch whenever possible</li>
+            <li>Distance is total path, displacement is shortest straight-line path</li>
+            <li>For 3 or more vectors, use component method</li>
+            <li>Watch for negative signs in leftward and downward directions</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣2️⃣ Practice Questions</h2>
+
+        <div class="example-box">
+          <div class="title">1. Two forces of 6 N and 8 N act at 60° to each other. Calculate the resultant.</div>
+          <p>Hint: Use <span class="math">R² = A² + B² + 2ABcosθ</span></p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">2. A man walks 5 km east and then 12 km north. How far is he from his starting point?</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">3. Convert 15 m/s to km/h.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">4. A particle moves from (1,2) to (4,6). Calculate the magnitude of displacement.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>✅ Final Revision Note</h2>
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Scalars and Vectors. This topic connects strongly with Measurements and Units, Kinematics, Forces, and Motion, so mastering it will help you in many other Physics chapters.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise scalar vs vector, components, resultant formulas, distance vs displacement, and km/h to m/s conversion.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

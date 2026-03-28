@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Vapours Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1380px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:4;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .hot{fill:rgba(255,107,107,.32);stroke:none}
+    .cool{fill:rgba(78,205,196,.30);stroke:none}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>☁️ Vapours</h1>
+        <p>JAMB Physics • saturated vapour • S.V.P • humidity • dew point • hygrometers • rain and fog formation</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains saturated and unsaturated vapours, saturated vapour pressure, boiling point, barometer method, humidity, dew point, and the formation of dew, mist, fog, and rain.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Unsaturated vapour can still take in more vapour</li>
+            <li>Saturated vapour is in equilibrium with its liquid</li>
+            <li>Boiling occurs when S.V.P equals external pressure</li>
+            <li>Humidity tells how much water vapour air contains</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Saturated vapour pressure depends mainly on temperature, and many weather effects happen when air cools to the dew point.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Types of Vapours</h2>
+
+        <h3>Unsaturated vapour</h3>
+        <ul>
+          <li>Not in contact with its own liquid</li>
+          <li>Can hold more vapour</li>
+          <li>Obeys gas laws</li>
+          <li>Pressure changes when compressed or cooled</li>
+        </ul>
+
+        <h3>Saturated vapour</h3>
+        <ul>
+          <li>In contact with its own liquid in a closed space</li>
+          <li>Evaporation rate equals condensation rate</li>
+          <li>Does not obey gas laws normally</li>
+          <li>Has the maximum vapour possible at that temperature</li>
+        </ul>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Feature</th>
+              <th>Unsaturated Vapour</th>
+              <th>Saturated Vapour</th>
+            </tr>
+            <tr><td>Contact with liquid</td><td>No</td><td>Yes</td></tr>
+            <tr><td>Obeys gas laws</td><td>Yes</td><td>No</td></tr>
+            <tr><td>Can add more vapour</td><td>Yes</td><td>No</td></tr>
+            <tr><td>Pressure on compression</td><td>Increases</td><td>Stays constant at same temperature</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Saturated Vapour Pressure</h2>
+        <p>Saturated vapour pressure is the pressure exerted by a vapour in dynamic equilibrium with its liquid in a closed container at a given temperature.</p>
+
+        <div class="formula-box">
+          <div class="title">Boiling condition</div>
+          <div class="line"><span class="math">Boiling occurs when S.V.P = external pressure</span></div>
+        </div>
+
+        <ul>
+          <li>At sea level, water boils at 100°C because its S.V.P equals atmospheric pressure</li>
+          <li>Lower external pressure gives lower boiling point</li>
+          <li>Higher external pressure gives higher boiling point</li>
+        </ul>
+
+        <h3>Factors affecting S.V.P</h3>
+        <ul>
+          <li><strong>Temperature:</strong> S.V.P increases as temperature increases</li>
+          <li><strong>Nature of liquid:</strong> more volatile liquids have higher S.V.P</li>
+          <li><strong>Not affected by:</strong> container volume, amount of liquid, presence of other gases</li>
+        </ul>
+
+        <div class="highlight-box">
+          <p>Pressure cookers work because higher pressure raises the boiling point, so food cooks faster.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Determination of S.V.P by Barometer Method</h2>
+        <p>The barometer method uses a mercury column. When vapour is introduced, it pushes the mercury column downward.</p>
+
+        <div class="formula-box">
+          <div class="title">Barometer method formula</div>
+          <div class="line"><span class="math">S.V.P = h₁ - h₂</span></div>
+        </div>
+
+        <ul>
+          <li><strong>h₁</strong> = height of mercury column without vapour</li>
+          <li><strong>h₂</strong> = height of mercury column after vapour is introduced</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Barometer method idea</div>
+          <svg viewBox="0 0 340 230" aria-label="Barometer method diagram">
+            <rect x="90" y="30" width="28" height="130" class="obj"/>
+            <rect x="205" y="30" width="28" height="145" class="obj"/>
+            <rect x="55" y="165" width="95" height="25" class="obj"/>
+            <rect x="170" y="180" width="95" height="25" class="obj"/>
+            <rect x="92" y="52" width="24" height="108" class="hot"/>
+            <rect x="207" y="75" width="24" height="100" class="hot"/>
+            <text x="50" y="212" class="label">Without vapour</text>
+            <text x="182" y="212" class="label">With vapour</text>
+            <text x="242" y="63" class="label">Vapour</text>
+          </svg>
+          <div class="diagram-caption">The fall in mercury column height gives the saturated vapour pressure.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Formation of Dew, Mist, Fog, and Rain</h2>
+        <p>These are all caused by condensation of water vapour when air is cooled to or below its dew point.</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Phenomenon</th>
+              <th>Formation Process</th>
+            </tr>
+            <tr><td>Dew</td><td>Water vapour condenses on cool surfaces</td></tr>
+            <tr><td>Mist</td><td>Tiny water droplets suspended near ground</td></tr>
+            <tr><td>Fog</td><td>Thicker mist with poor visibility</td></tr>
+            <tr><td>Rain</td><td>Cloud droplets grow large and fall when air is saturated</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Cooling to dew point</div>
+          <svg viewBox="0 0 340 180" aria-label="Dew point diagram">
+            <circle cx="85" cy="80" r="35" class="hot" stroke="var(--accent-secondary)" stroke-width="2"/>
+            <line x1="125" y1="80" x2="220" y2="80" class="curve"/>
+            <circle cx="255" cy="80" r="35" class="cool" stroke="var(--accent-tertiary)" stroke-width="2"/>
+            <circle cx="240" cy="118" r="5" class="cool"/>
+            <circle cx="255" cy="126" r="5" class="cool"/>
+            <circle cx="270" cy="118" r="5" class="cool"/>
+            <text x="58" y="85" class="label">Warm air</text>
+            <text x="222" y="85" class="label">Cool air</text>
+          </svg>
+          <div class="diagram-caption">When moist air cools to the dew point, condensation begins.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Humidity and Dew Point</h2>
+
+        <h3>Absolute humidity</h3>
+        <p>The mass of water vapour present in unit volume of air, usually in g/m³.</p>
+
+        <h3>Relative humidity</h3>
+        <p>Relative humidity is the ratio of actual water vapour present to the amount needed for saturation at the same temperature, expressed as a percentage.</p>
+
+        <div class="formula-box">
+          <div class="title">Relative humidity formulas</div>
+          <div class="line"><span class="math">R.H = (actual vapour / saturation vapour) × 100%</span></div>
+          <div class="line"><span class="math">R.H = (S.V.P at dew point / S.V.P at air temperature) × 100%</span></div>
+        </div>
+
+        <h3>Dew point</h3>
+        <p>Dew point is the temperature at which air becomes saturated. At this point, relative humidity is 100% and condensation begins.</p>
+
+        <div class="memory-tip">
+          <strong>🧠 Key fact</strong>
+          <p>If relative humidity is 100%, then the dew point is the same as the air temperature.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Hygrometry</h2>
+        <p>A wet and dry bulb hygrometer is used to estimate humidity.</p>
+
+        <ul>
+          <li><strong>Dry bulb</strong> measures actual air temperature</li>
+          <li><strong>Wet bulb</strong> is cooled by evaporation from wet cloth</li>
+        </ul>
+
+        <h3>How it works</h3>
+        <ul>
+          <li>Low humidity → more evaporation → bigger temperature difference</li>
+          <li>High humidity → less evaporation → smaller temperature difference</li>
+          <li>At 100% humidity → no evaporation → both readings are equal</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Wet and dry bulb hygrometer</div>
+          <svg viewBox="0 0 340 220" aria-label="Hygrometer diagram">
+            <line x1="120" y1="40" x2="120" y2="170" class="axis"/>
+            <line x1="220" y1="40" x2="220" y2="170" class="axis"/>
+            <circle cx="120" cy="178" r="16" class="hot"/>
+            <circle cx="220" cy="178" r="16" class="cool"/>
+            <path d="M233 188 Q255 198 258 215" class="curve"/>
+            <text x="90" y="28" class="label">Dry bulb</text>
+            <text x="191" y="28" class="label">Wet bulb</text>
+          </svg>
+          <div class="diagram-caption">The wet bulb usually reads lower because evaporation cools it.</div>
+        </div>
+
+        <div class="highlight-box">
+          <p>To use a hygrometric table, record dry bulb temperature, find the wet bulb depression, then read off the relative humidity.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Essential Calculations for JAMB</h2>
+
+        <div class="example-box">
+          <div class="title">Calculation 1: S.V.P from Barometer Readings</div>
+          <p>Mercury stands at 760 mm when dry and 710 mm when water vapour is introduced. Find the S.V.P.</p>
+          <p><strong>Step:</strong> <span class="math">S.V.P = h₁ - h₂ = 760 - 710 = 50 mmHg</span></p>
+          <div class="answer">Answer: 50 mmHg</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 2: Relative Humidity from Density</div>
+          <p>Air at 25°C contains 9.2 g/m³ of water vapour. Saturation vapour density at 25°C is 23.0 g/m³. Find the relative humidity.</p>
+          <p><strong>Step:</strong> <span class="math">R.H = (9.2/23.0) × 100 = 40%</span></p>
+          <div class="answer">Answer: 40%</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 3: Finding Dew Point</div>
+          <p>The air temperature is 30°C and relative humidity is 60%. Saturation vapour density is 30.4 g/m³ at 30°C and 19.8 g/m³ at 20°C. Estimate the dew point.</p>
+          <p><strong>Step 1:</strong> Actual vapour density = <span class="math">0.60 × 30.4 = 18.24 g/m³</span></p>
+          <p><strong>Step 2:</strong> This is close to the saturation value at 20°C</p>
+          <div class="answer">Answer: about 20°C</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 4: Boiling Point at High Altitude</div>
+          <p>At what temperature will water boil where atmospheric pressure is 600 mmHg, if water has S.V.P of 600 mmHg at 94°C?</p>
+          <p><strong>Step:</strong> Boiling occurs when <span class="math">S.V.P = external pressure</span></p>
+          <div class="answer">Answer: 94°C</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 5: Relative Humidity Using S.V.P</div>
+          <p>S.V.P at 20°C is 17.5 mmHg and at 10°C is 9.2 mmHg. If the dew point is 10°C on a 20°C day, find the relative humidity.</p>
+          <p><strong>Step:</strong> <span class="math">R.H = (9.2/17.5) × 100 = 52.6%</span></p>
+          <div class="answer">Answer: about 53%</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 6: Pressure Cooker</div>
+          <p>A pressure cooker cooks at 120°C. If the S.V.P of water at 120°C is 1489 mmHg, find the pressure inside. Take atmospheric pressure as 760 mmHg.</p>
+          <p><strong>Absolute pressure:</strong> <span class="math">1489 mmHg</span></p>
+          <p><strong>Gauge pressure:</strong> <span class="math">1489 - 760 = 729 mmHg</span></p>
+          <div class="answer">Answer: 1489 mmHg absolute or 729 mmHg gauge</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 7: Hygrometer Reading</div>
+          <p>A hygrometer reads 20°C on the dry bulb and 16°C on the wet bulb. Given that for dry bulb 20°C, a difference of 4°C corresponds to 66%, find the relative humidity.</p>
+          <p><strong>Step 1:</strong> Wet bulb depression = <span class="math">20 - 16 = 4°C</span></p>
+          <p><strong>Step 2:</strong> Read from table</p>
+          <div class="answer">Answer: 66%</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Quick Revision Notes</h2>
+
+        <div class="jamb-alert">
+          <h4>Fast memory points</h4>
+          <ul>
+            <li>Saturated vapour is in equilibrium with its liquid</li>
+            <li>S.V.P depends mainly on temperature</li>
+            <li>Boiling point is reached when S.V.P equals atmospheric pressure</li>
+            <li>Relative humidity = actual ÷ saturation × 100%</li>
+            <li>Dew point is the temperature where air becomes saturated</li>
+            <li>Evaporation can happen at all temperatures, but boiling happens at a fixed point</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Common Exam Tricks</h2>
+        <ul>
+          <li>Saturated vapour does <strong>not</strong> obey Boyle’s law the way unsaturated vapour does</li>
+          <li>S.V.P increases with temperature, and the increase is not simply linear</li>
+          <li>Boiling point decreases at high altitude because pressure is lower</li>
+          <li>At 100% relative humidity, dew point equals air temperature</li>
+          <li>Adding salt raises boiling point</li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Vapours. This chapter is important because it links gas laws, weather processes, boiling, humidity, and practical instruments like hygrometers.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise saturated vs unsaturated vapour, S.V.P, dew point, relative humidity, and the barometer method.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>
