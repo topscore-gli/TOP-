@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB English - Comprehension & Summary Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .quote-box{
+      background:rgba(255,255,255,.04);
+      padding:14px 16px;border-radius:12px;margin:12px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .quote-box .q{font-size:14px;font-style:italic;line-height:1.6}
+    .quote-box .who{margin-top:8px;font-size:12px;color:var(--text-secondary);font-weight:700}
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .passage-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .passage-box p{font-size:13px;margin-bottom:0}
+
+    .qa-box{
+      background:rgba(255,255,255,.03);
+      border-radius:14px;
+      padding:14px 16px;
+      margin:12px 0;
+      border:1px solid rgba(255,255,255,.06)
+    }
+    .qa-box .q{font-weight:800;color:var(--accent-tertiary);margin-bottom:6px;font-size:14px}
+    .qa-box .ans{font-size:13px;color:var(--text-primary);margin-top:6px}
+    .qa-box .exp{font-size:12px;color:var(--text-secondary);margin-top:6px}
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1100px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);white-space:nowrap;vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">ENGLISH</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📘 Comprehension & Summary Mastery Guide</h1>
+        <p>JAMB 2026 • rules • strategies • comprehension passages • summary practice</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Summary Table (Fast Revision)</h2>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Area</th>
+              <th>What to do</th>
+              <th>JAMB focus</th>
+            </tr>
+            <tr>
+              <td><strong>Before reading</strong></td>
+              <td>Read the 5 questions first</td>
+              <td>Save time and spot key words</td>
+            </tr>
+            <tr>
+              <td><strong>While reading</strong></td>
+              <td>Skim for main idea, tone, transitions</td>
+              <td>Understand passage quickly</td>
+            </tr>
+            <tr>
+              <td><strong>Answering</strong></td>
+              <td>Go back to exact sentence/paragraph</td>
+              <td>Evidence-based answering</td>
+            </tr>
+            <tr>
+              <td><strong>Avoid traps</strong></td>
+              <td>Reject extremes, half-true, outside knowledge</td>
+              <td>Common examiner tricks</td>
+            </tr>
+            <tr>
+              <td><strong>Summary</strong></td>
+              <td>Use own words, short sentences, main points only</td>
+              <td>Accuracy and brevity</td>
+            </tr>
+            <tr>
+              <td><strong>Time goal</strong></td>
+              <td>7–10 minutes per passage set</td>
+              <td>Exam speed control</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Core Rules & Strategies</h2>
+
+        <h3>Comprehension – Universal Method</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>Read the 5 questions first</li>
+            <li>Underline key words like: attitude, purpose, implies, main idea, inference, word meaning</li>
+            <li>Skim the passage in 1–2 minutes</li>
+            <li>Find main idea, tone, and transitions</li>
+            <li>Go back to the exact line for each answer</li>
+          </ul>
+        </div>
+
+        <h3>Eliminate Common Traps</h3>
+        <div class="jamb-alert">
+          <h4>Watch out for:</h4>
+          <ul>
+            <li>Extreme words: always, never</li>
+            <li>Opposite meaning options</li>
+            <li>Half-true answers</li>
+            <li>Outside knowledge</li>
+            <li>Personal opinion</li>
+          </ul>
+        </div>
+
+        <h3>Passage Types & What to Look For</h3>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Descriptive</strong> → senses, imagery, adjectives, tone</li>
+            <li><strong>Narrative</strong> → story, characters, conflict, resolution, moral</li>
+            <li><strong>Expository</strong> → facts, reasons, benefits, explanation</li>
+            <li><strong>Argumentative</strong> → writer’s position, reasons, rejected opposition</li>
+          </ul>
+        </div>
+
+        <h3>Summary Rules</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>Use your own words only</li>
+            <li>Write short complete sentences</li>
+            <li>Include only main points</li>
+            <li>Use third person</li>
+            <li>Answer exactly what is asked</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Time Goal</strong>
+          <p>Spend 7–10 minutes total on one passage, 5 questions, and summary if included.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Descriptive Passage 1 – Village Square at Dusk</h2>
+
+        <div class="passage-box">
+          <p>The village square at dusk was a living painting. Tall palm trees swayed gently in the evening breeze, their fronds whispering secrets to one another. Women in brightly coloured wrappers balanced enamel bowls of garri and vegetable soup on their heads, laughing and greeting passers-by. The air carried the sweet smell of roasting plantain mixed with the earthy scent of fresh palm wine. Children chased one another around the ancient iroko tree, their bare feet kicking up red dust that glowed golden in the setting sun. In the distance, the sound of talking drums from the chief’s compound floated across the square, calling the villagers home after a long day on the farm. Everything felt alive, warm and timeless.</p>
+        </div>
+
+        <div class="qa-box">
+          <div class="q">1. The writer’s main purpose is to</div>
+          <div>A. persuade people to visit the village</div>
+          <div>B. describe the beauty and atmosphere of the village square</div>
+          <div>C. explain why villagers love palm wine</div>
+          <div>D. argue that city life is better</div>
+          <div class="ans"><strong>Correct:</strong> B</div>
+          <div class="exp">Pure description using senses to show beauty and lively atmosphere.</div>
+        </div>
+
+        <div class="qa-box">
+          <div class="q">2. The word “whispering” means</div>
+          <div>A. shouting loudly</div>
+          <div>B. making soft sounds</div>
+          <div>C. arguing angrily</div>
+          <div>D. singing songs</div>
+          <div class="ans"><strong>Correct:</strong> B</div>
+          <div class="exp">The context is gentle and calm.</div>
+        </div>
+
+        <div class="qa-box">
+          <div class="q">3. The writer’s attitude is</div>
+          <div>A. critical and disappointed</div>
+          <div>B. indifferent</div>
+          <div>C. warm and appreciative</div>
+          <div>D. fearful</div>
+          <div class="ans"><strong>Correct:</strong> C</div>
+          <div class="exp">Words like “living painting,” “warm,” and “alive” show admiration.</div>
+        </div>
+
+        <div class="qa-box">
+          <div class="q">4. From the passage, it is clear that</div>
+          <div>A. the villagers are unhappy with their lives</div>
+          <div>B. the square is empty at dusk</div>
+          <div>C. the scene is peaceful and full of life</div>
+          <div>D. only children visit the square</div>
+          <div class="ans"><strong>Correct:</strong> C</div>
+          <div class="exp">Laughter, greetings, play, and drums show active but peaceful life.</div>
+        </div>
+
+        <div class="qa-box">
+          <div class="q">5. The expression “living painting” suggests</div>
+          <div>A. has many artists</div>
+          <div>B. looks beautiful and natural like a picture</div>
+          <div>C. is painted with bright colours</div>
+          <div>D. changes colour every evening</div>
+          <div class="ans"><strong>Correct:</strong> B</div>
+          <div class="exp">It is a metaphor for beauty and scenic life.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Descriptive Passage 2 – Harmattan Season</h2>
+
+        <div class="passage-box">
+          <p>Harmattan season in the North transforms the landscape into a dusty dream. The sky turns pale orange as fine sand from the Sahara covers everything. Acacia trees stand naked against the harmattan wind, their leaves long gone. Women wrap thick shawls around their heads and shoulders, while men cough and rub their eyes. Yet, the cool morning air feels refreshing after months of heat. Children fly kites made from old newspapers, and the smell of roasting suya fills the air. Despite the dust, the season brings a special quiet beauty that only northerners truly understand.</p>
+        </div>
+
+        <div class="qa-box">
+          <div class="q">1. The passage mainly describes</div>
+          <div>A. the disadvantages of harmattan</div>
+          <div>B. the physical appearance and atmosphere of harmattan season</div>
+          <div>C. how to make kites</div>
+          <div>D. why people cough during harmattan</div>
+          <div class="ans"><strong>Correct:</strong> B</div>
+          <div class="exp">The passage describes look, feel, smell, and activity.</div>
+        </div>
+
+        <div class="qa-box">
+          <div class="q">2. The word “transforms” means</div>
+          <div>A. destroys</div>
+          <div>B. changes completely</div>
+          <div>C. hides</div>
+          <div>D. improves slightly</div>
+          <div class="ans"><strong>Correct:</strong> B</div>
+          <div class="exp">It shows a major visible change.</div>
+        </div>
+
+        <div class="qa-box">
+          <div class="q">3. The writer’s tone is</div>
+          <div>A. angry</div>
+          <div>B. neutral and informative</div>
+          <div>C. admiring and positive</div>
+          <div>D. sad and regretful</div>
+          <div class="ans"><strong>Correct:</strong> C</div>
+          <div class="exp">Despite the dust, the writer still sees beauty in the season.</div>
+        </div>
+
+        <div class="qa-box">
+          <div class="q">4. It can be inferred that</div>
+          <div>A. everyone hates harmattan</div>
+          <div>B. harmattan has both challenges and pleasant sides</div>
+          <div>C. the North has no trees</div>
+          <div>D. kites are only flown in the South</div>
+          <div class="ans"><strong>Correct:</strong> B</div>
+          <div class="exp">The passage balances discomfort with refreshment and beauty.</div>
+        </div>
+
+        <div class="qa-box">
+          <div class="q">5. The phrase “dusty dream” is</div>
+          <div>A. simile</div>
+          <div>B. metaphor</div>
+          <div>C. personification</div>
+          <div>D. hyperbole</div>
+          <div class="ans"><strong>Correct:</strong> B</div>
+          <div class="exp">It directly compares the landscape to a dream.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Narrative Passage 1 – Chinedu Essay Winner</h2>
+
+        <div class="passage-box">
+          <p>Chinedu had always been the quiet boy in class. One morning, the principal announced a state-wide essay competition. Chinedu’s teacher encouraged him to try. That night, he stayed up late writing about “The Importance of Education in Nigeria.” He submitted his entry without telling anyone. Two months later, the principal called an assembly. When Chinedu’s name was announced as the winner, the whole school cheered. His mother cried with joy. From that day, Chinedu believed that hard work and quiet determination could change anyone’s story.</p>
+        </div>
+
+        <div class="qa-box"><div class="q">1. The passage is about</div><div>A. how to win competitions</div><div>B. a boy’s journey from being unnoticed to becoming a winner</div><div>C. the principal’s speech</div><div>D. why essays are important</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">The story moves from quietness to recognition.</div></div>
+        <div class="qa-box"><div class="q">2. Why did Chinedu stay up late?</div><div>A. watching television</div><div>B. writing the essay</div><div>C. playing games</div><div>D. arguing with mother</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">This is stated directly in the passage.</div></div>
+        <div class="qa-box"><div class="q">3. The word “announced” means</div><div>A. kept secret</div><div>B. made known publicly</div><div>C. whispered</div><div>D. cancelled</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">The announcement is made in assembly.</div></div>
+        <div class="qa-box"><div class="q">4. Chinedu’s success shows</div><div>A. only loud students win</div><div>B. determination and hard work pay off</div><div>C. teachers are not helpful</div><div>D. competitions useless</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">That is the moral of the story.</div></div>
+        <div class="qa-box"><div class="q">5. Writer’s attitude to Chinedu</div><div>A. mocking</div><div>B. admiring</div><div>C. jealous</div><div>D. indifferent</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">The writer presents him positively and warmly.</div></div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Narrative Passage 2 – Amina Refuses Ride</h2>
+
+        <div class="passage-box">
+          <p>Amina was trekking home from school when heavy rain started. Her umbrella was at home. Suddenly, a car stopped beside her. It was her neighbour, Uncle Musa. He offered her a ride, but Amina remembered her mother’s warning never to enter strangers’ cars. She politely refused and ran under a nearby shop shed. Ten minutes later, the rain stopped. She reached home safely and told her mother what happened. Her mother hugged her and said, “Well done, my daughter. Safety first.”</p>
+        </div>
+
+        <div class="qa-box"><div class="q">1. The story is mainly about</div><div>A. a girl who obeyed her mother’s advice during rain</div><div>B. how to drive in the rain</div><div>C. why Uncle Musa is kind</div><div>D. dangers of walking in rain</div><div class="ans"><strong>Correct:</strong> A</div><div class="exp">The story centers on obedience and safe decision-making.</div></div>
+        <div class="qa-box"><div class="q">2. Why did Amina refuse?</div><div>A. did not like Uncle Musa</div><div>B. remembered mother’s warning</div><div>C. car too slow</div><div>D. wanted to get wet</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">The reason is clearly stated.</div></div>
+        <div class="qa-box"><div class="q">3. “Safety first” implies</div><div>A. always take risks</div><div>B. protecting oneself more important than convenience</div><div>C. mothers too strict</div><div>D. rain not dangerous</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">The phrase emphasizes protection over ease.</div></div>
+        <div class="qa-box"><div class="q">4. Amina can be described as</div><div>A. disobedient and rude</div><div>B. careful and obedient</div><div>C. foolish</div><div>D. lazy</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">Her actions show caution and obedience.</div></div>
+        <div class="qa-box"><div class="q">5. Narrative ends on note of</div><div>A. sadness</div><div>B. praise and approval</div><div>C. anger</div><div>D. disappointment</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">The mother hugs and praises her.</div></div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Expository Passage 1 – Benefits of Reading</h2>
+
+        <div class="passage-box">
+          <p>Reading is one of the most powerful habits a student can develop. It improves vocabulary, increases knowledge and sharpens the mind. Students who read widely perform better in JAMB and WAEC because they understand questions faster. Reading also reduces stress and improves imagination. Parents should buy storybooks and novels for their children instead of only allowing phones and video games. In the long run, readers become better thinkers and leaders in society.</p>
+        </div>
+
+        <div class="qa-box"><div class="q">1. The passage explains</div><div>A. why students fail examinations</div><div>B. the benefits of developing the habit of reading</div><div>C. how to buy storybooks</div><div>D. the disadvantages of phones</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">The passage lists the advantages of reading.</div></div>
+        <div class="qa-box"><div class="q">2. Reading helps students to</div><div>A. sleep better</div><div>B. understand JAMB questions faster</div><div>C. play more games</div><div>D. spend less time at home</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">This is directly mentioned.</div></div>
+        <div class="qa-box"><div class="q">3. The word “sharpen” means</div><div>A. make blunt</div><div>B. make more effective</div><div>C. cut with a knife</div><div>D. reduce</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">It means improving the mind’s strength and function.</div></div>
+        <div class="qa-box"><div class="q">4. Writer suggests parents should</div><div>A. ban all phones</div><div>B. provide books instead of only phones</div><div>C. stop children from reading</div><div>D. read only newspapers</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">That is the exact suggestion in the passage.</div></div>
+        <div class="qa-box"><div class="q">5. Main idea</div><div>A. reading more important than playing</div><div>B. regular reading leads to academic and personal success</div><div>C. JAMB too difficult</div><div>D. society does not value readers</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">This best captures the whole passage.</div></div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Expository Passage 2 – Social Media</h2>
+
+        <div class="passage-box">
+          <p>Social media has changed the way young people communicate in Nigeria. Platforms like WhatsApp, Instagram and TikTok allow instant sharing of information and ideas. However, they also expose users to cyberbullying, fake news and addiction. Experts advise that young people should limit their screen time to two hours daily and verify every information before sharing. When used responsibly, social media can help students learn new skills and connect with opportunities.</p>
+        </div>
+
+        <div class="qa-box"><div class="q">1. The passage explains</div><div>A. how to create TikTok videos</div><div>B. both the advantages and disadvantages of social media</div><div>C. why Instagram is the best app</div><div>D. how to stop cyberbullying completely</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">The writer balances both sides.</div></div>
+        <div class="qa-box"><div class="q">2. One negative effect</div><div>A. too much happiness</div><div>B. cyberbullying and fake news</div><div>C. high cost of phones</div><div>D. loss of friends</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">These are directly listed.</div></div>
+        <div class="qa-box"><div class="q">3. “Verify” means</div><div>A. ignore</div><div>B. check the truth of</div><div>C. delete</div><div>D. share quickly</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">It means confirm accuracy.</div></div>
+        <div class="qa-box"><div class="q">4. Writer advises</div><div>A. delete all accounts</div><div>B. limit screen time and verify information</div><div>C. spend five hours online</div><div>D. stop learning new skills</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">This is the expert advice mentioned.</div></div>
+        <div class="qa-box"><div class="q">5. Tone is</div><div>A. completely against social media</div><div>B. balanced and advisory</div><div>C. very emotional</div><div>D. sarcastic</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">The writer discusses pros and cons with guidance.</div></div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Argumentative Passage 1 – University Education</h2>
+
+        <div class="passage-box">
+          <p>Some people believe university education is a waste of time because many graduates remain unemployed. However, I strongly disagree. University education teaches critical thinking, discipline and specialized knowledge that no amount of trading can give. A degree opens doors to better jobs, international opportunities and higher self-confidence. While skills are important, education remains the foundation for long-term success in any career. Nigeria needs more educated citizens, not fewer.</p>
+        </div>
+
+        <div class="qa-box"><div class="q">1. Writer’s position</div><div>A. university education useless</div><div>B. university education still very valuable</div><div>C. trading better than education</div><div>D. all graduates unemployed</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">The writer clearly supports university education.</div></div>
+        <div class="qa-box"><div class="q">2. “Foundation” means</div><div>A. roof</div><div>B. basic and necessary base</div><div>C. temporary help</div><div>D. final stage</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">It means essential base or starting support.</div></div>
+        <div class="qa-box"><div class="q">3. Supports argument by</div><div>A. personal stories</div><div>B. stating benefits and dismissing opposing view</div><div>C. attacking traders</div><div>D. agreeing with everyone</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">This is how the passage is structured.</div></div>
+        <div class="qa-box"><div class="q">4. University education gives</div><div>A. immediate money</div><div>B. critical thinking and better opportunities</div><div>C. only certificates</div><div>D. nothing useful</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">These are the major benefits mentioned.</div></div>
+        <div class="qa-box"><div class="q">5. Passage is</div><div>A. narrative</div><div>B. argumentative in favour of university education</div><div>C. descriptive</div><div>D. expository only</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">It takes a clear side and defends it.</div></div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Argumentative Passage 2 – Ban Cultism</h2>
+
+        <div class="passage-box">
+          <p>Many argue that the government should ban all cultism in secondary schools with very strict punishment. I support this view completely. Cultism destroys young lives, causes violence and fear in schools, and wastes the future of our nation. Parents and teachers must also teach moral values at home. If we do not kill cultism now, it will kill our tomorrow. Strict laws and constant monitoring are the only solutions.</p>
+        </div>
+
+        <div class="qa-box"><div class="q">1. Writer is arguing</div><div>A. against cultism and for strict punishment</div><div>B. cultism not dangerous</div><div>C. more freedom for students</div><div>D. parents do nothing</div><div class="ans"><strong>Correct:</strong> A</div><div class="exp">The writer fully supports strict action.</div></div>
+        <div class="qa-box"><div class="q">2. Reason against cultism</div><div>A. makes students happy</div><div>B. destroys young lives and causes violence</div><div>C. helps make friends</div><div>D. only in universities</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">These are directly stated reasons.</div></div>
+        <div class="qa-box"><div class="q">3. “Monitoring” means</div><div>A. ignoring</div><div>B. close watching and supervision</div><div>C. celebrating</div><div>D. reducing</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">Monitoring means watching closely.</div></div>
+        <div class="qa-box"><div class="q">4. Solution lies in</div><div>A. doing nothing</div><div>B. strict laws and moral education</div><div>C. closing schools</div><div>D. allowing cult groups</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">The writer gives both law and moral training as solutions.</div></div>
+        <div class="qa-box"><div class="q">5. Tone is</div><div>A. neutral</div><div>B. very strong and persuasive</div><div>C. humorous</div><div>D. doubtful</div><div class="ans"><strong>Correct:</strong> B</div><div class="exp">The language is urgent and forceful.</div></div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 Summary Passage 1 – Youths & Reading</h2>
+
+        <div class="passage-box">
+          <p>Many Nigerian youths waste valuable time on social media instead of reading. This habit has led to poor performance in examinations. Reading builds vocabulary and improves understanding. Parents and schools should create reading clubs and limit phone usage after 8 p.m. Students who read daily score higher in JAMB and become more confident. The future of Nigeria depends on how well her youths read today.</p>
+        </div>
+
+        <div class="qa-box"><div class="q">1. Best summary paragraph 1</div><div>A. Social media very useful</div><div>B. Youths waste time on social media instead of reading</div><div>C. JAMB too difficult</div><div>D. Parents do not care</div><div class="ans"><strong>Correct:</strong> B</div></div>
+        <div class="qa-box"><div class="q">2. Main reason poor performance</div><div>A. lack of money</div><div>B. wasting time on social media instead of reading</div><div>C. too many reading clubs</div><div>D. schools not good</div><div class="ans"><strong>Correct:</strong> B</div></div>
+        <div class="qa-box"><div class="q">3. Parents and schools should</div><div>A. ban all phones forever</div><div>B. create reading clubs and limit phone usage</div><div>C. allow more social media</div><div>D. close schools</div><div class="ans"><strong>Correct:</strong> B</div></div>
+        <div class="qa-box"><div class="q">4. Students who read daily</div><div>A. fail JAMB</div><div>B. score higher and become more confident</div><div>C. hate books</div><div>D. waste time</div><div class="ans"><strong>Correct:</strong> B</div></div>
+        <div class="qa-box"><div class="q">5. Best whole passage summary</div><div>A. Reading old-fashioned</div><div>B. Nigerian youths must reduce social media and read more for success</div><div>C. Social media better than books</div><div>D. Nigeria no future</div><div class="ans"><strong>Correct:</strong> B</div></div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣1️⃣ Summary Passage 2 – Climate Change in Nigeria</h2>
+
+        <div class="passage-box">
+          <p>Climate change is affecting Nigeria badly. Farmers in the North now experience shorter rainy seasons and poor harvests. Flooding in the South destroys homes and farmlands every year. The government is planting trees and encouraging solar energy. If nothing is done quickly, food shortages and displacement will increase. Every citizen must join the fight against climate change.</p>
+        </div>
+
+        <div class="qa-box"><div class="q">1. Effect on North</div><div>A. More rain North</div><div>B. Shorter rainy seasons and poor harvests</div><div>C. No more farming</div><div>D. Farmers happy</div><div class="ans"><strong>Correct:</strong> B</div></div>
+        <div class="qa-box"><div class="q">2. Problem in South</div><div>A. too much sunshine</div><div>B. flooding destroys homes and farms</div><div>C. lack solar energy</div><div>D. no trees</div><div class="ans"><strong>Correct:</strong> B</div></div>
+        <div class="qa-box"><div class="q">3. Government action</div><div>A. doing nothing</div><div>B. planting trees and encouraging solar energy</div><div>C. increasing flooding</div><div>D. stopping farming</div><div class="ans"><strong>Correct:</strong> B</div></div>
+        <div class="qa-box"><div class="q">4. If nothing done</div><div>A. more food better harvests</div><div>B. food shortages and displacement</div><div>C. less flooding</div><div>D. happy citizens</div><div class="ans"><strong>Correct:</strong> B</div></div>
+        <div class="qa-box"><div class="q">5. Best one-sentence summary</div><div>A. Climate change no effect</div><div>B. Climate change harming Nigeria and urgent action needed by all</div><div>C. Farmers love climate change</div><div>D. Solar energy useless</div><div class="ans"><strong>Correct:</strong> B</div></div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣2️⃣ Final Tips for JAMB Success</h2>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Practice these passages timed every day</li>
+            <li>Review every wrong answer by going back to the paragraph</li>
+            <li>Read newspapers and novels daily to increase speed</li>
+            <li>In the exam, read questions first</li>
+            <li>Eliminate wrong options before choosing your final answer</li>
+            <li>Never answer from personal opinion</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Final Target</strong>
+          <p>Aim for 8–10 correct in comprehension and summary to build a strong English score in JAMB.</p>
+        </div>
+
+        <div class="quote-box">
+          <div class="q">“Finished – Complete Comprehension & Summary Mastery Guide!”</div>
+          <div class="who">— Final study line</div>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Revise the rules first, then practise one passage under 10 minutes daily.')">Practice JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

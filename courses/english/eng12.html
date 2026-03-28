@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Oral English - Emphatic Stress Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:980px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .quiz-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .quiz-box .q{font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px}
+    .quiz-box button{
+      width:100%;margin-top:10px;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+      background:var(--accent);color:#000;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+    }
+    .quiz-answer{
+      margin-top:10px;font-size:13px;color:var(--text-secondary);display:none
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+    .caps-word{
+      color:var(--accent-secondary);
+      font-weight:900
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">ENGLISH</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📢 Emphatic Stress Mastery Guide</h1>
+        <p>JAMB 2026 • sentence stress • contrastive stress • golden rule • worked examples</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 What is Emphatic Stress?</h2>
+        <p><strong>Emphatic stress</strong> is the extra strong stress placed on one whole word in a sentence to show importance, correction, or contrast.</p>
+
+        <div class="highlight-box">
+          <p>In JAMB, the stressed word is usually written in <strong>CAPITAL LETTERS</strong>.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example</div>
+          <div class="line">The teacher wants <span class="caps-word">MY</span> pen.</div>
+          <div class="line"><strong>Meaning:</strong> Not his pen. Not your pen. <strong>My</strong> pen.</div>
+        </div>
+
+        <div class="quick-facts">
+          <ul>
+            <li>It shows <strong>importance</strong></li>
+            <li>It can <strong>correct a wrong idea</strong></li>
+            <li>It can show <strong>contrast</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Difference Between Word Stress and Emphatic Stress</h2>
+
+        <div class="example-box">
+          <div class="title">Word Stress</div>
+          <div class="line">Stress on one syllable inside a word.</div>
+          <div class="line"><strong>Example:</strong> COMmercial, deCIDE</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Emphatic Stress</div>
+          <div class="line">Stress on a whole word inside a sentence.</div>
+          <div class="line"><strong>Example:</strong> The teacher wants <span class="caps-word">MY</span> pen.</div>
+        </div>
+
+        <div class="jamb-alert">
+          <h4>Important for JAMB</h4>
+          <ul>
+            <li>This section tests <strong>emphatic stress</strong>, not ordinary word stress.</li>
+            <li>So your job is to find which word is being corrected or contrasted.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Exact JAMB Question Format</h2>
+        <p>JAMB usually asks:</p>
+
+        <div class="highlight-box">
+          <p><strong>“In each of the following questions, the word in capital letters has the emphatic stress. Choose the option to which the given sentence relates.”</strong></p>
+        </div>
+
+        <p>This means you must choose the option that brings out the correction or contrast in the capitalised word.</p>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ The Golden Rule</h2>
+
+        <div class="memory-tip">
+          <strong>🌟 Never forget this</strong>
+          <p>The correct option is the one that <strong>contradicts</strong> or <strong>replaces</strong> the CAPITALISED word.</p>
+        </div>
+
+        <div class="quick-facts">
+          <ul>
+            <li>The answer usually does <strong>not</strong> repeat the same capitalised word exactly</li>
+            <li>It usually changes that word to another person, action, place, time, object, or quality</li>
+            <li>The correct answer is the one the sentence is correcting</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example</div>
+          <div class="line">JOHN bought a new car yesterday.</div>
+          <div class="line"><strong>Meaning:</strong> It was John, not Peter or another person.</div>
+          <div class="line"><strong>Correct related question:</strong> Did Peter buy a new car yesterday?</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Quick Test Method</h2>
+
+        <div class="jamb-alert">
+          <h4>Use these 3 steps</h4>
+          <ul>
+            <li>Spot the word in CAPITAL LETTERS</li>
+            <li>Ask yourself: “What is this sentence correcting?”</li>
+            <li>Choose the option that changes exactly that word</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Shortcut</strong>
+          <p>If the stressed word is the <strong>subject</strong>, choose the option that changes the subject. If it is the <strong>verb</strong>, choose the option that changes the action. If it is the <strong>object, place, time, or quality</strong>, choose the option that changes that part.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Type 1 — Emphatic Stress on the Subject</h2>
+        <p>Here, the sentence is correcting <strong>who</strong> did something or who is being talked about.</p>
+
+        <div class="example-box">
+          <div class="title">1. <span class="caps-word">JOHN</span> bought a new car yesterday.</div>
+          <div class="line">A. Did Peter buy a new car yesterday?</div>
+          <div class="line">B. Did John sell a new car yesterday?</div>
+          <div class="line">C. Did John buy an old car yesterday?</div>
+          <div class="line">D. Did John buy a new car today?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes JOHN to Peter.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">2. <span class="caps-word">MY</span> mother cooked the rice.</div>
+          <div class="line">A. Did your father cook the rice?</div>
+          <div class="line">B. Did your mother eat the rice?</div>
+          <div class="line">C. Did your mother cook the beans?</div>
+          <div class="line">D. Did your sister cook the rice?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes MY mother to your father.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">3. <span class="caps-word">THE accused</span> has been tried.</div>
+          <div class="line">A. Has the witness been tried?</div>
+          <div class="line">B. Has the accused been sentenced?</div>
+          <div class="line">C. Has the judge been tried?</div>
+          <div class="line">D. Has the accused been released?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes the accused to the witness.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">4. <span class="caps-word">EMEKA</span> is a lawyer.</div>
+          <div class="line">A. Is Chinedu a lawyer?</div>
+          <div class="line">B. Is Emeka a doctor?</div>
+          <div class="line">C. Was Emeka a lawyer?</div>
+          <div class="line">D. Is Emeka the judge?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes EMEKA to Chinedu.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">5. <span class="caps-word">ADAMU</span> is leaving a car behind.</div>
+          <div class="line">A. Is Musa leaving a car behind?</div>
+          <div class="line">B. Is Adamu driving a car?</div>
+          <div class="line">C. Is Adamu leaving a house behind?</div>
+          <div class="line">D. Is Adamu taking a car?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes ADAMU to Musa.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">6. <span class="caps-word">HIS</span> wife works in a bank.</div>
+          <div class="line">A. Does her husband work in a bank?</div>
+          <div class="line">B. Does his sister work in a bank?</div>
+          <div class="line">C. Does his wife work in a school?</div>
+          <div class="line">D. Does his mother work in a bank?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes HIS wife to her husband.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">7. <span class="caps-word">THE Nigerian</span> football team has many foreign players.</div>
+          <div class="line">A. Does the Ghanaian football team have many foreign players?</div>
+          <div class="line">B. Does the Nigerian volleyball team have many foreign players?</div>
+          <div class="line">C. Does the Nigerian football team have local players?</div>
+          <div class="line">D. Does the Nigerian basketball team have many foreign players?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes Nigerian to Ghanaian.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">8. <span class="caps-word">SHE</span> works at the hospital.</div>
+          <div class="line">A. Does he work at the hospital?</div>
+          <div class="line">B. Does she work at the school?</div>
+          <div class="line">C. Does she teach at the hospital?</div>
+          <div class="line">D. What does she do at the hospital?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes SHE to he.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">9. <span class="caps-word">THE fire</span> destroyed many lives.</div>
+          <div class="line">A. Did the flood destroy many lives?</div>
+          <div class="line">B. Did the fire destroy few lives?</div>
+          <div class="line">C. Did the fire save many lives?</div>
+          <div class="line">D. Did the accident destroy many lives?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes fire to flood.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">10. <span class="caps-word">DADDY</span> plays tennis on Saturday afternoons.</div>
+          <div class="line">A. Does mummy play tennis on Saturday afternoons?</div>
+          <div class="line">B. Does daddy play football on Saturday afternoons?</div>
+          <div class="line">C. Does daddy play tennis on Sunday afternoons?</div>
+          <div class="line">D. Does uncle play tennis on Saturday afternoons?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes DADDY to mummy.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Type 2 — Emphatic Stress on the Verb</h2>
+        <p>Here, the sentence is correcting <strong>the action</strong>.</p>
+
+        <div class="example-box">
+          <div class="title">1. John <span class="caps-word">BOUGHT</span> a new car yesterday.</div>
+          <div class="line">A. Did John sell a new car yesterday?</div>
+          <div class="line">B. Did John buy an old car yesterday?</div>
+          <div class="line">C. Did Peter buy a new car yesterday?</div>
+          <div class="line">D. Did John wash a new car yesterday?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes BOUGHT to sell.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">2. The accused hasn’t even been <span class="caps-word">TRIED</span>.</div>
+          <div class="line">A. Was the accused sentenced?</div>
+          <div class="line">B. Has the accused been released?</div>
+          <div class="line">C. Has the suspect been apprehended?</div>
+          <div class="line">D. Was the accused handed over to the police?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes TRIED to sentenced.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">3. John must <span class="caps-word">PAY</span> for the broken glass immediately.</div>
+          <div class="line">A. Must John repair the broken glass immediately?</div>
+          <div class="line">B. Must Jane pay for the broken glass immediately?</div>
+          <div class="line">C. Must John pay for the broken window?</div>
+          <div class="line">D. Must John steal the broken glass?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes PAY to repair.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">4. The workers agreed to forgo their December salaries.</div>
+          <div class="line"><strong>Verb focus:</strong> <span class="caps-word">forgo</span></div>
+          <div class="line">A. Did the workers agree to claim their December salaries?</div>
+          <div class="line">B. Did the workers refuse to forgo their December salaries?</div>
+          <div class="line">C. Did the workers agree to forgo their March salaries?</div>
+          <div class="line">D. Did the employers agree to forgo their December salaries?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes forgo to claim.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">5. The cat <span class="caps-word">DEVOURED</span> the rat.</div>
+          <div class="line">A. Did the cat pet the rat?</div>
+          <div class="line">B. Did the rat devour the cat?</div>
+          <div class="line">C. Did the dog devour the rat?</div>
+          <div class="line">D. Did the cat chase the rat?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes DEVOURED to pet.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">6. She <span class="caps-word">WORKS</span> at the hospital.</div>
+          <div class="line">A. Does she teach at the hospital?</div>
+          <div class="line">B. Does she work at the school?</div>
+          <div class="line">C. Does he work at the hospital?</div>
+          <div class="line">D. What does she do at the hospital?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes WORKS to teach.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">7. The landlord <span class="caps-word">REFUSED</span> to eject the tenant.</div>
+          <div class="line">A. Did the landlord agree to eject the tenant?</div>
+          <div class="line">B. Did the caretaker refuse to eject the tenant?</div>
+          <div class="line">C. Did the landlord refuse to accept the tenant?</div>
+          <div class="line">D. Did the landlord eject the guest?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes REFUSED to agree.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">8. Adon stated she had a <span class="caps-word">RIGHT</span> to her privacy.</div>
+          <div class="line">A. Did Adon state she had no right to her privacy?</div>
+          <div class="line">B. Did Adon state she had a duty to her privacy?</div>
+          <div class="line">C. Did Kella state she had a right to her privacy?</div>
+          <div class="line">D. Did Adon state she had a right to her money?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes RIGHT to no right.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">9. The accountant <span class="caps-word">PAID</span> the workers July salary in September.</div>
+          <div class="line">A. Did the cashier pay the workers July salary in September?</div>
+          <div class="line">B. Did the accountant receive the workers July salary in September?</div>
+          <div class="line">C. Did the accountant pay the workers August salary in September?</div>
+          <div class="line">D. Did the accountant pay the workers July salary in October?</div>
+          <div class="answer">Answer: B</div>
+          <div class="line"><strong>Why:</strong> It changes PAID to receive. This is the true verb contrast.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">10. The car <span class="caps-word">CRUSHED</span> him.</div>
+          <div class="line">A. Did the car hit him?</div>
+          <div class="line">B. Did the lorry crush him?</div>
+          <div class="line">C. Did the car miss him?</div>
+          <div class="line">D. Did the car kill him?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes CRUSHED to hit.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Type 3 — Emphatic Stress on Object, Adverbial, or Adjective</h2>
+        <p>Here, the sentence is correcting the thing, place, time, quality, or description.</p>
+
+        <div class="example-box">
+          <div class="title">1. John bought a <span class="caps-word">NEW</span> car yesterday.</div>
+          <div class="line">A. Did John buy an old car yesterday?</div>
+          <div class="line">B. Did John buy a new house yesterday?</div>
+          <div class="line">C. Did Peter buy a new car yesterday?</div>
+          <div class="line">D. Did John sell a new car yesterday?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes NEW to old.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">2. The teacher wants <span class="caps-word">MY</span> pen.</div>
+          <div class="line">A. Does the teacher want his pen?</div>
+          <div class="line">B. What does the teacher want?</div>
+          <div class="line">C. Does the teacher want your ruler?</div>
+          <div class="line">D. Who wants my pen?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes MY to his.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">3. His wife works in a <span class="caps-word">BANK</span>.</div>
+          <div class="line">A. Does his wife work in a school?</div>
+          <div class="line">B. Does his wife work in an office?</div>
+          <div class="line">C. Does his sister work in a bank?</div>
+          <div class="line">D. Where does his wife work?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes BANK to school.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">4. The Nigerian football team has many <span class="caps-word">FOREIGN</span> players.</div>
+          <div class="line">A. Does the Nigerian football team have many local players?</div>
+          <div class="line">B. Does the Ghanaian football team have many foreign players?</div>
+          <div class="line">C. Does the Nigerian volleyball team have many foreign players?</div>
+          <div class="line">D. Does the Nigerian basketball team have many foreign players?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes FOREIGN to local.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">5. The workers agreed to forgo their <span class="caps-word">DECEMBER</span> salaries.</div>
+          <div class="line">A. Did the workers agree to forgo their March salaries?</div>
+          <div class="line">B. Did the workers agree to claim their December salaries?</div>
+          <div class="line">C. Did the employers agree to forgo their December salaries?</div>
+          <div class="line">D. Did the workers refuse their December salaries?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes DECEMBER to March.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">6. Daddy plays tennis on <span class="caps-word">SATURDAY</span> afternoons.</div>
+          <div class="line">A. Does daddy play tennis on Sunday afternoons?</div>
+          <div class="line">B. Does mummy play tennis on Saturday afternoons?</div>
+          <div class="line">C. Does daddy play football on Saturday afternoons?</div>
+          <div class="line">D. Does daddy play tennis on Saturday mornings?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes SATURDAY to Sunday.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">7. John’s watch is made of <span class="caps-word">GOLD</span>.</div>
+          <div class="line">A. Is John’s watch made of silver?</div>
+          <div class="line">B. Whose watch is made of gold?</div>
+          <div class="line">C. Is John’s necklace made of gold?</div>
+          <div class="line">D. What is made of gold?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes GOLD to silver.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">8. The bed is in the <span class="caps-word">ROOM</span>.</div>
+          <div class="line">A. Is the bed in the parlour?</div>
+          <div class="line">B. Where is the bed?</div>
+          <div class="line">C. Is the chair in the room?</div>
+          <div class="line">D. What is in the room?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes ROOM to parlour.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">9. My mother’s <span class="caps-word">FRIEND</span> hates pets.</div>
+          <div class="line">A. Does your mother’s boss hate pets?</div>
+          <div class="line">B. Does your mother’s friend love pets?</div>
+          <div class="line">C. Does your father’s friend hate pets?</div>
+          <div class="line">D. Does your mother’s friend hate dogs?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes FRIEND to boss.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">10. The landlord refused to eject the <span class="caps-word">TENANT</span>.</div>
+          <div class="line">A. Did the landlord refuse to eject the guest?</div>
+          <div class="line">B. Did the caretaker refuse to eject the tenant?</div>
+          <div class="line">C. Did the landlord accept the tenant?</div>
+          <div class="line">D. Did the landlord eject the tenant?</div>
+          <div class="answer">Answer: A</div>
+          <div class="line"><strong>Why:</strong> It changes TENANT to guest.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Quick Summary Table</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Stress Type</th>
+              <th>What to Change</th>
+              <th>Example</th>
+              <th>Correct Idea</th>
+            </tr>
+            <tr>
+              <td>Subject stress</td>
+              <td>Change who did it</td>
+              <td><strong>JOHN</strong> bought a car</td>
+              <td>Did Peter buy a car?</td>
+            </tr>
+            <tr>
+              <td>Verb stress</td>
+              <td>Change the action</td>
+              <td>John <strong>BOUGHT</strong> a car</td>
+              <td>Did John sell a car?</td>
+            </tr>
+            <tr>
+              <td>Object stress</td>
+              <td>Change the thing</td>
+              <td>He wants my <strong>PEN</strong></td>
+              <td>Does he want my book?</td>
+            </tr>
+            <tr>
+              <td>Adjective stress</td>
+              <td>Change the quality</td>
+              <td>a <strong>NEW</strong> car</td>
+              <td>an old car?</td>
+            </tr>
+            <tr>
+              <td>Adverbial stress</td>
+              <td>Change time/place/manner</td>
+              <td>on <strong>SATURDAY</strong></td>
+              <td>on Sunday?</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Final Tips for JAMB Exam Day</h2>
+
+        <div class="jamb-alert">
+          <h4>Exam strategy</h4>
+          <ul>
+            <li>Read the CAPITALISED word first</li>
+            <li>Do not be distracted by the whole sentence</li>
+            <li>Find the option that changes only that stressed word</li>
+            <li>Do not choose an option that mainly changes another part</li>
+            <li>Remember: the answer is the word or idea being corrected</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Best shortcut</strong>
+          <p>The sentence with emphatic stress is like saying: “Not this one — that one.” So your answer must show the “wrong idea” being corrected.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 Mini Self-Quiz</h2>
+
+        <div class="quiz-box">
+          <div class="q">1. JOHN bought a new car yesterday. What is being corrected?</div>
+          <div>A. The time</div>
+          <div>B. The person</div>
+          <div>C. The car</div>
+          <div>D. The action</div>
+          <button onclick="showAns('a1')">Show Answer</button>
+          <div class="quiz-answer" id="a1"><strong>Answer:</strong> B — the person.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">2. John BOUGHT a new car yesterday. Which option relates best?</div>
+          <div>A. Did Peter buy a new car yesterday?</div>
+          <div>B. Did John sell a new car yesterday?</div>
+          <div>C. Did John buy an old car yesterday?</div>
+          <div>D. Did John buy a new car today?</div>
+          <button onclick="showAns('a2')">Show Answer</button>
+          <div class="quiz-answer" id="a2"><strong>Answer:</strong> B — it changes the action bought to sell.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">3. The teacher wants MY pen. Which idea is being corrected?</div>
+          <div>A. The object</div>
+          <div>B. Ownership</div>
+          <div>C. The action</div>
+          <div>D. The place</div>
+          <button onclick="showAns('a3')">Show Answer</button>
+          <div class="quiz-answer" id="a3"><strong>Answer:</strong> B — ownership.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">4. Daddy plays tennis on SATURDAY afternoons. Which option relates best?</div>
+          <div>A. Does daddy play tennis on Sunday afternoons?</div>
+          <div>B. Does mummy play tennis on Saturday afternoons?</div>
+          <div>C. Does daddy play football on Saturday afternoons?</div>
+          <div>D. Does daddy play tennis on Saturday mornings?</div>
+          <button onclick="showAns('a4')">Show Answer</button>
+          <div class="quiz-answer" id="a4"><strong>Answer:</strong> A — it changes SATURDAY to Sunday.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">5. Golden rule: the correct answer usually...</div>
+          <div>A. Repeats the capitalised word exactly</div>
+          <div>B. Ignores the capitalised word</div>
+          <div>C. Contradicts or replaces the capitalised word</div>
+          <div>D. Changes every part of the sentence</div>
+          <button onclick="showAns('a5')">Show Answer</button>
+          <div class="quiz-answer" id="a5"><strong>Answer:</strong> C — that is the golden rule.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>✅ Final Encouragement</h2>
+        <p>You now have the full emphatic stress guide with the golden rule, clear explanation, and 30 worked JAMB-style examples.</p>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>If you practise these examples daily and always focus on the capitalised word first, emphatic stress can become one of your easiest full-mark areas in JAMB Oral English.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise 10 emphatic stress examples today. Read the CAPITALISED word first and ask: what exactly is being corrected?')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

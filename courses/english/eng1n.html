@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB English - The Lekki Headmaster (Chapter 1: Dusk) Summary</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+.progress-container{
+  position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+  background:var(--shadow-in);z-index:15
+}
+.progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+.content{padding:20px 16px;line-height:1.7}
+.main-header{
+  text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+  background:rgba(29,185,84,.1)
+}
+.main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+.main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+.section-card{
+  background:var(--card-bg);padding:22px 18px;border-radius:20px;
+  box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+  margin-bottom:22px;border-left:4px solid var(--accent)
+}
+.section-card h2{
+  font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+  display:flex;align-items:center;gap:8px
+}
+.section-card h3{
+  font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+  padding-left:12px;border-left:3px solid var(--accent-tertiary)
+}
+.section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+.section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+.section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+.section-card li{margin-bottom:7px;font-size:14px}
+
+.quick-facts{
+  background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+  padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+}
+.quick-facts li{font-size:13px}
+
+.highlight-box{
+  background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+  border-left:3px solid var(--accent-tertiary)
+}
+.memory-tip{
+  background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+  border-left:4px solid var(--accent-secondary)
+}
+.memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+.memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+.jamb-alert{
+  background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+  border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+}
+.jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+.jamb-alert li{font-size:13px}
+
+.table-container{
+  width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+}
+.summary-table{
+  width:100%;min-width:1050px;border-collapse:separate;border-spacing:0;font-size:13px
+}
+.summary-table th{
+  background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+}
+.summary-table td{
+  padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);white-space:nowrap;vertical-align:top
+}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+.table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+.nav-bar{
+  position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+  display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+}
+.nav-bar .nav-item{text-align:center}
+.nav-bar .nav-item.center button{
+  width:50px;height:50px;font-size:24px;background:var(--accent);
+  box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+  color:#000
+}
+.nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+.explore-btn{
+  background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+  box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+  font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+}
+.explore-btn:active{
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  transform:scale(.98)
+}
+
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+    
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">ENGLISH (JAMB)</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>📘 “Dusk” — The Lekki Headmaster (Chapter 1)</h1>
+    <p>Setting • plot • key events • characters • themes • likely JAMB questions</p>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div class="section-card">
+    <h2>📋 Summary Table (Fast Revision)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Area</th>
+          <th>What to remember</th>
+          <th>Why it matters (JAMB)</th>
+        </tr>
+        <tr>
+          <td><strong>Setting</strong></td>
+          <td>Stardom Schools (elite/posh), Lekki, Lagos</td>
+          <td>Direct “Where did it happen?” question</td>
+        </tr>
+        <tr>
+          <td><strong>Main event</strong></td>
+          <td>Mr. Bepo breaks down and cries during assembly</td>
+          <td>Plot focus; creates suspense</td>
+        </tr>
+        <tr>
+          <td><strong>Contrast</strong></td>
+          <td>He is usually confident and humorous</td>
+          <td>Characterization question</td>
+        </tr>
+        <tr>
+          <td><strong>Immediate helpers</strong></td>
+          <td>Mrs. Grace Apeh (VP), Nurse Titi, other staff</td>
+          <td>“Who did what?” questions</td>
+        </tr>
+        <tr>
+          <td><strong>Assembly mood</strong></td>
+          <td>Silence, shock, tension, confusion</td>
+          <td>Atmosphere question</td>
+        </tr>
+        <tr>
+          <td><strong>Rumours</strong></td>
+          <td>Staff/parents exaggerate; gossip spreads fast</td>
+          <td>Theme: school community dynamics</td>
+        </tr>
+        <tr>
+          <td><strong>Unresolved issue</strong></td>
+          <td>Cause of breakdown not revealed in Chapter 1</td>
+          <td>Suspense</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="memory-tip">
+      <strong>🧠 One-line recall</strong>
+      <p>“Normal assembly → principal freezes → tears for 30+ minutes → escorted to office → rumours explode.”</p>
+    </div>
+  </div>
+
+  <!-- SETTING + OPENING -->
+  <div class="section-card">
+    <h2>1️⃣ Setting & Opening Mood</h2>
+    <p>The chapter opens at <strong>Stardom Schools</strong>, an elite school in <strong>Lekki, Lagos</strong>, during a routine <strong>morning assembly</strong> in the school hall/chapel.</p>
+
+    <div class="quick-facts">
+      <ul>
+        <li>Students expect the usual pep talk from the principal</li>
+        <li>The chapel prefect <strong>Angel</strong> handles the microphone</li>
+        <li>School routines: anthem, prayers, structured assembly culture</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PLOT -->
+  <div class="section-card">
+    <h2>2️⃣ Plot Summary (What Happened in “Dusk”)</h2>
+    <p>Mr. Bepo Adewale (principal) approaches the podium <strong>in an unusual, awkward, ponderous way</strong>, unlike his normal charismatic self.</p>
+
+    <div class="highlight-box">
+      <p><strong>Key breakdown moment:</strong> he holds the microphone but cannot speak, stares blankly, drops his head, then begins to cry uncontrollably.</p>
+    </div>
+
+    <div class="quick-facts">
+      <ul>
+        <li>He attempts to speak several times but fails</li>
+        <li>Tears stream down his face; microphone slips and clatters</li>
+        <li>He sobs for over <strong>30 minutes</strong>, shaking and devastated</li>
+        <li>Students and staff are shocked; atmosphere becomes tense and puzzled</li>
+      </ul>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>Likely “atmosphere” answer words</h4>
+      <ul>
+        <li>Shocking</li>
+        <li>Tense</li>
+        <li>Confusing</li>
+        <li>Emotional</li>
+        <li>Suspenseful</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STAFF REACTIONS -->
+  <div class="section-card">
+    <h2>3️⃣ Staff Reaction & Immediate Response</h2>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Mrs. Grace Apeh</strong> (Vice Principal) steps forward, questions him, tries to console him</li>
+        <li><strong>Nurse Titi</strong> offers a handkerchief and helps</li>
+        <li>Other staff (e.g., Mr. Oyelana, Mr. Justus Israel, Mrs. Oyelana) assist</li>
+        <li>The principal is escorted off the podium to his office</li>
+        <li>Mrs. Apeh dismisses assembly early and sends students to class</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Quick recall</strong>
+      <p>VP + Nurse = first responders in the school setting.</p>
+    </div>
+  </div>
+
+  <!-- RUMOURS -->
+  <div class="section-card">
+    <h2>4️⃣ Rumours, Gossip & Community Dynamics</h2>
+    <p>Even though nobody knows the cause, rumours spread quickly among staff and parents.</p>
+
+    <div class="quick-facts">
+      <ul>
+        <li>Staff gossip and exaggerate events</li>
+        <li>Parents hear more dramatic versions (e.g., rolling on the floor)</li>
+        <li>Mr. Audu (Fine Arts teacher) jokes about the MD, Mrs. Ibidun Gloss, being a “witch/wizard” linked to policy changes</li>
+      </ul>
+    </div>
+
+    <div class="highlight-box">
+      <p><strong>Point:</strong> the school behaves like a small society—news travels fast and gets distorted.</p>
+    </div>
+  </div>
+
+  <!-- TRANSITIONAL DETAILS -->
+  <div class="section-card">
+    <h2>5️⃣ Other Details Mentioned (Usually for MCQs)</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>SS1 student <strong>Ikenna Egbu</strong> gives a presentation about excursion to <strong>Jos (Plateau State)</strong></li>
+        <li>He references the <strong>2nd stanza of the National Anthem</strong> and Jos’ climate/rocks/tourism</li>
+        <li>School routines: structured prayers (Muslim/Christian) on specific days</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CHARACTERS -->
+  <div class="section-card">
+    <h2>6️⃣ Main Characters Introduced</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Character</th>
+          <th>Role</th>
+          <th>What to remember</th>
+        </tr>
+        <tr>
+          <td><strong>Mr. Bepo Adewale</strong></td>
+          <td>Principal (“The Lekki Headmaster”)</td>
+          <td>Usually humorous/charismatic; breaks down in assembly</td>
+        </tr>
+        <tr>
+          <td><strong>Mrs. Grace Apeh</strong></td>
+          <td>Vice Principal</td>
+          <td>First to intervene; restores order</td>
+        </tr>
+        <tr>
+          <td><strong>Nurse Titi</strong></td>
+          <td>School nurse</td>
+          <td>Offers help/handkerchief; supports principal</td>
+        </tr>
+        <tr>
+          <td><strong>Mrs. Ibidun Gloss</strong></td>
+          <td>Managing Director (MD)</td>
+          <td>Linked to policy changes; target of rumours/jokes</td>
+        </tr>
+        <tr>
+          <td><strong>Mr. Audu</strong></td>
+          <td>Fine Arts teacher</td>
+          <td>Gossips/jokes, adds to rumours</td>
+        </tr>
+        <tr>
+          <td><strong>Angel</strong></td>
+          <td>Chapel prefect</td>
+          <td>Handles the microphone at assembly</td>
+        </tr>
+        <tr>
+          <td><strong>Ikenna Egbu</strong></td>
+          <td>SS1 student</td>
+          <td>Excursion speech about Jos</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+  </div>
+
+  <!-- THEMES -->
+  <div class="section-card">
+    <h2>7️⃣ Key Themes Introduced</h2>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Leadership vulnerability</strong> (strong leader breaks down)</li>
+        <li><strong>Emotional/mental health</strong> struggles</li>
+        <li><strong>School community dynamics</strong> (order, discipline, hierarchy)</li>
+        <li><strong>Rumours and gossip</strong></li>
+        <li><strong>Dedication vs personal crisis</strong></li>
+        <li><strong>Suspense</strong> (cause not revealed)</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Theme line</strong>
+      <p>The chapter shows how a private crisis can disrupt a public institution.</p>
+    </div>
+  </div>
+
+  <!-- LIKELY QUESTIONS -->
+  <div class="section-card">
+    <h2>✅ Likely JAMB Questions (Practice)</h2>
+    <div class="jamb-alert">
+      <h4>Common question patterns</h4>
+      <ul>
+        <li>Where did the incident occur?</li>
+        <li>What was unusual about Mr. Bepo’s behaviour?</li>
+        <li>Who first tried to console him?</li>
+        <li>What effect did his breakdown have on the assembly?</li>
+        <li>What caused rumours to spread?</li>
+        <li>Why is the chapter suspenseful?</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-card">
+    <h2>✅ Quick Revision Checklist</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Setting: Stardom Schools, Lekki, Lagos</li>
+        <li>Main event: Mr. Bepo’s silent breakdown and prolonged crying</li>
+        <li>First responders: Mrs. Grace Apeh + Nurse Titi</li>
+        <li>Assembly dismissed early; students sent to class</li>
+        <li>Rumours spread among staff and parents</li>
+        <li>Cause of breakdown not revealed in Chapter 1</li>
+        <li>Key themes: vulnerability, mental health, gossip, suspense</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Final memory line</strong>
+      <p>If you can narrate the assembly scene in 5 sentences, you’re ready for most objective questions on Chapter 1.</p>
+    </div>
+  </div>
+
+  <button class="explore-btn" onclick="alert('Revise: setting + unusual behaviour + helpers + rumours + suspense. Then practise objective questions.')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

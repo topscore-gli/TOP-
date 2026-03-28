@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Oral English - Rhymes and Homophones Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .set-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .set-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .set-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+    .word-list{
+      display:flex;flex-wrap:wrap;gap:8px;margin-top:10px
+    }
+    .word-pill{
+      padding:6px 10px;border-radius:20px;
+      background:rgba(29,185,84,.12);border:1px solid rgba(29,185,84,.3);
+      font-size:12px
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1000px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .quiz-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .quiz-box .q{font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px}
+    .quiz-box button{
+      width:100%;margin-top:10px;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+      background:var(--accent);color:#000;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+    }
+    .quiz-answer{
+      margin-top:10px;font-size:13px;color:var(--text-secondary);display:none
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">ENGLISH</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🎵 Rhymes & Homophones Guide</h1>
+        <p>JAMB 2026 • rhyme words • same sounds • homophones • easy practice • fast scoring</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Quick Overview</h2>
+        <p>JAMB Oral English tests your ability to recognize <strong>rhyming words</strong> and <strong>homophones</strong>.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Rhymes</strong> = words with the same ending sound</li>
+            <li><strong>Homophones</strong> = words that sound the same but have different spellings or meanings</li>
+          </ul>
+        </div>
+
+        <h3>Common JAMB question types</h3>
+        <div class="jamb-alert">
+          <h4>What they usually ask</h4>
+          <ul>
+            <li>Choose the word that rhymes with the underlined word</li>
+            <li>Which pair of words are homophones?</li>
+            <li>Select the option with the same sound as...</li>
+          </ul>
+        </div>
+
+        <h3>Easy step-by-step learning method</h3>
+        <div class="highlight-box">
+          <p>Read each set aloud slowly. Listen for the same ending sound. Then study the homophones and notice that the <strong>sound is the same</strong> but the <strong>meaning and spelling are different</strong>.</p>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Golden tip</strong>
+          <p>Do not trust spelling alone. In Oral English, your ears matter more than your eyes.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Understand the Difference</h2>
+
+        <div class="set-box">
+          <div class="title">What is a rhyme?</div>
+          <div class="line"><strong>Meaning:</strong> Two or more words end with the same sound.</div>
+          <div class="line"><strong>Example:</strong> light, night, right</div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">What is a homophone?</div>
+          <div class="line"><strong>Meaning:</strong> Two or more words sound the same but have different spellings and meanings.</div>
+          <div class="line"><strong>Example:</strong> right, write, rite</div>
+        </div>
+
+        <div class="jamb-alert">
+          <h4>Easy way to remember</h4>
+          <ul>
+            <li><strong>Rhymes</strong> → same ending sound</li>
+            <li><strong>Homophones</strong> → same whole sound</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Most Reoccurring JAMB Rhyme Sets</h2>
+        <p>These are the rhyme groups that appear often in JAMB. Learn the sound pattern, not just the spelling.</p>
+
+        <div class="set-box">
+          <div class="title">Rhyme Set 1: -ate /eɪt/</div>
+          <div class="line"><strong>Sound clue:</strong> Same ending sound as in <em>late</em>.</div>
+          <div class="word-list">
+            <span class="word-pill">day</span><span class="word-pill">late</span><span class="word-pill">fate</span><span class="word-pill">gate</span><span class="word-pill">hate</span>
+            <span class="word-pill">mate</span><span class="word-pill">plate</span><span class="word-pill">rate</span><span class="word-pill">state</span>
+          </div>
+          <div class="line"><strong>Homophone note:</strong> ate / eight</div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">Rhyme Set 2: -ight /aɪt/</div>
+          <div class="line"><strong>Sound clue:</strong> Same ending sound as in <em>light</em>.</div>
+          <div class="word-list">
+            <span class="word-pill">light</span><span class="word-pill">night</span><span class="word-pill">right</span><span class="word-pill">fight</span><span class="word-pill">sight</span>
+            <span class="word-pill">might</span><span class="word-pill">tight</span><span class="word-pill">bright</span><span class="word-pill">flight</span>
+          </div>
+          <div class="line"><strong>Homophone note:</strong> right / write / rite</div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">Rhyme Set 3: -ee /iː/</div>
+          <div class="line"><strong>Sound clue:</strong> Long “ee” sound.</div>
+          <div class="word-list">
+            <span class="word-pill">see</span><span class="word-pill">tree</span><span class="word-pill">free</span><span class="word-pill">three</span><span class="word-pill">key</span>
+            <span class="word-pill">bee</span><span class="word-pill">sea</span><span class="word-pill">tea</span><span class="word-pill">pea</span><span class="word-pill">knee</span>
+          </div>
+          <div class="line"><strong>Homophones:</strong> sea / see, tea / tee, key / quay</div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">Rhyme Set 4: -ay /eɪ/</div>
+          <div class="line"><strong>Sound clue:</strong> Same vowel glide as in <em>day</em>.</div>
+          <div class="word-list">
+            <span class="word-pill">day</span><span class="word-pill">say</span><span class="word-pill">way</span><span class="word-pill">play</span><span class="word-pill">stay</span>
+            <span class="word-pill">may</span><span class="word-pill">pay</span><span class="word-pill">ray</span><span class="word-pill">lay</span><span class="word-pill">pray</span>
+          </div>
+          <div class="line"><strong>Homophones:</strong> way / weigh, pray / prey</div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">Rhyme Set 5: -air /eə/</div>
+          <div class="line"><strong>Sound clue:</strong> Same ending sound as in <em>hair</em>.</div>
+          <div class="word-list">
+            <span class="word-pill">hair</span><span class="word-pill">fair</span><span class="word-pill">pair</span><span class="word-pill">chair</span><span class="word-pill">stair</span>
+            <span class="word-pill">bear</span><span class="word-pill">care</span><span class="word-pill">dare</span><span class="word-pill">share</span><span class="word-pill">rare</span>
+          </div>
+          <div class="line"><strong>Homophones:</strong> pair / pear / pare, fair / fare, bear / bare</div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">Rhyme Set 6: -ook /ʊk/</div>
+          <div class="line"><strong>Sound clue:</strong> Same short /ʊ/ + /k/ ending.</div>
+          <div class="word-list">
+            <span class="word-pill">book</span><span class="word-pill">look</span><span class="word-pill">took</span><span class="word-pill">cook</span><span class="word-pill">hook</span>
+            <span class="word-pill">shook</span><span class="word-pill">brook</span><span class="word-pill">crook</span><span class="word-pill">nook</span><span class="word-pill">rook</span>
+          </div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">Rhyme Set 7: -all /ɔːl/</div>
+          <div class="line"><strong>Sound clue:</strong> Long rounded ending sound.</div>
+          <div class="word-list">
+            <span class="word-pill">all</span><span class="word-pill">ball</span><span class="word-pill">call</span><span class="word-pill">fall</span><span class="word-pill">hall</span>
+            <span class="word-pill">tall</span><span class="word-pill">wall</span><span class="word-pill">small</span><span class="word-pill">stall</span><span class="word-pill">crawl</span>
+          </div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">Rhyme Set 8: -ine /aɪn/</div>
+          <div class="line"><strong>Sound clue:</strong> Same ending sound as in <em>line</em>.</div>
+          <div class="word-list">
+            <span class="word-pill">line</span><span class="word-pill">fine</span><span class="word-pill">mine</span><span class="word-pill">nine</span><span class="word-pill">pine</span>
+            <span class="word-pill">shine</span><span class="word-pill">vine</span><span class="word-pill">wine</span><span class="word-pill">dine</span>
+          </div>
+          <div class="line"><strong>Homophone:</strong> wine / whine</div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">Rhyme Set 9: -oat /əʊt/</div>
+          <div class="line"><strong>Sound clue:</strong> Same ending sound as in <em>boat</em>.</div>
+          <div class="word-list">
+            <span class="word-pill">boat</span><span class="word-pill">coat</span><span class="word-pill">goat</span><span class="word-pill">throat</span><span class="word-pill">float</span>
+            <span class="word-pill">note</span><span class="word-pill">vote</span><span class="word-pill">wrote</span><span class="word-pill">quote</span><span class="word-pill">remote</span>
+          </div>
+          <div class="line"><strong>Homophone:</strong> wrote / rote</div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">Rhyme Set 10: -ear /ɪə/</div>
+          <div class="line"><strong>Sound clue:</strong> Same ending sound as in <em>near</em>.</div>
+          <div class="word-list">
+            <span class="word-pill">near</span><span class="word-pill">dear</span><span class="word-pill">fear</span><span class="word-pill">hear</span><span class="word-pill">year</span>
+            <span class="word-pill">clear</span><span class="word-pill">tear</span><span class="word-pill">spear</span><span class="word-pill">cheer</span><span class="word-pill">steer</span>
+          </div>
+          <div class="line"><strong>Homophones:</strong> hear / here, dear / deer</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Top 50 Most Tested Homophones</h2>
+        <p>These sound the same, but their meanings and spellings are different. JAMB loves this area.</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>No.</th>
+              <th>Homophones</th>
+              <th>Quick Meaning Reminder</th>
+            </tr>
+            <tr><td>1</td><td>ate / eight</td><td>past of eat / number 8</td></tr>
+            <tr><td>2</td><td>right / write / rite</td><td>correct / put in words / ceremony</td></tr>
+            <tr><td>3</td><td>see / sea</td><td>look / ocean</td></tr>
+            <tr><td>4</td><td>there / their / they're</td><td>place / belonging to them / they are</td></tr>
+            <tr><td>5</td><td>your / you're</td><td>belonging to you / you are</td></tr>
+            <tr><td>6</td><td>its / it's</td><td>belonging to it / it is</td></tr>
+            <tr><td>7</td><td>to / too / two</td><td>preposition / also / number 2</td></tr>
+            <tr><td>8</td><td>no / know</td><td>negative / understand</td></tr>
+            <tr><td>9</td><td>pair / pear / pare</td><td>two / fruit / trim</td></tr>
+            <tr><td>10</td><td>fair / fare</td><td>just / transport fee or food</td></tr>
+            <tr><td>11</td><td>bear / bare</td><td>animal or carry / uncovered</td></tr>
+            <tr><td>12</td><td>hair / hare</td><td>hair on head / rabbit-like animal</td></tr>
+            <tr><td>13</td><td>dear / deer</td><td>beloved / animal</td></tr>
+            <tr><td>14</td><td>here / hear</td><td>in this place / perceive sound</td></tr>
+            <tr><td>15</td><td>week / weak</td><td>7 days / not strong</td></tr>
+            <tr><td>16</td><td>peace / piece</td><td>calm / part of something</td></tr>
+            <tr><td>17</td><td>principal / principle</td><td>school head / rule or belief</td></tr>
+            <tr><td>18</td><td>stationary / stationery</td><td>not moving / writing materials</td></tr>
+            <tr><td>19</td><td>compliment / complement</td><td>praise / complete something</td></tr>
+            <tr><td>20</td><td>advice / advise</td><td>noun / verb</td></tr>
+            <tr><td>21</td><td>loose / lose</td><td>not tight / fail to keep</td></tr>
+            <tr><td>22</td><td>weather / whether</td><td>climate / if</td></tr>
+            <tr><td>23</td><td>brake / break</td><td>stop vehicle / damage or pause</td></tr>
+            <tr><td>24</td><td>bridal / bridle</td><td>wedding-related / horse control strap</td></tr>
+            <tr><td>25</td><td>canvas / canvass</td><td>strong cloth / seek support</td></tr>
+            <tr><td>26</td><td>council / counsel</td><td>governing body / advice or lawyer</td></tr>
+            <tr><td>27</td><td>desert / dessert</td><td>dry land / sweet course</td></tr>
+            <tr><td>28</td><td>plain / plane</td><td>simple or flat land / aircraft</td></tr>
+            <tr><td>29</td><td>profit / prophet</td><td>gain / messenger of God</td></tr>
+            <tr><td>30</td><td>role / roll</td><td>part played / turn over</td></tr>
+            <tr><td>31</td><td>so / sew / sow</td><td>therefore / stitch / plant seeds</td></tr>
+            <tr><td>32</td><td>steal / steel</td><td>take unlawfully / metal</td></tr>
+            <tr><td>33</td><td>waist / waste</td><td>middle body / misuse</td></tr>
+            <tr><td>34</td><td>which / witch</td><td>question word / magical woman</td></tr>
+            <tr><td>35</td><td>whole / hole</td><td>complete / opening</td></tr>
+            <tr><td>36</td><td>born / borne</td><td>given birth / carried</td></tr>
+            <tr><td>37</td><td>ceiling / sealing</td><td>top inner roof / closing tightly</td></tr>
+            <tr><td>38</td><td>check / cheque</td><td>examine / bank payment note</td></tr>
+            <tr><td>39</td><td>chord / cord</td><td>music combination / rope</td></tr>
+            <tr><td>40</td><td>cite / sight / site</td><td>quote / vision / location</td></tr>
+            <tr><td>41</td><td>course / coarse</td><td>study route / rough</td></tr>
+            <tr><td>42</td><td>current / currant</td><td>present or flow / dried fruit</td></tr>
+            <tr><td>43</td><td>dual / duel</td><td>double / fight</td></tr>
+            <tr><td>44</td><td>flour / flower</td><td>baking powder / blossom</td></tr>
+            <tr><td>45</td><td>great / grate</td><td>wonderful / metal frame</td></tr>
+            <tr><td>46</td><td>idle / idol</td><td>lazy / object of worship</td></tr>
+            <tr><td>47</td><td>meat / meet</td><td>animal flesh / come together</td></tr>
+            <tr><td>48</td><td>medal / meddle</td><td>award / interfere</td></tr>
+            <tr><td>49</td><td>morning / mourning</td><td>early day / grieving death</td></tr>
+            <tr><td>50</td><td>past / passed</td><td>time before now / went by or succeeded</td></tr>
+            <tr><td>51</td><td>patience / patients</td><td>ability to wait / sick people</td></tr>
+            <tr><td>52</td><td>road / rode</td><td>street / past of ride</td></tr>
+            <tr><td>53</td><td>scene / seen</td><td>part of drama / past participle of see</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Tricky Homophones Explained Simply</h2>
+
+        <div class="set-box">
+          <div class="title">there / their / they’re</div>
+          <div class="line"><strong>there</strong> = place → The book is over there.</div>
+          <div class="line"><strong>their</strong> = belongs to them → Their car is new.</div>
+          <div class="line"><strong>they’re</strong> = they are → They’re coming soon.</div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">your / you’re</div>
+          <div class="line"><strong>your</strong> = belongs to you → Your bag is here.</div>
+          <div class="line"><strong>you’re</strong> = you are → You’re welcome.</div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">its / it’s</div>
+          <div class="line"><strong>its</strong> = belongs to it → The dog wagged its tail.</div>
+          <div class="line"><strong>it’s</strong> = it is → It’s raining.</div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">to / too / two</div>
+          <div class="line"><strong>to</strong> = direction → I am going to school.</div>
+          <div class="line"><strong>too</strong> = also / excessively → I want to go too.</div>
+          <div class="line"><strong>two</strong> = number 2 → I have two pens.</div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">right / write / rite</div>
+          <div class="line"><strong>right</strong> = correct / direction</div>
+          <div class="line"><strong>write</strong> = put words on paper</div>
+          <div class="line"><strong>rite</strong> = ceremony or ritual</div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">hear / here</div>
+          <div class="line"><strong>hear</strong> = receive sound</div>
+          <div class="line"><strong>here</strong> = in this place</div>
+        </div>
+
+        <div class="set-box">
+          <div class="title">see / sea</div>
+          <div class="line"><strong>see</strong> = use the eyes</div>
+          <div class="line"><strong>sea</strong> = ocean</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Where JAMB Usually Tests Rhymes & Homophones</h2>
+        <div class="jamb-alert">
+          <h4>Most repeated patterns</h4>
+          <ul>
+            <li>Rhymes with <strong>-ate</strong>, <strong>-ight</strong>, <strong>-ee</strong>, <strong>-air</strong>, <strong>-ook</strong>, <strong>-all</strong></li>
+            <li>Homophones like <strong>there/their/they’re</strong>, <strong>right/write</strong>, <strong>hear/here</strong></li>
+            <li>Questions that mix same spelling pattern with different sounds</li>
+          </ul>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Important:</strong> JAMB tests sound, not spelling shape. Two words may look different and still rhyme or sound exactly the same.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Mini Self-Quiz</h2>
+
+        <div class="quiz-box">
+          <div class="q">1. Which word rhymes with <strong>light</strong>?</div>
+          <div>A. late</div>
+          <div>B. right</div>
+          <div>C. lot</div>
+          <div>D. let</div>
+          <button onclick="showAns('a1')">Show Answer</button>
+          <div class="quiz-answer" id="a1"><strong>Answer:</strong> B — right. Both end with /aɪt/.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">2. Which pair are homophones?</div>
+          <div>A. bear / beer</div>
+          <div>B. sea / see</div>
+          <div>C. look / lock</div>
+          <div>D. late / let</div>
+          <button onclick="showAns('a2')">Show Answer</button>
+          <div class="quiz-answer" id="a2"><strong>Answer:</strong> B — sea / see.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">3. Which word rhymes with <strong>book</strong>?</div>
+          <div>A. boot</div>
+          <div>B. bake</div>
+          <div>C. cook</div>
+          <div>D. back</div>
+          <button onclick="showAns('a3')">Show Answer</button>
+          <div class="quiz-answer" id="a3"><strong>Answer:</strong> C — cook. Both end with /ʊk/.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">4. Which is correct as a homophone set?</div>
+          <div>A. there / their / they’re</div>
+          <div>B. right / rough</div>
+          <div>C. fair / fear</div>
+          <div>D. sea / say</div>
+          <button onclick="showAns('a4')">Show Answer</button>
+          <div class="quiz-answer" id="a4"><strong>Answer:</strong> A — there / their / they’re.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">5. Which word rhymes with <strong>hair</strong>?</div>
+          <div>A. hear</div>
+          <div>B. hare</div>
+          <div>C. her</div>
+          <div>D. hour</div>
+          <button onclick="showAns('a5')">Show Answer</button>
+          <div class="quiz-answer" id="a5"><strong>Answer:</strong> B — hare. It also forms a homophone pair with hair.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Quick JAMB Revision Tips</h2>
+        <div class="jamb-alert">
+          <h4>Best way to score high</h4>
+          <ul>
+            <li>Read rhyme sets aloud slowly</li>
+            <li>Memorise common homophones by meaning, not only sound</li>
+            <li>Practise daily with hear/here, right/write, there/their/they’re</li>
+            <li>Focus on repeated rhyme patterns from past JAMB questions</li>
+            <li>Test yourself by covering one word and predicting the rhyme or pair</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have the complete Rhymes and Homophones guide. If you practise these sound sets aloud every day, this part of Oral English can become one of your easiest marks.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Practise 3 rhyme sets and 10 homophones aloud today, then test yourself with hear/here, right/write, sea/see, and pair/pear/pare.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

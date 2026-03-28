@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Literature - The Lekki Headmaster (Chapter 1)</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1a1a2e;--si:#121221;--so:#22223d;--t:#e0e0e0;--a:#bb86fc;--d:#cf6679;--w:#ffb74d;--info:#03dac6}
+    body.light{--bg:#f0f2f5;--si:#d1d9e6;--so:#ffffff;--t:#1a202c;--a:#6200ee;--d:#b00020;--w:#f57c00;--info:#018786}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(255,255,255,.03);border-radius:8px}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;border:2px solid transparent}
+    .opt.sel{border-color:var(--a);background:rgba(187,134,252,.05)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    
+    .res, .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;overflow-y:auto}
+    .res.show{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%;text-align:center}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px}
+    .pop-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so);color:var(--t)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+
+    .det-item{margin:12px;padding:16px;background:rgba(255,255,255,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(207,102,121,.1);color:var(--d)}
+    .msg.ok{background:rgba(3,218,198,.1);color:var(--info)}
+  </style>
+</head>
+<body>
+  <div id="load"><div class="spinner"></div></div>
+
+  <div id="access">
+    <div class="card">
+      <h1>📚 Literature Quiz</h1>
+      <p>The Lekki Headmaster: Chapter 1<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Analysis</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Chapter 1: Dusk</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    <div class="q-cont">
+      <div class="timer" id="timer" style="font-size:13px;margin-bottom:10px;color:#888">⏱️ 30:00</div>
+      <div class="section-type" id="stype">Analysis</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-btn" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <h3 style="margin-bottom:16px">Question Navigator</h3>
+      <div class="pop-grid" id="pgrid"></div>
+    </div>
+  </div>
+
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-score" id="rscore">0%</div>
+      <h2 id="rtitle">Results</h2>
+      <p id="rmsg" style="margin:16px 0"></p>
+      <button class="primary" onclick="showDet()" style="width:100%;margin-bottom:10px">View Detailed Corrections</button>
+      <button class="nav-btn" onclick="restart()" style="width:100%">Restart</button>
+    </div>
+  </div>
+
+  <div class="det" id="det">
+    <div style="padding:20px;position:sticky;top:0;background:var(--bg);display:flex;justify-content:space-between">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Corrections</h3>
+      <div></div>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+const CONFIG={TIME:1800,PASS:50};
+
+const QUIZ_DATA=[
+  {q:"What is the title of Chapter 1?",o:["The Enticement","Dusk","Migration Tales","Arrival"],a:1,e:"The chapter is explicitly titled 'Dusk' and opens with the dramatic assembly scene."},
+  {q:"The primary setting of Chapter 1 is",o:["The principal's office","A classroom","The morning assembly in the school hall/chapel","The schoolyard"],a:2,e:"The chapter begins and centers on the unusual morning assembly where the principal breaks down."},
+  {q:"Who is the principal of Stardom Schools?",o:["Mrs. Grace Apeh","Mr. Bepo Adewale","Mrs. Ibidun Gloss","Mr. Audu"],a:1,e:"Mr. Bepo Adewale is introduced as the principal (also nicknamed 'The Lekki Headmaster')."},
+  {q:"What unusual behavior does the principal display at the assembly?",o:["He gives a long motivational speech","He walks ponderously, stares blankly, drops the microphone, and sobs uncontrollably","He scolds the students harshly","He dances to entertain everyone"],a:1,e:"His gait is awkward, he avoids eye contact, tries to speak but fails, and cries for over 30 minutes."},
+  {q:"How long did the principal sob during the assembly?",o:["Over 10 minutes","Over 30 minutes","Less than 5 minutes","Exactly 15 minutes"],a:1,e:"The text states he sobbed for over 30 minutes."},
+  {q:"What happens to the microphone during the principal's breakdown?",o:["He throws it away","It slips from his hand and falls to the floor","He speaks loudly into it","A student takes it from him"],a:1,e:"Tears stream, and the microphone clatters to the floor."},
+  {q:"Who first asks 'What is the matter, principal?' during the breakdown?",o:["The school nurse","The Vice Principal, Mrs. Grace Apeh","Mr. Audu","The chapel prefect"],a:1,e:"Mrs. Grace Apeh steps forward to inquire and console him."},
+  {q:"Who offers the principal a handkerchief?",o:["Mrs. Grace Apeh","Mrs. Titi (the school nurse)","Mr. Oyelana","Mrs. Ibidun Gloss"],a:1,e:"The nurse, Mrs. Titi, provides a handkerchief to help him."},
+  {q:"After the breakdown, who helps escort the principal to his office?",o:["Only students","Staff members including the VP, nurse, and others like Mr. Oyelana","The MD alone","The chapel prefect"],a:1,e:"Several staff members, including VP Apeh and nurse Titi, assist him."},
+  {q:"What does the Vice Principal do immediately after the incident?",o:["Continues the assembly","Dismisses the assembly and sends students to classes","Calls the parents","Gives a speech herself"],a:1,e:"Mrs. Apeh ends the assembly early to restore order."},
+  {q:"In the principal's office, what does he repeatedly mutter when asked about his problem?",o:["I am fine","Thank you. I will be all right","Leave me alone","Call my wife"],a:1,e:"He mutters this response despite agitation and continued tears."},
+  {q:"Who is the Managing Director (MD) of Stardom Schools?",o:["Mrs. Grace Apeh","Mrs. Ibidun Gloss","Mrs. Titi","Mr. Audu"],a:1,e:"Mrs. Ibidun Gloss is referred to as the MD."},
+  {q:"What humorous comment does Mr. Audu (Fine Arts teacher) make about the MD?",o:["She is kind-hearted","She is a 'witch' or 'wizard' for school changes","She should resign","She loves the principal"],a:1,e:"He jokingly blames her 'witchcraft' for fee reductions and policy changes."},
+  {q:"What school fee change is mentioned in rumors/gossip?",o:["Increase in tuition","Reduction in boarding fees from over ₦250,000 to ₦165,000","Free education policy","No change at all"],a:1,e:"Boarding fees were reduced significantly, leading to more boarders."},
+  {q:"Who is the chapel prefect mentioned in the assembly?",o:["Angel","Ikenna","Nike","Titi"],a:0,e:"Angel handles the microphone initially."},
+  {q:"What does the principal usually do that contrasts with this chapter?",o:["Remain silent","Give confident pep talks with eye contact and smiles","Avoid the podium","Cry often"],a:1,e:"He is typically charismatic and engaging."},
+  {q:"What item does the principal stare at during his silence?",o:["The ceiling","The floor tiles","The students' faces","The clock"],a:1,e:"His head drops, and he gazes at the tiles."},
+  {q:"Which staff member is from Fine Arts?",o:["Mr. Oyelana","Mr. Audu","Pastor Wande","Mrs. Apeh"],a:1,e:"Mr. Audu is the Fine Arts teacher who gossips humorously."},
+  {q:"What rumor spreads among some parents?",o:["The principal resigned","He was rolling on the floor crying","He won an award","The school closed"],a:1,e:"Exaggerated versions include rolling on the floor."},
+  {q:"At what approximate time does the MD arrive after being informed?",o:["7:45 a.m.","About 9:30 a.m.","Noon","Evening"],a:1,e:"She arrives around 9:30 a.m. to check on him."},
+  {q:"What is the school nicknamed for its status?",o:["Village school","Posh/elite school in Lekki","Government school","Poorly funded"],a:1,e:"It's described as a posh, elite institution in Lekki."},
+  {q:"Who fetched a chair for the sobbing principal?",o:["Students","The VP and staff","The MD","No one"],a:1,e:"Staff help him sit and console him."},
+  {q:"What emotion dominates the students' reaction?",o:["Joy","Puzzlement and silence","Anger","Laughter"],a:1,e:"They are perplexed, with tears and heavy silence."},
+  {q:"Which subject teacher is mentioned as Mr. Oyelana?",o:["Fine Arts","CRK","Physics","Chemistry"],a:1,e:"Mr. Oyelana is associated with CRK."},
+  {q:"What does the chapter build?",o:["Immediate resolution","Suspense about the cause of the breakdown","A happy ending","School closure"],a:1,e:"The reason remains unexplained, creating suspense."},
+  {q:"The principal's tears are described as",o:["Fake","Uncontrollable and streaming","Only a few drops","From laughter"],a:1,e:"Tears stream uncontrollably down his face."},
+  {q:"Who is nicknamed 'The Lekki Headmaster'?",o:["The MD","Mr. Bepo Adewale","Mrs. Apeh","Mr. Audu"],a:1,e:"Due to his imitations of Village Headmaster characters."},
+  {q:"What ritual is briefly mentioned in school routines?",o:["Daily fights","Recitation of National Anthem and prayers on specific days","No prayers","Only sports"],a:1,e:"Anthem and prayers (Christian/Muslim) on set days."},
+  {q:"The assembly is dismissed at what general time frame?",o:["After a full hour","Early, soon after the breakdown","At noon","Never dismissed"],a:1,e:"VP ends it promptly to send students to class."},
+  {q:"What theme is introduced through the principal's vulnerability?",o:["Perfect leadership","Emotional/mental health struggles behind strong facades","Financial success","Student rebellion"],a:1,e:"It contrasts his usual strength with personal distress."}
+];
+
+let state={q:0,ans:new Array(QUIZ_DATA.length).fill(null),time:CONFIG.TIME,timer:null};
+
+function init(){
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  document.getElementById('access').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  startTimer();
+  render();
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  state.timer=setInterval(()=>{
+    if(state.time>0){state.time--;updateTimer();}
+    else{submit();}
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  document.getElementById('timer').textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+}
+
+function render(){
+  const q=QUIZ_DATA[state.q];
+  document.getElementById('ptxt').textContent=`${state.q+1}/${QUIZ_DATA.length}`;
+  document.getElementById('pbar').style.width=((state.q+1)/QUIZ_DATA.length*100)+'%';
+  document.getElementById('question').textContent=q.q;
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  document.getElementById('prevBtn').disabled=state.q===0;
+  document.getElementById('nextBtn').textContent=state.q===QUIZ_DATA.length-1?'Submit':'Next →';
+}
+
+function select(i){state.ans[state.q]=i;render();}
+
+function next(){
+  if(state.q<QUIZ_DATA.length-1){state.q++;render();}
+  else{submit();}
+}
+
+function prev(){if(state.q>0){state.q--;render();}}
+
+function submit(){
+  clearInterval(state.timer);
+  let score=0;
+  QUIZ_DATA.forEach((q,i)=>{if(state.ans[i]===q.a)score++;});
+  const pct=Math.round((score/QUIZ_DATA.length)*100);
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rmsg').textContent=`You got ${score} out of ${QUIZ_DATA.length} correct.`;
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  QUIZ_DATA.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    if(state.ans[i]!==null)b.className='ans';
+    b.onclick=()=>{state.q=i;document.getElementById('pop').classList.remove('show');render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){if(e.target.id==='pop')document.getElementById('pop').classList.remove('show');}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  QUIZ_DATA.forEach((q,i)=>{
+    const ok=state.ans[i]===q.a;
+    const d=document.createElement('div');
+    d.className='det-item'+(ok?' ok':'');
+    d.innerHTML=`<strong>Q${i+1}: ${q.q}</strong><br>Your: ${state.ans[i]!==null?q.o[state.ans[i]]:'None'}<br>Correct: ${q.o[q.a]}<br><small>${q.e}</small>`;
+    c.appendChild(d);
+  });
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+}
+
+function toggleTheme(){document.body.classList.toggle('light');}
+function restart(){location.reload();}
+function exit(){if(confirm('Quit quiz?'))location.reload();}
+
+init();
+</script>
+</body>
+</html>

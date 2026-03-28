@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB English - Clauses Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .example-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:980px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .quiz-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .quiz-box .q{font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px}
+    .quiz-box button{
+      width:100%;margin-top:10px;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+      background:var(--accent);color:#000;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+    }
+    .quiz-answer{
+      margin-top:10px;font-size:13px;color:var(--text-secondary);display:none
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">ENGLISH</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📘 Clauses Mastery Guide</h1>
+        <p>JAMB 2026 • noun clause • adjective clause • adverb clause • FANBOYS • structure mastery</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Quick Overview of Clauses</h2>
+        <p>A clause is a group of words that contains a <strong>subject</strong> and a <strong>verb</strong>. Clauses are the building blocks of sentences, and they are important in JAMB Use of English, especially in sentence completion, comprehension, and structure questions.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Independent Clause</strong> → can stand alone as a full sentence</li>
+            <li><strong>Dependent Clause</strong> → cannot stand alone; depends on a main clause</li>
+            <li>Main dependent types: <strong>Noun Clause</strong>, <strong>Adjective Clause</strong>, <strong>Adverb Clause</strong></li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Expanded Example 1</div>
+          <div class="line"><strong>Sentence:</strong> The teacher praised the student who scored highest.</div>
+          <div class="line"><strong>Independent Clause:</strong> The teacher praised the student</div>
+          <div class="line"><strong>Dependent Clause:</strong> who scored highest</div>
+          <div class="line"><strong>Type:</strong> Adjective clause describing “student”</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Expanded Example 2</div>
+          <div class="line"><strong>Sentence:</strong> I will go if it stops raining.</div>
+          <div class="line"><strong>Independent Clause:</strong> I will go</div>
+          <div class="line"><strong>Dependent Clause:</strong> if it stops raining</div>
+          <div class="line"><strong>Type:</strong> Adverb clause of condition</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Expanded Example 3</div>
+          <div class="line"><strong>Sentence:</strong> What you said is true.</div>
+          <div class="line"><strong>Dependent Clause:</strong> What you said</div>
+          <div class="line"><strong>Function:</strong> Subject of the sentence</div>
+          <div class="line"><strong>Type:</strong> Noun clause</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 JAMB Tip</strong>
+          <p>Clauses often appear in Lexis and Structure. Practice identifying whether the clause acts as a noun, describes a noun, or modifies a verb.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Noun Clause – Where & How to Use</h2>
+        <p>A noun clause acts like a noun. It can function as the <strong>subject</strong>, <strong>object</strong>, <strong>complement</strong>, or <strong>object of a preposition</strong>.</p>
+
+        <h3>Common starter words</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>what, that, who, whoever, whom, whose</li>
+            <li>which, whether, if, why, how, where, when</li>
+          </ul>
+        </div>
+
+        <h3>Positions where noun clauses are used</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>As subject of a sentence</li>
+            <li>As object of a verb</li>
+            <li>As object of a preposition</li>
+            <li>As complement after a linking verb</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">What he said surprised me.</div>
+          <div class="line"><strong>Noun Clause:</strong> What he said</div>
+          <div class="line"><strong>Function:</strong> Subject of “surprised”</div>
+          <div class="line"><strong>Step-by-step:</strong> “he” = subject, “said” = verb; the whole clause acts as one noun.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">I know that she will pass.</div>
+          <div class="line"><strong>Noun Clause:</strong> that she will pass</div>
+          <div class="line"><strong>Function:</strong> Object of “know”</div>
+          <div class="line"><strong>Step-by-step:</strong> It tells what I know.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The problem is whether we have enough time.</div>
+          <div class="line"><strong>Noun Clause:</strong> whether we have enough time</div>
+          <div class="line"><strong>Function:</strong> Subject complement</div>
+          <div class="line"><strong>Step-by-step:</strong> It explains what the problem is.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Tell me who won the prize.</div>
+          <div class="line"><strong>Noun Clause:</strong> who won the prize</div>
+          <div class="line"><strong>Function:</strong> Object of “tell”</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">She is worried about whether it will rain.</div>
+          <div class="line"><strong>Noun Clause:</strong> whether it will rain</div>
+          <div class="line"><strong>Function:</strong> Object of preposition “about”</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Whoever arrives first gets the seat.</div>
+          <div class="line"><strong>Noun Clause:</strong> Whoever arrives first</div>
+          <div class="line"><strong>Function:</strong> Subject of “gets”</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">I wonder why he left early.</div>
+          <div class="line"><strong>Noun Clause:</strong> why he left early</div>
+          <div class="line"><strong>Function:</strong> Object of “wonder”</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The question is how we can solve this problem.</div>
+          <div class="line"><strong>Noun Clause:</strong> how we can solve this problem</div>
+          <div class="line"><strong>Function:</strong> Subject complement</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">She asked where the library is.</div>
+          <div class="line"><strong>Noun Clause:</strong> where the library is</div>
+          <div class="line"><strong>Function:</strong> Object of “asked”</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 JAMB Tip</strong>
+          <p>If the clause can be replaced with “it” or “something” and the sentence still makes sense, it is likely a noun clause.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Adjective Clause (Relative Clause) – Where & How to Use</h2>
+        <p>An adjective clause acts like an adjective. It describes a <strong>noun</strong> or <strong>pronoun</strong> and usually comes directly after the word it describes.</p>
+
+        <h3>Common starter words</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>who, whom, whose, which, that</li>
+            <li>where, when, why</li>
+          </ul>
+        </div>
+
+        <h3>Important note</h3>
+        <div class="highlight-box">
+          <p>Adjective clauses may be <strong>essential</strong> (no commas) or <strong>non-essential</strong> (with commas).</p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The boy who helped me is my friend.</div>
+          <div class="line"><strong>Clause:</strong> who helped me</div>
+          <div class="line"><strong>Describes:</strong> boy</div>
+          <div class="line"><strong>Type:</strong> Essential clause</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The book which I borrowed is interesting.</div>
+          <div class="line"><strong>Clause:</strong> which I borrowed</div>
+          <div class="line"><strong>Describes:</strong> book</div>
+          <div class="line"><strong>Type:</strong> Essential clause</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The man whose car was stolen reported to the police.</div>
+          <div class="line"><strong>Clause:</strong> whose car was stolen</div>
+          <div class="line"><strong>Describes:</strong> man</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">This is the house where I grew up.</div>
+          <div class="line"><strong>Clause:</strong> where I grew up</div>
+          <div class="line"><strong>Describes:</strong> house</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The day when we met was special.</div>
+          <div class="line"><strong>Clause:</strong> when we met</div>
+          <div class="line"><strong>Describes:</strong> day</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The reason why he left is unknown.</div>
+          <div class="line"><strong>Clause:</strong> why he left</div>
+          <div class="line"><strong>Describes:</strong> reason</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">My brother, who lives in Lagos, is a doctor.</div>
+          <div class="line"><strong>Clause:</strong> who lives in Lagos</div>
+          <div class="line"><strong>Describes:</strong> brother</div>
+          <div class="line"><strong>Type:</strong> Non-essential clause, so commas are used</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The car that I bought last year is reliable.</div>
+          <div class="line"><strong>Clause:</strong> that I bought last year</div>
+          <div class="line"><strong>Describes:</strong> car</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The girl whom we saw at the party is my cousin.</div>
+          <div class="line"><strong>Clause:</strong> whom we saw at the party</div>
+          <div class="line"><strong>Describes:</strong> girl</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 JAMB Tip</strong>
+          <p>If the clause is necessary to identify the noun, no commas. If it only adds extra information, use commas.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Adverb Clause – Where & How to Use</h2>
+        <p>An adverb clause acts like an adverb. It modifies a <strong>verb</strong>, <strong>adjective</strong>, or <strong>another adverb</strong>. It answers questions like <strong>when</strong>, <strong>where</strong>, <strong>why</strong>, <strong>how</strong>, and <strong>under what condition</strong>.</p>
+
+        <h3>Common starter words</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>because, since, as, if, unless</li>
+            <li>when, while, after, before, until</li>
+            <li>although, though, even though</li>
+            <li>so that, in order that</li>
+            <li>where, wherever, as if, as though</li>
+          </ul>
+        </div>
+
+        <h3>Main categories</h3>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Time:</strong> when, while, before, after, until</li>
+            <li><strong>Place:</strong> where, wherever</li>
+            <li><strong>Reason:</strong> because, since, as</li>
+            <li><strong>Condition:</strong> if, unless, provided that</li>
+            <li><strong>Purpose:</strong> so that, in order that</li>
+            <li><strong>Concession:</strong> although, though, even though</li>
+            <li><strong>Manner:</strong> as if, as though</li>
+          </ul>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Comma Rule:</strong> If the adverb clause comes first, use a comma. If it comes last, usually no comma.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">When school ends, go home.</div>
+          <div class="line"><strong>Clause:</strong> When school ends</div>
+          <div class="line"><strong>Type:</strong> Time clause</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Stay where you are.</div>
+          <div class="line"><strong>Clause:</strong> where you are</div>
+          <div class="line"><strong>Type:</strong> Place clause</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">He passed because he studied.</div>
+          <div class="line"><strong>Clause:</strong> because he studied</div>
+          <div class="line"><strong>Type:</strong> Reason clause</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">If you read, you’ll succeed.</div>
+          <div class="line"><strong>Clause:</strong> If you read</div>
+          <div class="line"><strong>Type:</strong> Condition clause</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Study so that you pass.</div>
+          <div class="line"><strong>Clause:</strong> so that you pass</div>
+          <div class="line"><strong>Type:</strong> Purpose clause</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Although tired, he continued.</div>
+          <div class="line"><strong>Clause:</strong> Although tired</div>
+          <div class="line"><strong>Type:</strong> Concession clause</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">He acts as if he owns the place.</div>
+          <div class="line"><strong>Clause:</strong> as if he owns the place</div>
+          <div class="line"><strong>Type:</strong> Manner clause</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Unless you hurry, you’ll be late.</div>
+          <div class="line"><strong>Clause:</strong> Unless you hurry</div>
+          <div class="line"><strong>Type:</strong> Condition clause</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">She sang while she cooked.</div>
+          <div class="line"><strong>Clause:</strong> while she cooked</div>
+          <div class="line"><strong>Type:</strong> Time clause</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 JAMB Tip</strong>
+          <p>Adverb clauses often come first in JAMB questions to test comma usage. Clause first = comma. Clause last = usually no comma.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Coordinating Conjunctions (FANBOYS) – Where & How to Use</h2>
+        <p>Coordinating conjunctions join <strong>equal parts</strong> of a sentence: words, phrases, or two independent clauses.</p>
+
+        <h3>FANBOYS</h3>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>F</strong>or</li>
+            <li><strong>A</strong>nd</li>
+            <li><strong>N</strong>or</li>
+            <li><strong>B</strong>ut</li>
+            <li><strong>O</strong>r</li>
+            <li><strong>Y</strong>et</li>
+            <li><strong>S</strong>o</li>
+          </ul>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Comma Rule:</strong> When FANBOYS joins two independent clauses, use a comma before the conjunction.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">I studied hard, and I passed.</div>
+          <div class="line"><strong>Clause 1:</strong> I studied hard</div>
+          <div class="line"><strong>Clause 2:</strong> I passed</div>
+          <div class="line"><strong>Conjunction:</strong> and</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">She wanted to come, but she was sick.</div>
+          <div class="line"><strong>Conjunction:</strong> but</div>
+          <div class="line"><strong>Use:</strong> Shows contrast</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Read the book, or watch the movie.</div>
+          <div class="line"><strong>Conjunction:</strong> or</div>
+          <div class="line"><strong>Use:</strong> Shows choice</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">It rained heavily, so we cancelled the match.</div>
+          <div class="line"><strong>Conjunction:</strong> so</div>
+          <div class="line"><strong>Use:</strong> Shows result</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">He is smart, yet he failed.</div>
+          <div class="line"><strong>Conjunction:</strong> yet</div>
+          <div class="line"><strong>Use:</strong> Shows unexpected contrast</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The test was easy, for everyone prepared well.</div>
+          <div class="line"><strong>Conjunction:</strong> for</div>
+          <div class="line"><strong>Use:</strong> Gives reason</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">He doesn't smoke, nor does he drink.</div>
+          <div class="line"><strong>Conjunction:</strong> nor</div>
+          <div class="line"><strong>Use:</strong> Adds a second negative idea</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">You can eat now or later.</div>
+          <div class="line"><strong>Use:</strong> Joins words/phrases, not two full clauses</div>
+          <div class="line"><strong>Comma:</strong> No comma needed here</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 JAMB Tip</strong>
+          <p>FANBOYS joins equals and makes compound sentences. Subordinating conjunctions create complex sentences.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Quick Comparison Table for Revision</h2>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Clause Type</th>
+              <th>Starter Words</th>
+              <th>Function</th>
+              <th>Position Clue</th>
+              <th>Sentence Type</th>
+            </tr>
+            <tr>
+              <td><strong>Noun Clause</strong></td>
+              <td>what, that, who, whether, if</td>
+              <td>Acts as noun</td>
+              <td>Can replace with “it”</td>
+              <td>Complex</td>
+            </tr>
+            <tr>
+              <td><strong>Adjective Clause</strong></td>
+              <td>who, which, that, whose, where</td>
+              <td>Describes a noun</td>
+              <td>Right after noun it describes</td>
+              <td>Complex</td>
+            </tr>
+            <tr>
+              <td><strong>Adverb Clause</strong></td>
+              <td>because, if, when, although, so that</td>
+              <td>Modifies verb/adjective/adverb</td>
+              <td>Answers when/why/how/condition</td>
+              <td>Complex</td>
+            </tr>
+            <tr>
+              <td><strong>Coordinating Conjunction</strong></td>
+              <td>for, and, nor, but, or, yet, so</td>
+              <td>Joins equal parts</td>
+              <td>Between equal clauses/phrases</td>
+              <td>Compound</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Practice Tips for JAMB Success</h2>
+        <div class="jamb-alert">
+          <h4>Simple method</h4>
+          <ul>
+            <li>Underline the clause</li>
+            <li>Ask: Does it act as a noun?</li>
+            <li>Ask: Does it describe a noun?</li>
+            <li>Ask: Does it modify a verb, adjective, or adverb?</li>
+            <li>Check the starter word</li>
+            <li>Remember: FANBOYS = equal join, others often = dependent join</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Final revision tip</strong>
+          <p>Revise with past questions. Clauses appear every year in JAMB structure questions.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Mini Self-Quiz</h2>
+
+        <div class="quiz-box">
+          <div class="q">1. In “What he said surprised me,” the clause “What he said” is a</div>
+          <div>A. adjective clause</div>
+          <div>B. noun clause</div>
+          <div>C. adverb clause</div>
+          <div>D. coordinating clause</div>
+          <button onclick="showAns('a1')">Show Answer</button>
+          <div class="quiz-answer" id="a1"><strong>Answer:</strong> B — noun clause.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">2. In “The boy who helped me is my friend,” the clause “who helped me” is a</div>
+          <div>A. noun clause</div>
+          <div>B. adverb clause</div>
+          <div>C. adjective clause</div>
+          <div>D. independent clause</div>
+          <button onclick="showAns('a2')">Show Answer</button>
+          <div class="quiz-answer" id="a2"><strong>Answer:</strong> C — adjective clause.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">3. In “If you read, you’ll succeed,” the clause “If you read” is an</div>
+          <div>A. adverb clause</div>
+          <div>B. noun clause</div>
+          <div>C. adjective clause</div>
+          <div>D. independent clause</div>
+          <button onclick="showAns('a3')">Show Answer</button>
+          <div class="quiz-answer" id="a3"><strong>Answer:</strong> A — adverb clause.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">4. Which of these is a coordinating conjunction?</div>
+          <div>A. because</div>
+          <div>B. although</div>
+          <div>C. but</div>
+          <div>D. when</div>
+          <button onclick="showAns('a4')">Show Answer</button>
+          <div class="quiz-answer" id="a4"><strong>Answer:</strong> C — but.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">5. In “My brother, who lives in Lagos, is a doctor,” the clause is</div>
+          <div>A. noun and essential</div>
+          <div>B. adjective and non-essential</div>
+          <div>C. adverb and essential</div>
+          <div>D. noun and non-essential</div>
+          <button onclick="showAns('a5')">Show Answer</button>
+          <div class="quiz-answer" id="a5"><strong>Answer:</strong> B — adjective and non-essential.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Final Encouragement</h2>
+        <div class="highlight-box">
+          <p><strong>Finished — complete Clauses Mastery Guide.</strong> Keep practicing clause identification and sentence structure, and your JAMB Use of English score will improve strongly.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Revise noun, adjective, and adverb clauses today, then answer 10 past questions on structure.')">Practice JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB English - The Lekki Headmaster (Chapter 3: Migration Tales) Summary</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+.progress-container{
+  position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+  background:var(--shadow-in);z-index:15
+}
+.progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+.content{padding:20px 16px;line-height:1.7}
+.main-header{
+  text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+  background:rgba(29,185,84,.1)
+}
+.main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+.main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+.section-card{
+  background:var(--card-bg);padding:22px 18px;border-radius:20px;
+  box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+  margin-bottom:22px;border-left:4px solid var(--accent)
+}
+.section-card h2{
+  font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+  display:flex;align-items:center;gap:8px
+}
+.section-card h3{
+  font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+  padding-left:12px;border-left:3px solid var(--accent-tertiary)
+}
+.section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+.section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+.section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+.section-card li{margin-bottom:7px;font-size:14px}
+
+.quick-facts{
+  background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+  padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+}
+.quick-facts li{font-size:13px}
+
+.highlight-box{
+  background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+  border-left:3px solid var(--accent-tertiary)
+}
+.quote-box{
+  background:rgba(255,255,255,.04);
+  padding:14px 16px;border-radius:12px;margin:12px 0;
+  border-left:4px solid var(--accent-secondary)
+}
+.quote-box .q{
+  font-size:14px;font-style:italic;line-height:1.6
+}
+.quote-box .who{
+  margin-top:8px;font-size:12px;color:var(--text-secondary);font-weight:700
+}
+
+.memory-tip{
+  background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+  border-left:4px solid var(--accent-secondary)
+}
+.memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+.memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+.jamb-alert{
+  background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+  border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+}
+.jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+.jamb-alert li{font-size:13px}
+
+.table-container{
+  width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+}
+.summary-table{
+  width:100%;min-width:1200px;border-collapse:separate;border-spacing:0;font-size:13px
+}
+.summary-table th{
+  background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+}
+.summary-table td{
+  padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);white-space:nowrap;vertical-align:top
+}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+.table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+.nav-bar{
+  position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+  display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+}
+.nav-bar .nav-item{text-align:center}
+.nav-bar .nav-item.center button{
+  width:50px;height:50px;font-size:24px;background:var(--accent);
+  box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+  color:#000
+}
+.nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+.explore-btn{
+  background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+  box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+  font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+}
+.explore-btn:active{
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  transform:scale(.98)
+}
+
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+    
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">ENGLISH (NOVEL)</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>📘 Chapter 3 — “Migration Tales”</h1>
+    <p>The Lekki Headmaster (Kabir Alabi Garba) • “Japa” realities • identity crisis • key quotes</p>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div class="section-card">
+    <h2>📋 Summary Table (Fast Revision)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Area</th>
+          <th>Key detail</th>
+          <th>Likely JAMB angle</th>
+        </tr>
+        <tr>
+          <td><strong>Bepo’s decision</strong></td>
+          <td>Firm plan to relocate (but wants realities first)</td>
+          <td>Motivation/character question</td>
+        </tr>
+        <tr>
+          <td><strong>Pay system abroad</strong></td>
+          <td>Hourly/daily/weekly/monthly vs Nigeria fixed monthly</td>
+          <td>Comparison question</td>
+        </tr>
+        <tr>
+          <td><strong>Why he likes hourly</strong></td>
+          <td>Flexibility, close monitoring, earn more with extra hours</td>
+          <td>Reason question</td>
+        </tr>
+        <tr>
+          <td><strong>Downgrading</strong></td>
+          <td>Lecturers drive Uber; architects clean offices</td>
+          <td>Theme: underemployment</td>
+        </tr>
+        <tr>
+          <td><strong>Cost of living</strong></td>
+          <td>Taxes, rent, maintenance reduce “big” earnings</td>
+          <td>Reality vs illusion</td>
+        </tr>
+        <tr>
+          <td><strong>Identity fear</strong></td>
+          <td>He may lose “Principoo” status and become “nobody”</td>
+          <td>Theme: identity crisis</td>
+        </tr>
+        <tr>
+          <td><strong>Brain drain</strong></td>
+          <td>Mass emigration (e.g., doctors leaving yearly)</td>
+          <td>Social issue question</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="memory-tip">
+      <strong>🧠 One-line recall</strong>
+      <p>Chapter 3 is Bepo’s “reality check”: migration pays more, but it can also reduce status and increase struggle.</p>
+    </div>
+  </div>
+
+  <!-- CONTEXT -->
+  <div class="section-card">
+    <h2>1️⃣ Context & Focus of the Chapter</h2>
+    <p>After deciding to join Seri and the children in the UK, Mr. Bepo begins to listen carefully to <strong>migration tales</strong> from Nigerians in the UK, USA, and Canada.</p>
+    <div class="quick-facts">
+      <ul>
+        <li>His decision is firm, but he wants to understand “what is really there”</li>
+        <li>He learns from success stories and warning stories</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PAY SYSTEM -->
+  <div class="section-card">
+    <h2>2️⃣ Payment Systems Abroad vs Nigeria</h2>
+    <p>Bepo discovers that payment abroad can be hourly/daily/weekly/monthly—unlike Nigeria’s fixed monthly salary system.</p>
+    <div class="quick-facts">
+      <h4>Why he likes the hourly system</h4>
+      <ul>
+        <li>Flexibility to change jobs easily</li>
+        <li>Employers can monitor performance closely</li>
+        <li>Earn more by working extra hours</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SUCCESS VS STRUGGLES -->
+  <div class="section-card">
+    <h2>3️⃣ Success Stories vs Struggle Stories</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Some migrants earn a lot (figures sound huge when converted to naira)</li>
+        <li>But many face <strong>downgrading</strong> because Nigerian qualifications may not fully transfer</li>
+      </ul>
+    </div>
+
+    <div class="highlight-box">
+      <p><strong>Downgrading examples:</strong> university lecturers driving Uber/taxis; professionals doing night office cleaning.</p>
+    </div>
+  </div>
+
+  <!-- COST OF LIVING -->
+  <div class="section-card">
+    <h2>4️⃣ The High Cost of Living Abroad</h2>
+    <p>Bepo notices that high income abroad can be reduced by expenses.</p>
+    <div class="quick-facts">
+      <ul>
+        <li>Taxes</li>
+        <li>High rent</li>
+        <li>Maintenance and bills</li>
+        <li>General cost of living</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Reality check line</strong>
+      <p>Higher pay doesn’t always mean more comfort, because expenses are also higher.</p>
+    </div>
+  </div>
+
+  <!-- JAPA / BRAIN DRAIN -->
+  <div class="section-card">
+    <h2>5️⃣ “Japa” Phenomenon & Brain Drain</h2>
+    <p>The chapter presents migration as a mass movement driven by Nigeria’s economic and security challenges.</p>
+    <div class="quick-facts">
+      <ul>
+        <li>Economic hardship</li>
+        <li>Insecurity</li>
+        <li>Poor infrastructure</li>
+        <li>Lack of opportunities</li>
+        <li>Brain drain (e.g., doctors leaving every year)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- IDENTITY / PRINCIPOO -->
+  <div class="section-card">
+    <h2>6️⃣ Bepo’s Identity Conflict (“Principoo”)</h2>
+    <p>Bepo loves his identity at Stardom Schools—his routines, respect, and the feeling of being useful.</p>
+
+    <div class="quick-facts">
+      <ul>
+        <li>Students call him <strong>“Principoo”</strong></li>
+        <li>He greets students at the gate (Mondays/Wednesdays)</li>
+        <li>Signature posture: left hand in pocket while speaking</li>
+        <li>Signature phrase: <strong>“other things being equal…”</strong></li>
+      </ul>
+    </div>
+
+    <!-- QUOTES: only include what user supplied -->
+    <h3>Key quote(s) mentioned in this chapter</h3>
+
+    <div class="quote-box">
+      <div class="q">“If you say education is too expensive, try ignorance!”</div>
+      <div class="who">— Mr. Bepo Adewale (motivational quote used with students)</div>
+    </div>
+
+    <div class="quote-box">
+      <div class="q">“other things being equal…”</div>
+      <div class="who">— Mr. Bepo’s signature phrase</div>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>Identity fear</h4>
+      <ul>
+        <li>He worries about becoming “a nobody trying to become a somebody” abroad (as described by a returned doctor friend).</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PEOPLE / SOURCES -->
+  <div class="section-card">
+    <h2>7️⃣ Who Shares the Migration Tales?</h2>
+    <div class="quick-facts">
+      <ul>
+        <li><strong>Seri</strong> (his wife) shares experiences and reassurance</li>
+        <li>Others like a former colleague <strong>Sola</strong> also share stories</li>
+        <li>Bepo believes transition may be smoother because Seri is already settled</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- THEMES -->
+  <div class="section-card">
+    <h2>8️⃣ Themes in Chapter 3</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Migration as temptation (“enticement”) vs reality</li>
+        <li>Identity and status crisis for professionals</li>
+        <li>Brain drain and national loss</li>
+        <li>Economic survival vs emotional attachment</li>
+        <li>Family reunion vs personal purpose</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- LIKELY QUESTIONS -->
+  <div class="section-card">
+    <h2>✅ Likely JAMB Questions (Practice)</h2>
+    <div class="jamb-alert">
+      <h4>Common question patterns</h4>
+      <ul>
+        <li>Why did Bepo prefer the hourly pay system?</li>
+        <li>What examples of downgrading are mentioned?</li>
+        <li>What costs reduce migrants’ earnings abroad?</li>
+        <li>What does “Principoo” show about Bepo’s identity?</li>
+        <li>State one quote/phrase Bepo is known for.</li>
+        <li>What is “brain drain” and how is it shown here?</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="section-card">
+    <h2>✅ Quick Revision Checklist</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Migration tales = success + struggles</li>
+        <li>Pay system abroad is flexible (hourly/daily/weekly/monthly)</li>
+        <li>Bepo likes hourly because of flexibility + extra earnings</li>
+        <li>Downgrading examples (Uber driving, office cleaning)</li>
+        <li>High cost of living reduces income (tax, rent, bills)</li>
+        <li>“Principoo” identity and routines (gate greetings, left hand in pocket)</li>
+        <li>Key quote: “If you say education is too expensive, try ignorance!”</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Final memory line</strong>
+      <p>For JAMB: learn (1) pay system difference, (2) downgrading examples, (3) Bepo’s identity quotes.</p>
+    </div>
+  </div>
+
+  <button class="explore-btn" onclick="alert('Revise: hourly pay reasons + downgrading examples + “Principoo” quotes. Then practise MCQs.')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

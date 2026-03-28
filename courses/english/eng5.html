@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB English - Word Classes & Concord Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .example-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1100px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .quiz-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .quiz-box .q{font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px}
+    .quiz-box button{
+      width:100%;margin-top:10px;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+      background:var(--accent);color:#000;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+    }
+    .quiz-answer{
+      margin-top:10px;font-size:13px;color:var(--text-secondary);display:none
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">ENGLISH</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📘 Word Classes + Concord Mastery Guide</h1>
+        <p>JAMB 2026 • all 8 parts of speech • rules • positions • usage • concord for top score</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Quick Overview</h2>
+        <p>Word classes, also called <strong>parts of speech</strong>, are the foundation of English grammar. JAMB tests them in <strong>Lexis & Structure</strong>, <strong>concord</strong>, <strong>phrasal verbs</strong>, <strong>idioms</strong>, and <strong>comprehension</strong>.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>There are <strong>8 main word classes</strong></li>
+            <li>JAMB tests their <strong>definitions</strong>, <strong>positions</strong>, <strong>rules</strong>, and <strong>correct usage</strong></li>
+            <li>Concord is strongly linked to nouns, pronouns, and verbs</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 JAMB Goal</strong>
+          <p>Know what each class does, where it appears in a sentence, and the rule that controls it.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Nouns</h2>
+        <p><strong>What it is:</strong> A noun names a person, place, thing, animal, idea, or quality.</p>
+
+        <h3>Where nouns are used</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>As the <strong>subject</strong> of a sentence</li>
+            <li>As the <strong>object</strong> of a verb</li>
+            <li>After prepositions</li>
+            <li>As complement after linking verbs</li>
+          </ul>
+        </div>
+
+        <h3>Common JAMB nouns</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>committee, family, police, luggage, furniture, information, news, mathematics</li>
+            <li>equipment, advice, baggage, stationery, poultry, cattle, people</li>
+            <li>scissors, trousers, glasses, economics, physics, measles, athletics</li>
+            <li>headquarters, government, audience, crowd, team, jury, staff, public</li>
+            <li>majority, minority, youth, offspring, aircraft, deer, sheep, series, species</li>
+          </ul>
+        </div>
+
+        <h3>Rules for JAMB</h3>
+        <div class="jamb-alert">
+          <h4>Important noun rules</h4>
+          <ul>
+            <li><strong>Collective nouns</strong> usually take singular verbs: The committee is…</li>
+            <li><strong>Uncountable nouns</strong> do not take “a/an” and usually do not take plural “s”</li>
+            <li><strong>Always-plural nouns</strong> take plural verbs: police have, scissors are, trousers are</li>
+            <li>Some nouns look plural but are singular in meaning: mathematics is, economics is</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The committee is meeting next week.</div>
+          <div class="line"><strong>Explanation:</strong> “Committee” is a collective noun, treated as one unit, so singular verb “is”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">All the information you need is on the website.</div>
+          <div class="line"><strong>Explanation:</strong> “Information” is uncountable. Use singular verb “is”, never “informations”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">The police have arrested the suspect.</div>
+          <div class="line"><strong>Explanation:</strong> “Police” is always plural, so use “have”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">His luggage was lost at the airport.</div>
+          <div class="line"><strong>Explanation:</strong> “Luggage” is uncountable, so singular verb “was”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Mathematics is my favourite subject.</div>
+          <div class="line"><strong>Explanation:</strong> “Mathematics” is singular in this sense.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Verbs</h2>
+        <p><strong>What it is:</strong> A verb shows action, state, or occurrence.</p>
+
+        <h3>Where verbs are used</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>To show what the subject <strong>does</strong></li>
+            <li>To show the subject’s <strong>state</strong> or condition</li>
+            <li>In phrasal verbs, where meaning changes with a particle</li>
+          </ul>
+        </div>
+
+        <h3>Common JAMB verbs and phrasal verbs</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>prefer, resemble, deliver, circumvent, coax, coerce</li>
+            <li>cash in on, run on, postpone, break down, give up</li>
+            <li>look forward to, turn down, put up with, come across, call off</li>
+            <li>break into, look into, take after, bring about, put off</li>
+            <li>make up, fall out, get along, run out of, look up to, turn up</li>
+          </ul>
+        </div>
+
+        <h3>Rules for JAMB</h3>
+        <div class="jamb-alert">
+          <h4>Important verb rules</h4>
+          <ul>
+            <li>Choose verbs that fit the meaning, not just the tense</li>
+            <li>Phrasal verbs often have meanings different from the main verb alone</li>
+            <li>Some verbs take special prepositions: look forward to, put up with, run on petrol</li>
+            <li>Some formal expressions are common in JAMB: delivered of a baby</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The thief tried to circumvent the security system.</div>
+          <div class="line"><strong>Explanation:</strong> “Circumvent” means get round or avoid.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Ayayi cashed in on our defensive error to score.</div>
+          <div class="line"><strong>Explanation:</strong> “Cash in on” means take advantage of.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">The car runs on petrol, not diesel.</div>
+          <div class="line"><strong>Explanation:</strong> “Run on” shows fuel source.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">She was delivered of a bouncing baby boy yesterday.</div>
+          <div class="line"><strong>Explanation:</strong> Formal JAMB usage: “delivered of” means gave birth to.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">The match was called off because of rain.</div>
+          <div class="line"><strong>Explanation:</strong> “Call off” means cancel.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Adjectives</h2>
+        <p><strong>What it is:</strong> An adjective describes or modifies a noun or pronoun.</p>
+
+        <h3>Where adjectives are used</h3>
+        <div class="quick-facts">
+          <ul>
+            <li><strong>Before a noun</strong>: a beautiful dress</li>
+            <li><strong>After a linking verb</strong>: the dress is beautiful</li>
+          </ul>
+        </div>
+
+        <h3>Common JAMB adjectives</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>beautiful, repulsive, lovely, white, best, little, few</li>
+            <li>affluent, benevolent, candid, frugal, elated, adamant, hostile</li>
+            <li>lucid, meticulous, sluggish, mischievous, phenomenal, bureaucratic</li>
+            <li>eccentric, exhilarating, unprecedented, unanimous, irresistible</li>
+            <li>immaculate, excruciating, inquisitive, unpredictable, sophisticated, obsolete</li>
+          </ul>
+        </div>
+
+        <h3>Rules for JAMB</h3>
+        <div class="jamb-alert">
+          <h4>Important adjective rules</h4>
+          <ul>
+            <li>Adjectives modify nouns and pronouns, not verbs</li>
+            <li>After linking verbs, use adjective, not adverb: She feels bad, not badly</li>
+            <li>Comparative forms must be correct: more expensive, better, less interesting</li>
+            <li>Some words can confuse students: little/few, less/fewer</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">She bought a beautiful dress for the party.</div>
+          <div class="line"><strong>Explanation:</strong> “Beautiful” comes before the noun “dress”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Everybody hates him for his repulsive looks.</div>
+          <div class="line"><strong>Explanation:</strong> “Repulsive” modifies “looks”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">It is more expensive to travel on Friday.</div>
+          <div class="line"><strong>Explanation:</strong> Comparative adjective used after linking verb “is”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">That was a lovely evening.</div>
+          <div class="line"><strong>Explanation:</strong> “Lovely” modifies “evening”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Jasmines are white in colour.</div>
+          <div class="line"><strong>Explanation:</strong> “White” comes after linking verb “are”.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Adverbs</h2>
+        <p><strong>What it is:</strong> An adverb modifies a verb, an adjective, or another adverb.</p>
+
+        <h3>Where adverbs are used</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>To show <strong>how</strong>: quickly, beautifully</li>
+            <li>To show <strong>when</strong>: later, soon, yesterday</li>
+            <li>To show <strong>where</strong>: here, there, upstairs</li>
+            <li>To show <strong>degree</strong>: very, quite, almost, too</li>
+          </ul>
+        </div>
+
+        <h3>Common JAMB adverbs</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>beautifully, pleasantly, quickly, later, early, more</li>
+            <li>slowly, very, quite, rather, too, extremely</li>
+            <li>frequently, seldom, always, never, soon, yesterday</li>
+            <li>here, there, everywhere, upstairs, downstairs</li>
+            <li>well, badly, hard, fast, almost, nearly, hardly, carefully, suddenly</li>
+          </ul>
+        </div>
+
+        <h3>Rules for JAMB</h3>
+        <div class="jamb-alert">
+          <h4>Important adverb rules</h4>
+          <ul>
+            <li>Adverbs usually modify verbs, adjectives, or other adverbs</li>
+            <li>Do not confuse adjective and adverb forms: quick/quickly, slow/slowly</li>
+            <li>Some adverbs have the same form as adjectives: fast, hard, late, early</li>
+            <li>“Hardly” does not mean “hard”; it means “scarcely”</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">She sang beautifully on stage.</div>
+          <div class="line"><strong>Explanation:</strong> “Beautifully” modifies the verb “sang”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">I was pleasantly surprised when she arrived.</div>
+          <div class="line"><strong>Explanation:</strong> “Pleasantly” modifies adjective “surprised”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">John came later than Peter.</div>
+          <div class="line"><strong>Explanation:</strong> Comparative adverb of time.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">If we finish our work quickly, we can go to the movies.</div>
+          <div class="line"><strong>Explanation:</strong> “Quickly” modifies “finish”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">He runs more quickly than his brother.</div>
+          <div class="line"><strong>Explanation:</strong> Comparative adverb form.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Pronouns</h2>
+        <p><strong>What it is:</strong> A pronoun replaces a noun to avoid repetition.</p>
+
+        <h3>Where pronouns are used</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>As subject: he, she, they</li>
+            <li>As object: him, her, them</li>
+            <li>As possessive: mine, yours, theirs</li>
+            <li>As relative pronouns: who, whom, which, that</li>
+          </ul>
+        </div>
+
+        <h3>Common JAMB pronouns</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>you, theirs, it, he, she, they, we, I, me, him, her, us, them</li>
+            <li>mine, yours, his, hers, its, ours, whose, who, whom, which, that</li>
+            <li>everyone, somebody, anybody, nobody, something, anything</li>
+            <li>this, that, these, those, one, each, either, neither</li>
+          </ul>
+        </div>
+
+        <h3>Rules for JAMB</h3>
+        <div class="jamb-alert">
+          <h4>Important pronoun rules</h4>
+          <ul>
+            <li>Pronoun must agree with the noun it replaces</li>
+            <li>Use subject pronoun as subject, object pronoun as object</li>
+            <li>Indefinite pronouns like everyone, somebody, each are usually singular</li>
+            <li>Possessive pronouns stand alone: mine, yours, theirs</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">It happened that our dog is male but theirs are all females.</div>
+          <div class="line"><strong>Explanation:</strong> “Theirs” replaces “their dogs”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Where are you going?</div>
+          <div class="line"><strong>Explanation:</strong> “You” is a second person pronoun.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Everyone has his own book.</div>
+          <div class="line"><strong>Explanation:</strong> “Everyone” is treated as singular in JAMB concord.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">The book is mine, not yours.</div>
+          <div class="line"><strong>Explanation:</strong> Possessive pronouns stand without a noun after them.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Neither the teacher nor the students are ready.</div>
+          <div class="line"><strong>Explanation:</strong> With neither…nor, the verb agrees with the nearer subject “students”.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Prepositions</h2>
+        <p><strong>What it is:</strong> A preposition shows the relationship of a noun or pronoun to other words in a sentence.</p>
+
+        <h3>Where prepositions are used</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>To show <strong>place</strong>: under, above, beside</li>
+            <li>To show <strong>time</strong>: before, during, since, until</li>
+            <li>To show <strong>direction</strong>: into, toward, across</li>
+            <li>In fixed expressions: in spite of, on the radio, on petrol</li>
+          </ul>
+        </div>
+
+        <h3>Common JAMB prepositions</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>under, for, on, in spite of, beneath, with, by, from, at, in, to, of</li>
+            <li>about, above, across, against, along, among, around, before, behind</li>
+            <li>below, beside, between, beyond, during, except, inside, into, near</li>
+            <li>off, onto, outside, over, since, through, throughout, toward, until, upon</li>
+          </ul>
+        </div>
+
+        <h3>Rules for JAMB</h3>
+        <div class="jamb-alert">
+          <h4>Important preposition rules</h4>
+          <ul>
+            <li>Some verbs and expressions take fixed prepositions</li>
+            <li>Use the correct collocation: on the radio, on television, on petrol</li>
+            <li>Do not confuse similar prepositions: between/among, in/into, on/upon</li>
+            <li>Prepositions are often tested in idioms and phrasal expressions</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">I left my shoes under the kitchen table.</div>
+          <div class="line"><strong>Explanation:</strong> “Under” shows lower position.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">We heard the news on the radio.</div>
+          <div class="line"><strong>Explanation:</strong> Correct JAMB collocation: on the radio.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">The car runs on petrol, not diesel.</div>
+          <div class="line"><strong>Explanation:</strong> “On” is used for fuel source.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">We went out in spite of the rain.</div>
+          <div class="line"><strong>Explanation:</strong> “In spite of” means despite.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">He felt it was beneath his dignity to join the queue.</div>
+          <div class="line"><strong>Explanation:</strong> “Beneath” is used in formal expression.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Conjunctions</h2>
+        <p><strong>What it is:</strong> A conjunction joins words, phrases, or clauses.</p>
+
+        <h3>Where conjunctions are used</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>To join words: tea and coffee</li>
+            <li>To join phrases: in the room or outside</li>
+            <li>To join clauses: he came because he was invited</li>
+          </ul>
+        </div>
+
+        <h3>Common JAMB conjunctions</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>but, although, rather than, because, since, for, and, or, yet, so</li>
+            <li>if, unless, while, whereas, even though, as, when, whenever</li>
+            <li>where, wherever, before, after, until, till, as soon as</li>
+            <li>provided that, in order that, so that</li>
+          </ul>
+        </div>
+
+        <h3>Rules for JAMB</h3>
+        <div class="jamb-alert">
+          <h4>Important conjunction rules</h4>
+          <ul>
+            <li>Coordinating conjunctions join equal structures</li>
+            <li>Subordinating conjunctions introduce dependent clauses</li>
+            <li>Be careful with contrast markers: although, though, but, yet</li>
+            <li>Some phrases function like conjunctions: rather than, in order that, so that</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Although the problem was simple, few students solved it.</div>
+          <div class="line"><strong>Explanation:</strong> “Although” introduces contrast and a dependent clause.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">I prefer tea rather than coffee.</div>
+          <div class="line"><strong>Explanation:</strong> “Rather than” expresses preference.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">We went out although it was raining.</div>
+          <div class="line"><strong>Explanation:</strong> Contrast conjunction.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">He ran fast because he was late.</div>
+          <div class="line"><strong>Explanation:</strong> “Because” introduces reason.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Since you are here, let us start the meeting.</div>
+          <div class="line"><strong>Explanation:</strong> “Since” can show reason or time, depending on context.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Interjections</h2>
+        <p><strong>What it is:</strong> An interjection expresses sudden feeling or emotion.</p>
+
+        <h3>Where interjections are used</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>At the beginning of a sentence</li>
+            <li>Before an exclamation mark or comma</li>
+            <li>To show pain, surprise, joy, regret, relief, praise</li>
+          </ul>
+        </div>
+
+        <h3>Common JAMB interjections</h3>
+        <div class="quick-facts">
+          <ul>
+            <li>Ouch, Wow, Ah, Oh, Hey, Alas, Hurray, Bravo, Oops, Aha</li>
+            <li>Eh, Well, Gosh, Gee, Yippee, Hurrah, Phew, Ugh, Yay, Boo</li>
+          </ul>
+        </div>
+
+        <h3>Rules for JAMB</h3>
+        <div class="jamb-alert">
+          <h4>Important interjection rules</h4>
+          <ul>
+            <li>Interjections are not grammatically tied to the rest of the sentence</li>
+            <li>They are usually followed by an exclamation mark</li>
+            <li>Meaning depends on emotion expressed</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Ouch! That hurts.</div>
+          <div class="line"><strong>Explanation:</strong> “Ouch” expresses pain.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Wow! That is amazing.</div>
+          <div class="line"><strong>Explanation:</strong> “Wow” expresses surprise or admiration.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Alas! The team lost the match.</div>
+          <div class="line"><strong>Explanation:</strong> “Alas” expresses sorrow or regret.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Bravo! You have done well.</div>
+          <div class="line"><strong>Explanation:</strong> “Bravo” expresses praise.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Phew! I finally finished the exam.</div>
+          <div class="line"><strong>Explanation:</strong> “Phew” expresses relief.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Rules of Concord (Subject-Verb Agreement) – JAMB Focus</h2>
+        <p><strong>Concord</strong> means the subject and verb must agree in <strong>number</strong> and sometimes <strong>person</strong>. JAMB loves tricky concord questions.</p>
+
+        <div class="jamb-alert">
+          <h4>15 key concord rules</h4>
+          <ul>
+            <li><strong>1.</strong> Singular subject takes singular verb; plural subject takes plural verb</li>
+            <li><strong>2.</strong> Collective nouns are usually singular</li>
+            <li><strong>3.</strong> With <strong>as well as / with / together with / along with</strong>, ignore the extra words</li>
+            <li><strong>4.</strong> In <strong>either…or / neither…nor</strong>, agree with the nearer subject</li>
+            <li><strong>5.</strong> <strong>A number of</strong> = plural; <strong>The number of</strong> = singular</li>
+            <li><strong>6.</strong> Indefinite pronouns like everyone, somebody, each are singular</li>
+            <li><strong>7.</strong> Uncountables like news, mathematics take singular verbs; police, cattle take plural verbs</li>
+            <li><strong>8.</strong> <strong>More than one</strong> takes singular verb</li>
+            <li><strong>9.</strong> <strong>The + adjective</strong> (the poor, the rich) is plural</li>
+            <li><strong>10.</strong> Amounts of money, time, distance often take singular verbs</li>
+            <li><strong>11.</strong> With <strong>not / not only…but also</strong>, focus on the true subject before the interruption</li>
+            <li><strong>12.</strong> Relative pronouns agree with their antecedents</li>
+            <li><strong>13.</strong> <strong>One of / each of</strong> usually takes singular verb</li>
+            <li><strong>14.</strong> <strong>None of</strong> is often treated as singular in JAMB</li>
+            <li><strong>15.</strong> Subjects joined by <strong>and</strong> are plural, unless they express one idea</li>
+          </ul>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The teacher, as well as his students, is working very hard.</div>
+          <div class="line"><strong>Rule:</strong> Ignore “as well as his students”; main subject is “teacher”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Either my friends or my brother has taken the car out.</div>
+          <div class="line"><strong>Rule:</strong> Verb agrees with nearer subject “brother”.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">A number of students are absent today.</div>
+          <div class="line"><strong>Rule:</strong> “A number of” is plural.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">The number of women is more than that of men.</div>
+          <div class="line"><strong>Rule:</strong> “The number of” is singular.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">More than one student has failed.</div>
+          <div class="line"><strong>Rule:</strong> “More than one” takes singular verb.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">The poor are always with us.</div>
+          <div class="line"><strong>Rule:</strong> “The + adjective” is plural.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">Twenty thousand naira is too much for the book.</div>
+          <div class="line"><strong>Rule:</strong> Amount of money is treated as singular.</div>
+        </div>
+        <div class="example-box">
+          <div class="title">My wife and comforter has arrived.</div>
+          <div class="line"><strong>Rule:</strong> One person is being described in two ways, so singular verb.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 20 JAMB-Style Concord Questions</h2>
+
+        <div class="quiz-box">
+          <div class="q">1. The teacher, as well as his students, __________ working very hard.</div>
+          <div>A. is</div><div>B. have been</div><div>C. are</div><div>D. were</div>
+          <button onclick="showAns('a1')">Show Answer</button>
+          <div class="quiz-answer" id="a1"><strong>Answer:</strong> A — is. Ignore “as well as his students”; subject is “teacher”.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">2. The farmer, with his sons, __________ millet.</div>
+          <div>A. grows</div><div>B. grow</div><div>C. were growing</div><div>D. have been growing</div>
+          <button onclick="showAns('a2')">Show Answer</button>
+          <div class="quiz-answer" id="a2"><strong>Answer:</strong> A — grows. Main subject is “farmer”.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">3. Chief Owonikoko as well as his men __________ arrived.</div>
+          <div>A. have</div><div>B. has</div><div>C. are</div><div>D. were</div>
+          <button onclick="showAns('a3')">Show Answer</button>
+          <div class="quiz-answer" id="a3"><strong>Answer:</strong> B — has. Main subject is singular.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">4. The man with his wives __________ coming.</div>
+          <div>A. were</div><div>B. are</div><div>C. is</div><div>D. been</div>
+          <button onclick="showAns('a4')">Show Answer</button>
+          <div class="quiz-answer" id="a4"><strong>Answer:</strong> C — is. Subject is “man”.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">5. Julius Berger and Associates __________ not employ technicians.</div>
+          <div>A. do</div><div>B. does</div><div>C. has</div><div>D. have</div>
+          <button onclick="showAns('a5')">Show Answer</button>
+          <div class="quiz-answer" id="a5"><strong>Answer:</strong> A — do. Compound subject takes plural verb.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">6. Either my friends or my brother __________ taken the car out.</div>
+          <div>A. have</div><div>B. has</div><div>C. was</div><div>D. were</div>
+          <button onclick="showAns('a6')">Show Answer</button>
+          <div class="quiz-answer" id="a6"><strong>Answer:</strong> B — has. Agree with nearer subject “brother”.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">7. I was still sleeping when the national news __________ this morning.</div>
+          <div>A. were broadcasted</div><div>B. was broadcasted</div><div>C. was broadcast</div><div>D. were broadcast</div>
+          <button onclick="showAns('a7')">Show Answer</button>
+          <div class="quiz-answer" id="a7"><strong>Answer:</strong> C — was broadcast. “News” is singular uncountable.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">8. The man, not his workers, __________ to blame.</div>
+          <div>A. are</div><div>B. is</div><div>C. were</div><div>D. them</div>
+          <button onclick="showAns('a8')">Show Answer</button>
+          <div class="quiz-answer" id="a8"><strong>Answer:</strong> B — is. Ignore “not his workers”.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">9. The number of women __________ more than that of men in every society.</div>
+          <div>A. are</div><div>B. is</div><div>C. were</div><div>D. been</div>
+          <button onclick="showAns('a9')">Show Answer</button>
+          <div class="quiz-answer" id="a9"><strong>Answer:</strong> B — is. “The number of” is singular.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">10. More than one person __________ in road accidents every day.</div>
+          <div>A. die</div><div>B. dying</div><div>C. dies</div><div>D. dead</div>
+          <button onclick="showAns('a10')">Show Answer</button>
+          <div class="quiz-answer" id="a10"><strong>Answer:</strong> C — dies. “More than one” takes singular verb.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">11. The committee __________ divided in their opinion.</div>
+          <div>A. are</div><div>B. is</div><div>C. were</div><div>D. have</div>
+          <button onclick="showAns('a11')">Show Answer</button>
+          <div class="quiz-answer" id="a11"><strong>Answer:</strong> B — is. Collective noun is usually singular.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">12. Everyone in the class __________ submitted his assignment.</div>
+          <div>A. have</div><div>B. has</div><div>C. are</div><div>D. is</div>
+          <button onclick="showAns('a12')">Show Answer</button>
+          <div class="quiz-answer" id="a12"><strong>Answer:</strong> B — has. “Everyone” is singular.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">13. A number of students __________ absent today.</div>
+          <div>A. is</div><div>B. are</div><div>C. was</div><div>D. were</div>
+          <button onclick="showAns('a13')">Show Answer</button>
+          <div class="quiz-answer" id="a13"><strong>Answer:</strong> B — are. “A number of” is plural.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">14. Neither the teacher nor the students __________ coming to the party.</div>
+          <div>A. is</div><div>B. are</div><div>C. was</div><div>D. were</div>
+          <button onclick="showAns('a14')">Show Answer</button>
+          <div class="quiz-answer" id="a14"><strong>Answer:</strong> B — are. Agree with nearer subject “students”.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">15. Twenty thousand naira __________ too much for the book.</div>
+          <div>A. are</div><div>B. is</div><div>C. were</div><div>D. have</div>
+          <button onclick="showAns('a15')">Show Answer</button>
+          <div class="quiz-answer" id="a15"><strong>Answer:</strong> B — is. Amount of money is singular.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">16. The police __________ arrested the suspect.</div>
+          <div>A. has</div><div>B. have</div><div>C. is</div><div>D. are</div>
+          <button onclick="showAns('a16')">Show Answer</button>
+          <div class="quiz-answer" id="a16"><strong>Answer:</strong> B — have. “Police” is always plural.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">17. Mathematics __________ my favourite subject.</div>
+          <div>A. are</div><div>B. is</div><div>C. were</div><div>D. have</div>
+          <button onclick="showAns('a17')">Show Answer</button>
+          <div class="quiz-answer" id="a17"><strong>Answer:</strong> B — is. “Mathematics” is singular here.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">18. One of the students __________ failed the examination.</div>
+          <div>A. have</div><div>B. has</div><div>C. are</div><div>D. were</div>
+          <button onclick="showAns('a18')">Show Answer</button>
+          <div class="quiz-answer" id="a18"><strong>Answer:</strong> B — has. “One of” takes singular verb.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">19. The poor __________ always with us.</div>
+          <div>A. is</div><div>B. are</div><div>C. was</div><div>D. were</div>
+          <button onclick="showAns('a19')">Show Answer</button>
+          <div class="quiz-answer" id="a19"><strong>Answer:</strong> B — are. “The poor” is plural.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">20. My wife and comforter __________ arrived.</div>
+          <div>A. have</div><div>B. has</div><div>C. are</div><div>D. were</div>
+          <button onclick="showAns('a20')">Show Answer</button>
+          <div class="quiz-answer" id="a20"><strong>Answer:</strong> B — has. One person is meant.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣1️⃣ Quick Comparison Table</h2>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Word Class</th>
+              <th>What it does</th>
+              <th>Where used</th>
+              <th>Main JAMB rule</th>
+            </tr>
+            <tr>
+              <td><strong>Noun</strong></td>
+              <td>Names person, place, thing, idea</td>
+              <td>Subject, object, complement</td>
+              <td>Know countable, uncountable, collective, always-plural forms</td>
+            </tr>
+            <tr>
+              <td><strong>Verb</strong></td>
+              <td>Shows action/state</td>
+              <td>Predicate of sentence</td>
+              <td>Watch phrasal verbs and concord</td>
+            </tr>
+            <tr>
+              <td><strong>Adjective</strong></td>
+              <td>Describes noun/pronoun</td>
+              <td>Before noun, after linking verb</td>
+              <td>Do not confuse adjective with adverb</td>
+            </tr>
+            <tr>
+              <td><strong>Adverb</strong></td>
+              <td>Modifies verb/adjective/adverb</td>
+              <td>Before/after word modified</td>
+              <td>Watch form and meaning: hard/hardly</td>
+            </tr>
+            <tr>
+              <td><strong>Pronoun</strong></td>
+              <td>Replaces noun</td>
+              <td>Subject, object, possessive, relative</td>
+              <td>Pronoun agreement matters</td>
+            </tr>
+            <tr>
+              <td><strong>Preposition</strong></td>
+              <td>Shows relationship</td>
+              <td>Before noun/pronoun</td>
+              <td>Learn fixed expressions and collocations</td>
+            </tr>
+            <tr>
+              <td><strong>Conjunction</strong></td>
+              <td>Joins words/phrases/clauses</td>
+              <td>Between equal or dependent parts</td>
+              <td>Know coordination vs subordination</td>
+            </tr>
+            <tr>
+              <td><strong>Interjection</strong></td>
+              <td>Expresses emotion</td>
+              <td>Usually sentence opening</td>
+              <td>Meaning depends on feeling expressed</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣2️⃣ Final Rules for 100% JAMB Success</h2>
+        <div class="jamb-alert">
+          <h4>Best study strategy</h4>
+          <ul>
+            <li>Revise one word class each day</li>
+            <li>Learn where each class appears in a sentence</li>
+            <li>Memorize special JAMB problem words: police, news, mathematics, advice, furniture</li>
+            <li>Practice phrasal verbs and fixed prepositions daily</li>
+            <li>Master concord rules because they appear every year</li>
+            <li>Do past questions and explain each answer to yourself</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>Finished — Complete Word Classes + Concord Chapter. Revise one section daily and your JAMB Use of English score can rise sharply.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Revise one word class today, then answer 10 concord questions before sleeping.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB English - The Lekki Headmaster (Chapter 5: Snake in the Roof) Summary</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+.progress-container{
+  position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+  background:var(--shadow-in);z-index:15
+}
+.progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+.content{padding:20px 16px;line-height:1.7}
+.main-header{
+  text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+  background:rgba(29,185,84,.1)
+}
+.main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+.main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+.section-card{
+  background:var(--card-bg);padding:22px 18px;border-radius:20px;
+  box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+  margin-bottom:22px;border-left:4px solid var(--accent)
+}
+.section-card h2{
+  font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+  display:flex;align-items:center;gap:8px
+}
+.section-card h3{
+  font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+  padding-left:12px;border-left:3px solid var(--accent-tertiary)
+}
+.section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+.section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+.section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+.section-card li{margin-bottom:7px;font-size:14px}
+
+.quick-facts{
+  background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+  padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+}
+.quick-facts li{font-size:13px}
+
+.highlight-box{
+  background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+  border-left:3px solid var(--accent-tertiary)
+}
+
+.quote-box{
+  background:rgba(255,255,255,.04);
+  padding:14px 16px;border-radius:12px;margin:12px 0;
+  border-left:4px solid var(--accent-secondary)
+}
+.quote-box .q{font-size:14px;font-style:italic;line-height:1.6}
+.quote-box .who{margin-top:8px;font-size:12px;color:var(--text-secondary);font-weight:700}
+
+.memory-tip{
+  background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+  border-left:4px solid var(--accent-secondary)
+}
+.memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+.memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+.jamb-alert{
+  background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+  border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+}
+.jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+.jamb-alert li{font-size:13px}
+
+.table-container{
+  width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+  box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+}
+.summary-table{
+  width:100%;min-width:1200px;border-collapse:separate;border-spacing:0;font-size:13px
+}
+.summary-table th{
+  background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+}
+.summary-table td{
+  padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);white-space:nowrap;vertical-align:top
+}
+.summary-table tr:last-child td{border-bottom:none}
+.summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+.table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+.nav-bar{
+  position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+  display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+}
+.nav-bar .nav-item{text-align:center}
+.nav-bar .nav-item.center button{
+  width:50px;height:50px;font-size:24px;background:var(--accent);
+  box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+  color:#000
+}
+.nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+.explore-btn{
+  background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+  box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+  font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+}
+.explore-btn:active{
+  box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+  transform:scale(.98)
+}
+
+  </style>
+</head>
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+    
+<div class="top-bar neumorphic">
+  <button class="neumorphic-btn" onclick="history.back()">←</button>
+  <div class="header">ENGLISH (NOVEL)</div>
+  <div class="right-icons">
+    <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+    <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="main-header">
+    <h1>📘 Chapter 5 — “Snake in the Roof”</h1>
+    <p>The Lekki Headmaster (Kabir Alabi Garba) • staff/management tension • cooperative loans • hidden danger proverb</p>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div class="section-card">
+    <h2>📋 Summary Table (Fast Revision)</h2>
+
+    <div class="table-container">
+      <table class="summary-table">
+        <tr>
+          <th>Area</th>
+          <th>Key detail</th>
+          <th>Likely JAMB angle</th>
+        </tr>
+        <tr>
+          <td><strong>When it happens</strong></td>
+          <td>Long break at Stardom Schools</td>
+          <td>Setting/time</td>
+        </tr>
+        <tr>
+          <td><strong>MD’s action</strong></td>
+          <td>Mrs. Ibidun Gloss walks instead of resting</td>
+          <td>Event trigger</td>
+        </tr>
+        <tr>
+          <td><strong>Discovery</strong></td>
+          <td>Staff park cars secretly on school’s acquired land</td>
+          <td>Conflict source</td>
+        </tr>
+        <tr>
+          <td><strong>Number</strong></td>
+          <td>About 17 staff vehicles</td>
+          <td>Detail MCQ</td>
+        </tr>
+        <tr>
+          <td><strong>Guard</strong></td>
+          <td>Jombo explains why teachers hide cars</td>
+          <td>“Who said what?”</td>
+        </tr>
+        <tr>
+          <td><strong>Accountant</strong></td>
+          <td>Mr. Jeremi Amos</td>
+          <td>Role identification</td>
+        </tr>
+        <tr>
+          <td><strong>Cooperative figures</strong></td>
+          <td>≈ ₦95m total; > ₦50m loaned out</td>
+          <td>Numbers question</td>
+        </tr>
+        <tr>
+          <td><strong>Proverb</strong></td>
+          <td>“Snake in the roof” warning about hidden danger</td>
+          <td>Interpretation question</td>
+        </tr>
+        <tr>
+          <td><strong>Outcome</strong></td>
+          <td>Board caps loan amounts; stricter rules</td>
+          <td>Resolution</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+    <div class="memory-tip">
+      <strong>🧠 One-line recall</strong>
+      <p>“MD discovers hidden staff parking → suspects theft → cooperative loan truth → board warns with proverb → new loan cap.”</p>
+    </div>
+  </div>
+
+  <!-- Setting -->
+  <div class="section-card">
+    <h2>1️⃣ Setting: Long Break at Stardom</h2>
+    <p>It is long break at Stardom Schools in Lekki, Lagos. Students are everywhere—playing and moving through corridors and the premises.</p>
+  </div>
+
+  <!-- MD and her condition -->
+  <div class="section-card">
+    <h2>2️⃣ MD’s Walk (What Triggers the Incident)</h2>
+    <p>The Managing Director, <strong>Mrs. Ibidun Gloss</strong>, has lived with a painful chronic medical condition for over 30 years. She usually goes to her private rest room during breaks, but this time she decides to walk.</p>
+  </div>
+
+  <!-- The discovery -->
+  <div class="section-card">
+    <h2>3️⃣ The Discovery: Secret Parking on Expansion Land</h2>
+    <p>Mrs. Gloss walks to a fenced land the school acquired two years earlier for future expansion (about five minutes from the back gate).</p>
+
+    <div class="jamb-alert">
+      <h4>What shocks her</h4>
+      <ul>
+        <li>Teachers and staff are using it as an unofficial parking lot</li>
+        <li>About <strong>17 vehicles</strong> (cars and buses) are parked there secretly</li>
+      </ul>
+    </div>
+
+    <div class="highlight-box">
+      <p><strong>Meaning:</strong> staff hide their cars so management won’t see what they own.</p>
+    </div>
+  </div>
+
+  <!-- Jombo -->
+  <div class="section-card">
+    <h2>4️⃣ Jombo the Security Guard Explains</h2>
+    <p>The security guard, <strong>Jombo</strong>, explains that teachers park there to conceal their vehicles from management/owners.</p>
+  </div>
+
+  <!-- Suspicion + summons -->
+  <div class="section-card">
+    <h2>5️⃣ Suspicion & Investigation</h2>
+    <p>The MD is shocked by the quality of the cars and wonders how staff can afford them on school salaries. She suspects possible financial mismanagement or theft.</p>
+
+    <div class="quick-facts">
+      <ul>
+        <li>She summons <strong>Mr. Bepo Adewale</strong> (Principal)</li>
+        <li>And <strong>Mr. Jeremi Amos</strong> (Accountant)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Cooperative -->
+  <div class="section-card">
+    <h2>6️⃣ The Truth: Stardom Cooperative Society</h2>
+    <p>Bepo and Jeremi Amos reassure her that school finances are intact and there is no stealing.</p>
+
+    <div class="highlight-box">
+      <p><strong>Most vehicles were bought using loans from the Stardom Cooperative Society.</strong></p>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>Cooperative figures (memorize)</h4>
+      <ul>
+        <li>Total funds: about <strong>₦95 million</strong></li>
+        <li>Loans already given: over <strong>₦50 million</strong></li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 What worries the MD</strong>
+      <p>Too much borrowing can become a future disaster—even if nobody is stealing now.</p>
+    </div>
+  </div>
+
+  <!-- Board meeting + proverb -->
+  <div class="section-card">
+    <h2>7️⃣ Emergency Board Meeting & The Proverb</h2>
+    <p>An emergency board meeting is called. The board chairman, <strong>Chief Mrs. Solape Bayo</strong> (MD’s mother), addresses the issue.</p>
+
+    <div class="quote-box">
+      <div class="q">“It’s like hanging a snake in the roof and going to bed.”</div>
+      <div class="who">— Chief Mrs. Solape Bayo (Board Chairman)</div>
+    </div>
+
+    <div class="highlight-box">
+      <p><strong>Meaning:</strong> ignoring a hidden danger (like huge loans/indiscipline) will cause trouble later.</p>
+    </div>
+  </div>
+
+  <!-- Outcome -->
+  <div class="section-card">
+    <h2>8️⃣ Outcome: New Rules (Loan Cap)</h2>
+    <p>The board introduces new rules, including <strong>capping loan amounts</strong> from the cooperative to encourage financial prudence and reduce risk.</p>
+  </div>
+
+  <!-- Quotes & phrases -->
+  <div class="section-card">
+    <h2>🗣️ Quotes & Phrases from This Chapter</h2>
+    <p>Below are the exact wordings/phrases you included in your notes (good for JAMB objective questions):</p>
+
+    <div class="quote-box">
+      <div class="q">“It’s like hanging a snake in the roof and going to bed.”</div>
+      <div class="who">— Proverb used by Chief Mrs. Solape Bayo</div>
+    </div>
+
+    <div class="jamb-alert">
+      <h4>If you want more quotes</h4>
+      <ul>
+        <li>Send any direct lines you saw in your copy of the novel, and I’ll format them into this section exactly.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Themes -->
+  <div class="section-card">
+    <h2>9️⃣ Themes / Ideas (JAMB Focus)</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Financial prudence vs staff extravagance</li>
+        <li>Mistrust between management and employees</li>
+        <li>Hidden dangers in a “safe” place (snake metaphor)</li>
+        <li>Power dynamics: MD oversight, board intervention</li>
+        <li>Transparency and accountability in private schools</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Likely questions -->
+  <div class="section-card">
+    <h2>✅ Likely JAMB Questions (Practice)</h2>
+    <div class="jamb-alert">
+      <h4>Common question patterns</h4>
+      <ul>
+        <li>What did the MD discover during long break?</li>
+        <li>Who is Jombo and what did he explain?</li>
+        <li>Why did the MD suspect theft?</li>
+        <li>What is the Stardom Cooperative Society used for?</li>
+        <li>State the cooperative’s figures (₦95m total; >₦50m loaned).</li>
+        <li>Who chaired the board meeting and what proverb did she use?</li>
+        <li>Interpret the proverb “snake in the roof.”</li>
+        <li>What decision did the board take?</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section-card">
+    <h2>✅ Quick Revision Checklist</h2>
+    <div class="quick-facts">
+      <ul>
+        <li>Long break setting + MD’s walk</li>
+        <li>Expansion land (2 years acquired; 5 mins from back gate)</li>
+        <li>Secret parking: ~17 vehicles</li>
+        <li>Jombo explains concealment</li>
+        <li>Summoned: Bepo + Jeremi Amos</li>
+        <li>Truth: cooperative loans (₦95m; >₦50m loaned)</li>
+        <li>Chairman: Chief Mrs. Solape Bayo (MD’s mother)</li>
+        <li>Proverb + meaning</li>
+        <li>Outcome: loan cap/new rules</li>
+      </ul>
+    </div>
+
+    <div class="memory-tip">
+      <strong>🧠 Final memory line</strong>
+      <p>For JAMB: memorize “17 vehicles + Jombo + ₦95m/₦50m + snake proverb + loan cap.”</p>
+    </div>
+  </div>
+
+  <button class="explore-btn" onclick="alert('Revise: characters + cooperative figures + proverb meaning. Then practise MCQs.')">Practice JAMB Questions</button>
+</div>
+</div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

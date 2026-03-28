@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB English - Antonyms Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800}
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1200px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);white-space:nowrap;vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .word-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .word-box .title{font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px}
+    .word-box .line{font-size:13px;margin-bottom:4px}
+    .word-box .line strong{color:var(--accent-secondary)}
+
+    .quiz-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .quiz-box .q{font-size:14px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px}
+    .quiz-box button{
+      width:100%;margin-top:10px;border:none;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer;
+      background:var(--accent);color:#000;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out)
+    }
+    .quiz-answer{
+      margin-top:10px;font-size:13px;color:var(--text-secondary);display:none
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">ENGLISH</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>📘 Antonyms Mastery Guide</h1>
+        <p>JAMB 2026 • how to score 9–10/10 • 200 antonyms • quick revision + self-quiz</p>
+      </div>
+
+      <div class="section-card">
+        <h2>📋 Fast Revision Table</h2>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Step</th>
+              <th>What to do</th>
+              <th>Why it helps</th>
+            </tr>
+            <tr>
+              <td><strong>1</strong></td>
+              <td>Read the full sentence</td>
+              <td>Context can change the meaning</td>
+            </tr>
+            <tr>
+              <td><strong>2</strong></td>
+              <td>Remove synonyms or neutral words</td>
+              <td>Narrows options fast</td>
+            </tr>
+            <tr>
+              <td><strong>3</strong></td>
+              <td>Choose the strongest opposite</td>
+              <td>JAMB prefers exact contrast</td>
+            </tr>
+            <tr>
+              <td><strong>4</strong></td>
+              <td>Revise repeated words daily</td>
+              <td>Many antonyms repeat yearly</td>
+            </tr>
+            <tr>
+              <td><strong>5</strong></td>
+              <td>Learn 20 per day and test weekly</td>
+              <td>Builds retention and speed</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="memory-tip">
+          <strong>🧠 Main goal</strong>
+          <p>Master antonyms and boost your Use of English score.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ How to Score 9–10/10 in Antonyms</h2>
+        <div class="quick-facts">
+          <ul>
+            <li>Read the full sentence first</li>
+            <li>Context changes meaning</li>
+            <li>Eliminate synonyms or neutral options first</li>
+            <li>Pick the strongest opposite, not just a different word</li>
+            <li>Many words repeat year after year: benevolent, obsolete, lucid, hostile, candid, timid...</li>
+          </ul>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Study method:</strong> learn 20 words per day, make your own sentences, then test yourself weekly.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Antonyms List (1–50)</h2>
+
+        <div class="word-box"><div class="title">1. Abandon</div><div class="line"><strong>Meaning:</strong> To leave completely</div><div class="line"><strong>Antonym:</strong> Retain</div></div>
+        <div class="word-box"><div class="title">2. Abate</div><div class="line"><strong>Meaning:</strong> To reduce in intensity</div><div class="line"><strong>Antonym:</strong> Aggravate</div></div>
+        <div class="word-box"><div class="title">3. Abhor</div><div class="line"><strong>Meaning:</strong> To hate intensely</div><div class="line"><strong>Antonym:</strong> Love</div></div>
+        <div class="word-box"><div class="title">4. Abject</div><div class="line"><strong>Meaning:</strong> Miserable or hopeless</div><div class="line"><strong>Antonym:</strong> Praiseworthy</div></div>
+        <div class="word-box"><div class="title">5. Abolish</div><div class="line"><strong>Meaning:</strong> To end officially</div><div class="line"><strong>Antonym:</strong> Establish</div></div>
+        <div class="word-box"><div class="title">6. Abound</div><div class="line"><strong>Meaning:</strong> To exist in large numbers</div><div class="line"><strong>Antonym:</strong> Deficient</div></div>
+        <div class="word-box"><div class="title">7. Abrupt</div><div class="line"><strong>Meaning:</strong> Sudden or unexpected</div><div class="line"><strong>Antonym:</strong> Gradual</div></div>
+        <div class="word-box"><div class="title">8. Absolve</div><div class="line"><strong>Meaning:</strong> To free from blame</div><div class="line"><strong>Antonym:</strong> Accuse</div></div>
+        <div class="word-box"><div class="title">9. Absurd</div><div class="line"><strong>Meaning:</strong> Ridiculously unreasonable</div><div class="line"><strong>Antonym:</strong> Sensible</div></div>
+        <div class="word-box"><div class="title">10. Abundant</div><div class="line"><strong>Meaning:</strong> Plentiful</div><div class="line"><strong>Antonym:</strong> Scarce</div></div>
+
+        <div class="word-box"><div class="title">11. Accurate</div><div class="line"><strong>Meaning:</strong> Correct in details</div><div class="line"><strong>Antonym:</strong> Inaccurate</div></div>
+        <div class="word-box"><div class="title">12. Acrimony</div><div class="line"><strong>Meaning:</strong> Bitterness in speech</div><div class="line"><strong>Antonym:</strong> Benevolence</div></div>
+        <div class="word-box"><div class="title">13. Adamant</div><div class="line"><strong>Meaning:</strong> Unyielding</div><div class="line"><strong>Antonym:</strong> Flexible</div></div>
+        <div class="word-box"><div class="title">14. Adhere</div><div class="line"><strong>Meaning:</strong> To stick to</div><div class="line"><strong>Antonym:</strong> Disjoin</div></div>
+        <div class="word-box"><div class="title">15. Admonish</div><div class="line"><strong>Meaning:</strong> To warn gently</div><div class="line"><strong>Antonym:</strong> Applaud</div></div>
+        <div class="word-box"><div class="title">16. Adversity</div><div class="line"><strong>Meaning:</strong> Hardship</div><div class="line"><strong>Antonym:</strong> Prosperity</div></div>
+        <div class="word-box"><div class="title">17. Affluent</div><div class="line"><strong>Meaning:</strong> Wealthy</div><div class="line"><strong>Antonym:</strong> Destitute</div></div>
+        <div class="word-box"><div class="title">18. Aggravate</div><div class="line"><strong>Meaning:</strong> To make worse</div><div class="line"><strong>Antonym:</strong> Alleviate</div></div>
+        <div class="word-box"><div class="title">19. Alien</div><div class="line"><strong>Meaning:</strong> Foreign or strange</div><div class="line"><strong>Antonym:</strong> Native</div></div>
+        <div class="word-box"><div class="title">20. Allay</div><div class="line"><strong>Meaning:</strong> To calm</div><div class="line"><strong>Antonym:</strong> Excite</div></div>
+
+        <div class="word-box"><div class="title">21. Allure</div><div class="line"><strong>Meaning:</strong> To attract</div><div class="line"><strong>Antonym:</strong> Repel</div></div>
+        <div class="word-box"><div class="title">22. Altruistic</div><div class="line"><strong>Meaning:</strong> Selfless</div><div class="line"><strong>Antonym:</strong> Selfish</div></div>
+        <div class="word-box"><div class="title">23. Amateur</div><div class="line"><strong>Meaning:</strong> Non-professional</div><div class="line"><strong>Antonym:</strong> Professional</div></div>
+        <div class="word-box"><div class="title">24. Ambiguous</div><div class="line"><strong>Meaning:</strong> Unclear</div><div class="line"><strong>Antonym:</strong> Clear</div></div>
+        <div class="word-box"><div class="title">25. Ameliorate</div><div class="line"><strong>Meaning:</strong> To improve</div><div class="line"><strong>Antonym:</strong> Worsen</div></div>
+        <div class="word-box"><div class="title">26. Amiable</div><div class="line"><strong>Meaning:</strong> Friendly</div><div class="line"><strong>Antonym:</strong> Hostile</div></div>
+        <div class="word-box"><div class="title">27. Ample</div><div class="line"><strong>Meaning:</strong> Sufficient</div><div class="line"><strong>Antonym:</strong> Insufficient</div></div>
+        <div class="word-box"><div class="title">28. Amplify</div><div class="line"><strong>Meaning:</strong> To enlarge</div><div class="line"><strong>Antonym:</strong> Contract</div></div>
+        <div class="word-box"><div class="title">29. Ancient</div><div class="line"><strong>Meaning:</strong> Very old</div><div class="line"><strong>Antonym:</strong> Modern</div></div>
+        <div class="word-box"><div class="title">30. Anguish</div><div class="line"><strong>Meaning:</strong> Severe pain</div><div class="line"><strong>Antonym:</strong> Joy</div></div>
+
+        <div class="word-box"><div class="title">31. Animosity</div><div class="line"><strong>Meaning:</strong> Hatred</div><div class="line"><strong>Antonym:</strong> Friendship</div></div>
+        <div class="word-box"><div class="title">32. Anonymous</div><div class="line"><strong>Meaning:</strong> Nameless</div><div class="line"><strong>Antonym:</strong> Known</div></div>
+        <div class="word-box"><div class="title">33. Antique</div><div class="line"><strong>Meaning:</strong> Old-fashioned</div><div class="line"><strong>Antonym:</strong> Modern</div></div>
+        <div class="word-box"><div class="title">34. Apathetic</div><div class="line"><strong>Meaning:</strong> Indifferent</div><div class="line"><strong>Antonym:</strong> Enthusiastic</div></div>
+        <div class="word-box"><div class="title">35. Apparent</div><div class="line"><strong>Meaning:</strong> Obvious</div><div class="line"><strong>Antonym:</strong> Hidden</div></div>
+        <div class="word-box"><div class="title">36. Apprehensive</div><div class="line"><strong>Meaning:</strong> Anxious</div><div class="line"><strong>Antonym:</strong> Confident</div></div>
+        <div class="word-box"><div class="title">37. Ardent</div><div class="line"><strong>Meaning:</strong> Passionate</div><div class="line"><strong>Antonym:</strong> Apathetic</div></div>
+        <div class="word-box"><div class="title">38. Arduous</div><div class="line"><strong>Meaning:</strong> Difficult</div><div class="line"><strong>Antonym:</strong> Easy</div></div>
+        <div class="word-box"><div class="title">39. Arrogant</div><div class="line"><strong>Meaning:</strong> Conceited</div><div class="line"><strong>Antonym:</strong> Humble</div></div>
+        <div class="word-box"><div class="title">40. Ascend</div><div class="line"><strong>Meaning:</strong> To go up</div><div class="line"><strong>Antonym:</strong> Descend</div></div>
+
+        <div class="word-box"><div class="title">41. Assertive</div><div class="line"><strong>Meaning:</strong> Confident</div><div class="line"><strong>Antonym:</strong> Timid</div></div>
+        <div class="word-box"><div class="title">42. Astonish</div><div class="line"><strong>Meaning:</strong> To surprise greatly</div><div class="line"><strong>Antonym:</strong> Bore</div></div>
+        <div class="word-box"><div class="title">43. Audacious</div><div class="line"><strong>Meaning:</strong> Bold</div><div class="line"><strong>Antonym:</strong> Timid</div></div>
+        <div class="word-box"><div class="title">44. Auspicious</div><div class="line"><strong>Meaning:</strong> Favorable</div><div class="line"><strong>Antonym:</strong> Ominous</div></div>
+        <div class="word-box"><div class="title">45. Authentic</div><div class="line"><strong>Meaning:</strong> Genuine</div><div class="line"><strong>Antonym:</strong> Fake</div></div>
+        <div class="word-box"><div class="title">46. Avarice</div><div class="line"><strong>Meaning:</strong> Greed</div><div class="line"><strong>Antonym:</strong> Generosity</div></div>
+        <div class="word-box"><div class="title">47. Awkward</div><div class="line"><strong>Meaning:</strong> Clumsy</div><div class="line"><strong>Antonym:</strong> Graceful</div></div>
+        <div class="word-box"><div class="title">48. Barbarous</div><div class="line"><strong>Meaning:</strong> Uncivilized</div><div class="line"><strong>Antonym:</strong> Civilized</div></div>
+        <div class="word-box"><div class="title">49. Barren</div><div class="line"><strong>Meaning:</strong> Unproductive</div><div class="line"><strong>Antonym:</strong> Fertile</div></div>
+        <div class="word-box"><div class="title">50. Bawdy</div><div class="line"><strong>Meaning:</strong> Indecent</div><div class="line"><strong>Antonym:</strong> Decent</div></div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Antonyms List (51–100)</h2>
+        <div class="quick-facts">
+          <ul>
+            <li>51. Befogged → Clear-headed</li>
+            <li>52. Belligerent → Peaceful</li>
+            <li>53. Benevolent → Malevolent</li>
+            <li>54. Benign → Malignant</li>
+            <li>55. Bewitching → Repugnant</li>
+            <li>56. Bigoted → Tolerant</li>
+            <li>57. Bizarre → Normal</li>
+            <li>58. Bleak → Bright</li>
+            <li>59. Bliss → Misery</li>
+            <li>60. Blunt → Sharp</li>
+            <li>61. Boisterous → Calm</li>
+            <li>62. Bold → Timid</li>
+            <li>63. Brave → Cowardly</li>
+            <li>64. Brittle → Tough</li>
+            <li>65. Busy → Idle</li>
+            <li>66. Calamity → Fortune</li>
+            <li>67. Callous → Compassionate</li>
+            <li>68. Calm → Turbulent</li>
+            <li>69. Candid → Deceitful</li>
+            <li>70. Capable → Incapable</li>
+            <li>71. Captivate → Repel</li>
+            <li>72. Carnal → Spiritual</li>
+            <li>73. Catholic → Narrow-minded</li>
+            <li>74. Cease → Begin</li>
+            <li>75. Celebrated → Unknown</li>
+            <li>76. Censure → Praise</li>
+            <li>77. Chaste → Lustful</li>
+            <li>78. Cheap → Expensive</li>
+            <li>79. Clandestine → Open</li>
+            <li>80. Classic → Unusual</li>
+            <li>81. Coarse → Refined</li>
+            <li>82. Comic → Tragic</li>
+            <li>83. Compact → Loose</li>
+            <li>84. Compassion → Cruelty</li>
+            <li>85. Compress → Expand</li>
+            <li>86. Conceal → Reveal</li>
+            <li>87. Concede → Deny</li>
+            <li>88. Conceit → Modesty</li>
+            <li>89. Concord → Discord</li>
+            <li>90. Condemn → Praise</li>
+            <li>91. Confident → Diffident</li>
+            <li>92. Confuse → Clarify</li>
+            <li>93. Consolidate → Weaken</li>
+            <li>94. Conspicuous → Hidden</li>
+            <li>95. Contrary → Similar</li>
+            <li>96. Creation → Destruction</li>
+            <li>97. Cruel → Kind</li>
+            <li>98. Cunning → Naive</li>
+            <li>99. Cursory → Thorough</li>
+            <li>100. Decay → Flourish</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Antonyms List (101–150)</h2>
+        <div class="quick-facts">
+          <ul>
+            <li>101. Deceit → Sincerity</li>
+            <li>102. Decipher → Misinterpret</li>
+            <li>103. Defile → Purify</li>
+            <li>104. Dejected → Elated</li>
+            <li>105. Deliberate → Rash</li>
+            <li>106. Demolish → Construct</li>
+            <li>107. Dense → Sparse</li>
+            <li>108. Denounce → Praise</li>
+            <li>109. Deprive → Restore</li>
+            <li>110. Deride → Praise</li>
+            <li>111. Derogatory → Appreciative</li>
+            <li>112. Despair → Hope</li>
+            <li>113. Destructive → Constructive</li>
+            <li>114. Detest → Adore</li>
+            <li>115. Diffident → Confident</li>
+            <li>116. Diligent → Lazy</li>
+            <li>117. Diminish → Increase</li>
+            <li>118. Disdain → Respect</li>
+            <li>119. Disparage → Praise</li>
+            <li>120. Dissuade → Persuade</li>
+            <li>121. Docile → Obstinate</li>
+            <li>122. Doubtful → Certain</li>
+            <li>123. Dull → Bright</li>
+            <li>124. Dwarf → Giant</li>
+            <li>125. Eager → Indifferent</li>
+            <li>126. Eccentric → Conventional</li>
+            <li>127. Eclipse → Shine</li>
+            <li>128. Ecstasy → Misery</li>
+            <li>129. Efface → Preserve</li>
+            <li>130. Eloquent → Inarticulate</li>
+            <li>131. Elated → Depressed</li>
+            <li>132. Encumbrance → Aid</li>
+            <li>133. Endeavour → Laziness</li>
+            <li>134. Enormous → Tiny</li>
+            <li>135. Epitome → Expansion</li>
+            <li>136. Equivocal → Clear</li>
+            <li>137. Eradicate → Implant</li>
+            <li>138. Evasive → Honest</li>
+            <li>139. Exaggerate → Understate</li>
+            <li>140. Exemplary → Bad</li>
+            <li>141. Explicit → Ambiguous</li>
+            <li>142. Fabricate → Destroy</li>
+            <li>143. Fallacy → Truth</li>
+            <li>144. Fanatical → Moderate</li>
+            <li>145. Feeble → Strong</li>
+            <li>146. Ferocious → Gentle</li>
+            <li>147. Fickle → Constant</li>
+            <li>148. Fluctuate → Stabilize</li>
+            <li>149. Fragile → Sturdy</li>
+            <li>150. Frantic → Calm</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Antonyms List (151–200)</h2>
+        <div class="quick-facts">
+          <ul>
+            <li>151. Frenzy → Calm</li>
+            <li>152. Frugal → Extravagant</li>
+            <li>153. Frivolous → Serious</li>
+            <li>154. Furious → Calm</li>
+            <li>155. Generous → Stingy</li>
+            <li>156. Genuine → Fake</li>
+            <li>157. Gloomy → Cheerful</li>
+            <li>158. Gracious → Rude</li>
+            <li>159. Grudge → Forgiveness</li>
+            <li>160. Guile → Honesty</li>
+            <li>161. Hapless → Lucky</li>
+            <li>162. Harass → Assist</li>
+            <li>163. Hasty → Deliberate</li>
+            <li>164. Haughty → Humble</li>
+            <li>165. Hazard → Safety</li>
+            <li>166. Heinous → Admirable</li>
+            <li>167. Heretic → Conformist</li>
+            <li>168. Hideous → Beautiful</li>
+            <li>169. Hostile → Friendly</li>
+            <li>170. Humble → Arrogant</li>
+            <li>171. Hypocritical → Sincere</li>
+            <li>172. Ignorant → Knowledgeable</li>
+            <li>173. Illustrious → Obscure</li>
+            <li>174. Immaculate → Dirty</li>
+            <li>175. Impartial → Biased</li>
+            <li>176. Impetuous → Cautious</li>
+            <li>177. Implacable → Placable</li>
+            <li>178. Incessant → Intermittent</li>
+            <li>179. Indifferent → Interested</li>
+            <li>180. Indigent → Wealthy</li>
+            <li>181. Indolent → Industrious</li>
+            <li>182. Inexorable → Yielding</li>
+            <li>183. Infamous → Reputable</li>
+            <li>184. Inferior → Superior</li>
+            <li>185. Ingenuous → Sophisticated</li>
+            <li>186. Innocuous → Harmful</li>
+            <li>187. Insipid → Flavorful</li>
+            <li>188. Insolent → Respectful</li>
+            <li>189. Integrity → Dishonesty</li>
+            <li>190. Intermittent → Continuous</li>
+            <li>191. Intrepid → Cowardly</li>
+            <li>192. Intricate → Simple</li>
+            <li>193. Irate → Calm</li>
+            <li>194. Jubilant → Sorrowful</li>
+            <li>195. Juvenile → Mature</li>
+            <li>196. Keen → Dull</li>
+            <li>197. Kindle → Extinguish</li>
+            <li>198. Languid → Energetic</li>
+            <li>199. Lavish → Stingy</li>
+            <li>200. Lethargic → Active</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ High-Frequency JAMB Antonyms to Memorize First</h2>
+        <div class="quick-facts">
+          <ul>
+            <li>Benevolent → Malevolent</li>
+            <li>Lucid → Confusing / obscure</li>
+            <li>Obsolete → Modern / current</li>
+            <li>Hostile → Friendly</li>
+            <li>Candid → Deceitful</li>
+            <li>Timid → Bold</li>
+            <li>Scarce → Abundant</li>
+            <li>Arduous → Easy</li>
+            <li>Humble → Arrogant</li>
+            <li>Prosperity → Adversity</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Shortcut</strong>
+          <p>If you’re short on time, master the repeated words first before moving to the full 200 list.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Self-Quiz</h2>
+
+        <div class="quiz-box">
+          <div class="q">1. Benevolent = kind. What is the antonym?</div>
+          <div>A. Generous</div>
+          <div>B. Malevolent</div>
+          <div>C. Friendly</div>
+          <div>D. Honest</div>
+          <button onclick="showAns('a1')">Show Answer</button>
+          <div class="quiz-answer" id="a1"><strong>Answer:</strong> B — Malevolent.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">2. Arduous means difficult. The antonym is</div>
+          <div>A. Hard</div>
+          <div>B. Long</div>
+          <div>C. Easy</div>
+          <div>D. Rough</div>
+          <button onclick="showAns('a2')">Show Answer</button>
+          <div class="quiz-answer" id="a2"><strong>Answer:</strong> C — Easy.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">3. Hostile means unfriendly. The antonym is</div>
+          <div>A. Harsh</div>
+          <div>B. Friendly</div>
+          <div>C. Weak</div>
+          <div>D. Quiet</div>
+          <button onclick="showAns('a3')">Show Answer</button>
+          <div class="quiz-answer" id="a3"><strong>Answer:</strong> B — Friendly.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">4. Scarce means not enough. The antonym is</div>
+          <div>A. Rare</div>
+          <div>B. Empty</div>
+          <div>C. Abundant</div>
+          <div>D. Small</div>
+          <button onclick="showAns('a4')">Show Answer</button>
+          <div class="quiz-answer" id="a4"><strong>Answer:</strong> C — Abundant.</div>
+        </div>
+
+        <div class="quiz-box">
+          <div class="q">5. Timid means shy. The antonym is</div>
+          <div>A. Careful</div>
+          <div>B. Reserved</div>
+          <div>C. Quiet</div>
+          <div>D. Bold</div>
+          <button onclick="showAns('a5')">Show Answer</button>
+          <div class="quiz-answer" id="a5"><strong>Answer:</strong> D — Bold.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Final Tips</h2>
+        <div class="jamb-alert">
+          <h4>To score very high:</h4>
+          <ul>
+            <li>Revise daily</li>
+            <li>Practice by context, not cramming only</li>
+            <li>Test yourself every week</li>
+            <li>Focus on repeated JAMB words</li>
+            <li>Always choose the strongest opposite</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>Finished — all 200 words complete. Revise consistently and you’ll score very high in Use of English.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Revise 20 words today, make your own sentences, then test yourself before sleeping.')">Practice JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+
+    function showAns(id){
+      document.getElementById(id).style.display = 'block';
+    }
+  </script>
+</body>
+</html>
