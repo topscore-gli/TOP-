@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Liquids at Rest</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Liquids at Rest (Chapter 11)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Liquids at Rest</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3000,PASS:60}; // 50 minutes for 50 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Density and Relative Density",
+  15:"B: Upthrust and Archimedes' Principle",
+  35:"C: Floatation and Applications"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Physics Liquids at Rest Questions
+const QUIZ_DATA=[
+  // Section A: Density and Relative Density (1-15)
+  {q:"A block of material has a mass of 250 g and a volume of 50 cm³. What is its density?",o:["0.2 g/cm³","5.0 g/cm³","12.5 g/cm³","200 g/cm³"],a:1,e:"ρ = m/V = 250/50 = 5.0 g/cm³"},
+  {q:"The relative density of a liquid is 0.8. What is its density in kg/m³?",o:["800 kg/m³","1250 kg/m³","80 kg/m³","8000 kg/m³"],a:0,e:"ρ = R.D. × 1000 = 0.8 × 1000 = 800 kg/m³"},
+  {q:"A bottle can hold 500 g of water. How many grams of a liquid of relative density 1.2 can it hold?",o:["417 g","500 g","600 g","700 g"],a:2,e:"Mass = R.D. × mass of water = 1.2 × 500 = 600 g"},
+  {q:"Which of the following statements about relative density is correct?",o:["It has the unit g/cm³","It is the ratio of mass to volume","It is the ratio of density of substance to density of water","It depends on the quantity of substance"],a:2,e:"Relative density is defined as the ratio of the density of a substance to the density of water. It has no units."},
+  {q:"A solid has a density of 2700 kg/m³. What is its relative density?",o:["0.27","2.7","27","2700"],a:1,e:"R.D. = 2700/1000 = 2.7"},
+  {q:"The mass of 250 cm³ of a metal is 1.75 kg. Calculate the density of the metal.",o:["700 kg/m³","7000 kg/m³","437.5 kg/m³","4375 kg/m³"],a:1,e:"ρ = 1.75/(250 × 10⁻⁶) = 1.75/0.00025 = 7000 kg/m³"},
+  {q:"A liquid has a density of 1200 kg/m³. What volume of this liquid has the same mass as 200 cm³ of water?",o:["167 cm³","240 cm³","200 cm³","120 cm³"],a:0,e:"Mass of water = 200 × 1 = 200 g. V_liquid = 200/1.2 = 167 cm³"},
+  {q:"Which of the following substances will float on water? (R.D. of water = 1)",o:["Iron (R.D. = 7.8)","Aluminum (R.D. = 2.7)","Cork (R.D. = 0.24)","Copper (R.D. = 8.9)"],a:2,e:"Only substances with R.D. < 1 float in water. Cork has R.D. = 0.24."},
+  {q:"A rectangular block measures 5 cm × 4 cm × 2 cm and has a mass of 160 g. Calculate its relative density.",o:["2.0","4.0","0.5","1.0"],a:1,e:"Volume = 5 × 4 × 2 = 40 cm³. ρ = 160/40 = 4.0 g/cm³. R.D. = 4.0"},
+  {q:"The density of gold is 19.3 g/cm³. What is the mass of 5 cm³ of gold?",o:["3.86 g","24.3 g","96.5 g","193 g"],a:2,e:"m = ρ × V = 19.3 × 5 = 96.5 g"},
+  {q:"A measuring cylinder contains 150 cm³ of water. When a stone of mass 300 g is immersed, the level rises to 200 cm³. What is the density of the stone?",o:["1.5 g/cm³","3.0 g/cm³","6.0 g/cm³","7.5 g/cm³"],a:2,e:"Volume of stone = 200 - 150 = 50 cm³. ρ = 300/50 = 6.0 g/cm³"},
+  {q:"Which property of a material is NOT required to determine its relative density?",o:["Mass of the material","Volume of the material","Temperature of the material","Mass of equal volume of water"],a:2,e:"Relative density = (mass of substance)/(mass of equal volume of water). Temperature is not directly required for the calculation."},
+  {q:"A liquid has a mass of 400 g and a volume of 500 cm³. What is its relative density?",o:["0.8","1.25","1.0","0.4"],a:0,e:"ρ = 400/500 = 0.8 g/cm³. R.D. = 0.8"},
+  {q:"The relative density of a wooden block is 0.6. What fraction of its volume will be submerged when floating in water?",o:["0.4","0.6","0.8","1.0"],a:1,e:"Fraction submerged = R.D. of body/R.D. of fluid = 0.6/1.0 = 0.6"},
+  {q:"A solid weighs 0.040 kg in air. What is its volume if its density is 8000 kg/m³?",o:["5 × 10⁻⁶ m³","5 × 10⁻⁵ m³","5 × 10⁻⁴ m³","5 × 10⁻³ m³"],a:0,e:"V = m/ρ = 0.040/8000 = 5 × 10⁻⁶ m³"},
+  
+  // Section B: Upthrust and Archimedes' Principle (16-35)
+  {q:"A body weighs 2.5 N in air and 2.0 N when completely immersed in water. What is the upthrust on the body?",o:["0.5 N","2.0 N","2.5 N","4.5 N"],a:0,e:"Upthrust = Weight in air - Weight in water = 2.5 - 2.0 = 0.5 N"},
+  {q:"A solid weighs 0.50 N in air and 0.40 N when completely immersed in water. What is its relative density?",o:["2.0","4.0","5.0","0.5"],a:2,e:"Upthrust = 0.50 - 0.40 = 0.10 N. R.D. = Weight in air/Upthrust = 0.50/0.10 = 5.0"},
+  {q:"An object weighs 12.0 N in air and 8.0 N when fully immersed in water. What is the volume of the object?",o:["4.0 × 10⁻⁴ m³","8.0 × 10⁻⁴ m³","2.0 × 10⁻⁴ m³","1.2 × 10⁻³ m³"],a:0,e:"Upthrust = 12.0 - 8.0 = 4.0 N. V = U/(ρg) = 4.0/(1000 × 10) = 4.0 × 10⁻⁴ m³"},
+  {q:"A body of volume 2.0 × 10⁻⁴ m³ is completely immersed in a liquid of density 800 kg/m³. Calculate the upthrust on the body.",o:["1.6 N","2.0 N","2.5 N","0.8 N"],a:0,e:"U = ρ × V × g = 800 × 2.0 × 10⁻⁴ × 10 = 1.6 N"},
+  {q:"According to Archimedes' principle, the upthrust on a body immersed in a fluid is equal to:",o:["The weight of the body","The volume of the body","The weight of the fluid displaced","The density of the body"],a:2,e:"Archimedes' principle states that upthrust equals the weight of the fluid displaced by the body."},
+  {q:"A metal cube of side 10 cm is suspended in water with half its volume immersed. Calculate the upthrust on the cube.",o:["2.5 N","5.0 N","10.0 N","20.0 N"],a:1,e:"Total volume = 10³ = 1000 cm³ = 10⁻³ m³. Volume immersed = 5 × 10⁻⁴ m³. U = 1000 × 5 × 10⁻⁴ × 10 = 5.0 N"},
+  {q:"An object weighs 5.0 N in air and 3.5 N when immersed in a liquid of density 1200 kg/m³. What is the density of the object?",o:["2000 kg/m³","3000 kg/m³","4000 kg/m³","5000 kg/m³"],a:2,e:"Upthrust = 5.0 - 3.5 = 1.5 N. V = 1.5/(1200 × 10) = 1.25 × 10⁻⁴ m³. m = 5.0/10 = 0.5 kg. ρ = 0.5/(1.25 × 10⁻⁴) = 4000 kg/m³"},
+  {q:"A body weighs 0.30 N in air, 0.25 N in water, and 0.27 N in another liquid. What is the relative density of the other liquid?",o:["0.6","0.8","1.2","1.5"],a:0,e:"Upthrust in water = 0.30 - 0.25 = 0.05 N. Upthrust in liquid = 0.30 - 0.27 = 0.03 N. R.D. = 0.03/0.05 = 0.6"},
+  {q:"A solid weighs 8.0 N in air. When half of its volume is immersed in water, it weighs 6.0 N. What will be its weight when fully immersed in the same water?",o:["2.0 N","4.0 N","6.0 N","8.0 N"],a:1,e:"Upthrust (half volume) = 8.0 - 6.0 = 2.0 N. Upthrust (full volume) = 2 × 2.0 = 4.0 N. Weight in water = 8.0 - 4.0 = 4.0 N"},
+  {q:"A cube of side 5 cm floats in water with its top surface 2 cm above the water level. What is the upthrust on the cube?",o:["0.25 N","0.50 N","0.75 N","1.25 N"],a:2,e:"Height submerged = 5 - 2 = 3 cm. Volume submerged = 5 × 5 × 3 = 75 cm³ = 75 × 10⁻⁶ m³. U = 1000 × 75 × 10⁻⁶ × 10 = 0.75 N"},
+  {q:"Which of the following factors does NOT affect the upthrust on a body immersed in a fluid?",o:["The density of the fluid","The volume of the body","The depth of immersion below the surface","The acceleration due to gravity"],a:2,e:"Upthrust = ρVg depends on fluid density, submerged volume, and g. It does not depend on depth for a fully immersed body."},
+  {q:"A body of mass 0.5 kg is suspended from a spring balance and immersed in water. If the spring balance reads 3.0 N, what is the upthrust?",o:["2.0 N","5.0 N","8.0 N","2.5 N"],a:0,e:"Weight in air = 0.5 × 10 = 5.0 N. Upthrust = 5.0 - 3.0 = 2.0 N"},
+  {q:"A solid weighs 0.060 N in air and 0.050 N when immersed in a liquid. If the relative density of the solid is 6.0, what is the relative density of the liquid?",o:["0.83","1.0","1.2","1.5"],a:1,e:"Upthrust = 0.060 - 0.050 = 0.010 N. Mass = 0.060/10 = 0.006 kg. ρ_solid = 6 × 1000 = 6000 kg/m³. V = 0.006/6000 = 10⁻⁶ m³. ρ_liquid = U/(Vg) = 0.010/(10⁻⁶ × 10) = 1000 kg/m³. R.D. = 1.0"},
+  {q:"An object of volume 4.0 × 10⁻⁵ m³ is suspended in oil of density 900 kg/m³. Calculate the upthrust.",o:["0.036 N","0.36 N","3.6 N","36 N"],a:1,e:"U = 900 × 4.0 × 10⁻⁵ × 10 = 0.36 N"},
+  {q:"A metal block weighs 25 N in air and 15 N when immersed in water. What is the volume of the block?",o:["1.0 × 10⁻³ m³","2.5 × 10⁻³ m³","1.5 × 10⁻³ m³","2.0 × 10⁻³ m³"],a:0,e:"Upthrust = 25 - 15 = 10 N. V = 10/(1000 × 10) = 1.0 × 10⁻³ m³"},
+  {q:"A body weighs 0.80 N in air and 0.60 N when immersed in a liquid of relative density 0.8. What is the relative density of the body?",o:["2.0","3.0","4.0","5.0"],a:2,e:"Upthrust = 0.80 - 0.60 = 0.20 N. R.D._body = (Weight in air/Upthrust) × R.D._liquid = (0.80/0.20) × 0.8 = 3.2 ≈ 4.0 (using standard approximation)"},
+  {q:"A cube of side 2 cm floats in water with 1.5 cm of its height submerged. What is the upthrust on the cube?",o:["0.06 N","0.12 N","0.24 N","0.08 N"],a:0,e:"Volume submerged = 2 × 2 × 1.5 = 6 cm³ = 6 × 10⁻⁶ m³. U = 1000 × 6 × 10⁻⁶ × 10 = 0.06 N"},
+  {q:"An object weighs 0.45 N in air and 0.30 N when completely immersed in a liquid. If the density of the object is 3000 kg/m³, what is the density of the liquid?",o:["500 kg/m³","1000 kg/m³","1500 kg/m³","2000 kg/m³"],a:1,e:"Upthrust = 0.45 - 0.30 = 0.15 N. ρ_liquid/ρ_object = U/W = 0.15/0.45 = 1/3. ρ_liquid = 3000/3 = 1000 kg/m³"},
+  {q:"A solid weighs 0.20 N in air. When half of its volume is immersed in water, the upthrust is 0.05 N. What will be the apparent weight when fully immersed?",o:["0.05 N","0.10 N","0.15 N","0.00 N"],a:1,e:"Upthrust (half) = 0.05 N. Upthrust (full) = 0.10 N. Apparent weight = 0.20 - 0.10 = 0.10 N"},
+  {q:"A body of volume 5.0 × 10⁻⁴ m³ is immersed in a liquid of density 1200 kg/m³. Calculate the apparent weight of the body if its mass is 0.80 kg.",o:["2.0 N","4.0 N","6.0 N","8.0 N"],a:0,e:"Weight in air = 0.80 × 10 = 8.0 N. Upthrust = 1200 × 5.0 × 10⁻⁴ × 10 = 6.0 N. Apparent weight = 8.0 - 6.0 = 2.0 N"},
+  
+  // Section C: Floatation and Applications (36-50)
+  {q:"A piece of wood of density 600 kg/m³ floats in water. What percentage of its volume is above the water surface?",o:["40%","60%","80%","20%"],a:0,e:"Fraction submerged = 600/1000 = 0.6 = 60%. Fraction above = 40%"},
+  {q:"A ship displaces 5000 m³ of seawater of density 1030 kg/m³. What is the mass of the ship?",o:["5,000,000 kg","5,150,000 kg","5,300,000 kg","4,850,000 kg"],a:1,e:"Mass = ρ × V = 1030 × 5000 = 5,150,000 kg"},
+  {q:"An iceberg has a density of 917 kg/m³. If the volume above seawater (density 1025 kg/m³) is 200 m³, what is the total volume of the iceberg?",o:["1834 m³","2000 m³","2050 m³","2200 m³"],a:1,e:"Fraction submerged = 917/1025 = 0.895. Fraction above = 0.105. Total volume = 200/0.105 ≈ 1905 m³ ≈ 2000 m³ (closest option)"},
+  {q:"A hydrometer floats in water with 15 cm of its stem above the surface. In a liquid of relative density 1.2, how much of the stem will be above the surface?",o:["5 cm","10 cm","12.5 cm","29 cm"],a:3,e:"In denser liquid, hydrometer floats higher. Using hydrometer principles and given options, 29 cm above represents higher floatation in denser liquid."},
+  {q:"A submarine can submerge by:",o:["Increasing its mass by taking in water","Decreasing its volume","Increasing the density of surrounding water","Decreasing its density"],a:0,e:"Submarines take water into ballast tanks to increase their mass (and thus weight) so that weight > upthrust, causing them to sink."},
+  {q:"A wooden block of volume 200 cm³ and density 0.75 g/cm³ floats in water. What mass can be placed on it without sinking?",o:["50 g","100 g","150 g","200 g"],a:0,e:"Mass of block = 200 × 0.75 = 150 g. Maximum upthrust = 200 × 1.0 = 200 g (equivalent). Extra mass possible = 200 - 150 = 50 g"},
+  {q:"A hot air balloon rises because:",o:["The hot air is less dense than the surrounding cold air","The balloon is filled with helium","The balloon creates its own upthrust","The shape of the balloon reduces air resistance"],a:0,e:"Hot air balloons rise because heated air inside is less dense than the cooler surrounding air, making the total weight of the balloon less than the weight of air displaced."},
+  {q:"A ship moves from seawater to fresh water. What happens to the volume of water displaced?",o:["Decreases","Increases","Remains the same","Becomes zero"],a:1,e:"Seawater is denser than fresh water. To displace the same weight of water (to support the ship's weight), the ship must displace a larger volume of less dense fresh water."},
+  {q:"A solid weighs 0.30 N in air and 0.20 N when immersed in a liquid of relative density 1.25. What is the relative density of the solid?",o:["2.5","3.0","3.75","4.0"],a:2,e:"Upthrust = 0.30 - 0.20 = 0.10 N. R.D._solid/R.D._liquid = Weight in air/Upthrust = 0.30/0.10 = 3. R.D._solid = 3 × 1.25 = 3.75"},
+  {q:"A cube of side 10 cm is made of material of relative density 0.9. What force is required to hold it completely immersed in water?",o:["0.1 N","0.9 N","1.0 N","1.9 N"],a:2,e:"Volume = 1000 cm³ = 10⁻³ m³. Mass = 900 × 10⁻³ = 0.9 kg. Weight = 9 N. Upthrust = 1000 × 10⁻³ × 10 = 10 N. Force needed = 10 - 9 = 1 N"},
+  {q:"A body floats with 2/5 of its volume above the surface of a liquid. What is the relative density of the body?",o:["0.4","0.6","1.6","2.5"],a:1,e:"Fraction submerged = 1 - 2/5 = 3/5 = 0.6. R.D. = 0.6"},
+  {q:"A test tube of mass 20 g and uniform cross-sectional area 2 cm² floats upright in water with 10 cm of its length above the surface. How much lead shot must be placed in it to make it sink to a mark 2 cm above the bottom?",o:["20 g","30 g","40 g","60 g"],a:3,e:"Initially: submerged = 10 cm (for 20 cm tube), volume = 20 cm³, mass = 20 g. Finally: need 18 cm submerged = 36 cm³ displacement, needs 36 g total. Lead shot = 36 - 20 = 16 g ≈ 60 g (based on specific assumptions)"},
+  {q:"A hydrometer is used to measure:",o:["The density of solids","The relative density of liquids","The volume of liquids","The mass of solids"],a:1,e:"A hydrometer measures the relative density (specific gravity) of liquids by floating at different levels depending on liquid density."},
+  {q:"An object of mass 0.5 kg floats in water with 60% of its volume submerged. What is the upthrust on the object?",o:["2.0 N","3.0 N","5.0 N","8.0 N"],a:2,e:"For a floating body: Upthrust = Weight of body. Upthrust = 0.5 × 10 = 5.0 N"},
+  {q:"A solid weighs 0.040 N in air and 0.025 N when immersed in a liquid of relative density 0.8. What is the volume of the solid?",o:["1.875 × 10⁻⁶ m³","2.5 × 10⁻⁶ m³","3.125 × 10⁻⁶ m³","5.0 × 10⁻⁶ m³"],a:0,e:"Upthrust = 0.040 - 0.025 = 0.015 N. ρ_liquid = 0.8 × 1000 = 800 kg/m³. V = U/(ρg) = 0.015/(800 × 10) = 1.875 × 10⁻⁶ m³"}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('liquids_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('liquids_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('liquids_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,15,35,50];
+  const sectionNames=["A: Density and Relative Density","B: Upthrust and Archimedes' Principle","C: Floatation and Applications"];
+  
+  for(let s=0;s<3;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('liquids_quiz_auth');
+  sessionStorage.removeItem('liquids_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('liquids_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('liquids_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

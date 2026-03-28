@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Thermal Expansion Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1380px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:4;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .hot{fill:rgba(255,107,107,.32);stroke:none}
+    .cool{fill:rgba(78,205,196,.30);stroke:none}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🌡️ Thermal Expansion</h1>
+        <p>JAMB Physics • linear expansivity • volume expansivity • liquids in containers • anomalous expansion of water</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains how solids and liquids expand when heated, how to calculate linear and volume expansivities, how to distinguish real and apparent expansion of liquids, and why water behaves abnormally between 0°C and 4°C.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Heating makes particles vibrate more and spread farther apart</li>
+            <li>Solids expand in length, area, and volume</li>
+            <li>Liquids show real and apparent expansion</li>
+            <li>Water behaves unusually between 0°C and 4°C</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Expansion happens in all directions, but the way we measure it depends on whether we are looking at length, area, or volume.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Foundation Concept</h2>
+        <p>When matter is heated, its particles gain energy and vibrate more vigorously. This makes the substance expand.</p>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Particles spread out when heated</div>
+          <svg viewBox="0 0 340 190" aria-label="Particle expansion diagram">
+            <rect x="35" y="45" width="110" height="90" class="obj"/>
+            <rect x="195" y="35" width="120" height="110" class="obj"/>
+            <circle cx="60" cy="70" r="6" class="hot"/>
+            <circle cx="90" cy="70" r="6" class="hot"/>
+            <circle cx="120" cy="70" r="6" class="hot"/>
+            <circle cx="60" cy="100" r="6" class="hot"/>
+            <circle cx="90" cy="100" r="6" class="hot"/>
+            <circle cx="120" cy="100" r="6" class="hot"/>
+
+            <circle cx="225" cy="65" r="6" class="cool"/>
+            <circle cx="265" cy="62" r="6" class="cool"/>
+            <circle cx="295" cy="70" r="6" class="cool"/>
+            <circle cx="232" cy="110" r="6" class="cool"/>
+            <circle cx="275" cy="104" r="6" class="cool"/>
+            <circle cx="305" cy="114" r="6" class="cool"/>
+
+            <text x="58" y="160" class="label">Before heating</text>
+            <text x="220" y="160" class="label">After heating</text>
+          </svg>
+          <div class="diagram-caption">Heating increases spacing between particles, so the body expands.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Expansion of Solids</h2>
+
+        <h3>Three types of expansion</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Type</th>
+              <th>Symbol</th>
+              <th>Dimensions</th>
+              <th>Formula</th>
+              <th>Relationship</th>
+            </tr>
+            <tr><td>Linear</td><td>α</td><td>1D</td><td><span class="math">L = L₀(1 + αΔT)</span></td><td>Base unit</td></tr>
+            <tr><td>Superficial / Area</td><td>β</td><td>2D</td><td><span class="math">A = A₀(1 + βΔT)</span></td><td><span class="math">β = 2α</span></td></tr>
+            <tr><td>Cubical / Volume</td><td>γ</td><td>3D</td><td><span class="math">V = V₀(1 + γΔT)</span></td><td><span class="math">γ = 3α</span></td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="memory-tip">
+          <strong>🧠 The 1-2-3 rule</strong>
+          <p>1D → α, 2D → 2α, 3D → 3α.</p>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Most-used formulas</div>
+          <div class="line"><span class="math">ΔL = L₀αΔT</span></div>
+          <div class="line"><span class="math">ΔA = A₀βΔT</span></div>
+          <div class="line"><span class="math">ΔV = V₀γΔT</span></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Common Expansivity Values</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Material</th>
+              <th>Linear Expansivity α × 10⁻⁶ K⁻¹</th>
+              <th>Common Use</th>
+              <th>Special Property</th>
+            </tr>
+            <tr><td>Aluminium</td><td>23</td><td>Cookware, aircraft</td><td>High expansion</td></tr>
+            <tr><td>Copper</td><td>17</td><td>Wires, pipes</td><td>Good conductor</td></tr>
+            <tr><td>Brass</td><td>19</td><td>Bimetallic strips</td><td>Medium expansion</td></tr>
+            <tr><td>Iron / Steel</td><td>11–12</td><td>Rails, structures</td><td>Strong, moderate expansion</td></tr>
+            <tr><td>Glass</td><td>9</td><td>Containers</td><td>Low expansion</td></tr>
+            <tr><td>Invar</td><td>0.9</td><td>Precision instruments</td><td>Very low expansion</td></tr>
+            <tr><td>Concrete</td><td>12</td><td>Buildings</td><td>Needs expansion joints</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Expansion of Liquids</h2>
+
+        <h3>The container problem</h3>
+        <p>When a liquid in a container is heated, both the liquid and the container expand. This is why we distinguish between real and apparent expansion.</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Type</th>
+              <th>Definition</th>
+              <th>Formula</th>
+              <th>Key Point</th>
+            </tr>
+            <tr>
+              <td>Real expansion (γᵣ)</td>
+              <td>Actual expansion of the liquid</td>
+              <td><span class="math">γᵣ = γₐ + γᵍ</span></td>
+              <td>True molecular expansion</td>
+            </tr>
+            <tr>
+              <td>Apparent expansion (γₐ)</td>
+              <td>What is observed in the container</td>
+              <td><span class="math">γₐ = ΔV_apparent/(V₀ΔT)</span></td>
+              <td>Usually smaller than real expansion</td>
+            </tr>
+            <tr>
+              <td>Container expansion (γᵍ)</td>
+              <td>Expansion of the bottle or glass</td>
+              <td><span class="math">γᵍ = 3αᵍ</span></td>
+              <td>Must be included</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="formula-box">
+          <div class="title">Most important liquid formula</div>
+          <div class="line"><span class="math">γᵣ = γₐ + γᵍ</span></div>
+        </div>
+
+        <div class="highlight-box">
+          <p><strong>Real expansion is always greater than apparent expansion</strong> because the container also expands.</p>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Real vs apparent expansion</div>
+          <svg viewBox="0 0 340 220" aria-label="Liquid expansion in container diagram">
+            <rect x="65" y="35" width="75" height="150" class="obj"/>
+            <rect x="200" y="25" width="90" height="160" class="obj"/>
+            <rect x="67" y="95" width="71" height="90" class="cool"/>
+            <rect x="202" y="75" width="86" height="110" class="cool"/>
+            <text x="70" y="200" class="label">Before heating</text>
+            <text x="212" y="200" class="label">After heating</text>
+          </svg>
+          <div class="diagram-caption">The liquid rises, but the container also expands. What you see is the apparent expansion.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Anomalous Expansion of Water</h2>
+        <p>Water behaves abnormally between 0°C and 4°C.</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Temperature Range</th>
+              <th>Behavior</th>
+              <th>Volume Change</th>
+              <th>Density</th>
+            </tr>
+            <tr><td>0°C → 4°C</td><td>Contracts</td><td>Decreases</td><td>Increases</td></tr>
+            <tr><td>At 4°C</td><td>Minimum volume</td><td>Minimum</td><td>Maximum density</td></tr>
+            <tr><td>Above 4°C</td><td>Expands normally</td><td>Increases</td><td>Decreases</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="memory-tip">
+          <strong>🧠 Key fact</strong>
+          <p>Water has maximum density at <strong>4°C</strong>.</p>
+        </div>
+
+        <div class="highlight-box">
+          <p>This is why lakes freeze from the top. Ice floats on the surface while denser 4°C water stays below, allowing aquatic life to survive.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Applications and Effects</h2>
+
+        <h3>Useful applications</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Application</th>
+              <th>How It Works</th>
+              <th>Where Used</th>
+            </tr>
+            <tr><td>Bimetallic strip</td><td>Two metals expand differently and bend</td><td>Thermostats, fire alarms</td></tr>
+            <tr><td>Expansion gaps</td><td>Spaces allow materials expand safely</td><td>Railways, bridges</td></tr>
+            <tr><td>Expansion loops</td><td>Loops absorb extra pipe length</td><td>Steam and hot-water pipes</td></tr>
+            <tr><td>Riveting</td><td>Hot rivets contract on cooling</td><td>Steel construction</td></tr>
+            <tr><td>Thermometers</td><td>Expansion of liquid indicates temperature</td><td>Lab and medical thermometers</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <h3>Problems caused</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Problem</th>
+              <th>Solution</th>
+              <th>Prevention</th>
+            </tr>
+            <tr><td>Sagging power lines</td><td>Leave slack</td><td>Proper tensioning</td></tr>
+            <tr><td>Cracking concrete</td><td>Include expansion joints</td><td>Design with gaps</td></tr>
+            <tr><td>Bursting pipes</td><td>Insulate and drain</td><td>Winterization</td></tr>
+            <tr><td>Glass cracking</td><td>Use heat-resistant glass</td><td>Warm gradually</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Expansion gap in rails</div>
+          <svg viewBox="0 0 340 170" aria-label="Rail expansion gap diagram">
+            <rect x="25" y="75" width="120" height="22" class="obj"/>
+            <rect x="160" y="75" width="120" height="22" class="obj"/>
+            <text x="138" y="68" class="label">Gap</text>
+            <line x1="145" y1="72" x2="160" y2="72" class="curve"/>
+          </svg>
+          <div class="diagram-caption">Small gaps between rails prevent buckling when the rails expand in hot weather.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Essential Calculations for JAMB</h2>
+
+        <div class="example-box">
+          <div class="title">Example 1: Basic Linear Expansion</div>
+          <p>A copper rod is 50 cm long at 20°C and heated to 100°C. Find its new length. Take <span class="math">α = 17×10⁻⁶ K⁻¹</span>.</p>
+          <p><strong>Step 1:</strong> <span class="math">ΔT = 100 - 20 = 80°C</span></p>
+          <p><strong>Step 2:</strong> <span class="math">L = L₀(1 + αΔT)</span></p>
+          <p><strong>Step 3:</strong> <span class="math">L = 50(1 + 17×10⁻⁶ × 80)</span></p>
+          <p><strong>Step 4:</strong> <span class="math">L = 50.068 cm</span></p>
+          <div class="answer">Answer: 50.068 cm</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Finding Original Length</div>
+          <p>A rod expands by 0.5 mm when heated from 20°C to 70°C. If <span class="math">α = 20×10⁻⁶ K⁻¹</span>, find the original length.</p>
+          <p><strong>Step 1:</strong> <span class="math">ΔL = L₀αΔT</span></p>
+          <p><strong>Step 2:</strong> <span class="math">0.0005 = L₀ × 20×10⁻⁶ × 50</span></p>
+          <p><strong>Step 3:</strong> <span class="math">L₀ = 0.5 m</span></p>
+          <div class="answer">Answer: 0.5 m</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: Volume Expansion of a Solid</div>
+          <p>An aluminium cube of side 10 cm at 0°C is heated to 100°C. Find the increase in volume. Take <span class="math">α = 23×10⁻⁶ K⁻¹</span>.</p>
+          <p><strong>Step 1:</strong> <span class="math">γ = 3α = 69×10⁻⁶ K⁻¹</span></p>
+          <p><strong>Step 2:</strong> <span class="math">V₀ = 10³ = 1000 cm³</span></p>
+          <p><strong>Step 3:</strong> <span class="math">ΔV = V₀γΔT = 1000 × 69×10⁻⁶ × 100</span></p>
+          <p><strong>Step 4:</strong> <span class="math">ΔV = 6.9 cm³</span></p>
+          <div class="answer">Answer: 6.9 cm³</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 4: Relationship Between Expansivities</div>
+          <p>If <span class="math">α = 19×10⁻⁶ K⁻¹</span>, find the superficial expansivity.</p>
+          <p><strong>Step:</strong> <span class="math">β = 2α = 38×10⁻⁶ K⁻¹</span></p>
+          <div class="answer">Answer: 38 × 10⁻⁶ K⁻¹</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 5: Real and Apparent Expansion</div>
+          <p>A glass bottle contains 500 cm³ of mercury at 20°C. At 100°C the mercury appears to rise by 6.5 cm³. Find: (a) apparent expansivity (b) real expansivity. Take <span class="math">γ_glass = 25×10⁻⁶ K⁻¹</span>.</p>
+          <p><strong>(a)</strong> <span class="math">γₐ = 6.5/(500 × 80) = 1.625×10⁻⁴ K⁻¹ = 162.5×10⁻⁶ K⁻¹</span></p>
+          <p><strong>(b)</strong> <span class="math">γᵣ = γₐ + γᵍ = 162.5×10⁻⁶ + 25×10⁻⁶ = 187.5×10⁻⁶ K⁻¹</span></p>
+          <div class="answer">Answer: 162.5 × 10⁻⁶ K⁻¹ and 187.5 × 10⁻⁶ K⁻¹</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 6: Density Change with Temperature</div>
+          <p>The density of a liquid at 20°C is 800 kg/m³. Find its density at 120°C if <span class="math">γ = 2.0×10⁻⁴ K⁻¹</span>.</p>
+          <p><strong>Step 1:</strong> <span class="math">ρ = ρ₀/(1 + γΔT)</span></p>
+          <p><strong>Step 2:</strong> <span class="math">ρ = 800/(1 + 2.0×10⁻⁴ × 100)</span></p>
+          <p><strong>Step 3:</strong> <span class="math">ρ = 800/1.02 = 784.3 kg/m³</span></p>
+          <div class="answer">Answer: 784.3 kg/m³</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 7: Bimetallic Strip</div>
+          <p>Brass has <span class="math">α = 19×10⁻⁶ K⁻¹</span> and iron has <span class="math">α = 12×10⁻⁶ K⁻¹</span>. If both are 20 cm long at 20°C, find the difference in their expansions at 120°C.</p>
+          <p><strong>Brass:</strong> <span class="math">ΔL = 20 × 19×10⁻⁶ × 100 = 0.038 cm</span></p>
+          <p><strong>Iron:</strong> <span class="math">ΔL = 20 × 12×10⁻⁶ × 100 = 0.024 cm</span></p>
+          <p><strong>Difference:</strong> <span class="math">0.038 - 0.024 = 0.014 cm = 0.14 mm</span></p>
+          <div class="answer">Answer: 0.14 mm</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 8: Anomalous Expansion of Water</div>
+          <p>Water has volume 1000 cm³ at 0°C. At what temperature is its volume minimum? Also find the volume at 2°C if <span class="math">γ = -4.0×10⁻⁵ K⁻¹</span>.</p>
+          <p><strong>Minimum volume:</strong> at <span class="math">4°C</span></p>
+          <p><strong>At 2°C:</strong> <span class="math">V = 1000(1 - 4.0×10⁻⁵ × 2)</span></p>
+          <p><span class="math">V = 1000(0.99992) = 999.92 cm³</span></p>
+          <div class="answer">Answer: minimum at 4°C, volume = 999.92 cm³</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 9: Expansion Gap</div>
+          <p>A steel rail is 20 m long at 10°C. Find the gap needed if the maximum temperature is 60°C. Take <span class="math">α = 11×10⁻⁶ K⁻¹</span>.</p>
+          <p><strong>Step:</strong> <span class="math">ΔL = L₀αΔT = 20 × 11×10⁻⁶ × 50 = 0.011 m = 11 mm</span></p>
+          <div class="answer">Answer: 11 mm</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 10: Compound Liquid Expansion Problem</div>
+          <p>A glass flask of volume 1000 cm³ is filled with mercury at 0°C. At 100°C, 15.3 cm³ overflows. If the real expansivity of mercury is <span class="math">182×10⁻⁶ K⁻¹</span>, find: (a) apparent expansivity (b) real expansivity (c) linear expansivity of glass.</p>
+          <p><strong>(a)</strong> <span class="math">γₐ = 15.3/(1000 × 100) = 153×10⁻⁶ K⁻¹</span></p>
+          <p><strong>(b)</strong> <span class="math">γᵣ = 182×10⁻⁶ K⁻¹</span></p>
+          <p><strong>(c)</strong> <span class="math">γᵍ = γᵣ - γₐ = 29×10⁻⁶ K⁻¹</span></p>
+          <p><span class="math">αᵍ = γᵍ/3 = 9.67×10⁻⁶ K⁻¹</span></p>
+          <div class="answer">Answer: 153 × 10⁻⁶ K⁻¹, 182 × 10⁻⁶ K⁻¹, 9.67 × 10⁻⁶ K⁻¹</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Quick Reference Formula Sheet</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Concept</th>
+              <th>Formula</th>
+              <th>When to Use</th>
+            </tr>
+            <tr><td>Linear expansion</td><td><span class="math">L = L₀(1 + αΔT)</span></td><td>Length changes in solids</td></tr>
+            <tr><td>Change in length</td><td><span class="math">ΔL = L₀αΔT</span></td><td>Expansion amount</td></tr>
+            <tr><td>Area expansion</td><td><span class="math">A = A₀(1 + 2αΔT)</span></td><td>Surface expansion</td></tr>
+            <tr><td>Volume expansion</td><td><span class="math">V = V₀(1 + 3αΔT)</span></td><td>Solid volume changes</td></tr>
+            <tr><td>Real liquid expansion</td><td><span class="math">γᵣ = ΔV_real/(V₀ΔT)</span></td><td>True liquid expansion</td></tr>
+            <tr><td>Apparent liquid expansion</td><td><span class="math">γₐ = ΔV_apparent/(V₀ΔT)</span></td><td>Observed expansion</td></tr>
+            <tr><td>Container correction</td><td><span class="math">γᵣ = γₐ + γᵍ</span></td><td>Liquid in container problems</td></tr>
+            <tr><td>Density change</td><td><span class="math">ρ = ρ₀/(1 + γΔT)</span></td><td>New density after heating</td></tr>
+            <tr><td>Relationships</td><td><span class="math">β = 2α, γ = 3α</span></td><td>Converting expansivities</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ JAMB Exam Strategies</h2>
+
+        <div class="jamb-alert">
+          <h4>High-yield focus points</h4>
+          <ul>
+            <li>Real vs apparent expansion is tested often</li>
+            <li>Examples 5 and 10 are especially important</li>
+            <li>Be careful with units of length and volume</li>
+            <li>Remember that ΔT has same numerical value in K and °C</li>
+            <li>Do not confuse <span class="math">2α</span> with <span class="math">3α</span></li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Most important distinction</strong>
+          <p><strong>Real expansion</strong> is what actually happens to the liquid. <strong>Apparent expansion</strong> is what you observe in the container.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 Chapter Connections</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Chapter</th>
+              <th>Connection</th>
+            </tr>
+            <tr><td>Chapter 12: Temperature</td><td>Thermometers work because substances expand with temperature</td></tr>
+            <tr><td>Chapter 14: Gas Laws</td><td>Gases expand much more than solids and liquids</td></tr>
+            <tr><td>Chapter 13: Quantity of Heat</td><td>Expansion occurs when heat is supplied</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Thermal Expansion. This chapter is very important for calculations, practical applications, and top-score distinction questions, especially on real and apparent expansion.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise α, β, γ relationships, linear expansion, real vs apparent expansion, and anomalous expansion of water.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

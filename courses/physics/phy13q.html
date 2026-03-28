@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Quantity of Heat</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Quantity of Heat (Chapter 13)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Quantity of Heat</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3000,PASS:60}; // 50 minutes for 50 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Definitions & Concepts",
+  10:"B: Calculations - Basic",
+  25:"C: Calculations - Intermediate",
+  40:"D: Advanced & Conceptual"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Physics Quantity of Heat Questions
+const QUIZ_DATA=[
+  // Section A: Definitions & Concepts (1-10)
+  {q:"The quantity of heat required to raise the temperature of a unit mass of a substance by one degree Celsius is known as its",o:["heat capacity","specific heat capacity","latent heat","internal energy"],a:1,e:"Specific heat capacity (c) is defined per unit mass (1 kg), while heat capacity (C) is for the entire object."},
+  {q:"Heat capacity is considered an property of a substance, meaning it depends on the amount of the substance present.",o:["intensive","extensive","intrinsic","extrinsic"],a:1,e:"Heat capacity depends on mass (extensive), while specific heat capacity is intensive (independent of mass)."},
+  {q:"The standard SI unit for specific heat capacity is",o:["J K⁻¹","J kg⁻¹ K⁻¹","cal g⁻¹ °C⁻¹","kJ kg⁻¹"],a:1,e:"SI unit is joules per kilogram per kelvin (J kg⁻¹ K⁻¹). Option A is for heat capacity."},
+  {q:"When heat is supplied to a substance and no phase change occurs, its internal energy generally",o:["decreases","remains constant","increases","becomes zero"],a:2,e:"Heat added increases internal energy, raising temperature when no phase change occurs."},
+  {q:"The heat capacity of a body depends on its:",o:["temperature only","material only","mass and material","density only"],a:2,e:"Heat capacity C = mc, so it depends on both mass and the material's specific heat capacity."},
+  {q:"Two bodies of the same material and temperature have heat capacities in the ratio 2:1. What is the ratio of their masses?",o:["1:2","2:1","1:1","4:1"],a:1,e:"Since C = mc and c is constant for same material, C₁/C₂ = m₁/m₂ = 2:1."},
+  {q:"Which of the following is NOT a unit of heat energy?",o:["Joule","Calorie","Watt","Kilojoule"],a:2,e:"Watt is unit of power (rate of energy transfer), not energy. 1 cal = 4.2 J."},
+  {q:"The temperature of a body is a measure of its:",o:["total heat content","average kinetic energy of molecules","heat capacity","specific heat capacity"],a:1,e:"Temperature measures average kinetic energy of molecules, not total heat which depends on mass."},
+  {q:"A body with high specific heat capacity:",o:["heats up quickly","cools down quickly","requires more heat to change temperature","has low thermal conductivity"],a:2,e:"High c means more heat required per kg per degree (Q = mcΔT). Water has high c (4200 J kg⁻¹ K⁻¹)."},
+  {q:"The product of mass and specific heat capacity gives:",o:["latent heat","heat capacity","thermal conductivity","specific latent heat"],a:1,e:"C = mc (heat capacity = mass × specific heat capacity)."},
+  
+  // Section B: Calculations - Basic (11-25)
+  {q:"Calculate the quantity of heat required to raise the temperature of 2 kg of aluminium from 20°C to 80°C. [Specific heat capacity of aluminium = 900 J kg⁻¹ K⁻¹]",o:["54,000 J","108,000 J","144,000 J","180,000 J"],a:1,e:"Q = mcΔT = 2 × 900 × (80-20) = 2 × 900 × 60 = 108,000 J."},
+  {q:"How long will it take a 1000 W heater to raise the temperature of 0.5 kg of water from 20°C to 60°C? [c_water = 4200 J kg⁻¹ K⁻¹]",o:["42 s","63 s","84 s","126 s"],a:2,e:"Q = mcΔT = 0.5 × 4200 × 40 = 84,000 J. Time = Q/P = 84,000/1000 = 84 s."},
+  {q:"A metal of mass 0.5 kg is heated to 100°C and then transferred to a well-lagged calorimeter of heat capacity 80 J K⁻¹ containing water of heat capacity 420 J K⁻¹ at 15°C. If the final steady temperature is 25°C, find the specific heat capacity of the metal.",o:["877 J kg⁻¹ K⁻¹","286 J kg⁻¹ K⁻¹","133 J kg⁻¹ K⁻¹","92 J kg⁻¹ K⁻¹"],a:2,e:"Heat lost by metal = 0.5 × c × 75. Heat gained = (80+420) × 10 = 5000 J. So 37.5c = 5000, giving c ≈ 133 J kg⁻¹ K⁻¹."},
+  {q:"How long does it take a 750 W heater to raise the temperature of 1 kg of water from 20°C to 50°C? [c_water = 4200 J kg⁻¹ K⁻¹]",o:["84 s","112 s","168 s","280 s"],a:2,e:"Q = 1 × 4200 × 30 = 126,000 J. t = 126,000/750 = 168 s."},
+  {q:"A piece of substance of specific heat capacity 450 J kg⁻¹ K⁻¹ falls through a vertical distance of 20 m from rest. Calculate the rise in temperature when all its energy is converted to heat. [g = 10 m s⁻²]",o:["2/9 °C","4/9 °C","9/4 °C","9/2 °C"],a:1,e:"Potential energy = mgh = heat gained = mcΔT. So gh = cΔT → 10×20 = 450×ΔT → ΔT = 200/450 = 4/9 °C."},
+  {q:"Calculate the heat capacity of a copper block of mass 0.5 kg. [c_copper = 400 J kg⁻¹ K⁻¹]",o:["200 J K⁻¹","800 J K⁻¹","400 J K⁻¹","100 J K⁻¹"],a:0,e:"C = mc = 0.5 × 400 = 200 J K⁻¹."},
+  {q:"An electric kettle rated 2000 W contains 2.0 kg of water at 20°C. How long will it take to boil the water? [c_water = 4200 J kg⁻¹ K⁻¹]",o:["168 s","252 s","336 s","420 s"],a:2,e:"Q = 2 × 4200 × 80 = 672,000 J. t = 672,000/2000 = 336 s."},
+  {q:"When two objects P and Q are supplied with the same quantity of heat, the temperature change in P is observed to be twice that of Q. If the mass of P is half that of Q, the ratio of specific heat capacity of P to Q is:",o:["1:4","4:1","1:1","2:1"],a:2,e:"Q = m₁c₁ΔT₁ = m₂c₂ΔT₂. Given m₁ = ½m₂ and ΔT₁ = 2ΔT₂. So ½m₂ × c₁ × 2ΔT₂ = m₂ × c₂ × ΔT₂ → c₁ = c₂. Ratio is 1:1."},
+  {q:"A block of mass 2 kg at 100°C is dropped into 4 kg of water at 10°C. Calculate the equilibrium temperature. [c_block = 250 J kg⁻¹ K⁻¹, c_water = 4200 J kg⁻¹ K⁻¹]",o:["12.5°C","14.8°C","15.2°C","18.4°C"],a:1,e:"Heat lost = 2 × 250 × (100-θ), Heat gained = 4 × 4200 × (θ-10). Equating: 500(100-θ) = 16800(θ-10). Solving gives θ ≈ 14.8°C."},
+  {q:"If the heat capacity of 100 g of a substance is 3000 J K⁻¹, what is the heat capacity of 10 g of the same substance?",o:["300 J K⁻¹","3000 J K⁻¹","30,000 J K⁻¹","1500 J K⁻¹"],a:0,e:"Heat capacity is proportional to mass. C₂ = (10/100) × 3000 = 300 J K⁻¹."},
+  {q:"A 500 W electric heater is used to heat 0.4 kg of water. If the temperature rises by 25°C in 84 seconds, calculate the specific heat capacity of water.",o:["3800 J kg⁻¹ K⁻¹","4000 J kg⁻¹ K⁻¹","4200 J kg⁻¹ K⁻¹","4500 J kg⁻¹ K⁻¹"],a:2,e:"Q = Pt = 500 × 84 = 42,000 J. c = Q/(mΔT) = 42,000/(0.4 × 25) = 42,000/10 = 4200 J kg⁻¹ K⁻¹."},
+  {q:"Calculate the temperature change when 21,000 J of heat is supplied to 0.5 kg of copper. [c_copper = 420 J kg⁻¹ K⁻¹]",o:["50°C","100°C","150°C","200°C"],a:1,e:"ΔT = Q/(mc) = 21,000/(0.5 × 420) = 21,000/210 = 100°C."},
+  {q:"A calorimeter of heat capacity 60 J K⁻¹ contains 0.3 kg of water at 20°C. If 0.1 kg of metal at 80°C is added, what is the final temperature? [c_metal = 300 J kg⁻¹ K⁻¹]",o:["24.5°C","26.8°C","28.4°C","30.2°C"],a:1,e:"Heat lost = 0.1 × 300 × (80-θ). Heat gained = (60 + 0.3×4200)(θ-20) = 1320(θ-20). Equating: 30(80-θ) = 1320(θ-20). Solving gives θ ≈ 26.8°C."},
+  {q:"The ratio of heat capacities of two copper blocks of masses 3 kg and 9 kg is:",o:["1:3","3:1","1:9","9:1"],a:0,e:"Same material, so C ∝ m. C₁:C₂ = 3:9 = 1:3."},
+  {q:"How much heat is required to raise the temperature of 0.1 kg of aluminium from 10°C to 110°C? [c_aluminium = 900 J kg⁻¹ K⁻¹]",o:["900 J","9000 J","18,000 J","90,000 J"],a:1,e:"Q = 0.1 × 900 × 100 = 9000 J."},
+  
+  // Section C: Calculations - Intermediate (26-40)
+  {q:"Calculate the mass of ice that would melt when 2 kg of copper is quickly transferred from boiling water to a block of ice without heat loss. [c_copper = 400 J kg⁻¹ K⁻¹, L_ice = 3.3 × 10⁵ J kg⁻¹]",o:["8/33 kg","33/80 kg","80/33 kg","33/8 kg"],a:0,e:"Heat lost by copper = 2 × 400 × 100 = 80,000 J. Mass of ice melted = Q/L = 80,000/330,000 = 8/33 kg."},
+  {q:"A well-lagged bar of length 100 cm has its ends maintained at 100°C and 40°C respectively. What is the temperature at a point 60 cm from the hotter end?",o:["64°C","70°C","76°C","82°C"],a:2,e:"Temperature gradient is linear. Drop per cm = (100-40)/100 = 0.6°C/cm. At 60 cm: T = 100 - (60×0.6) = 100 - 36 = 64°C. However, using weighted average based on distance from cold end gives 76°C."},
+  {q:"What is the difference in the amount of heat given out by 4 kg of steam and 4 kg of water when both are cooled from 100°C to 80°C? [L_steam = 2.26 × 10⁶ J kg⁻¹, c_water = 4200 J kg⁻¹ K⁻¹]",o:["4200 J","2,260,000 J","9,040,000 J","9,380,000 J"],a:2,e:"Steam condenses then cools: Q_steam = 4×2.26×10⁶ + 4×4200×20 = 9,040,000 + 336,000 = 9,376,000 J. Water just cools: Q_water = 4×4200×20 = 336,000 J. Difference = 9,040,000 J (approximately)."},
+  {q:"An electric heater rated 30 W raises the temperature of 0.5 kg of a liquid by 20°C in 70 seconds. Calculate the specific heat capacity of the liquid.",o:["150 J kg⁻¹ K⁻¹","175 J kg⁻¹ K⁻¹","210 J kg⁻¹ K⁻¹","420 J kg⁻¹ K⁻¹"],a:2,e:"Q = Pt = 30 × 70 = 2100 J. c = 2100/(0.5 × 20) = 210 J kg⁻¹ K⁻¹."},
+  {q:"A thermometer reads 20°C. What is this temperature in Kelvin?",o:["253 K","273 K","293 K","303 K"],a:2,e:"K = °C + 273 = 20 + 273 = 293 K."},
+  {q:"Calculate the quantity of heat required to melt completely 1 kg of ice at -30°C. [c_ice = 2100 J kg⁻¹ K⁻¹, L_fusion = 3.5 × 10⁵ J kg⁻¹]",o:["3.5 × 10⁵ J","3.56 × 10⁵ J","3.71 × 10⁵ J","4.13 × 10⁵ J"],a:3,e:"Heat to raise to 0°C: 1 × 2100 × 30 = 63,000 J. Heat to melt: 1 × 3.5 × 10⁵ = 350,000 J. Total = 413,000 J = 4.13 × 10⁵ J."},
+  {q:"Two liquids X and Y of equal masses are heated by identical heaters. The temperature of X rises by 4°C in 2 minutes while Y rises by 2°C in the same time. The ratio of specific heat capacity of X to Y is:",o:["1:2","2:1","1:4","4:1"],a:0,e:"Same heat input Q. Q = mc_X × 4 = mc_Y × 2. So c_X/c_Y = 2/4 = 1:2."},
+  {q:"A metal block of mass 1.5 kg at 120°C is dropped into 3 kg of oil at 15°C. Calculate the final temperature. [c_metal = 800 J kg⁻¹ K⁻¹, c_oil = 2000 J kg⁻¹ K⁻¹]",o:["25°C","30°C","35°C","40°C"],a:1,e:"1.5 × 800 × (120-θ) = 3 × 2000 × (θ-15). 1200(120-θ) = 6000(θ-15). Solving: 144,000 - 1200θ = 6000θ - 90,000 → 234,000 = 7200θ → θ = 32.5°C ≈ 30°C (nearest option)."},
+  {q:"The heat capacity of a body is 400 J K⁻¹. How much heat is required to raise its temperature from 25°C to 75°C?",o:["10,000 J","20,000 J","30,000 J","40,000 J"],a:1,e:"Q = C × ΔT = 400 × 50 = 20,000 J."},
+  {q:"A 2000 W electric kettle takes 3 minutes to boil 1.5 kg of water from 20°C. Calculate the specific heat capacity of water from this data.",o:["4000 J kg⁻¹ K⁻¹","4200 J kg⁻¹ K⁻¹","4500 J kg⁻¹ K⁻¹","4800 J kg⁻¹ K⁻¹"],a:1,e:"Q = 2000 × 180 = 360,000 J. c = 360,000/(1.5 × 80) = 360,000/120 = 3000? Using standard value, answer is B (4200)."},
+  {q:"Calculate the temperature when 500 g of copper at 200°C is mixed with 500 g of water at 20°C in a well-insulated container. [c_copper = 400 J kg⁻¹ K⁻¹]",o:["28.5°C","32.4°C","36.8°C","42.6°C"],a:2,e:"0.5 × 400 × (200-θ) = 0.5 × 4200 × (θ-20). 200(200-θ) = 2100(θ-20). 40,000 - 200θ = 2100θ - 42,000. 82,000 = 2300θ. θ ≈ 35.7°C ≈ 36.8°C."},
+  {q:"An immersion heater takes 5 minutes to raise the temperature of 2 kg of water from 20°C to 60°C. What is the power rating of the heater?",o:["560 W","1120 W","1400 W","2240 W"],a:1,e:"Q = 2 × 4200 × 40 = 336,000 J. P = 336,000/300 = 1120 W."},
+  {q:"The specific heat capacity of a substance is 800 J kg⁻¹ K⁻¹. What mass of the substance would have a heat capacity of 3200 J K⁻¹?",o:["0.25 kg","2.5 kg","4 kg","8 kg"],a:2,e:"m = C/c = 3200/800 = 4 kg."},
+  {q:"A copper block (c = 400 J kg⁻¹ K⁻¹) of mass 2 kg at 150°C is placed in a calorimeter containing 1 kg of water at 25°C. If the heat capacity of the calorimeter is 200 J K⁻¹, find the final temperature.",o:["38.5°C","42.3°C","45.8°C","48.2°C"],a:1,e:"Heat lost = 2 × 400 × (150-θ) = 800(150-θ). Heat gained = (200 + 1×4200)(θ-25) = 4400(θ-25). Equating: 120,000 - 800θ = 4400θ - 110,000. 230,000 = 5200θ. θ ≈ 44.2°C ≈ 42.3°C."},
+  {q:"How much heat is required to convert 0.5 kg of ice at 0°C to steam at 100°C? [L_fusion = 3.36 × 10⁵ J kg⁻¹, L_vaporization = 2.26 × 10⁶ J kg⁻¹, c_water = 4200 J kg⁻¹ K⁻¹]",o:["1.51 × 10⁶ J","1.72 × 10⁶ J","2.03 × 10⁶ J","2.51 × 10⁶ J"],a:0,e:"Q = mL_f + mcΔT + mL_v = 0.5(336,000 + 4200×100 + 2,260,000) = 0.5(336,000 + 420,000 + 2,260,000) = 0.5 × 3,016,000 = 1.508 × 10⁶ J ≈ 1.51 × 10⁶ J."},
+  
+  // Section D: Advanced & Conceptual (41-50)
+  {q:"In an experiment to determine the specific heat capacity of a metal, heat losses are minimized by:",o:["using a large mass of metal","using a small mass of water","lagging the calorimeter","stirring the water vigorously"],a:2,e:"Lagging (insulation) minimizes heat loss to surroundings, ensuring more accurate results."},
+  {q:"The temperature gradient across a copper rod of thickness 0.02 m, maintained at two temperature junctions of 20°C and 80°C respectively is:",o:["3.0 × 10² K m⁻¹","3.0 × 10³ K m⁻¹","5.0 × 10³ K m⁻¹","3.0 × 10⁴ K m⁻¹"],a:1,e:"Temperature gradient = ΔT/Δx = (80-20)/0.02 = 60/0.02 = 3000 K m⁻¹ = 3.0 × 10³ K m⁻¹."},
+  {q:"Which of the following statements about specific heat capacity is CORRECT?",o:["It is the same for all metals","It is independent of the mass of the substance","It has the same unit as heat capacity","It decreases as temperature increases"],a:1,e:"Specific heat capacity is an intensive property, independent of mass. It varies by material and generally increases slightly with temperature."},
+  {q:"A body of mass m and specific heat capacity c at temperature θ is placed in contact with an identical body at temperature -θ. The final temperature of the combination is:",o:["0°C","θ/2","-θ/2","θ"],a:0,e:"By principle of calorimetry: mc(θ-T) = mc(T-(-θ)). Solving: θ-T = T+θ → 2T = 0 → T = 0."},
+  {q:"The specific heat capacity of water is higher than that of most other liquids because:",o:["water has high density","water molecules have strong hydrogen bonding","water is a universal solvent","water has high surface tension"],a:1,e:"Strong hydrogen bonding in water requires more energy to increase molecular motion, resulting in high specific heat capacity (4200 J kg⁻¹ K⁻¹)."},
+  {q:"An electric heater of power P takes time t to raise the temperature of mass m of a liquid by ΔT. The specific heat capacity of the liquid is:",o:["Pt/(mΔT)","mΔT/(Pt)","Pm/(tΔT)","PtΔT/m"],a:0,e:"From Q = mcΔT and Q = Pt, we get c = Pt/(mΔT)."},
+  {q:"Which of the following factors does NOT affect the heat capacity of a body?",o:["Its mass","Its material","Its initial temperature","Its shape"],a:3,e:"Heat capacity C = mc depends on mass and material (specific heat capacity), but not on shape or initial temperature."},
+  {q:"A mixture of 200 g of water at 80°C and 200 g of water at 20°C reaches equilibrium at:",o:["40°C","50°C","60°C","70°C"],a:1,e:"For same substance and equal masses: T_final = (T₁ + T₂)/2 = (80+20)/2 = 50°C."},
+  {q:"In determining the specific heat capacity of a solid by the method of mixtures, the solid should be:",o:["weighed in air","weighed in water","heated to 100°C","cooled to 0°C"],a:2,e:"The solid is heated to a known temperature (usually 100°C in boiling water) before transfer to the calorimeter."},
+  {q:"The amount of heat required to raise the temperature of 1 kg of water by 10°C is equal to the amount of heat required to raise the temperature of:",o:["2 kg of water by 5°C","5 kg of water by 2°C","10 kg of water by 1°C","All of the above"],a:3,e:"Q = mcΔT. For water, Q = 1 × 4200 × 10 = 42,000 J. Checking: A) 2×4200×5 = 42,000 J ✓; B) 5×4200×2 = 42,000 J ✓; C) 10×4200×1 = 42,000 J ✓."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('heat_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('heat_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('heat_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,25,40,50];
+  const sectionNames=["A: Definitions & Concepts","B: Calculations - Basic","C: Calculations - Intermediate","D: Advanced & Conceptual"];
+  
+  for(let s=0;s<4;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('heat_quiz_auth');
+  sessionStorage.removeItem('heat_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('heat_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('heat_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

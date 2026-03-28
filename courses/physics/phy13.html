@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Quantity of Heat Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1280px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:4;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .heatfill{fill:rgba(255,107,107,.32);stroke:none}
+    .coldfill{fill:rgba(78,205,196,.30);stroke:none}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🔥 Quantity of Heat</h1>
+        <p>JAMB Physics • heat capacity • specific heat capacity • mixtures • electrical heating • heat calculations</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains heat as a form of energy, the meaning of heat capacity and specific heat capacity, how they are determined, and how to solve the common numerical questions JAMB sets from this topic.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Heat is energy transferred because of temperature difference</li>
+            <li>Heat capacity refers to a whole body</li>
+            <li>Specific heat capacity refers to unit mass of a material</li>
+            <li>The main formula is <span class="math">Q = mcΔT</span></li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>If you know the mass, the material, and the temperature change, you can usually find the heat involved.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Heat as a Form of Energy</h2>
+        <p>Heat is energy transferred from one body to another because of a temperature difference.</p>
+
+        <ul>
+          <li>Heat flows from a hotter body to a colder body</li>
+          <li>Heat is measured in <strong>joules (J)</strong></li>
+          <li>Another older unit is the <strong>calorie (cal)</strong></li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Calorie conversion</div>
+          <div class="line"><span class="math">1 calorie ≈ 4.2 J</span></div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Heat transfer</div>
+          <svg viewBox="0 0 340 170" aria-label="Heat transfer diagram">
+            <circle cx="85" cy="85" r="35" class="heatfill" stroke="var(--accent-secondary)" stroke-width="2"/>
+            <circle cx="255" cy="85" r="35" class="coldfill" stroke="var(--accent-tertiary)" stroke-width="2"/>
+            <line x1="125" y1="85" x2="215" y2="85" class="curve"/>
+            <text x="67" y="90" class="label">Hot</text>
+            <text x="238" y="90" class="label">Cold</text>
+            <text x="145" y="72" class="label">Heat Q</text>
+          </svg>
+          <div class="diagram-caption">Heat moves from a hotter body to a colder body until thermal equilibrium is reached.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Heat Capacity</h2>
+        <p>Heat capacity is the quantity of heat required to raise the temperature of a whole body by 1 kelvin or 1 degree Celsius.</p>
+
+        <div class="formula-box">
+          <div class="title">Heat capacity formula</div>
+          <div class="line"><span class="math">C = Q/ΔT</span></div>
+        </div>
+
+        <ul>
+          <li><strong>C</strong> = heat capacity</li>
+          <li><strong>Q</strong> = quantity of heat supplied</li>
+          <li><strong>ΔT</strong> = temperature change</li>
+          <li>Unit = <strong>J/K</strong> or <strong>J/°C</strong></li>
+        </ul>
+
+        <div class="highlight-box">
+          <p>Heat capacity depends on the whole object, so it depends on both the material and the mass of the object.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Specific Heat Capacity</h2>
+        <p>Specific heat capacity is the quantity of heat required to raise the temperature of 1 kilogram of a substance by 1 kelvin.</p>
+
+        <div class="formula-box">
+          <div class="title">Master formulas</div>
+          <div class="line"><span class="math">c = Q/(mΔT)</span></div>
+          <div class="line"><span class="math">Q = mcΔT</span></div>
+        </div>
+
+        <ul>
+          <li><strong>c</strong> = specific heat capacity</li>
+          <li><strong>m</strong> = mass</li>
+          <li><strong>Q</strong> = heat energy</li>
+          <li><strong>ΔT</strong> = temperature change</li>
+        </ul>
+
+        <p>The unit of specific heat capacity is <strong>J kg⁻¹ K⁻¹</strong>.</p>
+
+        <div class="memory-tip">
+          <strong>🧠 Quick memory</strong>
+          <p>If the question says “whole body,” think <strong>C</strong>. If it says “per kilogram,” think <strong>c</strong>.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Relationship Between C and c</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Property</th>
+              <th>Heat Capacity (C)</th>
+              <th>Specific Heat Capacity (c)</th>
+            </tr>
+            <tr>
+              <td>Definition</td>
+              <td>Heat to raise the whole object by 1 K</td>
+              <td>Heat to raise 1 kg of material by 1 K</td>
+            </tr>
+            <tr>
+              <td>Property of</td>
+              <td>The whole object</td>
+              <td>The material itself</td>
+            </tr>
+            <tr>
+              <td>Mass dependence</td>
+              <td>Depends on mass and material</td>
+              <td>Independent of mass</td>
+            </tr>
+            <tr>
+              <td>Unit</td>
+              <td>J K⁻¹ or J °C⁻¹</td>
+              <td>J kg⁻¹ K⁻¹</td>
+            </tr>
+            <tr>
+              <td>Formula link</td>
+              <td><span class="math">C = mc</span></td>
+              <td><span class="math">c = C/m</span></td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="formula-box">
+          <div class="title">Link formula</div>
+          <div class="line"><span class="math">C = mc</span></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Methods of Determination</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Method</th>
+              <th>Principle</th>
+              <th>Formula / Approach</th>
+              <th>Best For</th>
+            </tr>
+            <tr>
+              <td>Method of mixtures</td>
+              <td>Heat lost by hot body equals heat gained by cold body</td>
+              <td><span class="math">Q_lost = Q_gained</span></td>
+              <td>Solids and liquids</td>
+            </tr>
+            <tr>
+              <td>Electrical method</td>
+              <td>Electrical energy changes to heat</td>
+              <td><span class="math">Q = IVt = I²Rt = V²t/R</span></td>
+              <td>Liquids, accurate work</td>
+            </tr>
+            <tr>
+              <td>Newton’s law of cooling</td>
+              <td>Rate of heat loss depends on temperature difference</td>
+              <td><span class="math">dQ/dt ∝ (θ - θ₀)</span></td>
+              <td>Higher temperature work</td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Essential JAMB Calculations</h2>
+
+        <div class="example-box">
+          <div class="title">Example 1: Basic Specific Heat Capacity</div>
+          <p>Calculate the temperature rise when 500 J of heat is supplied to 100 g of water. Take <span class="math">c = 4200 J kg⁻¹ K⁻¹</span>.</p>
+          <p><strong>Step 1:</strong> Convert mass: <span class="math">100 g = 0.1 kg</span></p>
+          <p><strong>Step 2:</strong> Use <span class="math">Q = mcΔT</span></p>
+          <p><strong>Step 3:</strong> <span class="math">ΔT = Q/(mc) = 500/(0.1 × 4200)</span></p>
+          <p><strong>Step 4:</strong> <span class="math">ΔT = 1.19 ≈ 1.2°C</span></p>
+          <div class="answer">Answer: 1.2°C</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Heat Capacity of a Body</div>
+          <p>An aluminium block is heated by a 30 W heater. Its temperature rises by 100°C in 5 minutes. Find its heat capacity.</p>
+          <p><strong>Step 1:</strong> Time = <span class="math">5 min = 300 s</span></p>
+          <p><strong>Step 2:</strong> Heat supplied = <span class="math">Q = Pt = 30 × 300 = 9000 J</span></p>
+          <p><strong>Step 3:</strong> <span class="math">C = Q/ΔT = 9000/100 = 90 J K⁻¹</span></p>
+          <div class="answer">Answer: 90 J K⁻¹</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: Method of Mixtures</div>
+          <p>A metal of mass 0.5 kg at 100°C is placed in a calorimeter of heat capacity 80 J K⁻¹ containing water of heat capacity 420 J K⁻¹ at 20°C. Find the final temperature. Take <span class="math">c_m = 400 J kg⁻¹ K⁻¹</span>.</p>
+          <p><strong>Let final temperature = θ</strong></p>
+          <p><strong>Heat lost by metal:</strong> <span class="math">0.5 × 400 × (100 - θ) = 200(100 - θ)</span></p>
+          <p><strong>Heat gained by calorimeter + water:</strong> <span class="math">80(θ - 20) + 420(θ - 20) = 500(θ - 20)</span></p>
+          <p><strong>Equate:</strong> <span class="math">200(100 - θ) = 500(θ - 20)</span></p>
+          <p><strong>Solve:</strong> <span class="math">20000 - 200θ = 500θ - 10000</span></p>
+          <p><span class="math">30000 = 700θ</span></p>
+          <p><span class="math">θ = 42.9°C ≈ 43°C</span></p>
+          <div class="answer">Answer: about 43°C</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 4: Finding Specific Heat Capacity of a Metal</div>
+          <p>A metal of mass 0.5 kg at 100°C is transferred into a calorimeter of heat capacity 80 J K⁻¹ with water of heat capacity 420 J K⁻¹ at 20°C. If the final temperature is 44°C, find the metal’s specific heat capacity.</p>
+          <p><strong>Heat lost by metal:</strong> <span class="math">0.5 × c × (100 - 44) = 28c</span></p>
+          <p><strong>Heat gained:</strong> <span class="math">80(44 - 20) + 420(44 - 20)</span></p>
+          <p><span class="math">= 80(24) + 420(24) = 1920 + 10080 = 12000 J</span></p>
+          <p><strong>Equate:</strong> <span class="math">28c = 12000</span></p>
+          <p><span class="math">c = 12000/28 = 428.6 ≈ 429 J kg⁻¹ K⁻¹</span></p>
+          <div class="answer">Answer: about 430 J kg⁻¹ K⁻¹</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 5: Electrical Heating Method</div>
+          <p>A 50 W electric heater is immersed in a liquid of mass 0.5 kg. Its temperature rises from 25°C to 75°C in 210 s. Find the liquid’s specific heat capacity. Assume no heat loss.</p>
+          <p><strong>Step 1:</strong> <span class="math">ΔT = 75 - 25 = 50°C</span></p>
+          <p><strong>Step 2:</strong> Heat supplied = <span class="math">Q = Pt = 50 × 210 = 10500 J</span></p>
+          <p><strong>Step 3:</strong> <span class="math">c = Q/(mΔT) = 10500/(0.5 × 50)</span></p>
+          <p><strong>Step 4:</strong> <span class="math">c = 420 J kg⁻¹ K⁻¹</span></p>
+          <div class="answer">Answer: 420 J kg⁻¹ K⁻¹</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 6: Comparing Two Substances</div>
+          <p>Two liquids X and Y of equal mass receive the same quantity of heat. The temperature rise of X is twice that of Y. Find <span class="math">c_X : c_Y</span>.</p>
+          <p><strong>Use</strong> <span class="math">Q = mcΔT</span></p>
+          <p>Since <span class="math">m</span> and <span class="math">Q</span> are the same, <span class="math">c</span> is inversely proportional to <span class="math">ΔT</span>.</p>
+          <p>If <span class="math">ΔT_X = 2ΔT_Y</span>, then <span class="math">c_X = 1/2 c_Y</span></p>
+          <div class="answer">Answer: <span class="math">1:2</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 7: Heating and Melting Ice</div>
+          <p>Calculate the heat required to melt 1 kg of ice initially at -30°C. Take <span class="math">L = 3.5×10⁵ J kg⁻¹</span> and <span class="math">c_ice = 2.1×10³ J kg⁻¹ K⁻¹</span>.</p>
+          <p><strong>Stage 1:</strong> Warm ice from -30°C to 0°C</p>
+          <p><span class="math">Q₁ = mcΔT = 1 × 2100 × 30 = 63000 J</span></p>
+          <p><strong>Stage 2:</strong> Melt ice at 0°C</p>
+          <p><span class="math">Q₂ = mL = 1 × 3.5×10⁵ = 350000 J</span></p>
+          <p><strong>Total:</strong> <span class="math">Q = Q₁ + Q₂ = 413000 J = 4.13×10⁵ J</span></p>
+          <div class="answer">Answer: 4.13 × 10⁵ J</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Common Specific Heat Capacities</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Substance</th>
+              <th>Specific Heat Capacity (J kg⁻¹ K⁻¹)</th>
+              <th>Notes</th>
+            </tr>
+            <tr><td>Water</td><td>4200</td><td>Very high for common substances</td></tr>
+            <tr><td>Ice</td><td>2100</td><td>About half that of water</td></tr>
+            <tr><td>Aluminium</td><td>900</td><td>High for a metal</td></tr>
+            <tr><td>Copper</td><td>390</td><td>Lower value, heats up faster</td></tr>
+            <tr><td>Iron/Steel</td><td>450</td><td>Common engineering metal</td></tr>
+            <tr><td>Lead</td><td>130</td><td>Very low</td></tr>
+            <tr><td>Mercury</td><td>140</td><td>Liquid metal with low value</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="highlight-box">
+          <p><strong>Important memory:</strong> Water has one of the highest specific heat capacities among common substances, which is why it heats and cools slowly.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Common Mistakes to Avoid</h2>
+        <ul>
+          <li>Forgetting to convert mass from grams to kilograms</li>
+          <li>Leaving time in minutes instead of seconds in electrical heating questions</li>
+          <li>Confusing heat capacity <span class="math">C</span> with specific heat capacity <span class="math">c</span></li>
+          <li>Mixing up heat and temperature</li>
+          <li>For mixture questions, failing to identify which body loses heat and which gains heat</li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>🧠 Quick check</strong>
+          <p>In method of mixtures, always start from: <strong>heat lost = heat gained</strong>.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ JAMB Exam Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>How to score well here</h4>
+          <ul>
+            <li>Convert all units first before using formulas</li>
+            <li>Remember water = 4200 J kg⁻¹ K⁻¹</li>
+            <li>Most metals lie roughly between 400 and 900 J kg⁻¹ K⁻¹</li>
+            <li>For electrical heating, use <span class="math">Q = Pt = IVt</span></li>
+            <li>For latent heat questions, break the process into stages</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 Chapter Connections</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Chapter</th>
+              <th>Connection</th>
+            </tr>
+            <tr><td>Chapter 16: Change of State</td><td>Latent heat calculations build directly on quantity of heat</td></tr>
+            <tr><td>Chapter 12: Temperature</td><td>Temperature difference is what drives heat transfer</td></tr>
+            <tr><td>Chapter 14: Gas Laws</td><td>Heat capacities of gases link to thermal physics</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Quantity of Heat. This chapter is one of the most important in thermal physics because it connects temperature change, electrical heating, mixtures, and change of state.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise Q = mcΔT, C = Q/ΔT, C = mc, method of mixtures, and electrical heating formulas.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

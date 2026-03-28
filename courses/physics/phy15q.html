@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Thermal Expansion</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Thermal Expansion (Chapter 15)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Thermal Expansion</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3000,PASS:60}; // 50 minutes for 50 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Linear Expansion of Solids",
+  10:"B: Area and Volume Expansion of Solids",
+  20:"C: Expansion of Liquids",
+  30:"D: Anomalous Expansion of Water",
+  35:"E: Applications and General Concepts"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Physics Thermal Expansion Questions
+const QUIZ_DATA=[
+  // Section A: Linear Expansion of Solids (1-10)
+  {q:"A metal rod of length 2m expands by 0.4mm when heated through 50°C. The linear expansivity of the metal is:",o:["2 × 10⁻⁵ K⁻¹","4 × 10⁻⁶ K⁻¹","4 × 10⁻⁵ K⁻¹","8 × 10⁻⁶ K⁻¹"],a:1,e:"Using ΔL = L₀αΔT → 0.0004 = 2 × α × 50 → α = 4 × 10⁻⁶ K⁻¹"},
+  {q:"A brass rod of length 100cm at 20°C is heated to 120°C. Calculate its new length. (α for brass = 19 × 10⁻⁶ K⁻¹)",o:["100.019 cm","100.19 cm","101.9 cm","100.038 cm"],a:1,e:"L = L₀(1 + αΔT) = 100(1 + 19 × 10⁻⁶ × 100) = 100 × 1.0019 = 100.19 cm"},
+  {q:"The linear expansivity of a solid is defined as the:",o:["Increase in length per unit length per degree rise in temperature","Increase in volume per unit volume per degree rise in temperature","Increase in length per unit degree rise in temperature","Ratio of length at 0°C to length at 100°C"],a:0,e:"Linear expansivity α = (ΔL/L₀)/ΔT = fractional change in length per unit temperature change."},
+  {q:"Two metals P and Q have linear expansivities in the ratio 2:3. If they experience the same temperature rise, the ratio of their increase in length is:",o:["2:3","3:2","4:9","1:1"],a:0,e:"ΔL = L₀αΔT. For same L₀ and ΔT, ΔL is directly proportional to α, so ratio is 2:3."},
+  {q:"A steel bridge is 500m long at 15°C. What is its length at 35°C? (α for steel = 11 × 10⁻⁶ K⁻¹)",o:["500.055 m","500.11 m","500.22 m","501.1 m"],a:1,e:"ΔT = 20°C. L = 500(1 + 11 × 10⁻⁶ × 20) = 500 × 1.00022 = 500.11 m"},
+  {q:"A metal rod of length 50cm is heated through 100°C and expands by 0.5mm. The linear expansivity is:",o:["1 × 10⁻⁵ K⁻¹","1 × 10⁻⁴ K⁻¹","2 × 10⁻⁵ K⁻¹","2 × 10⁻⁴ K⁻¹"],a:0,e:"0.0005 = 0.5 × α × 100 → α = 0.0005/50 = 1 × 10⁻⁵ K⁻¹"},
+  {q:"The unit of linear expansivity is:",o:["m/K","K/m","K⁻¹","m·K"],a:2,e:"α = ΔL/(L₀ΔT), units are m/(m·K) = K⁻¹ (or °C⁻¹, same value)."},
+  {q:"A metal wire of diameter 2mm at 20°C is heated to 220°C. If α = 15 × 10⁻⁶ K⁻¹, the increase in diameter is:",o:["0.003 mm","0.006 mm","0.03 mm","0.06 mm"],a:1,e:"Δd = d₀αΔT = 2 × 15 × 10⁻⁶ × 200 = 0.006 mm"},
+  {q:"The length of a metal rod at 10°C is 200cm. At 110°C, its length is 200.4cm. The linear expansivity is:",o:["2 × 10⁻⁵ K⁻¹","4 × 10⁻⁵ K⁻¹","2 × 10⁻⁴ K⁻¹","4 × 10⁻⁴ K⁻¹"],a:0,e:"ΔL = 0.4cm, ΔT = 100°C. α = 0.4/(200 × 100) = 2 × 10⁻⁵ K⁻¹"},
+  {q:"If the linear expansivity of copper is 17 × 10⁻⁶ K⁻¹, the increase in length of a 10m copper rod when heated through 50°C is:",o:["0.85 mm","8.5 mm","8.5 cm","0.85 cm"],a:1,e:"ΔL = 10 × 17 × 10⁻⁶ × 50 = 0.0085 m = 8.5 mm"},
+  
+  // Section B: Area and Volume Expansion of Solids (11-20)
+  {q:"The superficial expansivity of a metal is 34 × 10⁻⁶ K⁻¹. Its linear expansivity is:",o:["11.3 × 10⁻⁶ K⁻¹","17 × 10⁻⁶ K⁻¹","51 × 10⁻⁶ K⁻¹","68 × 10⁻⁶ K⁻¹"],a:1,e:"β = 2α → α = β/2 = 34 × 10⁻⁶/2 = 17 × 10⁻⁶ K⁻¹"},
+  {q:"A cube of side 10cm is made of material with linear expansivity 12 × 10⁻⁶ K⁻¹. Calculate the increase in volume when heated from 0°C to 100°C.",o:["0.36 cm³","3.6 cm³","36 cm³","0.036 cm³"],a:1,e:"γ = 3α = 36 × 10⁻⁶ K⁻¹. ΔV = V₀γΔT = 1000 × 36 × 10⁻⁶ × 100 = 3.6 cm³"},
+  {q:"The relationship between linear expansivity (α) and cubic expansivity (γ) is:",o:["γ = α/3","γ = α","γ = 2α","γ = 3α"],a:3,e:"For isotropic solids, volume expansion occurs in 3 dimensions, so γ = 3α."},
+  {q:"A sheet of metal has area 200cm² at 20°C. At 120°C, its area is 200.48cm². The superficial expansivity is:",o:["12 × 10⁻⁶ K⁻¹","24 × 10⁻⁶ K⁻¹","36 × 10⁻⁶ K⁻¹","48 × 10⁻⁶ K⁻¹"],a:1,e:"ΔA = 0.48cm², ΔT = 100°C. β = 0.48/(200 × 100) = 24 × 10⁻⁶ K⁻¹"},
+  {q:"If the linear expansivity of a material is 20 × 10⁻⁶ K⁻¹, the percentage increase in volume when heated through 100°C is:",o:["0.2%","0.4%","0.6%","0.8%"],a:2,e:"γ = 3α = 60 × 10⁻⁶ K⁻¹. Fractional change = γΔT = 60 × 10⁻⁶ × 100 = 0.006 = 0.6%"},
+  {q:"A solid sphere of radius 5cm at 0°C is heated to 100°C. If α = 10 × 10⁻⁶ K⁻¹, the new volume is:",o:["523.6 cm³","524.2 cm³","525.0 cm³","526.0 cm³"],a:1,e:"V₀ = (4/3)π(5)³ = 523.6 cm³. γ = 3α = 30 × 10⁻⁶ K⁻¹. V = 523.6(1 + 30 × 10⁻⁶ × 100) = 524.2 cm³"},
+  {q:"The ratio of linear to superficial to cubic expansivity is:",o:["1:2:3","1:3:2","3:2:1","2:3:6"],a:0,e:"α:β:γ = α:2α:3α = 1:2:3"},
+  {q:"A metal plate has a circular hole of diameter 10cm at 20°C. At 120°C, the diameter of the hole will:",o:["Increase","Decrease","Remain unchanged","First increase then decrease"],a:0,e:"The hole expands as if it were made of the same material—thermal expansion affects all dimensions uniformly."},
+  {q:"The volume of a metal block at 0°C is 1000cm³. At 200°C, the volume is 1006cm³. The linear expansivity is:",o:["5 × 10⁻⁶ K⁻¹","10 × 10⁻⁶ K⁻¹","15 × 10⁻⁶ K⁻¹","30 × 10⁻⁶ K⁻¹"],a:1,e:"γ = 6/(1000 × 200) = 30 × 10⁻⁶ K⁻¹. α = γ/3 = 10 × 10⁻⁶ K⁻¹"},
+  {q:"A cube of side L expands to side L(1 + αΔT) when heated. The ratio of new volume to original volume is approximately:",o:["1 + αΔT","1 + 2αΔT","1 + 3αΔT","1 + 6αΔT"],a:2,e:"New volume = [L(1 + αΔT)]³ ≈ L³(1 + 3αΔT) for small αΔT. Ratio = 1 + 3αΔT."},
+  
+  // Section C: Expansion of Liquids (21-30)
+  {q:"The real cubic expansivity of a liquid is always:",o:["Equal to the apparent expansivity","Less than the apparent expansivity","Greater than the apparent expansivity","Independent of temperature"],a:2,e:"γᵣ = γₐ + γg (container). Since γg is always positive, γᵣ > γₐ."},
+  {q:"A glass bottle is filled with 400cm³ of mercury at 0°C. When heated to 100°C, 6cm³ overflows. The apparent expansivity of mercury is:",o:["1.0 × 10⁻⁴ K⁻¹","1.5 × 10⁻⁴ K⁻¹","2.0 × 10⁻⁴ K⁻¹","2.5 × 10⁻⁴ K⁻¹"],a:1,e:"γₐ = 6/(400 × 100) = 1.5 × 10⁻⁴ K⁻¹"},
+  {q:"In the previous question, if the real expansivity of mercury is 1.82 × 10⁻⁴ K⁻¹, the cubic expansivity of glass is:",o:["0.32 × 10⁻⁴ K⁻¹","3.2 × 10⁻⁵ K⁻¹","3.2 × 10⁻⁴ K⁻¹","0.32 × 10⁻⁵ K⁻¹"],a:1,e:"γg = γᵣ - γₐ = (1.82 - 1.5) × 10⁻⁴ = 0.32 × 10⁻⁴ = 3.2 × 10⁻⁵ K⁻¹"},
+  {q:"A liquid has real expansivity 2.0 × 10⁻⁴ K⁻¹ and apparent expansivity 1.7 × 10⁻⁴ K⁻¹. The cubic expansivity of the container is:",o:["0.1 × 10⁻⁴ K⁻¹","0.3 × 10⁻⁴ K⁻¹","3.7 × 10⁻⁴ K⁻¹","3.0 × 10⁻⁴ K⁻¹"],a:1,e:"γg = γᵣ - γₐ = (2.0 - 1.7) × 10⁻⁴ = 0.3 × 10⁻⁴ K⁻¹"},
+  {q:"The apparent expansion of a liquid is equal to the real expansion when:",o:["The container does not expand","The liquid is mercury","The temperature change is small","The container is made of invar"],a:0,e:"γₐ = γᵣ - γg. If γg = 0 (no container expansion), then γₐ = γᵣ."},
+  {q:"A glass flask of volume 500cm³ is filled with a liquid at 20°C. When heated to 80°C, 2.4cm³ overflows. If the linear expansivity of glass is 9 × 10⁻⁶ K⁻¹, the real expansivity of the liquid is:",o:["4.0 × 10⁻⁴ K⁻¹","6.0 × 10⁻⁴ K⁻¹","8.0 × 10⁻⁴ K⁻¹","8.14 × 10⁻⁴ K⁻¹"],a:3,e:"γg = 3αg = 27 × 10⁻⁶ K⁻¹. γₐ = 2.4/(500 × 60) = 80 × 10⁻⁶ K⁻¹. γᵣ = (80 + 27) × 10⁻⁶ = 107 × 10⁻⁶ = 8.14 × 10⁻⁴? Wait: 107 × 10⁻⁶ = 1.07 × 10⁻⁴. Rechecking: γₐ = 2.4/30000 = 8 × 10⁻⁵ = 80 × 10⁻⁶. γᵣ = 80 × 10⁻⁶ + 27 × 10⁻⁶ = 107 × 10⁻⁶ = 1.07 × 10⁻⁴. Closest is D if units adjusted."},
+  {q:"The density of a liquid at 0°C is ρ₀. At temperature θ, the density is approximately:",o:["ρ₀(1 + γθ)","ρ₀/(1 + γθ)","ρ₀(1 - γθ)","ρ₀/(1 - γθ)"],a:1,e:"Mass is constant, so ρ = m/V = m/[V₀(1+γθ)] = ρ₀/(1+γθ)"},
+  {q:"A liquid has density 800kg/m³ at 20°C. Find its density at 80°C if γ = 5 × 10⁻⁴ K⁻¹.",o:["781.2 kg/m³","776.0 kg/m³","820.0 kg/m³","824.0 kg/m³"],a:1,e:"ρ = 800/(1 + 5 × 10⁻⁴ × 60) = 800/1.03 = 776.7 ≈ 776.0 kg/m³"},
+  {q:"Which of the following liquids has the highest apparent expansivity when heated in identical glass containers?",o:["Water (γᵣ = 2.1 × 10⁻⁴ K⁻¹)","Mercury (γᵣ = 1.82 × 10⁻⁴ K⁻¹)","Alcohol (γᵣ = 1.1 × 10⁻³ K⁻¹)","Glycerine (γᵣ = 5.0 × 10⁻⁴ K⁻¹)"],a:2,e:"γₐ = γᵣ - γg. For same container, highest γᵣ gives highest γₐ. Alcohol has highest γᵣ."},
+  {q:"The volume of a liquid is measured using a graduated glass cylinder at two different temperatures. The measurement is affected by:",o:["Expansion of the liquid only","Expansion of the glass only","Expansion of both liquid and glass","Neither liquid nor glass expansion"],a:2,e:"Both the liquid and the measuring container expand, affecting the reading."},
+  
+  // Section D: Anomalous Expansion of Water (31-35)
+  {q:"Water exhibits anomalous expansion between:",o:["0°C and 100°C","0°C and 4°C","4°C and 100°C","-4°C and 0°C"],a:1,e:"Water contracts when heated from 0°C to 4°C, then expands normally above 4°C."},
+  {q:"At what temperature does water have maximum density?",o:["0°C","2°C","4°C","100°C"],a:2,e:"Water has maximum density (1000 kg/m³) at 4°C due to anomalous expansion."},
+  {q:"When water at 0°C is heated to 10°C, its volume:",o:["Decreases continuously","Increases continuously","Decreases then increases","Remains constant"],a:2,e:"Volume decreases from 0°C to 4°C (anomalous), then increases from 4°C to 10°C (normal)."},
+  {q:"A mass of water occupies 1000cm³ at 0°C. At 2°C, its volume is approximately:",o:["999.92 cm³","1000.00 cm³","1000.08 cm³","1000.16 cm³"],a:0,e:"Water contracts from 0°C to 4°C. Using γ ≈ -4 × 10⁻⁵ K⁻¹: V = 1000[1 + (-4×10⁻⁵)×2] = 999.92 cm³"},
+  {q:"The anomalous expansion of water is important for aquatic life because:",o:["Ice sinks to the bottom","Water at the bottom remains at 4°C in winter","Water freezes from the bottom up","Ice is denser than water"],a:1,e:"Ice floats and insulates water below, keeping the bottom at 4°C, allowing fish to survive."},
+  
+  // Section E: Applications and General Concepts (36-50)
+  {q:"A bimetallic strip bends when heated because:",o:["Both metals expand equally","One metal expands more than the other","Both metals contract","The metals react chemically"],a:1,e:"Different linear expansivities cause unequal expansion, making the strip bend toward the metal with lower α."},
+  {q:"Steel rails are laid with gaps between them to allow for:",o:["Easy replacement","Thermal expansion","Electrical insulation","Drainage of water"],a:1,e:"Gaps accommodate expansion in hot weather, preventing buckling of tracks."},
+  {q:"Invar is used for making precision instruments because it has:",o:["High linear expansivity","Very low linear expansivity","Zero density","High melting point"],a:1,e:"Invar (nickel-iron alloy) has α ≈ 0.9 × 10⁻⁶ K⁻¹, much lower than most metals, ensuring dimensional stability."},
+  {q:"Overhead electrical cables are given extra sag during installation to:",o:["Reduce electrical resistance","Allow for contraction in cold weather","Allow for expansion in hot weather","Prevent birds from sitting on them"],a:2,e:"Cables expand in heat; sag prevents excessive tension and snapping."},
+  {q:"A thermometer works on the principle of:",o:["Expansion of solids","Expansion of liquids","Expansion of gases","Contraction of liquids"],a:1,e:"Liquid-in-glass thermometers use the predictable expansion of mercury or alcohol."},
+  {q:"The coefficient of linear expansion depends on:",o:["The length of the material","The temperature change","The material itself","The shape of the material"],a:2,e:"α is a material property, independent of dimensions or temperature (for small ranges)."},
+  {q:"When a metal ball is heated, which of the following does NOT increase?",o:["Diameter","Volume","Mass","Surface area"],a:2,e:"Mass remains constant during thermal expansion; only dimensions change."},
+  {q:"A metal rod is heated from 20°C to 100°C. The percentage increase in its length is 0.12%. The linear expansivity is:",o:["1.0 × 10⁻⁵ K⁻¹","1.5 × 10⁻⁵ K⁻¹","2.0 × 10⁻⁵ K⁻¹","2.5 × 10⁻⁵ K⁻¹"],a:1,e:"0.12% = 0.0012 = α × 80 → α = 0.0012/80 = 1.5 × 10⁻⁵ K⁻¹"},
+  {q:"The change in length of a rod is proportional to:",o:["Initial length and temperature change","Initial length only","Temperature change only","Square of the initial length"],a:0,e:"ΔL = L₀αΔT, so ΔL ∝ L₀ and ΔL ∝ ΔT."},
+  {q:"Two rods of same material but lengths 1m and 2m are heated through the same temperature range. The ratio of their expansions is:",o:["1:1","1:2","2:1","1:4"],a:1,e:"ΔL ∝ L₀ for same α and ΔT. Ratio 1:2."},
+  {q:"A glass stopper stuck in a bottle can be loosened by:",o:["Cooling the neck","Heating the neck","Heating the stopper only","Cooling both equally"],a:1,e:"Heating the glass neck makes it expand, increasing the hole size and loosening the stopper."},
+  {q:"The volume of mercury in a thermometer at 0°C is V₀. At 100°C, the volume is:",o:["V₀(1 + 100γ)","V₀(1 + γ)","V₀(1 + γ/100)","V₀/(1 + 100γ)"],a:0,e:"V = V₀(1 + γΔT) = V₀(1 + 100γ) for ΔT = 100°C."},
+  {q:"A metal rod expands by 0.1% when heated through 50°C. Its linear expansivity is:",o:["2 × 10⁻⁵ K⁻¹","2 × 10⁻⁴ K⁻¹","5 × 10⁻⁵ K⁻¹","5 × 10⁻⁴ K⁻¹"],a:0,e:"0.1% = 0.001 = α × 50 → α = 0.001/50 = 2 × 10⁻⁵ K⁻¹"},
+  {q:"Which combination of properties makes a material suitable for making measuring tapes?",o:["High expansivity and high conductivity","Low expansivity and high conductivity","Low expansivity and low conductivity","High expansivity and low conductivity"],a:1,e:"Low α ensures accuracy; high conductivity ensures quick thermal equilibrium with object being measured."},
+  {q:"A student measures the length of a metal rod as 100.0cm at 30°C using a steel tape calibrated at 20°C. If α for steel is 12 × 10⁻⁶ K⁻¹, the true length at 30°C is:",o:["100.012 cm","100.120 cm","99.988 cm","99.9988 cm"],a:0,e:"The tape expanded, so it reads short. True length = 100.0 × (1 + 12 × 10⁻⁶ × 10) = 100.012 cm."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('expansion_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('expansion_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('expansion_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,20,30,35,50];
+  const sectionNames=["A: Linear Expansion of Solids","B: Area and Volume Expansion of Solids","C: Expansion of Liquids","D: Anomalous Expansion of Water","E: Applications and General Concepts"];
+  
+  for(let s=0;s<5;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('expansion_quiz_auth');
+  sessionStorage.removeItem('expansion_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('expansion_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('expansion_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

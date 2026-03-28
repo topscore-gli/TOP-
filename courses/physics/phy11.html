@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Liquids at Rest Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1220px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:4;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .liquid{fill:rgba(78,205,196,.35);stroke:none}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🫧 Liquids at Rest</h1>
+        <p>JAMB Physics • density • relative density • upthrust • buoyancy • Archimedes’ principle • floatation</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains how stationary liquids behave, why bodies float or sink, and how ideas like density and upthrust apply to ships, hydrometers, submarines, and balloons.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Density tells how compact matter is</li>
+            <li>Relative density compares a substance with water</li>
+            <li>Upthrust is the upward force from a fluid</li>
+            <li>Floating happens when weight equals upthrust</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>If a body displaces enough fluid to balance its own weight, it floats. If not, it sinks.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Density of Solids and Liquids</h2>
+
+        <p>Density is the mass per unit volume of a substance.</p>
+
+        <div class="formula-box">
+          <div class="title">Density formula</div>
+          <div class="line"><span class="math">ρ = m/V</span></div>
+        </div>
+
+        <ul>
+          <li>SI unit: <strong>kg/m³</strong></li>
+          <li>Another common unit: <strong>g/cm³</strong></li>
+          <li><span class="math">1 g/cm³ = 1000 kg/m³</span></li>
+          <li>Density does not depend on the amount of substance</li>
+        </ul>
+
+        <div class="highlight-box">
+          <p><strong>Water density</strong> = <strong>1 g/cm³</strong> = <strong>1000 kg/m³</strong>. This is the main reference point in many JAMB questions.</p>
+        </div>
+
+        <h3>Determining density</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>For Solids</th>
+              <th>For Liquids</th>
+            </tr>
+            <tr>
+              <td>
+                • Measure mass using a balance<br>
+                • For regular shapes, calculate volume using formula<br>
+                • For irregular solids, use water displacement<br>
+                • Then use <span class="math">ρ = m/V</span>
+              </td>
+              <td>
+                • Measure empty container mass<br>
+                • Measure container + liquid mass<br>
+                • Subtract to get mass of liquid<br>
+                • Measure volume and use <span class="math">ρ = m/V</span>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Relative Density</h2>
+
+        <p>Relative density, also called specific gravity, is the ratio of the density of a substance to the density of water.</p>
+
+        <div class="formula-box">
+          <div class="title">Relative density formulas</div>
+          <div class="line"><span class="math">R.D. = ρ(substance) / ρ(water)</span></div>
+          <div class="line"><span class="math">R.D. = mass of substance / mass of equal volume of water</span></div>
+        </div>
+
+        <ul>
+          <li>Relative density has <strong>no unit</strong></li>
+          <li>For water, <strong>R.D. = 1</strong></li>
+          <li>If <strong>R.D. &lt; 1</strong>, the body floats in water</li>
+          <li>If <strong>R.D. &gt; 1</strong>, the body sinks in water</li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>🧠 Quick memory</strong>
+          <p>Density has units. Relative density has no units.</p>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Link with water density</div>
+          <div class="line"><span class="math">ρ(substance) = R.D. × ρ(water)</span></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Upthrust or Buoyant Force</h2>
+
+        <p>Upthrust is the upward force exerted by a fluid on a body immersed in it.</p>
+
+        <h3>Why upthrust happens</h3>
+        <ul>
+          <li>Pressure increases with depth</li>
+          <li>The bottom of an immersed body experiences more pressure than the top</li>
+          <li>This pressure difference produces a net upward force</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Upthrust formula</div>
+          <div class="line"><span class="math">U = ρ(fluid) × V(displaced) × g</span></div>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Why upthrust acts upward</div>
+          <svg viewBox="0 0 340 220" aria-label="Upthrust diagram">
+            <rect x="80" y="40" width="180" height="140" class="obj"/>
+            <rect x="82" y="90" width="176" height="90" class="liquid"/>
+            <rect x="140" y="105" width="55" height="45" fill="rgba(255,107,107,.3)" stroke="var(--accent-secondary)" stroke-width="2"/>
+            <line x1="167" y1="150" x2="167" y2="82" class="curve"/>
+            <line x1="120" y1="105" x2="120" y2="96" class="curve"/>
+            <line x1="215" y1="150" x2="215" y2="166" class="curve"/>
+            <text x="175" y="82" class="label">Upthrust</text>
+            <text x="88" y="70" class="label">Liquid</text>
+          </svg>
+          <div class="diagram-caption">The greater pressure at the bottom gives a larger upward force than the downward force at the top.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Archimedes’ Principle</h2>
+
+        <p>When a body is completely or partially immersed in a fluid, it experiences an upthrust equal to the weight of the fluid displaced.</p>
+
+        <div class="formula-box">
+          <div class="title">Archimedes’ principle</div>
+          <div class="line"><span class="math">Upthrust = weight of displaced fluid</span></div>
+          <div class="line"><span class="math">U = ρ(fluid) × V(displaced) × g</span></div>
+        </div>
+
+        <h3>Experimental verification</h3>
+        <ul>
+          <li>Measure weight of object in air: <strong>W(air)</strong></li>
+          <li>Measure weight of object immersed in water: <strong>W(apparent)</strong></li>
+          <li>Upthrust = <span class="math">W(air) - W(apparent)</span></li>
+          <li>Collect displaced water and weigh it</li>
+          <li>The two values are equal</li>
+        </ul>
+
+        <div class="highlight-box">
+          <p><strong>Apparent loss in weight = Upthrust</strong></p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Law of Floatation</h2>
+
+        <p>A body floats in a fluid when its weight equals the weight of the fluid displaced.</p>
+
+        <div class="formula-box">
+          <div class="title">Condition for floatation</div>
+          <div class="line"><span class="math">Weight of body = Upthrust</span></div>
+          <div class="line"><span class="math">m(body)g = ρ(fluid)V(submerged)g</span></div>
+        </div>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Condition</th>
+              <th>Result</th>
+            </tr>
+            <tr><td>Weight &lt; maximum upthrust</td><td>Body floats</td></tr>
+            <tr><td>Weight = upthrust</td><td>Body is fully immersed or neutrally buoyant</td></tr>
+            <tr><td>Weight &gt; maximum upthrust</td><td>Body sinks</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="formula-box">
+          <div class="title">Fraction submerged</div>
+          <div class="line"><span class="math">Fraction submerged = R.D. of body / R.D. of fluid</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Ice in water</div>
+          <p>For ice with <span class="math">R.D. = 0.92</span> in water:</p>
+          <p><strong>Fraction submerged</strong> = <span class="math">0.92/1 = 0.92</span></p>
+          <p><strong>That means</strong> 92% is submerged and 8% stays above water.</p>
+        </div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Floating body</div>
+          <svg viewBox="0 0 340 220" aria-label="Floating body diagram">
+            <rect x="60" y="50" width="220" height="130" class="obj"/>
+            <rect x="62" y="110" width="216" height="70" class="liquid"/>
+            <rect x="135" y="85" width="70" height="55" fill="rgba(255,107,107,.3)" stroke="var(--accent-secondary)" stroke-width="2"/>
+            <line x1="170" y1="85" x2="170" y2="55" class="curve"/>
+            <line x1="170" y1="140" x2="170" y2="95" class="curve"/>
+            <text x="176" y="58" class="label">Weight</text>
+            <text x="176" y="100" class="label">Upthrust</text>
+          </svg>
+          <div class="diagram-caption">A floating body settles at the level where its weight equals the upthrust from the liquid.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Applications</h2>
+
+        <h3>Ships</h3>
+        <ul>
+          <li>Steel is denser than water, but ships contain hollow spaces</li>
+          <li>Their overall average density becomes less than that of water</li>
+          <li>They displace a large volume of water and get enough upthrust</li>
+          <li>Plimsoll lines show safe loading limits</li>
+        </ul>
+
+        <h3>Hydrometers</h3>
+        <ul>
+          <li>Used to measure relative density of liquids</li>
+          <li>It floats deeper in less dense liquids</li>
+          <li>It floats higher in denser liquids</li>
+        </ul>
+
+        <h3>Submarines</h3>
+        <ul>
+          <li>Ballast tanks fill with water to increase weight and sink</li>
+          <li>Water is pumped out to reduce weight and rise</li>
+          <li>Neutral buoyancy occurs when weight equals upthrust</li>
+        </ul>
+
+        <h3>Hot air balloons</h3>
+        <ul>
+          <li>Hot air is less dense than cold air</li>
+          <li>If total weight is less than the weight of displaced air, the balloon rises</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Worked Examples for JAMB</h2>
+
+        <div class="example-box">
+          <div class="title">Example 1: Upthrust, Volume, Density, and R.D.</div>
+          <p>A solid weighs 0.50 N in air and 0.40 N in water. Find: (a) upthrust (b) volume (c) density (d) relative density.</p>
+          <p><strong>(a)</strong> Upthrust = <span class="math">0.50 - 0.40 = 0.10 N</span></p>
+          <p><strong>(b)</strong> <span class="math">V = U/(ρg) = 0.10/(1000×10) = 1.0×10⁻⁵ m³ = 10 cm³</span></p>
+          <p><strong>(c)</strong> Mass = <span class="math">0.50/10 = 0.05 kg = 50 g</span></p>
+          <p><span class="math">ρ = 50/10 = 5.0 g/cm³</span></p>
+          <p><strong>(d)</strong> <span class="math">R.D. = 5.0/1.0 = 5.0</span></p>
+          <div class="answer">Answers: 0.10 N, 10 cm³, 5.0 g/cm³, 5.0</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 2: Floating Wood</div>
+          <p>A wood block has volume 100 cm³ and density 0.6 g/cm³. Find the volume above water.</p>
+          <p><strong>Step 1:</strong> Fraction submerged = <span class="math">0.6/1.0 = 0.6</span></p>
+          <p><strong>Step 2:</strong> Volume submerged = <span class="math">0.6 × 100 = 60 cm³</span></p>
+          <p><strong>Step 3:</strong> Volume above = <span class="math">100 - 60 = 40 cm³</span></p>
+          <div class="answer">Answer: 40 cm³</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 3: Object in Unknown Liquid</div>
+          <p>An object weighs 2.5 N in air and 2.0 N in a liquid of density 800 kg/m³. Find the object’s density.</p>
+          <p><strong>Step 1:</strong> Upthrust = <span class="math">2.5 - 2.0 = 0.5 N</span></p>
+          <p><strong>Step 2:</strong> <span class="math">V = 0.5/(800×10) = 6.25×10⁻⁵ m³</span></p>
+          <p><strong>Step 3:</strong> Mass = <span class="math">2.5/10 = 0.25 kg</span></p>
+          <p><strong>Step 4:</strong> <span class="math">ρ = 0.25 / 6.25×10⁻⁵ = 4000 kg/m³</span></p>
+          <div class="answer">Answer: 4000 kg/m³</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 4: Finding R.D. of a Liquid</div>
+          <p>A solid weighs 10.0 N in air, 8.0 N in water, and 9.0 N in another liquid. Find the liquid’s relative density.</p>
+          <p><strong>Step 1:</strong> Upthrust in water = <span class="math">10.0 - 8.0 = 2.0 N</span></p>
+          <p><strong>Step 2:</strong> Upthrust in liquid = <span class="math">10.0 - 9.0 = 1.0 N</span></p>
+          <p><strong>Step 3:</strong> <span class="math">R.D. = U(liquid)/U(water) = 1.0/2.0 = 0.5</span></p>
+          <div class="answer">Answer: 0.5</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 5: Tension in a Suspended Cube</div>
+          <p>A metal cube of side 5 cm and relative density 8.0 is suspended with half its volume in oil of relative density 0.8. Find the thread tension.</p>
+          <p><strong>Step 1:</strong> Volume = <span class="math">5³ = 125 cm³ = 125×10⁻⁶ m³</span></p>
+          <p><strong>Step 2:</strong> Density of cube = <span class="math">8000 kg/m³</span></p>
+          <p><strong>Step 3:</strong> Mass = <span class="math">8000 × 125×10⁻⁶ = 1.0 kg</span></p>
+          <p><strong>Step 4:</strong> Weight = <span class="math">1.0 × 10 = 10 N</span></p>
+          <p><strong>Step 5:</strong> Immersed volume = <span class="math">62.5×10⁻⁶ m³</span></p>
+          <p><strong>Step 6:</strong> Upthrust = <span class="math">800 × 62.5×10⁻⁶ × 10 = 0.5 N</span></p>
+          <p><strong>Step 7:</strong> Tension = <span class="math">10 - 0.5 = 9.5 N</span></p>
+          <div class="answer">Answer: 9.5 N</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 6: Maximum Load for a Boat</div>
+          <p>A boat has volume 20 m³ and mass 8000 kg. Find: (a) maximum mass it can carry safely (b) volume displaced when fully loaded.</p>
+          <p><strong>Step 1:</strong> Maximum upthrust = <span class="math">1000 × 20 × 10 = 200,000 N</span></p>
+          <p><strong>Step 2:</strong> Weight of boat = <span class="math">8000 × 10 = 80,000 N</span></p>
+          <p><strong>Step 3:</strong> Extra load weight = <span class="math">200,000 - 80,000 = 120,000 N</span></p>
+          <p><strong>(a)</strong> Maximum mass = <span class="math">120,000/10 = 12,000 kg</span></p>
+          <p><strong>(b)</strong> Fully loaded means displaced volume = <span class="math">20 m³</span></p>
+          <div class="answer">Answers: 12,000 kg and 20 m³</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 7: Iceberg Volume</div>
+          <p>An iceberg of density 920 kg/m³ has 2000 m³ above sea water. Take sea water density as 1030 kg/m³. Find its total volume.</p>
+          <p><strong>Step 1:</strong> Fraction submerged = <span class="math">920/1030 = 0.893</span></p>
+          <p><strong>Step 2:</strong> Fraction above = <span class="math">1 - 0.893 = 0.107</span></p>
+          <p><strong>Step 3:</strong> <span class="math">0.107V = 2000</span></p>
+          <p><strong>Step 4:</strong> <span class="math">V = 2000/0.107 ≈ 18,700 m³</span></p>
+          <div class="answer">Answer: about 18,700 m³</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Example 8: Relative Density of a Liquid</div>
+          <p>A solid weighs 0.080 N in air and 0.060 N in a liquid. If the solid’s R.D. is 4.0, find the liquid’s R.D.</p>
+          <p><strong>Step 1:</strong> Density of solid = <span class="math">4000 kg/m³</span></p>
+          <p><strong>Step 2:</strong> Mass = <span class="math">0.080/10 = 0.008 kg</span></p>
+          <p><strong>Step 3:</strong> Volume = <span class="math">0.008/4000 = 2×10⁻⁶ m³</span></p>
+          <p><strong>Step 4:</strong> Upthrust = <span class="math">0.080 - 0.060 = 0.020 N</span></p>
+          <p><strong>Step 5:</strong> <span class="math">ρ(liquid) = 0.020/(2×10⁻⁶×10) = 1000 kg/m³</span></p>
+          <p><strong>Step 6:</strong> Relative density = <span class="math">1000/1000 = 1.0</span></p>
+          <div class="answer">Answer: 1.0</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Quick Reference Table</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Quantity</th>
+              <th>Symbol</th>
+              <th>Formula</th>
+              <th>Unit</th>
+            </tr>
+            <tr><td>Density</td><td>ρ</td><td>m/V</td><td>kg/m³</td></tr>
+            <tr><td>Relative Density</td><td>R.D.</td><td>ρ(substance)/ρ(water)</td><td>None</td></tr>
+            <tr><td>Upthrust</td><td>U</td><td>ρ(fluid) × V × g</td><td>N</td></tr>
+            <tr><td>Weight</td><td>W</td><td>m × g</td><td>N</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Study Tips for JAMB</h2>
+
+        <div class="jamb-alert">
+          <h4>How to avoid mistakes</h4>
+          <ul>
+            <li>Master the formulas because JAMB asks many calculations here</li>
+            <li>Do not confuse density with relative density</li>
+            <li>Remember <span class="math">1 g/cm³ = 1000 kg/m³</span></li>
+            <li>For floating bodies, always use <strong>Weight = Upthrust</strong></li>
+            <li>If R.D. is less than 1, the body floats in water</li>
+            <li>If R.D. is greater than 1, it sinks in water</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 JAMB Examination Objectives</h2>
+        <p>You should be able to:</p>
+        <ul>
+          <li>Distinguish between density and relative density</li>
+          <li>Determine upthrust on immersed bodies</li>
+          <li>Apply Archimedes’ principle</li>
+          <li>Apply the law of floatation</li>
+          <li>Solve problems on floating and sinking bodies</li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Liquids at Rest. This chapter is very important because it links density, pressure, buoyancy, and practical applications like ships and hydrometers.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise density, relative density, upthrust, Archimedes’ principle, and the law of floatation.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

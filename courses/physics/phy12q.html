@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Temperature and Its Measurement</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Temperature and Its Measurement (Chapter 12)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Temperature and Its Measurement</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3000,PASS:60}; // 50 minutes for 50 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Concept of Temperature & Heat Flow",
+  5:"B: Thermometric Properties",
+  15:"C: Temperature Scales & Conversions",
+  30:"D: Thermometer Calibration",
+  40:"E: Types of Thermometers & Comparison"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Physics Temperature Questions
+const QUIZ_DATA=[
+  // Section A: Concept of Temperature & Heat Flow (1-5)
+  {q:"Temperature is defined as the:",o:["Total kinetic energy of molecules in a body","Degree of hotness or coldness of a body","Amount of heat energy in a body","Average potential energy of molecules"],a:1,e:"Temperature measures the degree of hotness or coldness, not the total energy (heat)."},
+  {q:"Heat flows from one body to another when there is a difference in:",o:["Mass","Density","Temperature","Volume"],a:2,e:"Heat naturally flows from a body at higher temperature to one at lower temperature."},
+  {q:"The SI unit of temperature is:",o:["Degree Celsius (°C)","Degree Fahrenheit (°F)","Kelvin (K)","Joule (J)"],a:2,e:"Kelvin is the SI base unit for temperature; Celsius is a derived unit."},
+  {q:"Two bodies at different temperatures are placed in contact. Heat will flow until:",o:["The bodies have equal mass","The bodies have equal heat capacity","Thermal equilibrium is reached","The hotter body loses all its heat"],a:2,e:"Heat flows until both bodies reach the same temperature (thermal equilibrium)."},
+  {q:"Which statement is TRUE about temperature?",o:["It is a form of energy","It determines the direction of heat flow","It is measured in joules","It increases with the mass of the body"],a:1,e:"Temperature difference determines heat flow direction; it is not energy itself."},
+  
+  // Section B: Thermometric Properties (6-15)
+  {q:"A thermometric property is a property that:",o:["Remains constant at all temperatures","Changes with mass of the substance","Changes measurably with temperature","Depends only on the volume of the substance"],a:2,e:"A thermometric property must change in a measurable way with temperature."},
+  {q:"Which of the following is NOT a thermometric property?",o:["Expansion of mercury","Electrical resistance of platinum","Colour of a painted surface","Pressure of a gas at constant volume"],a:2,e:"Colour change is not a standard, measurable thermometric property used in thermometers."},
+  {q:"The thermometric property used in a liquid-in-glass thermometer is:",o:["Electrical resistance","Volume expansion of liquid","Pressure of trapped gas","Thermoelectric e.m.f"],a:1,e:"Liquid-in-glass thermometers use the expansion of mercury or alcohol."},
+  {q:"In a constant volume gas thermometer, the thermometric property is:",o:["Volume of the gas","Mass of the gas","Pressure of the gas","Density of the gas"],a:2,e:"At constant volume, pressure changes with temperature (Gay-Lussac's law)."},
+  {q:"The thermometric property used in a thermocouple is:",o:["Change in length","Change in resistance","Thermoelectric e.m.f","Change in pressure"],a:2,e:"Thermocouples generate an e.m.f (voltage) proportional to temperature difference."},
+  {q:"For a property to be suitable as a thermometric property, it must:",o:["Change rapidly with time","Be independent of the substance used","Vary linearly and uniformly with temperature","Remain constant at the ice point"],a:2,e:"Uniform, linear variation allows for accurate calibration and measurement."},
+  {q:"Which thermometric property is used in a platinum resistance thermometer?",o:["Change in length","Change in electrical resistance","Thermoelectric effect","Thermal radiation"],a:1,e:"Platinum wire resistance changes predictably with temperature."},
+  {q:"A bimetallic strip thermometer works on the principle of:",o:["Different rates of thermal expansion of two metals","Thermoelectric effect","Change in electrical resistance","Gas expansion"],a:0,e:"Two metals with different expansion rates bend when heated."},
+  {q:"The thermometric property used in a pyrometer is:",o:["Colour of thermal radiation","Electrical resistance","Liquid expansion","Gas pressure"],a:0,e:"Pyrometers measure temperature by detecting thermal radiation intensity/colour."},
+  {q:"Which thermometric property has the widest range of application?",o:["Mercury expansion","Alcohol expansion","Gas pressure","Platinum resistance"],a:2,e:"Gas thermometers can measure from -270°C to 1500°C."},
+  
+  // Section C: Temperature Scales & Conversions (16-30)
+  {q:"On the Celsius scale, the lower fixed point is:",o:["0°C (ice point)","32°C (ice point)","100°C (steam point)","273°C (absolute zero)"],a:0,e:"The ice point (melting ice) is defined as 0°C."},
+  {q:"The upper fixed point on the Kelvin scale is:",o:["0 K","100 K","273 K","373 K"],a:3,e:"Steam point = 100°C = 373 K (100 + 273)."},
+  {q:"Absolute zero on the Celsius scale is:",o:["0°C","-32°C","-100°C","-273°C"],a:3,e:"0 K = -273°C (approximately)."},
+  {q:"Convert 25°C to Kelvin:",o:["248 K","298 K","300 K","373 K"],a:1,e:"T(K) = 25 + 273 = 298 K."},
+  {q:"Convert 350 K to Celsius:",o:["623°C","77°C","23°C","77°C"],a:1,e:"T(°C) = 350 - 273 = 77°C."},
+  {q:"The temperature at which Celsius and Fahrenheit scales give the same reading is:",o:["-40°","0°","32°","100°"],a:0,e:"Solving °C = (9/5)°C + 32 gives °C = -40°."},
+  {q:"Convert 68°F to Celsius:",o:["10°C","20°C","30°C","40°C"],a:1,e:"°C = (5/9)(68 - 32) = (5/9)(36) = 20°C."},
+  {q:"Normal human body temperature is 37°C. What is this in Kelvin?",o:["237 K","273 K","310 K","373 K"],a:2,e:"37 + 273 = 310 K."},
+  {q:"A room temperature of 300 K is equivalent to:",o:["27°C","73°C","527°C","573°C"],a:0,e:"300 - 273 = 27°C."},
+  {q:"The boiling point of water on the Fahrenheit scale is:",o:["100°F","212°F","273°F","373°F"],a:1,e:"100°C = (9/5 × 100) + 32 = 212°F."},
+  {q:"If the temperature of a body increases by 10°C, the increase in Kelvin is:",o:["5 K","10 K","263 K","283 K"],a:1,e:"A change of 1°C = change of 1 K; size of units is identical."},
+  {q:"Absolute zero temperature is defined as:",o:["0°C","-273°C","The temperature at which water freezes","The temperature at which all molecular motion ceases"],a:3,e:"Absolute zero (0 K) is the theoretical temperature where all molecular motion stops."},
+  {q:"The triple point of water is:",o:["0°C at 1 atm","0.01°C at 611 Pa","100°C at 1 atm","-273°C at 0 Pa"],a:1,e:"Triple point (where ice, water, and steam coexist) is 273.16 K (0.01°C) at 611 Pa."},
+  {q:"Which temperature scale does NOT have negative values?",o:["Celsius","Fahrenheit","Kelvin","All have negative values"],a:2,e:"Kelvin scale starts at absolute zero (0 K) and has no negative values."},
+  {q:"A temperature difference of 50°C is equivalent to a difference of:",o:["50 K","323 K","273 K","90 K"],a:0,e:"Temperature differences are the same in Celsius and Kelvin scales."},
+  
+  // Section D: Thermometer Calibration (31-40)
+  {q:"During calibration of a thermometer, the ice point is assigned a value of:",o:["0 K","0°C","273 K","Both B and C"],a:3,e:"Ice point = 0°C = 273 K."},
+  {q:"The fundamental interval of a thermometer is the difference between:",o:["Upper and lower fixed points","Laboratory and outdoor temperatures","Highest and lowest recorded temperatures","Body temperature and room temperature"],a:0,e:"Fundamental interval = steam point - ice point = 100°C or 100 K."},
+  {q:"A mercury-in-glass thermometer has thread length 2.0 cm at 0°C and 22.0 cm at 100°C. What length corresponds to 50°C?",o:["10.0 cm","11.0 cm","12.0 cm","24.0 cm"],a:2,e:"Using linear scale: L = 2 + (50/100) × (22-2) = 2 + 10 = 12 cm."},
+  {q:"In a resistance thermometer, R₀ = 10Ω and R₁₀₀ = 30Ω. What is the temperature when R = 22Ω?",o:["40°C","50°C","60°C","70°C"],a:2,e:"T = [(22-10)/(30-10)] × 100 = (12/20) × 100 = 60°C."},
+  {q:"A constant volume gas thermometer reads 60 cmHg at 0°C and 90 cmHg at 100°C. The pressure at 50°C will be:",o:["70 cmHg","75 cmHg","80 cmHg","85 cmHg"],a:1,e:"P = 60 + (50/100) × (90-60) = 60 + 15 = 75 cmHg."},
+  {q:"The fundamental assumption in thermometer calibration is that the thermometric property varies:",o:["Exponentially with temperature","Linearly with temperature","Inversely with temperature","Logarithmically with temperature"],a:1,e:"Calibration assumes linear variation between fixed points."},
+  {q:"A thermocouple produces 0 mV at 0°C and 8 mV at 100°C. What e.m.f corresponds to 75°C?",o:["4 mV","5 mV","6 mV","8 mV"],a:2,e:"E = (75/100) × 8 = 6 mV (assuming linearity from 0)."},
+  {q:"If a thermometer reads 4 cm at ice point and 20 cm at steam point, what is the temperature when it reads 10 cm?",o:["31.25°C","37.5°C","40.0°C","62.5°C"],a:1,e:"T = [(10-4)/(20-4)] × 100 = (6/16) × 100 = 37.5°C."},
+  {q:"The sensitivity of a liquid-in-glass thermometer can be increased by:",o:["Using a narrower capillary tube","Using a larger bulb","Using a liquid with higher expansion coefficient","All of the above"],a:3,e:"All these factors increase the thermometer's sensitivity."},
+  {q:"A poorly calibrated thermometer reads 2°C in melting ice and 102°C in steam. What is the correct temperature when it reads 52°C?",o:["50°C","52°C","54°C","100°C"],a:0,e:"Corrected T = [(52-2)/(102-2)] × 100 = (50/100) × 100 = 50°C."},
+  
+  // Section E: Types of Thermometers & Comparison (41-50)
+  {q:"Which thermometer is most suitable for measuring very high temperatures in a furnace?",o:["Mercury thermometer","Alcohol thermometer","Thermocouple","Clinical thermometer"],a:2,e:"Thermocouples measure up to 1500°C; mercury boils at 357°C."},
+  {q:"A clinical thermometer differs from other thermometers because it:",o:["Uses a different liquid","Has a constriction (kink) in the capillary tube","Measures higher temperatures","Is larger in size"],a:1,e:"The kink prevents mercury from falling back, allowing reading after removal."},
+  {q:"The standard thermometer against which others are calibrated is the:",o:["Mercury-in-glass thermometer","Constant volume gas thermometer","Platinum resistance thermometer","Thermocouple"],a:1,e:"Gas thermometers are most accurate and reproducible."},
+  {q:"Which thermometer responds most quickly to temperature changes?",o:["Liquid-in-glass","Gas thermometer","Thermocouple","Bimetallic strip"],a:2,e:"Thermocouples have very low heat capacity and respond rapidly."},
+  {q:"A thermometer that can measure temperatures without contact is the:",o:["Mercury thermometer","Resistance thermometer","Pyrometer","Therocouple"],a:2,e:"Pyrometers detect thermal radiation, requiring no physical contact."},
+  {q:"The range of a mercury thermometer is limited because mercury:",o:["Freezes at -39°C and boils at 357°C","Expands too rapidly","Is expensive","Is poisonous"],a:0,e:"Phase changes limit the usable range."},
+  {q:"Alcohol is sometimes preferred to mercury in thermometers because it:",o:["Is more accurate","Has a lower freezing point (-115°C)","Is silver in colour","Does not expand uniformly"],a:1,e:"Alcohol remains liquid at much lower temperatures than mercury."},
+  {q:"Which factor does NOT affect the choice of thermometer for a particular job?",o:["Range required","Accuracy needed","Colour of the liquid","Physical conditions of measurement"],a:2,e:"Liquid colour is irrelevant to measurement capability."},
+  {q:"A six's maximum and minimum thermometer uses:",o:["Mercury and alcohol","Two metals","Gas pressure","Electrical resistance"],a:0,e:"It uses both mercury (for pushing indices) and alcohol (as the thermometric liquid)."},
+  {q:"The main advantage of the Kelvin scale over the Celsius scale is that:",o:["It has smaller divisions","It is an absolute scale based on thermodynamic principles","It is easier to calculate with","It is used internationally"],a:1,e:"Kelvin is an absolute thermodynamic scale starting at absolute zero, making it scientifically fundamental."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('temperature_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('temperature_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('temperature_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,5,15,30,40,50];
+  const sectionNames=["A: Concept of Temperature & Heat Flow","B: Thermometric Properties","C: Temperature Scales & Conversions","D: Thermometer Calibration","E: Types of Thermometers & Comparison"];
+  
+  for(let s=0;s<5;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('temperature_quiz_auth');
+  sessionStorage.removeItem('temperature_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('temperature_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('temperature_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

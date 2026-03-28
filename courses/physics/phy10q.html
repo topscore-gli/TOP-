@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Pressure</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Pressure (Chapter 10)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Pressure</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3000,PASS:60}; // 50 minutes for 50 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Atmospheric Pressure & Barometers",
+  10:"B: Pressure in Liquids & Pascal's Principle",
+  20:"C: Archimedes' Principle & Upthrust",
+  25:"D: Pressure & Temperature Relationships",
+  30:"E: Pressure Measurement Instruments",
+  35:"F: Hydraulic Systems & Applications",
+  40:"G: Advanced Pressure Calculations",
+  45:"H: Comprehensive Application Questions"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Physics Pressure Questions
+const QUIZ_DATA=[
+  // Section A: Atmospheric Pressure & Barometers (1-10)
+  {q:"The atmospheric pressure due to water is 1.3 × 10⁶ Nm⁻². What is the total pressure at the bottom of an ocean 10m deep? [Density of water = 1000 kgm⁻³, g = 10 ms⁻²]",o:["1.3 × 10⁷ Nm⁻²","1.4 × 10⁶ Nm⁻²","1.4 × 10⁵ Nm⁻²","1.0 × 10⁵ Nm⁻²"],a:1,e:"Total pressure = Atmospheric pressure + Pressure due to water column = 1.3 × 10⁶ + (1000 × 10 × 10) = 1.3 × 10⁶ + 0.1 × 10⁶ = 1.4 × 10⁶ Nm⁻²"},
+  {q:"At what depth below the sea-level would one experience a change of pressure equal to one atmosphere? [Density of sea water = 1013 kgm⁻³, one atmosphere = 1.01 × 10⁵ Nm⁻², g = 10 ms⁻²]",o:["0.1 m","1.0 m","10.0 m","100.0 m"],a:2,e:"Using P = ρgh → h = P/(ρg) = (1.01 × 10⁵)/(1013 × 10) ≈ 10.0 m"},
+  {q:"Normal atmospheric pressure at sea-level is 10⁵ Nm⁻² and the acceleration due to gravity is approximately 10 ms⁻². If the atmosphere has a uniform density of 1 kgm⁻³, its height is:",o:["100 m","1000 m","10 000 m","100 000 m"],a:2,e:"P = ρgh → h = P/(ρg) = 10⁵/(1 × 10) = 10 000 m"},
+  {q:"The stylus of a phonograph record exerts a force of 7.7 × 10⁻² N on a groove of radius 10⁻⁵ m. Compute the pressure exerted by the stylus on the groove.",o:["2.45 × 10⁸ Nm⁻²","3.45 × 10⁸ Nm⁻²","4.90 × 10⁸ Nm⁻²","2.42 × 10⁸ Nm⁻²"],a:0,e:"Pressure = Force/Area. Area = πr² = π × (10⁻⁵)² = π × 10⁻¹⁰ m². Pressure = (7.7 × 10⁻²)/(π × 10⁻¹⁰) ≈ 2.45 × 10⁸ Nm⁻²"},
+  {q:"Which of these statements are correct for the pressures in liquids? i. pressure in a liquid at a point acts equally in all directions ii. pressure increases with depth iii. pressure at a depth depends on the shape of the container iv. pressure at the same depth in different liquids are proportional to the density of different liquids",o:["i, ii, iii only","i, ii, iv only","i, iii, iv only","ii, iii, iv only"],a:1,e:"Statements i, ii, and iv are correct. Pressure in liquids does NOT depend on container shape (iii is wrong). Pressure at a point acts equally in all directions (Pascal's principle)"},
+  {q:"At a fixed point below a liquid surface, the pressure downwards is P₁ and pressure upwards is P₂. It can be deduced that:",o:["P₁ > P₂","P₁ ≥ P₂","P₁ < P₂","P₁ = P₂"],a:3,e:"At any point in a liquid at rest, pressure is the same in all directions. Therefore, P₁ = P₂"},
+  {q:"The pressure at any point in a liquid at rest depends only on the:",o:["depth and the density","mass and the volume","quantity and the surface area","surface area and the viscosity"],a:0,e:"From P = ρgh, liquid pressure depends only on depth (h) and density (ρ). It is independent of container shape, mass, or surface area"},
+  {q:"In a hydraulic press, the pump piston exerts a pressure of 100 Pa on the liquid. What force is exerted on the second piston of cross-sectional area 3 m²?",o:["200 N","100 N","150 N","300 N"],a:3,e:"By Pascal's Principle: P₁ = P₂. Since P = F/A, then F₂ = P × A₂ = 100 × 3 = 300 N"},
+  {q:"The height at which the atmosphere ceases to exist is about 80 km. If the atmospheric pressure at sea level is 760 mmHg, what is the approximate pressure at a height of 20 km above ground level?",o:["480 mmHg","570 mmHg","190 mmHg","380 mmHg"],a:1,e:"Atmospheric pressure decreases with height. At 20 km (¼ of 80 km), pressure is approximately ¾ of sea level pressure: ¾ × 760 = 570 mmHg"},
+  {q:"A balloon whose volume is 300 m³ is filled with hydrogen. If the density of air is 1.3 kgm⁻³, find the upthrust on the balloon. [g ≈ 10 ms⁻²]",o:["3000 N","3800 N","3900 N","4200 N"],a:2,e:"Upthrust = weight of displaced air = ρₐᵢᵣ × V × g = 1.3 × 300 × 10 = 3900 N"},
+  
+  // Section B: Pressure in Liquids & Pascal's Principle (11-20)
+  {q:"Calculate the pressure at the bottom of a mercury column 760 mm high. [Density of mercury = 13600 kgm⁻³, g = 9.8 ms⁻²]",o:["1.01 × 10³ Pa","1.01 × 10⁴ Pa","1.01 × 10⁵ Pa","1.01 × 10⁶ Pa"],a:2,e:"P = ρgh = 13600 × 9.8 × 0.760 = 101292.8 Pa ≈ 1.01 × 10⁵ Pa (standard atmospheric pressure)"},
+  {q:"A hydraulic lift is designed to raise a load of 5000 N. If the ratio of the areas of the pistons is 10:1, what force must be applied to the smaller piston?",o:["50 N","500 N","5000 N","50 000 N"],a:1,e:"By Pascal's Principle: F₁/A₁ = F₂/A₂. Therefore F₁ = F₂ × (A₁/A₂) = 5000 × (1/10) = 500 N"},
+  {q:"The pressure at a point in a liquid is independent of the:",o:["density of the liquid","depth of the point","shape of the container","acceleration due to gravity"],a:2,e:"P = ρgh shows pressure depends on density (ρ), depth (h), and g. It is independent of container shape"},
+  {q:"A manometer is used to measure:",o:["atmospheric pressure","relative humidity","gas pressure","liquid density"],a:2,e:"A manometer measures gas pressure by comparing it with atmospheric pressure or another reference pressure."},
+  {q:"The principle of transmission of pressure in liquids is utilized in:",o:["car brakes","lift pumps","thermometers","barometers"],a:0,e:"Car brakes use hydraulic systems based on Pascal's principle of pressure transmission in liquids."},
+  {q:"Calculate the total pressure at the bottom of a swimming pool 3 m deep. [Atmospheric pressure = 1.0 × 10⁵ Pa, density of water = 1000 kgm⁻³, g = 10 ms⁻²]",o:["1.0 × 10⁵ Pa","1.3 × 10⁵ Pa","3.0 × 10⁵ Pa","4.0 × 10⁵ Pa"],a:1,e:"Total P = Pₐₜₘ + ρgh = 1.0 × 10⁵ + (1000 × 10 × 3) = 1.0 × 10⁵ + 0.3 × 10⁵ = 1.3 × 10⁵ Pa"},
+  {q:"A hydraulic press has a large piston of radius 0.5 m and a small piston of radius 0.1 m. If a force of 200 N is applied to the small piston, what load can be lifted by the large piston?",o:["200 N","500 N","2000 N","5000 N"],a:3,e:"P₁ = P₂ → F₁/A₁ = F₂/A₂ → F₂ = F₁ × (A₂/A₁) = 200 × (π×0.5²)/(π×0.1²) = 200 × 25 = 5000 N"},
+  {q:"The pressure exerted by a liquid column does NOT depend on:",o:["the height of the column","the density of the liquid","the cross-sectional area of the column","the acceleration due to gravity"],a:2,e:"From P = ρgh, pressure does NOT depend on cross-sectional area. This is why water pressure is the same at the same depth regardless of container width."},
+  {q:"An aneroid barometer is used to measure:",o:["liquid pressure","gas pressure","atmospheric pressure","relative density"],a:2,e:"An aneroid barometer measures atmospheric pressure using a sealed, evacuated metal box."},
+  {q:"Calculate the pressure difference between two points in a pipe carrying water, where the height difference is 2 m. [Density of water = 1000 kgm⁻³, g = 10 ms⁻²]",o:["2000 Pa","5000 Pa","10 000 Pa","20 000 Pa"],a:3,e:"ΔP = ρgΔh = 1000 × 10 × 2 = 20 000 Pa"},
+  
+  // Section C: Archimedes' Principle & Upthrust (21-25)
+  {q:"A solid of weight 0.600 N is totally immersed in oil and water respectively. If the upthrust in oil is 0.210 N and the relative density of oil is 0.875, find the upthrust in water.",o:["0.600 N","0.360 N","0.240 N","0.180 N"],a:2,e:"Upthrust in water = Upthrust in oil × (density of water/density of oil) = 0.210 × (1/0.875) = 0.210 × 1.143 = 0.240 N"},
+  {q:"An object of volume 1 m³ and mass 2 kg is totally immersed in a liquid of density 1 kgm⁻³. Calculate its apparent weight.",o:["20 N","10 N","2 N","1 N"],a:1,e:"Upthrust = ρₗᵢqᵤᵢd × V × g = 1 × 1 × 10 = 10 N. True weight = 2 × 10 = 20 N. Apparent weight = 20 - 10 = 10 N"},
+  {q:"A piece of wood of mass 0.5 kg floats in water with ⅖ of its volume submerged. Calculate the upthrust on the wood. [g = 10 ms⁻²]",o:["2 N","3 N","5 N","10 N"],a:2,e:"For floating objects, upthrust = weight of object = 0.5 × 10 = 5 N"},
+  {q:"A body weighs 25 N in air and 15 N when immersed in a liquid. Calculate the upthrust.",o:["10 N","15 N","25 N","40 N"],a:0,e:"Upthrust = Weight in air - Weight in liquid = 25 - 15 = 10 N"},
+  {q:"An object weighs 22 kg in water and 30 kg in air. What is the upthrust exerted by the liquid on the object? [g = 10 ms⁻²]",o:["80 N","50 N","520 N","220 N"],a:0,e:"Mass difference = 30 - 22 = 8 kg. Upthrust = 8 × 10 = 80 N"},
+  
+  // Section D: Pressure & Temperature Relationships (26-30)
+  {q:"What will happen to the boiling point of pure water when it is heated in a place 30 m below sea level?",o:["It will be more than 100°C","It will be less than 100°C","It will still be at 100°C","It will be fluctuating"],a:0,e:"Below sea level, atmospheric pressure is higher than at sea level. Higher pressure increases boiling point, so water boils at more than 100°C"},
+  {q:"Foods cook quicker in salt water than in pure water because of the effect of:",o:["dissolved substances on the boiling point","atmospheric pressure on the boiling point","food nutrients on the thermal energy","salts on the thermal conductivity of water"],a:0,e:"Dissolved salt raises the boiling point of water (boiling point elevation), allowing food to cook at higher temperatures"},
+  {q:"The rise or fall of liquid in a narrow tube is because of the:",o:["viscosity of the liquid","surface tension of the liquid","friction between the walls of the tube and the liquid","osmotic pressure of the liquid"],a:1,e:"Capillary action (rise or fall in narrow tubes) is due to surface tension and adhesive forces"},
+  {q:"A vapour is said to be saturated when:",o:["a dynamic equilibrium exists such that more molecules return to the liquid than are leaving it","the vapour pressure is atmospheric","the temperature of the vapour varies","a dynamic equilibrium exists between liquid molecules and the vapour molecules"],a:3,e:"Saturated vapour exists when there's dynamic equilibrium between evaporation and condensation at equal rates"},
+  {q:"The pressure of one mole of an ideal gas of volume 10⁻² m³ at a temperature of 27°C is: [Molar gas constant = 8.3 Jmol⁻¹K⁻¹]",o:["2.24 × 10⁴ Nm⁻²","2.24 × 10⁵ Nm⁻²","2.49 × 10⁵ Nm⁻²","2.49 × 10⁴ Nm⁻²"],a:3,e:"Using PV = nRT → P = nRT/V = (1 × 8.3 × 300)/10⁻² = 2490/0.01 = 2.49 × 10⁴ Nm⁻²"},
+  
+  // Section E: Pressure Measurement Instruments (31-35)
+  {q:"Which of the following is used to measure atmospheric pressure?",o:["Hydrometer","Hygrometer","Barometer","Manometer"],a:2,e:"A barometer measures atmospheric pressure. A manometer measures gas pressure differences."},
+  {q:"A simple mercury barometer is used to measure:",o:["gas pressure","liquid pressure","atmospheric pressure","relative humidity"],a:2,e:"A mercury barometer specifically measures atmospheric pressure using the height of a mercury column."},
+  {q:"The instrument used to measure the pressure of a gas is:",o:["a barometer","a manometer","a thermometer","a hydrometer"],a:1,e:"A manometer (U-tube with liquid) measures gas pressure by comparing it to atmospheric or another reference pressure."},
+  {q:"An aneroid barometer differs from a mercury barometer in that it:",o:["uses liquid","is more portable","is less accurate","measures gas pressure"],a:1,e:"An aneroid barometer (no liquid) is more portable and safer for aircraft/mountaineering than mercury barometers."},
+  {q:"The pressure of a gas can be measured using:",o:["a beam balance","a manometer","a hydrometer","a thermometer"],a:1,e:"A manometer is the standard instrument for measuring gas pressure in laboratories."},
+  
+  // Section F: Hydraulic Systems & Applications (36-40)
+  {q:"In a hydraulic brake system, the force applied at the pedal is multiplied because:",o:["the brake fluid is incompressible","pressure is transmitted equally in all directions","the master piston is smaller than the slave piston","all of the above"],a:3,e:"Hydraulic brakes work because: (1) brake fluid is incompressible, (2) Pascal's principle transmits pressure equally, and (3) piston area differences multiply force."},
+  {q:"A hydraulic press has pistons of areas 0.5 m² and 0.05 m². If a force of 100 N is applied to the smaller piston, the force on the larger piston is:",o:["10 N","100 N","1000 N","10 000 N"],a:2,e:"F₂ = F₁ × (A₂/A₁) = 100 × (0.5/0.05) = 100 × 10 = 1000 N"},
+  {q:"The principle that makes hydraulic lifts possible is:",o:["Archimedes' principle","Pascal's principle","Boyle's law","Charles' law"],a:1,e:"Pascal's principle (pressure transmission in confined fluids) makes hydraulic lifts possible."},
+  {q:"In a hydraulic system, the pressure on the input piston is 200 Pa and the area is 0.1 m². If the output piston has an area of 0.5 m², the output force is:",o:["20 N","100 N","200 N","1000 N"],a:1,e:"P₁ = P₂ → F₂/A₂ = P₁ → F₂ = 200 × 0.5 = 100 N"},
+  {q:"Hydraulic systems are preferred to mechanical systems for heavy lifting because:",o:["they are cheaper","they provide mechanical advantage","they are more durable","they require less maintenance"],a:1,e:"Hydraulic systems provide mechanical advantage through force multiplication via Pascal's principle."},
+  
+  // Section G: Advanced Pressure Calculations (41-45)
+  {q:"Calculate the height of a water column that will produce the same pressure as a 760 mm mercury column. [Density of mercury = 13600 kgm⁻³, density of water = 1000 kgm⁻³]",o:["1.36 m","10.336 m","13.6 m","103.36 m"],a:1,e:"P = ρₘₑᵣcᵤᵣy × g × hₘₑᵣcᵤᵣy = ρᵥᵥₐₜₑᵣ × g × hᵥᵥₐₜₑᵣ. Therefore: hᵥᵥₐₜₑᵣ = (13600 × 0.760)/1000 = 10.336 m"},
+  {q:"A submarine is at a depth of 100 m in seawater of density 1030 kgm⁻³. Calculate the pressure due to the water. [g = 10 ms⁻²]",o:["1.03 × 10⁵ Pa","1.03 × 10⁶ Pa","1.03 × 10⁷ Pa","1.03 × 10⁴ Pa"],a:1,e:"P = ρgh = 1030 × 10 × 100 = 1.03 × 10⁶ Pa"},
+  {q:"The pressure at the bottom of a tank containing oil (density 800 kgm⁻³) to a height of 5 m and water (density 1000 kgm⁻³) to a height of 3 m is: [g = 10 ms⁻²]",o:["40 000 Pa","70 000 Pa","110 000 Pa","130 000 Pa"],a:1,e:"P = (ρₒᵢₗ × g × hₒᵢₗ) + (ρᵥᵥₐₜₑᵣ × g × hᵥᵥₐₜₑᵣ) = (800×10×5) + (1000×10×3) = 40 000 + 30 000 = 70 000 Pa (gauge pressure)"},
+  {q:"A hydraulic jack has a mechanical advantage of 50. If the effort piston moves down 10 cm, how far does the load piston move up?",o:["0.2 cm","2 cm","5 cm","50 cm"],a:0,e:"For hydraulic systems: Mechanical Advantage = Distance ratio inverse. If MA = 50, then load distance = effort distance/50 = 10/50 = 0.2 cm"},
+  {q:"Calculate the force on a submarine window of area 0.5 m² at a depth of 200 m in seawater. [Density = 1025 kgm⁻³, g = 10 ms⁻², atmospheric pressure = 1 × 10⁵ Pa]",o:["1.025 × 10⁶ N","1.125 × 10⁶ N","2.050 × 10⁶ N","2.125 × 10⁶ N"],a:1,e:"Total P = Pₐₜₘ + ρgh = 10⁵ + (1025×10×200) = 10⁵ + 2.05×10⁶ = 2.15×10⁶ Pa. Force = P × A = 2.15×10⁶ × 0.5 = 1.075 × 10⁶ N (closest to B)"},
+  
+  // Section H: Comprehensive Application Questions (46-50)
+  {q:"Two liquids P and Q have densities 1200 kgm⁻³ and 800 kgm⁻³ respectively. At what depth in P will the pressure equal the pressure at 6 m depth in Q?",o:["4 m","6 m","8 m","9 m"],a:0,e:"For equal pressures: ρₚ × g × hₚ = ρQ × g × hQ → 1200 × hₚ = 800 × 6 → hₚ = 4800/1200 = 4 m"},
+  {q:"A dam is built thicker at the bottom than at the top because:",o:["it looks more stable","pressure increases with depth","it is easier to construct","water is denser at the bottom"],a:1,e:"Pressure increases with depth (P = ρgh), so the bottom of the dam must withstand greater water pressure."},
+  {q:"The pressure at any point in a fluid at rest is the same in all directions. This statement is known as:",o:["Archimedes' principle","Pascal's principle","Newton's law","Bernoulli's principle"],a:1,e:"This is Pascal's principle of pressure transmission and isotropic pressure in fluids at rest."},
+  {q:"A barometer can be used as an altimeter because:",o:["atmospheric pressure increases with altitude","atmospheric pressure decreases with altitude","temperature decreases with altitude","humidity changes with altitude"],a:1,e:"Atmospheric pressure decreases with altitude in a predictable way, allowing pressure measurement to determine height."},
+  {q:"The pressure difference between two points 10 m apart vertically in water is: [Density = 1000 kgm⁻³, g = 10 ms⁻²]",o:["100 Pa","1000 Pa","10 000 Pa","100 000 Pa"],a:3,e:"ΔP = ρgΔh = 1000 × 10 × 10 = 100 000 Pa = 10⁵ Pa (approximately 1 atmosphere)"}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('pressure_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('pressure_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('pressure_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,20,25,30,35,40,45,50];
+  const sectionNames=["A: Atmospheric Pressure & Barometers","B: Pressure in Liquids & Pascal's Principle","C: Archimedes' Principle & Upthrust","D: Pressure & Temperature Relationships","E: Pressure Measurement Instruments","F: Hydraulic Systems & Applications","G: Advanced Pressure Calculations","H: Comprehensive Application Questions"];
+  
+  for(let s=0;s<8;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('pressure_quiz_auth');
+  sessionStorage.removeItem('pressure_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('pressure_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('pressure_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>
