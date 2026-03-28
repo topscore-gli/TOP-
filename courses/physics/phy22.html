@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Characteristics of Sound Waves Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1460px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:4;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .hot{fill:rgba(255,107,107,.32);stroke:none}
+    .cool{fill:rgba(78,205,196,.30);stroke:none}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🎵 Characteristics of Sound Waves</h1>
+        <p>JAMB Physics • pitch • loudness • quality • echo • Doppler effect • resonance • beats</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains the nature of sound waves, pitch, loudness, quality, speed of sound, echo, Doppler effect, resonance in pipes, and beat frequency calculations.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Sound is a longitudinal mechanical wave</li>
+            <li>Pitch depends on frequency</li>
+            <li>Loudness depends on amplitude</li>
+            <li>Beat frequency is the difference between two close frequencies</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Different characteristics of sound depend on different wave properties: frequency gives pitch, amplitude gives loudness, and waveform gives quality.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Nature of Sound Waves</h2>
+        <p>Sound is a longitudinal mechanical wave that needs a material medium to travel.</p>
+
+        <ul>
+          <li><strong>Compression:</strong> region of high pressure and density</li>
+          <li><strong>Rarefaction:</strong> region of low pressure and density</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Longitudinal sound wave</div>
+          <svg viewBox="0 0 340 180" aria-label="Longitudinal sound wave diagram">
+            <line x1="20" y1="90" x2="320" y2="90" class="axis"/>
+            <line x1="38" y1="62" x2="38" y2="118" class="tick"/>
+            <line x1="46" y1="62" x2="46" y2="118" class="tick"/>
+            <line x1="54" y1="62" x2="54" y2="118" class="tick"/>
+            <line x1="62" y1="62" x2="62" y2="118" class="tick"/>
+
+            <line x1="110" y1="75" x2="110" y2="105" class="tick"/>
+            <line x1="138" y1="75" x2="138" y2="105" class="tick"/>
+
+            <line x1="182" y1="62" x2="182" y2="118" class="tick"/>
+            <line x1="190" y1="62" x2="190" y2="118" class="tick"/>
+            <line x1="198" y1="62" x2="198" y2="118" class="tick"/>
+            <line x1="206" y1="62" x2="206" y2="118" class="tick"/>
+
+            <line x1="260" y1="75" x2="260" y2="105" class="tick"/>
+            <line x1="288" y1="75" x2="288" y2="105" class="tick"/>
+
+            <text x="34" y="42" class="label">C</text>
+            <text x="120" y="42" class="label">R</text>
+            <text x="186" y="42" class="label">C</text>
+            <text x="270" y="42" class="label">R</text>
+          </svg>
+          <div class="diagram-caption">Sound moves as compressions and rarefactions through a medium.</div>
+        </div>
+
+        <div class="highlight-box">
+          <p>Sound cannot travel through vacuum because there are no particles there to vibrate.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Characteristics of Sound Waves</h2>
+
+        <h3>A. Pitch</h3>
+        <p>Pitch depends on the frequency of the sound wave.</p>
+        <ul>
+          <li>Higher frequency → higher pitch</li>
+          <li>Lower frequency → lower pitch</li>
+          <li>Human hearing range is about 20 Hz to 20,000 Hz</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">High pitch vs low pitch</div>
+          <svg viewBox="0 0 340 180" aria-label="Pitch diagram">
+            <path d="M20 55 Q30 35 40 55 T60 55 T80 55 T100 55 T120 55 T140 55 T160 55" class="curve"/>
+            <path d="M20 125 Q50 95 80 125 T140 125 T200 125 T260 125 T320 125" class="curve"/>
+            <text x="190" y="60" class="label">High frequency = high pitch</text>
+            <text x="180" y="130" class="label">Low frequency = low pitch</text>
+          </svg>
+          <div class="diagram-caption">Closer wave cycles mean higher frequency and higher pitch.</div>
+        </div>
+
+        <h3>B. Loudness</h3>
+        <p>Loudness depends on the amplitude of the sound wave.</p>
+        <ul>
+          <li>Greater amplitude → louder sound</li>
+          <li>Measured in decibels (dB)</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Loud sound vs soft sound</div>
+          <svg viewBox="0 0 340 180" aria-label="Loudness diagram">
+            <path d="M20 60 Q45 20 70 60 T120 60 T170 60 T220 60 T270 60 T320 60" class="curve"/>
+            <path d="M20 125 Q45 110 70 125 T120 125 T170 125 T220 125 T270 125 T320 125" class="curve"/>
+            <text x="210" y="50" class="label">Large amplitude = louder</text>
+            <text x="214" y="118" class="label">Small amplitude = softer</text>
+          </svg>
+          <div class="diagram-caption">Amplitude affects loudness, not pitch.</div>
+        </div>
+
+        <h3>C. Quality (Timbre)</h3>
+        <p>Quality allows us to distinguish between two sounds of the same pitch and loudness.</p>
+        <p>It depends on the waveform and the relative intensities of overtones or harmonics.</p>
+
+        <div class="memory-tip">
+          <strong>🧠 Quick memory</strong>
+          <p>Pitch = frequency, Loudness = amplitude, Quality = waveform/overtones.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Speed of Sound</h2>
+        <p>The speed of sound depends on the medium and, in gases, on the temperature.</p>
+
+        <div class="formula-box">
+          <div class="title">Speed in gases</div>
+          <div class="line"><span class="math">v = √(γRT/M)</span></div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Temperature relationship</div>
+          <div class="line"><span class="math">v ∝ √T</span></div>
+          <div class="line"><span class="math">v₁/v₂ = √(T₁/T₂)</span></div>
+        </div>
+
+        <ul>
+          <li>Sound travels fastest in solids</li>
+          <li>Then in liquids</li>
+          <li>Slowest in gases</li>
+        </ul>
+
+        <div class="highlight-box">
+          <p>For JAMB, speed of sound in air is often taken as about <strong>330–340 m/s</strong>.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Echo and Reverberation</h2>
+
+        <h3>Echo</h3>
+        <p>An echo is the reflection of sound from a distant surface and is heard as a distinct repetition.</p>
+
+        <div class="formula-box">
+          <div class="title">Echo distance formula</div>
+          <div class="line"><span class="math">d = vt/2</span></div>
+        </div>
+
+        <ul>
+          <li>Minimum distance for a distinct echo is about 17 m</li>
+          <li>The factor 2 is for the forward and return journey of sound</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Echo from a wall</div>
+          <svg viewBox="0 0 340 180" aria-label="Echo diagram">
+            <circle cx="60" cy="115" r="12" class="hot"/>
+            <rect x="275" y="45" width="22" height="110" class="obj"/>
+            <line x1="74" y1="105" x2="275" y2="90" class="curve"/>
+            <line x1="275" y1="100" x2="88" y2="132" class="curve"/>
+            <text x="38" y="145" class="label">Source</text>
+            <text x="260" y="35" class="label">Wall</text>
+          </svg>
+          <div class="diagram-caption">The reflected sound returns to the listener as an echo.</div>
+        </div>
+
+        <h3>Reverberation</h3>
+        <p>Reverberation is caused by multiple reflections that make sound persist for a short time in a hall or room.</p>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Doppler Effect</h2>
+        <p>The Doppler effect is the apparent change in frequency due to relative motion between the source and the observer.</p>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Scenario</th>
+              <th>Observed Frequency</th>
+            </tr>
+            <tr><td>Approaching source</td><td>Higher frequency</td></tr>
+            <tr><td>Receding source</td><td>Lower frequency</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="formula-box">
+          <div class="title">Moving source</div>
+          <div class="line"><span class="math">f' = f[v/(v ± vₛ)]</span></div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Moving observer</div>
+          <div class="line"><span class="math">f' = f[(v ± v₀)/v]</span></div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Sign reminder</strong>
+          <p>Approaching gives higher frequency. For a moving source, use minus in the denominator when approaching and plus when receding.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Resonance and Stationary Waves in Pipes</h2>
+
+        <h3>Open pipes</h3>
+        <p>For a pipe open at both ends:</p>
+        <div class="formula-box">
+          <div class="title">Open pipe formulas</div>
+          <div class="line"><span class="math">f₀ = v/2L</span></div>
+          <div class="line"><span class="math">fₙ = nf₀</span></div>
+        </div>
+        <p>All harmonics are present.</p>
+
+        <h3>Closed pipes</h3>
+        <p>For a pipe closed at one end:</p>
+        <div class="formula-box">
+          <div class="title">Closed pipe formulas</div>
+          <div class="line"><span class="math">f₀ = v/4L</span></div>
+          <div class="line"><span class="math">fₙ = nf₀, n = 1, 3, 5...</span></div>
+        </div>
+        <p>Only odd harmonics are present.</p>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Open pipe vs closed pipe</div>
+          <svg viewBox="0 0 340 200" aria-label="Pipe resonance diagram">
+            <line x1="40" y1="60" x2="160" y2="60" class="axis"/>
+            <line x1="40" y1="100" x2="160" y2="100" class="axis"/>
+            <path d="M40 80 Q70 45 100 80 T160 80" class="curve"/>
+            <text x="65" y="28" class="label">Open pipe</text>
+
+            <line x1="205" y1="60" x2="305" y2="60" class="axis"/>
+            <line x1="205" y1="100" x2="305" y2="100" class="axis"/>
+            <line x1="305" y1="60" x2="305" y2="100" class="axis"/>
+            <path d="M205 80 Q255 45 305 80" class="curve"/>
+            <text x="220" y="28" class="label">Closed pipe</text>
+          </svg>
+          <div class="diagram-caption">Open pipes support all harmonics, while closed pipes support only odd harmonics.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Beats</h2>
+        <p>When two sounds of slightly different frequencies are heard together, beats are produced.</p>
+
+        <div class="formula-box">
+          <div class="title">Beat frequency</div>
+          <div class="line"><span class="math">f<sub>beat</sub> = |f₁ - f₂|</span></div>
+        </div>
+
+        <ul>
+          <li>Number of beats per second equals the difference in frequencies</li>
+          <li>Useful in tuning musical instruments</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Essential Calculations for JAMB</h2>
+
+        <div class="example-box">
+          <div class="title">Calculation 1: Speed and Wavelength</div>
+          <p>A sound wave of frequency 500 Hz travels through air at 340 m/s. Find the wavelength and period.</p>
+          <p><strong>Wavelength:</strong> <span class="math">λ = v/f = 340/500 = 0.68 m</span></p>
+          <p><strong>Period:</strong> <span class="math">T = 1/f = 1/500 = 0.002 s = 2 ms</span></p>
+          <div class="answer">Answer: 0.68 m and 2 ms</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 2: Echo</div>
+          <p>A man stands 510 m from a cliff. How long will it take to hear the echo if <span class="math">v = 340 m/s</span>?</p>
+          <p><strong>Step:</strong> Total distance = <span class="math">2 × 510 = 1020 m</span></p>
+          <p><span class="math">t = 1020/340 = 3 s</span></p>
+          <div class="answer">Answer: 3 s</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 3: Temperature Effect on Speed</div>
+          <p>Speed of sound is 330 m/s at 0°C (273 K). Find the speed at 27°C (300 K).</p>
+          <p><strong>Step:</strong> <span class="math">v₁/v₂ = √(T₁/T₂)</span></p>
+          <p><span class="math">330/v₂ = √(273/300)</span></p>
+          <p><span class="math">v₂ ≈ 346 m/s</span></p>
+          <div class="answer">Answer: 346 m/s</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 4: Doppler Effect</div>
+          <p>A train moving at 30 m/s sounds a whistle of frequency 500 Hz. Find the frequency heard by a stationary observer as the train approaches. Take <span class="math">v = 340 m/s</span>.</p>
+          <p><strong>Step:</strong> <span class="math">f' = f[v/(v - vₛ)]</span></p>
+          <p><span class="math">f' = 500 × 340/(340 - 30) = 548.4 Hz</span></p>
+          <div class="answer">Answer: 548.4 Hz</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 5: Resonance in Open Pipe</div>
+          <p>An open pipe is 0.5 m long. Find its fundamental frequency if <span class="math">v = 340 m/s</span>.</p>
+          <p><strong>Step:</strong> <span class="math">f₀ = v/2L = 340/(2 × 0.5) = 340 Hz</span></p>
+          <div class="answer">Answer: 340 Hz</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 6: Beats</div>
+          <p>Two tuning forks produce 5 beats per second. One fork has frequency 256 Hz. Find the possible frequencies of the second fork.</p>
+          <p><strong>Step:</strong> <span class="math">5 = |256 - f₂|</span></p>
+          <p><span class="math">f₂ = 261 Hz</span> or <span class="math">251 Hz</span></p>
+          <div class="answer">Answer: 261 Hz or 251 Hz</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 7: Closed Pipe</div>
+          <p>A closed pipe of length 0.4 m resonates at its fundamental frequency. Find the frequency if <span class="math">v = 320 m/s</span>.</p>
+          <p><strong>Step:</strong> <span class="math">f₀ = v/4L = 320/(4 × 0.4) = 200 Hz</span></p>
+          <div class="answer">Answer: 200 Hz</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Summary Table: Key Formulas</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Concept</th>
+              <th>Formula</th>
+            </tr>
+            <tr><td>Wave speed</td><td><span class="math">v = fλ</span></td></tr>
+            <tr><td>Echo distance</td><td><span class="math">d = vt/2</span></td></tr>
+            <tr><td>Open pipe fundamental</td><td><span class="math">f = v/2L</span></td></tr>
+            <tr><td>Closed pipe fundamental</td><td><span class="math">f = v/4L</span></td></tr>
+            <tr><td>Beat frequency</td><td><span class="math">f<sub>beat</sub> = |f₁ - f₂|</span></td></tr>
+            <tr><td>Doppler effect</td><td><span class="math">f' = f[v/(v ± vₛ)]</span></td></tr>
+            <tr><td>Temperature relation</td><td><span class="math">v₁/v₂ = √(T₁/T₂)</span></td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 JAMB Exam Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>High-score reminders</h4>
+          <ul>
+            <li>Use about <span class="math">330–340 m/s</span> for sound in air unless another value is given</li>
+            <li>In echo problems, always remember the sound goes and comes back</li>
+            <li>Open pipes have all harmonics, closed pipes have only odd harmonics</li>
+            <li>Approaching Doppler cases give higher observed frequency</li>
+            <li>Convert temperatures to Kelvin in temperature-ratio formulas</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣1️⃣ Common Mistakes to Avoid</h2>
+        <ul>
+          <li>Forgetting the factor of 2 in echo calculations</li>
+          <li>Using Celsius instead of Kelvin in temperature-ratio problems</li>
+          <li>Mixing up open pipe and closed pipe formulas</li>
+          <li>Using the wrong sign in Doppler effect</li>
+          <li>Thinking beat frequency is the average instead of the difference</li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Characteristics of Sound Waves. This chapter is important because it combines wave ideas, sound properties, resonance, and repeated calculation patterns in exams.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise pitch, loudness, quality, echo, Doppler effect, resonance in pipes, and beat frequency.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

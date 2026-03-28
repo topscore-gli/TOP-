@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Light Energy Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1460px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:4;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .hot{fill:rgba(255,107,107,.32);stroke:none}
+    .cool{fill:rgba(78,205,196,.30);stroke:none}
+    .darkfill{fill:rgba(0,0,0,.35)}
+    .lightfill{fill:rgba(255,255,255,.15)}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>💡 Light Energy</h1>
+        <p>JAMB Physics • sources of light • luminous objects • shadows • eclipses • pin-hole camera • wave equation</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains sources of light, luminous and non-luminous objects, the wave equation for light, formation of shadows and eclipses, and pin-hole camera magnification.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Light is an electromagnetic wave</li>
+            <li>Luminous objects produce their own light</li>
+            <li>Non-luminous objects reflect light</li>
+            <li>The basic wave formula is <span class="math">v = fλ</span></li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>We see most objects not because they make light, but because they reflect light from luminous sources.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Sources of Light</h2>
+
+        <h3>Natural vs artificial sources</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Natural Sources</th>
+              <th>Artificial Sources</th>
+            </tr>
+            <tr><td>Sun</td><td>Electric bulbs</td></tr>
+            <tr><td>Stars</td><td>Fluorescent tubes</td></tr>
+            <tr><td>Fireflies</td><td>Candles</td></tr>
+            <tr><td>Lightning</td><td>LEDs</td></tr>
+            <tr><td>Volcanic lava</td><td>Lasers</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Natural and artificial light sources</div>
+          <svg viewBox="0 0 340 190" aria-label="Sources of light diagram">
+            <circle cx="65" cy="65" r="24" class="hot"/>
+            <circle cx="125" cy="50" r="3" class="cool"/>
+            <circle cx="140" cy="68" r="3" class="cool"/>
+            <circle cx="112" cy="78" r="3" class="cool"/>
+            <circle cx="58" cy="132" r="6" class="cool"/>
+            <rect x="215" y="45" width="22" height="50" class="obj"/>
+            <ellipse cx="226" cy="38" rx="18" ry="12" class="hot"/>
+            <rect x="275" y="48" width="10" height="40" class="obj"/>
+            <line x1="285" y1="68" x2="320" y2="68" class="curve"/>
+            <text x="28" y="165" class="label">Natural</text>
+            <text x="214" y="165" class="label">Artificial</text>
+          </svg>
+          <div class="diagram-caption">Natural sources occur in nature, while artificial sources need human-made energy input.</div>
+        </div>
+
+        <h3>Luminous vs non-luminous objects</h3>
+        <p><strong>Luminous objects</strong> produce their own light, while <strong>non-luminous objects</strong> do not produce light but reflect light from other sources.</p>
+
+        <ul>
+          <li><strong>Luminous:</strong> Sun, stars, electric bulb, candle flame, firefly</li>
+          <li><strong>Non-luminous:</strong> Moon, table, human body, planets</li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>⚠️ JAMB trap</strong>
+          <p>The <strong>Moon is non-luminous</strong>. It shines because it reflects sunlight.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Propagation of Light</h2>
+        <p>Light travels as an electromagnetic wave.</p>
+
+        <div class="formula-box">
+          <div class="title">Wave equation</div>
+          <div class="line"><span class="math">v = fλ</span></div>
+        </div>
+
+        <ul>
+          <li><strong>v</strong> = speed of light</li>
+          <li><strong>f</strong> = frequency</li>
+          <li><strong>λ</strong> = wavelength</li>
+        </ul>
+
+        <h3>Key values to memorize</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Medium</th>
+              <th>Speed of Light</th>
+            </tr>
+            <tr><td>Vacuum / air</td><td><span class="math">3.0 × 10⁸ m/s</span></td></tr>
+            <tr><td>Water</td><td><span class="math">2.25 × 10⁸ m/s</span></td></tr>
+            <tr><td>Glass</td><td><span class="math">2.0 × 10⁸ m/s</span></td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Light speed in different media</div>
+          <svg viewBox="0 0 340 180" aria-label="Light speed in media diagram">
+            <rect x="35" y="45" width="75" height="95" class="cool"/>
+            <rect x="130" y="65" width="75" height="75" class="obj"/>
+            <rect x="225" y="80" width="75" height="60" class="darkfill"/>
+            <text x="46" y="155" class="label">Air/Vacuum</text>
+            <text x="148" y="155" class="label">Water</text>
+            <text x="245" y="155" class="label">Glass</text>
+          </svg>
+          <div class="diagram-caption">Light travels fastest in vacuum and more slowly in denser media like water and glass.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 1: Wave Equation</div>
+          <p>A light wave has frequency <span class="math">6.0 × 10¹⁴ Hz</span>. Find its wavelength in vacuum.</p>
+          <p><strong>Step:</strong> <span class="math">λ = c/f = (3.0 × 10⁸)/(6.0 × 10¹⁴)</span></p>
+          <p><span class="math">λ = 5.0 × 10⁻⁷ m = 500 nm</span></p>
+          <div class="answer">Answer: 500 nm</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Formation of Shadows and Eclipses</h2>
+        <p>Shadows form because light travels in straight lines and can be blocked by opaque objects.</p>
+
+        <h3>Parts of a shadow</h3>
+        <ul>
+          <li><strong>Umbra:</strong> region of total darkness</li>
+          <li><strong>Penumbra:</strong> region of partial darkness</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Umbra and penumbra</div>
+          <svg viewBox="0 0 340 190" aria-label="Shadow diagram">
+            <circle cx="55" cy="95" r="22" class="hot"/>
+            <circle cx="150" cy="95" r="18" class="obj"/>
+            <polygon points="168,82 315,45 315,75 168,100" class="lightfill"/>
+            <polygon points="168,108 315,115 315,145 168,88" class="lightfill"/>
+            <polygon points="168,92 315,78 315,112 168,98" class="darkfill"/>
+            <text x="245" y="70" class="label">Penumbra</text>
+            <text x="255" y="100" class="label">Umbra</text>
+            <text x="245" y="140" class="label">Penumbra</text>
+          </svg>
+          <div class="diagram-caption">The umbra is the complete shadow, while the penumbra is the partial shadow.</div>
+        </div>
+
+        <h3>Eclipses</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Solar Eclipse</th>
+              <th>Lunar Eclipse</th>
+            </tr>
+            <tr><td>Moon is between Sun and Earth</td><td>Earth is between Sun and Moon</td></tr>
+            <tr><td>Occurs during the day</td><td>Occurs at night</td></tr>
+            <tr><td>Sun is blocked</td><td>Moon enters Earth's shadow</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Solar and lunar eclipse idea</div>
+          <svg viewBox="0 0 340 200" aria-label="Eclipse diagram">
+            <circle cx="55" cy="60" r="24" class="hot"/>
+            <circle cx="150" cy="60" r="10" class="obj"/>
+            <circle cx="255" cy="60" r="18" class="cool"/>
+            <text x="38" y="25" class="label">Sun</text>
+            <text x="138" y="25" class="label">Moon</text>
+            <text x="242" y="25" class="label">Earth</text>
+
+            <circle cx="55" cy="145" r="24" class="hot"/>
+            <circle cx="155" cy="145" r="18" class="cool"/>
+            <circle cx="265" cy="145" r="10" class="obj"/>
+            <text x="38" y="180" class="label">Sun</text>
+            <text x="145" y="180" class="label">Earth</text>
+            <text x="252" y="180" class="label">Moon</text>
+          </svg>
+          <div class="diagram-caption">Solar eclipse: Moon between Sun and Earth. Lunar eclipse: Earth between Sun and Moon.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ The Pin-Hole Camera</h2>
+        <p>A pin-hole camera works on the principle that light travels in straight lines. Rays from the object pass through a tiny hole and form an inverted image on the screen.</p>
+
+        <div class="formula-box">
+          <div class="title">Magnification formula</div>
+          <div class="line"><span class="math">hᵢ/hₒ = v/u = m</span></div>
+        </div>
+
+        <ul>
+          <li><strong>hᵢ</strong> = image height</li>
+          <li><strong>hₒ</strong> = object height</li>
+          <li><strong>v</strong> = image distance</li>
+          <li><strong>u</strong> = object distance</li>
+          <li><strong>m</strong> = magnification</li>
+        </ul>
+
+        <h3>Image characteristics</h3>
+        <ul>
+          <li>Real</li>
+          <li>Inverted</li>
+          <li>Laterally inverted</li>
+          <li>Size depends on distances</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Pin-hole camera principle</div>
+          <svg viewBox="0 0 340 210" aria-label="Pinhole camera diagram">
+            <line x1="35" y1="30" x2="35" y2="180" class="axis"/>
+            <line x1="250" y1="35" x2="250" y2="175" class="axis"/>
+            <circle cx="170" cy="105" r="4" class="hot"/>
+            <line x1="35" y1="45" x2="170" y2="105" class="curve"/>
+            <line x1="35" y1="165" x2="170" y2="105" class="curve"/>
+            <line x1="170" y1="105" x2="250" y2="155" class="curve"/>
+            <line x1="170" y1="105" x2="250" y2="55" class="curve"/>
+            <text x="15" y="25" class="label">Object</text>
+            <text x="158" y="92" class="label">Pinhole</text>
+            <text x="258" y="25" class="label">Screen</text>
+          </svg>
+          <div class="diagram-caption">The top of the object forms the lower part of the image, so the image is inverted.</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 2: Image Height</div>
+          <p>An object 2 m tall is 4 m from a pin-hole camera. If the screen is 0.5 m from the pinhole, find the image height.</p>
+          <p><strong>Step:</strong> <span class="math">hᵢ/hₒ = v/u</span></p>
+          <p><span class="math">hᵢ/2 = 0.5/4</span></p>
+          <p><span class="math">hᵢ = 0.25 m = 25 cm</span></p>
+          <div class="answer">Answer: 25 cm</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 3: Finding Object Height</div>
+          <p>A pin-hole camera has a screen 10 cm from the pinhole. An object 5 m away produces an image 2 cm tall. Find the height of the object and the magnification.</p>
+          <p><strong>Convert:</strong> <span class="math">5 m = 500 cm</span></p>
+          <p><span class="math">2/hₒ = 10/500</span></p>
+          <p><span class="math">hₒ = 100 cm = 1 m</span></p>
+          <p><span class="math">m = 2/100 = 0.02</span></p>
+          <div class="answer">Answer: 1 m and 0.02</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 4: Finding Screen Distance</div>
+          <p>An object 6 m high is 12 m away. If the image is 10 cm high, how far is the screen from the pinhole?</p>
+          <p><strong>Convert:</strong> <span class="math">10 cm = 0.1 m</span></p>
+          <p><span class="math">0.1/6 = v/12</span></p>
+          <p><span class="math">v = 0.2 m = 20 cm</span></p>
+          <div class="answer">Answer: 20 cm</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Quick Revision Checklist</h2>
+
+        <div class="jamb-alert">
+          <h4>Must-know points</h4>
+          <ul>
+            <li>Distinguish luminous and non-luminous objects</li>
+            <li>Know natural and artificial light sources</li>
+            <li>Use <span class="math">v = fλ</span> correctly</li>
+            <li>Explain shadows, umbra, penumbra, and eclipses</li>
+            <li>Draw and interpret a pin-hole camera ray diagram</li>
+            <li>Use <span class="math">hᵢ/hₒ = v/u</span> for magnification problems</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ JAMB Exam Tips</h2>
+        <ul>
+          <li>Light travels fastest in vacuum at <span class="math">3 × 10⁸ m/s</span></li>
+          <li>The Moon is non-luminous</li>
+          <li>Pin-hole camera images are inverted</li>
+          <li>Use consistent units before calculation</li>
+          <li>Solar eclipse and lunar eclipse are often tested as comparisons</li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>🧠 Safety note</strong>
+          <p>Never look directly at a solar eclipse. It can seriously damage the eyes.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Common Mistakes to Avoid</h2>
+        <ul>
+          <li>Calling the Moon a luminous object</li>
+          <li>Forgetting that pin-hole camera images are inverted</li>
+          <li>Mixing up solar and lunar eclipses</li>
+          <li>Using cm and m carelessly in calculations</li>
+          <li>Forgetting that light slows down in denser media like water and glass</li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Light Energy. This topic is important because it introduces core light ideas that lead directly into reflection, refraction, lenses, and optical instruments.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise luminous vs non-luminous objects, v = fλ, eclipses, umbra vs penumbra, and pin-hole camera magnification.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Light Energy</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Light Energy (Chapter 23)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Light Energy</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3000,PASS:60}; // 50 minutes for 50 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Sources of Light",
+  10:"B: Propagation of Light",
+  25:"C: Pin-hole Camera",
+  40:"D: General Concepts & Applications"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Physics Light Energy Questions
+const QUIZ_DATA=[
+  // Section A: Sources of Light (1-10)
+  {q:"Which of the following is a luminous object?",o:["The Moon","A mirror","A lit candle","A planet"],a:2,e:"A luminous object produces its own light. A lit candle produces light through combustion. The Moon, mirrors, and planets only reflect light from other sources."},
+  {q:"The ultimate natural source of light energy on Earth is the",o:["Moon","Stars","Sun","Lightning"],a:2,e:"The Sun is the primary natural source of light for Earth. All other natural light sources (stars, lightning, fireflies) are secondary or occasional."},
+  {q:"Which of the following is an artificial source of light?",o:["Firefly","Glow worm","Electric bulb","Volcanic eruption"],a:2,e:"An electric bulb is man-made and requires electrical energy to produce light. Fireflies, glow worms, and volcanic eruptions are natural phenomena."},
+  {q:"Bioluminescence is a process of light production found in",o:["Electric bulbs","Fireflies","Candles","Fluorescent tubes"],a:1,e:"Bioluminescence is the production of light by living organisms. Fireflies produce light through chemical reactions in their bodies."},
+  {q:"Which object is non-luminous?",o:["The Sun","A burning matchstick","The Earth","A star"],a:2,e:"The Earth does not produce its own light; it reflects sunlight. The Sun, burning matchsticks, and stars are all luminous."},
+  {q:"LED stands for",o:["Light Emission Device","Light Emitting Diode","Low Energy Display","Luminous Electric Device"],a:1,e:"LED means Light Emitting Diode. It is a semiconductor device that emits light when current flows through it."},
+  {q:"Which of these produces light through incandescence?",o:["Firefly","Fluorescent tube","Filament bulb","LED bulb"],a:2,e:"Incandescence is light produced by heating. A filament bulb heats a tungsten wire until it glows. Fireflies use bioluminescence; fluorescent tubes and LEDs use different principles."},
+  {q:"The Moon is visible at night because it",o:["Produces its own light","Reflects light from the Sun","Absorbs light from stars","Refracts light from the Earth"],a:1,e:"The Moon is non-luminous. It reflects sunlight towards Earth, making it visible at night."},
+  {q:"Which is NOT a characteristic of light from natural sources?",o:["It may be intermittent","It requires fuel or electricity","It occurs without human intervention","It existed before human civilization"],a:1,e:"Natural light sources do not require fuel or electricity. This describes artificial sources."},
+  {q:"A lightning flash is an example of",o:["Bioluminescence","Chemiluminescence","Electroluminescence","Natural electrical discharge"],a:3,e:"Lightning is a natural electrical discharge in the atmosphere that produces intense light and heat."},
+  
+  // Section B: Propagation of Light (11-25)
+  {q:"The speed of light in vacuum is approximately",o:["3.0 × 10⁶ m/s","3.0 × 10⁷ m/s","3.0 × 10⁸ m/s","3.0 × 10⁹ m/s"],a:2,e:"The speed of light in vacuum is exactly 299,792,458 m/s, approximately 3.0 × 10⁸ m/s."},
+  {q:"Light travels fastest in",o:["Water","Glass","Diamond","Vacuum"],a:3,e:"Light travels fastest in vacuum (empty space). It slows down when passing through any material medium."},
+  {q:"If the frequency of a light wave is 5.0 × 10¹⁴ Hz, what is its wavelength in vacuum?",o:["3.0 × 10⁻⁷ m","6.0 × 10⁻⁷ m","1.67 × 10⁶ m","1.5 × 10²³ m"],a:1,e:"Using c = fλ: λ = (3.0 × 10⁸)/(5.0 × 10¹⁴) = 6.0 × 10⁻⁷ m (600 nm, orange-red light)."},
+  {q:"A light wave has wavelength 500 nm. Its frequency is",o:["6.0 × 10¹⁴ Hz","6.0 × 10¹² Hz","1.67 × 10¹⁵ Hz","1.5 × 10⁶ Hz"],a:0,e:"f = c/λ = (3.0 × 10⁸)/(500 × 10⁻⁹) = 6.0 × 10¹⁴ Hz."},
+  {q:"The speed of light in a medium is 2.0 × 10⁸ m/s. If the frequency is 4.0 × 10¹⁴ Hz, the wavelength in the medium is",o:["500 nm","750 nm","800 nm","200 nm"],a:0,e:"λ = v/f = (2.0 × 10⁸)/(4.0 × 10¹⁴) = 5.0 × 10⁻⁷ m = 500 nm."},
+  {q:"Which property of light explains the formation of shadows?",o:["Reflection","Refraction","Rectilinear propagation","Diffraction"],a:2,e:"Rectilinear propagation means light travels in straight lines. This explains why opaque objects block light and create shadows."},
+  {q:"During a solar eclipse, the relative positions of the Sun, Moon, and Earth are",o:["Sun → Earth → Moon","Earth → Sun → Moon","Sun → Moon → Earth","Moon → Earth → Sun"],a:2,e:"In a solar eclipse, the Moon passes between the Sun and Earth, blocking sunlight."},
+  {q:"A lunar eclipse occurs when",o:["The Moon is between the Sun and Earth","The Earth is between the Sun and Moon","The Sun is between the Earth and Moon","The Earth, Moon, and Sun form a right angle"],a:1,e:"During a lunar eclipse, Earth blocks sunlight from reaching the Moon, casting a shadow on it."},
+  {q:"The darkest part of a shadow is called the",o:["Penumbra","Umbra","Antumbra","Partial shadow"],a:1,e:"The umbra is the region of total shadow where light is completely blocked. Penumbra is partial shadow."},
+  {q:"An observer in the penumbra during a solar eclipse will see",o:["Total eclipse","Partial eclipse","Annular eclipse","No eclipse"],a:1,e:"Penumbra is the partial shadow region. Observers here see only a portion of the Sun covered (partial eclipse)."},
+  {q:"An annular solar eclipse occurs when",o:["The Moon is closest to Earth","The Moon is farthest from Earth","The Sun is between Earth and Moon","The Earth is between Sun and Moon"],a:1,e:"When the Moon is at apogee (farthest from Earth), it appears smaller than the Sun, leaving a bright ring (annulus) visible."},
+  {q:"The straight-line propagation of light is demonstrated by all EXCEPT",o:["Formation of shadows","Working of a pin-hole camera","Occurrence of eclipses","Formation of mirages"],a:3,e:"Mirages are caused by refraction (bending of light) in air layers of different temperatures, not by straight-line propagation."},
+  {q:"A point source of light casts a sharp shadow of an opaque object because",o:["Light travels in straight lines","Light is a transverse wave","Light can be polarized","Light carries energy"],a:0,e:"Sharp shadows result from light traveling in straight lines and being blocked by opaque objects."},
+  {q:"The shadow of a pole is shortest when the Sun is",o:["At the horizon","At 45° to the vertical","Overhead (at zenith)","Setting in the west"],a:2,e:"When the Sun is directly overhead, light rays hit the pole vertically, creating the shortest shadow."},
+  {q:"During a total lunar eclipse, the Moon appears reddish because",o:["The Moon reflects red light from Earth","Sunlight is refracted through Earth's atmosphere","The Moon produces red light","Earth's shadow is red"],a:1,e:"Earth's atmosphere refracts (bends) sunlight, scattering blue light and allowing red light to reach the Moon, giving it a reddish color."},
+  
+  // Section C: Pin-hole Camera (26-40)
+  {q:"The image formed by a pin-hole camera is always",o:["Virtual and erect","Real and erect","Virtual and inverted","Real and inverted"],a:3,e:"A pin-hole camera forms a real image (can be projected on a screen) that is inverted (upside down and left-right reversed)."},
+  {q:"In a pin-hole camera, increasing the object distance while keeping the screen distance constant will",o:["Increase the image size","Decrease the image size","Not affect the image size","Make the image blurred"],a:1,e:"From h_i/h_o = v/u, if u increases while v stays constant, h_i decreases."},
+  {q:"A pin-hole camera produces a sharp image when",o:["The hole is large","The hole is small","The screen is far from the hole","The object is bright"],a:1,e:"A small hole ensures light from each point on the object reaches only one point on the screen, creating a sharp image. Large holes create overlapping images (blurred)."},
+  {q:"An object 3 m tall is placed 6 m from a pin-hole camera. If the image is 10 cm tall, the distance from pin-hole to screen is",o:["10 cm","20 cm","30 cm","60 cm"],a:1,e:"h_i/h_o = v/u → 0.1/3 = v/6 → v = (0.1 × 6)/3 = 0.2 m = 20 cm."},
+  {q:"The magnification of a pin-hole camera is given by",o:["object distance/image distance","image height/object height","object height/image height","image distance/object height"],a:1,e:"Magnification m = h_i/h_o = v/u (image height divided by object height, or image distance divided by object distance)."},
+  {q:"If the screen of a pin-hole camera is moved closer to the pin-hole, the image will",o:["Become brighter and larger","Become dimmer and smaller","Become brighter and smaller","Become dimmer and larger"],a:2,e:"Moving the screen closer reduces image distance (v), making the image smaller (h_i decreases). The smaller image concentrates light, making it brighter."},
+  {q:"A pin-hole camera has a screen 25 cm from the hole. An object 2 m high is placed 10 m away. The image height is",o:["2 cm","5 cm","8 cm","10 cm"],a:1,e:"h_i/2 = 0.25/10 → h_i = (2 × 0.25)/10 = 0.05 m = 5 cm."},
+  {q:"The image in a pin-hole camera is blurred if",o:["The object is too far","The hole is too large","The screen is too close","The room is dark"],a:1,e:"A large hole allows light from multiple points on the object to reach the same point on the screen, causing overlapping and blurring."},
+  {q:"In a pin-hole camera, if the object distance is doubled and the screen distance is halved, the new image height becomes",o:["Half the original","One-quarter the original","Double the original","Four times the original"],a:1,e:"Original: h_i = h_o × v/u. New: h_i' = h_o × (v/2)/(2u) = h_o × v/(4u) = 1/4 × original."},
+  {q:"A pin-hole camera is used to photograph a tree 12 m tall. The image formed is 4 cm high when the screen is 30 cm from the pin-hole. How far is the tree from the camera?",o:["30 m","60 m","90 m","120 m"],a:2,e:"0.04/12 = 0.3/u → u = (12 × 0.3)/0.04 = 3.6/0.04 = 90 m."},
+  {q:"The magnification of a pin-hole camera image is 0.02. If the object is 50 m away, the screen distance is",o:["10 cm","25 cm","50 cm","100 cm"],a:3,e:"m = v/u → 0.02 = v/50 → v = 1 m = 100 cm."},
+  {q:"Which factor does NOT affect the size of the image in a pin-hole camera?",o:["Size of the object","Distance of object from pin-hole","Distance of screen from pin-hole","Size of the pin-hole"],a:3,e:"Image size depends on object size, object distance, and image distance. Hole size affects sharpness/brightness, not size."},
+  {q:"A pin-hole camera forms an image of a distant object. The image is",o:["Very large and bright","Very small and dim","Very small and bright","Very large and dim"],a:1,e:"For distant objects, u is very large, making h_i very small. The small image receives little light, making it dim."},
+  {q:"If the object distance equals the image distance in a pin-hole camera, the magnification is",o:["0.5","1.0","2.0","4.0"],a:1,e:"m = v/u. If v = u, then m = 1, meaning image size equals object size."},
+  {q:"To obtain a larger image using a pin-hole camera, you should",o:["Move the object closer to the pin-hole","Move the screen closer to the pin-hole","Make the hole larger","Decrease the object size"],a:0,e:"From h_i = h_o × v/u, decreasing u (object distance) increases h_i (image height)."},
+  
+  // Section D: General Concepts & Applications (41-50)
+  {q:"Which color of light has the longest wavelength in the visible spectrum?",o:["Violet","Blue","Yellow","Red"],a:3,e:"In the visible spectrum, red light has the longest wavelength (700 nm) and violet has the shortest (400 nm)."},
+  {q:"The wavelength of violet light is approximately 400 nm. Its frequency is approximately",o:["7.5 × 10¹⁴ Hz","1.2 × 10¹⁵ Hz","5.0 × 10¹⁴ Hz","3.0 × 10¹⁴ Hz"],a:0,e:"f = (3.0 × 10⁸)/(400 × 10⁻⁹) = 7.5 × 10¹⁴ Hz."},
+  {q:"Light takes approximately 8 minutes to travel from the Sun to Earth. The distance is approximately",o:["1.44 × 10¹⁰ m","1.44 × 10¹¹ m","1.44 × 10¹² m","1.44 × 10¹³ m"],a:1,e:"Distance = speed × time = 3.0 × 10⁸ × (8 × 60) = 3.0 × 10⁸ × 480 = 1.44 × 10¹¹ m."},
+  {q:"A light year is a unit of",o:["Time","Distance","Speed","Intensity"],a:1,e:"A light year is the distance light travels in one year (≈ 9.46 × 10¹⁵ m). It is a unit of distance, not time."},
+  {q:"The speed of light in water is 2.25 × 10⁸ m/s. The refractive index of water is",o:["1.00","1.25","1.33","2.25"],a:2,e:"n = c/v = (3.0 × 10⁸)/(2.25 × 10⁸) = 1.33."},
+  {q:"During a partial solar eclipse, an observer sees",o:["Complete darkness","A ring of fire around the Moon","Only a portion of the Sun covered","The Sun completely covered by the Moon"],a:2,e:"In a partial solar eclipse, the observer is in the penumbra and sees only part of the Sun's disk covered by the Moon."},
+  {q:"The image formed by a pin-hole camera of a person standing upright will show the person",o:["Upright and facing the same direction","Upright but facing opposite direction","Inverted and facing the same direction","Inverted and facing opposite direction"],a:3,e:"Pin-hole camera images are inverted vertically (upside down) and laterally (left-right reversed), so the person appears inverted and facing opposite."},
+  {q:"If the frequency of light remains constant as it enters a different medium, which quantity changes?",o:["Speed only","Wavelength only","Both speed and wavelength","Neither speed nor wavelength"],a:2,e:"Frequency is determined by the source and doesn't change. Speed changes in different media, and since v = fλ, wavelength must also change."},
+  {q:"A pin-hole camera is placed 20 m from a building. If the image height is 10 cm when the screen is 50 cm from the pin-hole, the building height is",o:["2 m","4 m","20 m","40 m"],a:1,e:"0.1/h_o = 0.5/20 → h_o = (0.1 × 20)/0.5 = 2/0.5 = 4 m."},
+  {q:"Which statement about light is CORRECT?",o:["Light requires a material medium to travel","The speed of light is the same in all media","Light travels in straight lines in a uniform medium","Light cannot travel through vacuum"],a:2,e:"Light travels in straight lines (rectilinear propagation) in a uniform medium. It does NOT require a medium (can travel through vacuum), and its speed varies in different media."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('sound_wave_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('sound_wave_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('sound_wave_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,25,40,50];
+  const sectionNames=["A: Sources of Light","B: Propagation of Light","C: Pin-hole Camera","D: General Concepts & Applications"];
+  
+  for(let s=0;s<4;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('sound_wave_quiz_auth');
+  sessionStorage.removeItem('sound_wave_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('sound_wave_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('sound_wave_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Refraction of Light at Plane and Curved Surfaces</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1540px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:3;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .hot{fill:rgba(255,107,107,.32);stroke:none}
+    .cool{fill:rgba(78,205,196,.30);stroke:none}
+    .darkfill{fill:rgba(0,0,0,.35)}
+    .lightfill{fill:rgba(255,255,255,.15)}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🔍 Refraction of Light at Plane and Curved Surfaces</h1>
+        <p>JAMB Physics • Snell’s law • refractive index • prisms • critical angle • total internal reflection • lenses</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains the laws of refraction, refractive index, prisms, minimum deviation, critical angle, total internal reflection, lenses, and optical instruments like microscopes and telescopes.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Refraction is the bending of light between media of different optical density</li>
+            <li>Snell’s law is <span class="math">n₁ sin i = n₂ sin r</span></li>
+            <li>Critical angle helps explain total internal reflection</li>
+            <li>The lens formula is <span class="math">1/f = 1/u + 1/v</span></li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Light bends because its speed changes when it enters a different medium.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ Laws of Refraction</h2>
+
+        <h3>What is refraction?</h3>
+        <p>Refraction is the bending of light as it moves from one transparent medium to another of different optical density.</p>
+
+        <h3>The two laws of refraction</h3>
+        <ul>
+          <li><strong>First law:</strong> The incident ray, refracted ray, and normal all lie in the same plane.</li>
+          <li><strong>Second law:</strong> The ratio involving the sines of the angles is constant for a given pair of media.</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Snell’s law</div>
+          <div class="line"><span class="math">n₁ sin i = n₂ sin r</span></div>
+        </div>
+
+        <h3>Key terms</h3>
+        <ul>
+          <li><strong>Incident ray:</strong> incoming ray</li>
+          <li><strong>Refracted ray:</strong> ray inside the second medium</li>
+          <li><strong>Normal:</strong> line perpendicular to the surface</li>
+          <li><strong>Angle of incidence:</strong> angle between incident ray and normal</li>
+          <li><strong>Angle of refraction:</strong> angle between refracted ray and normal</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Refraction at a boundary</div>
+          <svg viewBox="0 0 340 220" aria-label="Refraction diagram">
+            <line x1="25" y1="120" x2="315" y2="120" class="axis"/>
+            <line x1="170" y1="35" x2="170" y2="200" class="tick"/>
+            <line x1="90" y1="55" x2="170" y2="120" class="curve"/>
+            <line x1="170" y1="120" x2="215" y2="180" class="curve"/>
+            <text x="68" y="50" class="label">Incident ray</text>
+            <text x="210" y="195" class="label">Refracted ray</text>
+            <text x="178" y="48" class="label">Normal</text>
+            <text x="125" y="98" class="label">i</text>
+            <text x="180" y="148" class="label">r</text>
+            <text x="38" y="108" class="label">Air</text>
+            <text x="38" y="145" class="label">Water/Glass</text>
+          </svg>
+          <div class="diagram-caption">When light enters a denser medium, it bends toward the normal.</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Refractive Index</h2>
+
+        <h3>Definition</h3>
+        <p>Refractive index measures how much light slows down in a medium compared with vacuum.</p>
+
+        <div class="formula-box">
+          <div class="title">Refractive index formulas</div>
+          <div class="line"><span class="math">n = c/v</span></div>
+          <div class="line"><span class="math">n = sin i / sin r</span> (for air to medium)</div>
+        </div>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Material</th>
+              <th>Refractive Index</th>
+            </tr>
+            <tr><td>Vacuum</td><td>1.00</td></tr>
+            <tr><td>Air</td><td>1.0003 ≈ 1.00</td></tr>
+            <tr><td>Water</td><td>1.33</td></tr>
+            <tr><td>Crown Glass</td><td>1.52</td></tr>
+            <tr><td>Flint Glass</td><td>1.66</td></tr>
+            <tr><td>Diamond</td><td>2.42</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="highlight-box">
+          <p>Higher refractive index means lower light speed in that medium and stronger bending toward the normal.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 1: Basic Snell’s Law</div>
+          <p>Light travels from air into water at an angle of incidence of 40°. Take <span class="math">n₁ = 1.0</span> and <span class="math">n₂ = 1.33</span>. Find the angle of refraction.</p>
+          <p><span class="math">1.0 × sin 40° = 1.33 × sin r</span></p>
+          <p><span class="math">sin r = 0.6428 / 1.33 = 0.4833</span></p>
+          <p><span class="math">r = sin⁻¹(0.4833) = 28.9°</span></p>
+          <div class="answer">Answer: about 29°</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Light Through Prisms</h2>
+
+        <h3>Triangular prism</h3>
+        <p>When light passes through a prism, it bends toward the base of the prism and becomes deviated from its original path.</p>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Light through a triangular prism</div>
+          <svg viewBox="0 0 340 220" aria-label="Prism diagram">
+            <polygon points="135,45 220,160 85,160" class="obj"/>
+            <line x1="30" y1="100" x2="118" y2="100" class="curve"/>
+            <line x1="118" y1="100" x2="165" y2="130" class="curve"/>
+            <line x1="165" y1="130" x2="295" y2="185" class="curve"/>
+            <text x="24" y="92" class="label">Incident</text>
+            <text x="248" y="178" class="label">Emergent</text>
+            <text x="130" y="178" class="label">Prism base</text>
+          </svg>
+          <div class="diagram-caption">The ray bends toward the base and emerges deviated from its original direction.</div>
+        </div>
+
+        <h3>Angle of deviation</h3>
+        <div class="formula-box">
+          <div class="title">Deviation formulas</div>
+          <div class="line"><span class="math">D = (i₁ + i₂) - (r₁ + r₂)</span></div>
+          <div class="line"><span class="math">D = i₁ + i₂ - A</span></div>
+        </div>
+
+        <h3>Minimum deviation</h3>
+        <p>Minimum deviation occurs when the ray passes symmetrically through the prism.</p>
+        <ul>
+          <li><span class="math">i₁ = i₂</span></li>
+          <li><span class="math">r₁ = r₂</span></li>
+          <li>The refracted ray inside is parallel to the base</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">At minimum deviation</div>
+          <div class="line"><span class="math">Dₘ = 2i - A</span></div>
+          <div class="line"><span class="math">n = sin[(A + Dₘ)/2] / sin(A/2)</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 2: Minimum Deviation</div>
+          <p>A prism of angle 60° has a minimum deviation of 40°. Find the refractive index.</p>
+          <p><span class="math">n = sin[(60 + 40)/2] / sin(60/2)</span></p>
+          <p><span class="math">n = sin 50° / sin 30° = 0.7660 / 0.5 = 1.532</span></p>
+          <div class="answer">Answer: 1.53</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Critical Angle and Total Internal Reflection</h2>
+
+        <h3>Critical angle</h3>
+        <p>The critical angle is the angle of incidence in the denser medium for which the angle of refraction in the rarer medium is 90°.</p>
+
+        <div class="formula-box">
+          <div class="title">Critical angle formulas</div>
+          <div class="line"><span class="math">sin C = n₂/n₁</span> where <span class="math">n₁ &gt; n₂</span></div>
+          <div class="line"><span class="math">sin C = 1/n</span> for denser medium to air</div>
+        </div>
+
+        <h3>Total internal reflection</h3>
+        <p>Total internal reflection happens when:</p>
+        <ul>
+          <li>Light travels from denser to rarer medium</li>
+          <li>Angle of incidence is greater than the critical angle</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Critical angle and total internal reflection</div>
+          <svg viewBox="0 0 340 220" aria-label="Total internal reflection diagram">
+            <line x1="25" y1="120" x2="315" y2="120" class="axis"/>
+            <line x1="170" y1="30" x2="170" y2="195" class="tick"/>
+            <line x1="120" y1="180" x2="170" y2="120" class="curve"/>
+            <line x1="170" y1="120" x2="260" y2="120" class="pathline"/>
+            <line x1="170" y1="120" x2="120" y2="60" class="curve"/>
+            <text x="30" y="145" class="label">Glass/Water</text>
+            <text x="30" y="110" class="label">Air</text>
+            <text x="198" y="111" class="label">r = 90°</text>
+            <text x="92" y="54" class="label">TIR</text>
+          </svg>
+          <div class="diagram-caption">At the critical angle, the refracted ray grazes the surface; beyond it, total internal reflection occurs.</div>
+        </div>
+
+        <h3>Applications of total internal reflection</h3>
+        <ul>
+          <li>Optical fibers</li>
+          <li>Prismatic binoculars</li>
+          <li>Diamond sparkle</li>
+          <li>Mirage formation</li>
+        </ul>
+
+        <div class="example-box">
+          <div class="title">Calculation 3: Critical Angle of Water</div>
+          <p>Find the critical angle for water with refractive index 1.33.</p>
+          <p><span class="math">sin C = 1/1.33 = 0.7519</span></p>
+          <p><span class="math">C = sin⁻¹(0.7519) = 48.8°</span></p>
+          <div class="answer">Answer: about 49°</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 4: Diamond Critical Angle</div>
+          <p>Diamond has refractive index 2.42. Find its critical angle.</p>
+          <p><span class="math">sin C = 1/2.42 = 0.4132</span></p>
+          <p><span class="math">C = sin⁻¹(0.4132) = 24.4°</span></p>
+          <div class="answer">Answer: 24.4°</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>💎 Why diamonds sparkle</strong>
+          <p>Diamond has a very small critical angle, so light undergoes many internal reflections before emerging.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Lenses</h2>
+
+        <h3>Types of lenses</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Convex Lens</th>
+              <th>Concave Lens</th>
+            </tr>
+            <tr><td>Thicker at the centre</td><td>Thinner at the centre</td></tr>
+            <tr><td>Converging lens</td><td>Diverging lens</td></tr>
+            <tr><td><span class="math">f</span> is positive</td><td><span class="math">f</span> is negative</td></tr>
+            <tr><td>Used in cameras, magnifiers, eyes</td><td>Used in myopia correction and peepholes</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Convex and concave lenses</div>
+          <svg viewBox="0 0 340 190" aria-label="Lens types diagram">
+            <path d="M105 35 Q130 95 105 155 Q145 135 145 95 Q145 55 105 35" class="obj"/>
+            <path d="M145 35 Q120 95 145 155 Q105 135 105 95 Q105 55 145 35" class="obj"/>
+
+            <path d="M245 35 Q228 95 245 155 Q220 140 220 95 Q220 50 245 35" class="obj"/>
+            <path d="M275 35 Q292 95 275 155 Q300 140 300 95 Q300 50 275 35" class="obj"/>
+
+            <text x="90" y="175" class="label">Convex</text>
+            <text x="230" y="175" class="label">Concave</text>
+          </svg>
+          <div class="diagram-caption">A convex lens converges rays, while a concave lens diverges them.</div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Lens formula</div>
+          <div class="line"><span class="math">1/f = 1/u + 1/v</span></div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Magnification and power</div>
+          <div class="line"><span class="math">m = hᵢ/hₒ = v/u</span></div>
+          <div class="line"><span class="math">P = 1/f</span> in metres</div>
+        </div>
+
+        <div class="highlight-box">
+          <p>For lenses, real images have <span class="math">v &gt; 0</span> and virtual images have <span class="math">v &lt; 0</span>.</p>
+        </div>
+
+        <h3>Convex lens image summary</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Object Position</th>
+              <th>Image Position</th>
+              <th>Nature</th>
+              <th>Size</th>
+            </tr>
+            <tr><td>At infinity</td><td>At F</td><td>Real, inverted</td><td>Point</td></tr>
+            <tr><td>Beyond 2F</td><td>Between F and 2F</td><td>Real, inverted</td><td>Diminished</td></tr>
+            <tr><td>At 2F</td><td>At 2F</td><td>Real, inverted</td><td>Same size</td></tr>
+            <tr><td>Between F and 2F</td><td>Beyond 2F</td><td>Real, inverted</td><td>Magnified</td></tr>
+            <tr><td>At F</td><td>At infinity</td><td>—</td><td>—</td></tr>
+            <tr><td>Between F and lens</td><td>Same side as object</td><td>Virtual, erect</td><td>Magnified</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="example-box">
+          <div class="title">Calculation 5: Convex Lens</div>
+          <p>An object is 30 cm from a convex lens of focal length 20 cm. Find image position and magnification.</p>
+          <p><strong>Given:</strong> <span class="math">u = 30 cm, f = +20 cm</span></p>
+          <p><span class="math">1/20 = 1/30 + 1/v</span></p>
+          <p><span class="math">1/v = 1/20 - 1/30 = 1/60</span></p>
+          <p><span class="math">v = 60 cm</span></p>
+          <p><span class="math">m = v/u = 60/30 = 2</span></p>
+          <div class="answer">Answer: image at 60 cm, real, inverted, magnified 2 times</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 6: Lens Power</div>
+          <p>A lens has focal length 25 cm. Find its power in diopters.</p>
+          <p><strong>Convert:</strong> <span class="math">25 cm = 0.25 m</span></p>
+          <p><span class="math">P = 1/f = 1/0.25 = 4 D</span></p>
+          <div class="answer">Answer: +4 D</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ Optical Instruments</h2>
+
+        <h3>Simple microscope</h3>
+        <ul>
+          <li>Uses a convex lens of short focal length</li>
+          <li>Object is placed between the focal point and the lens</li>
+          <li>Image is virtual, erect, and magnified</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Magnifying power of simple microscope</div>
+          <div class="line"><span class="math">M = D/f</span> for relaxed eye</div>
+          <div class="line"><span class="math">M = 1 + D/f</span> for near point</div>
+        </div>
+
+        <h3>Compound microscope</h3>
+        <p>Uses two convex lenses: the objective and the eyepiece. The objective forms a real magnified image which is then magnified again by the eyepiece.</p>
+
+        <h3>Astronomical telescope</h3>
+        <p>Uses two convex lenses. The objective has a long focal length and the eyepiece a short focal length.</p>
+
+        <div class="formula-box">
+          <div class="title">Telescope magnification</div>
+          <div class="line"><span class="math">M = f₀/fₑ</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 7: Microscope Magnification</div>
+          <p>A simple microscope has focal length 5 cm. Find its magnifying power for relaxed eye and near point.</p>
+          <p><strong>Relaxed eye:</strong> <span class="math">M = 25/5 = 5</span></p>
+          <p><strong>Near point:</strong> <span class="math">M = 1 + 25/5 = 6</span></p>
+          <div class="answer">Answer: 5× and 6×</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 8: Telescope Magnification</div>
+          <p>An astronomical telescope has objective focal length 100 cm and eyepiece focal length 5 cm. Find the magnifying power.</p>
+          <p><span class="math">M = 100/5 = 20</span></p>
+          <div class="answer">Answer: 20×</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Quick Revision Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>Memory aids</h4>
+          <ul>
+            <li><strong>Fast to slow:</strong> light bends toward the normal</li>
+            <li><strong>Slow to fast:</strong> light bends away from the normal</li>
+            <li><span class="math">sin C = 1/n</span> when going from dense medium to air</li>
+            <li>Minimum deviation occurs when the path through a prism is symmetric</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>⚠️ Common JAMB traps</strong>
+          <p>Critical angle exists only when light goes from denser to rarer medium. Also remember lens sign convention differs from mirrors.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Practice Questions for JAMB</h2>
+
+        <div class="example-box">
+          <div class="title">Light travels from water to air. The critical angle is approximately:</div>
+          <p>(a) 30°<br>(b) 41°<br>(c) 49°<br>(d) 60°</p>
+          <div class="answer">Answer: (c) 49°</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">A convex lens forms a real image when the object is placed:</div>
+          <p>(a) Between F and lens<br>(b) At F<br>(c) Beyond F<br>(d) Anywhere</p>
+          <div class="answer">Answer: (c) Beyond F</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The power of a lens with focal length 50 cm is:</div>
+          <p>(a) 0.5 D<br>(b) 2 D<br>(c) 5 D<br>(d) 20 D</p>
+          <div class="answer">Answer: (b) 2 D</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Refraction of Light. This chapter is super important because it connects ray diagrams, formulas, optical instruments, and practical phenomena like optical fiber and diamond sparkle.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise Snell’s law, refractive index, prism deviation, critical angle, total internal reflection, lens formula, and lens power.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

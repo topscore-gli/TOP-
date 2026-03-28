@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Optical Instruments Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1560px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:3;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .hot{fill:rgba(255,107,107,.32);stroke:none}
+    .cool{fill:rgba(78,205,196,.30);stroke:none}
+    .darkfill{fill:rgba(0,0,0,.35)}
+    .lightfill{fill:rgba(255,255,255,.15)}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🔭 Optical Instruments</h1>
+        <p>JAMB Physics • camera • projector • microscope • telescope • human eye • magnifying power • eye defects</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains the principles of cameras, projectors, microscopes, telescopes, and the human eye, including calculations involving magnifying power, near point, far point, and lens formulas.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>Most optical instruments use convex lenses</li>
+            <li>Camera forms a real, inverted image on film or sensor</li>
+            <li>Simple microscope gives a virtual, erect, magnified image</li>
+            <li>Telescope magnification is <span class="math">M = fₒ/fₑ</span></li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Optical instruments work by controlling how lenses form real or virtual images and how the eye views those images.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ The Camera</h2>
+
+        <h3>Principle</h3>
+        <p>A camera uses a convex lens to form a real, inverted, diminished image on film or an electronic sensor.</p>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Camera image formation</div>
+          <svg viewBox="0 0 340 210" aria-label="Camera diagram">
+            <line x1="25" y1="105" x2="315" y2="105" class="axis"/>
+            <line x1="90" y1="80" x2="90" y2="40" class="tick"/>
+            <line x1="180" y1="45" x2="180" y2="165" class="obj"/>
+            <line x1="290" y1="40" x2="290" y2="170" class="tick"/>
+            <line x1="90" y1="40" x2="180" y2="85" class="curve"/>
+            <line x1="90" y1="40" x2="180" y2="105" class="curve"/>
+            <line x1="180" y1="85" x2="290" y2="155" class="curve"/>
+            <line x1="180" y1="105" x2="290" y2="105" class="curve"/>
+            <text x="62" y="32" class="label">Object</text>
+            <text x="170" y="35" class="label">Lens</text>
+            <text x="274" y="32" class="label">Film/Sensor</text>
+          </svg>
+          <div class="diagram-caption">The camera forms a real inverted image on the sensor or film.</div>
+        </div>
+
+        <h3>Key components</h3>
+        <ul>
+          <li><strong>Convex lens:</strong> forms the image</li>
+          <li><strong>Aperture:</strong> controls amount of light entering</li>
+          <li><strong>Shutter:</strong> controls exposure time</li>
+          <li><strong>Film/Sensor:</strong> records the image</li>
+          <li><strong>Focusing ring:</strong> changes lens-to-film distance</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Camera lens formula</div>
+          <div class="line"><span class="math">1/f = 1/u + 1/v</span></div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">F-number</div>
+          <div class="line"><span class="math">f/# = f/D</span></div>
+        </div>
+
+        <div class="highlight-box">
+          <p>Smaller f-number means a larger aperture and more light entering the camera.</p>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 1: Camera Focusing</div>
+          <p>A camera has focal length 50 mm. How far must the film be from the lens to photograph a distant mountain?</p>
+          <p>For a distant object, <span class="math">u ≈ ∞</span>, so <span class="math">v ≈ f</span>.</p>
+          <p><span class="math">v = 50 mm</span></p>
+          <div class="answer">Answer: 50 mm</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 2: Close-up Photography</div>
+          <p>The same camera has focal length 50 mm and photographs a flower 30 cm away. Find how far the lens moves from the distant-object position.</p>
+          <p><strong>Convert:</strong> <span class="math">50 mm = 5 cm</span></p>
+          <p><span class="math">1/5 = 1/30 + 1/v</span></p>
+          <p><span class="math">1/v = 1/5 - 1/30 = 1/6</span></p>
+          <p><span class="math">v = 6 cm = 60 mm</span></p>
+          <p>Movement = <span class="math">60 - 50 = 10 mm</span></p>
+          <div class="answer">Answer: 10 mm away from the film position</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ The Projector</h2>
+
+        <h3>Principle</h3>
+        <p>A projector uses a convex lens to form a real, inverted, magnified image of a small slide on a distant screen.</p>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Projector image formation</div>
+          <svg viewBox="0 0 340 210" aria-label="Projector diagram">
+            <line x1="25" y1="105" x2="315" y2="105" class="axis"/>
+            <line x1="75" y1="130" x2="75" y2="80" class="tick"/>
+            <line x1="165" y1="45" x2="165" y2="165" class="obj"/>
+            <line x1="290" y1="40" x2="290" y2="185" class="tick"/>
+            <line x1="75" y1="80" x2="165" y2="95" class="curve"/>
+            <line x1="75" y1="130" x2="165" y2="115" class="curve"/>
+            <line x1="165" y1="95" x2="290" y2="40" class="curve"/>
+            <line x1="165" y1="115" x2="290" y2="185" class="curve"/>
+            <text x="52" y="72" class="label">Slide</text>
+            <text x="155" y="35" class="label">Lens</text>
+            <text x="275" y="28" class="label">Screen</text>
+          </svg>
+          <div class="diagram-caption">The slide is placed just beyond the focal point to produce a large image on the screen.</div>
+        </div>
+
+        <h3>Key points</h3>
+        <ul>
+          <li>Uses a bright light source</li>
+          <li>Slide is placed just beyond the focal length</li>
+          <li>Large image distance gives large magnification</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Projector magnification</div>
+          <div class="line"><span class="math">m = v/u = hᵢ/hₒ</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 3: Projector Setup</div>
+          <p>A projector has focal length 10 cm. A slide 2 cm tall is placed 10.5 cm from the lens. Find the image distance and image size.</p>
+          <p><span class="math">1/10 = 1/10.5 + 1/v</span></p>
+          <p><span class="math">1/v = 1/10 - 1/10.5 = 0.5/105</span></p>
+          <p><span class="math">v = 210 cm</span></p>
+          <p><span class="math">m = v/u = 210/10.5 = 20</span></p>
+          <p>Image height = <span class="math">20 × 2 = 40 cm</span></p>
+          <div class="answer">Answer: 210 cm and 40 cm</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ The Simple Microscope</h2>
+
+        <h3>Principle</h3>
+        <p>A simple microscope or magnifying glass uses a convex lens of short focal length. The object is placed between the lens and its focus, so the image formed is virtual, erect, and magnified.</p>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Simple microscope</div>
+          <svg viewBox="0 0 340 210" aria-label="Simple microscope diagram">
+            <line x1="25" y1="105" x2="315" y2="105" class="axis"/>
+            <line x1="115" y1="130" x2="115" y2="80" class="tick"/>
+            <line x1="170" y1="45" x2="170" y2="165" class="obj"/>
+            <line x1="90" y1="65" x2="170" y2="90" class="curve"/>
+            <line x1="90" y1="65" x2="170" y2="105" class="curve"/>
+            <line x1="170" y1="90" x2="260" y2="60" class="curve"/>
+            <line x1="170" y1="105" x2="260" y2="105" class="curve"/>
+            <line x1="260" y1="60" x2="115" y2="150" class="pathline"/>
+            <line x1="260" y1="105" x2="115" y2="150" class="pathline"/>
+            <line x1="115" y1="150" x2="115" y2="55" class="tick"/>
+            <text x="96" y="72" class="label">Object</text>
+            <text x="100" y="48" class="label">Virtual image</text>
+          </svg>
+          <div class="diagram-caption">The magnifying glass forms a larger virtual image on the same side as the object.</div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Angular magnification</div>
+          <div class="line"><span class="math">M = D/f</span> for relaxed eye</div>
+          <div class="line"><span class="math">M = 1 + D/f</span> for near point</div>
+        </div>
+
+        <p>Here, <span class="math">D = 25 cm</span> is the least distance of distinct vision.</p>
+
+        <div class="example-box">
+          <div class="title">Calculation 4: Simple Microscope</div>
+          <p>A magnifying glass has focal length 5 cm. Find its magnifying power for relaxed eye and near point.</p>
+          <p><strong>Relaxed eye:</strong> <span class="math">M = 25/5 = 5×</span></p>
+          <p><strong>Near point:</strong> <span class="math">M = 1 + 25/5 = 6×</span></p>
+          <div class="answer">Answer: 5× and 6×</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ The Compound Microscope</h2>
+
+        <h3>Construction</h3>
+        <p>A compound microscope uses two convex lenses:</p>
+        <ul>
+          <li><strong>Objective:</strong> short focal length, close to the specimen</li>
+          <li><strong>Eyepiece:</strong> longer focal length, close to the eye</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Compound microscope</div>
+          <svg viewBox="0 0 340 220" aria-label="Compound microscope diagram">
+            <line x1="25" y1="110" x2="315" y2="110" class="axis"/>
+            <line x1="70" y1="140" x2="70" y2="90" class="tick"/>
+            <line x1="120" y1="45" x2="120" y2="175" class="obj"/>
+            <line x1="225" y1="45" x2="225" y2="175" class="obj"/>
+            <line x1="175" y1="175" x2="175" y2="45" class="tick"/>
+            <text x="46" y="82" class="label">Object</text>
+            <text x="92" y="35" class="label">Objective</text>
+            <text x="205" y="35" class="label">Eyepiece</text>
+            <text x="142" y="188" class="label">Intermediate image</text>
+          </svg>
+          <div class="diagram-caption">The objective makes a real enlarged image, and the eyepiece magnifies it further.</div>
+        </div>
+
+        <h3>Image formation</h3>
+        <ul>
+          <li>Objective forms a real, inverted, magnified image</li>
+          <li>Eyepiece acts like a simple microscope</li>
+          <li>Final image is virtual, inverted, and highly magnified</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Compound microscope magnification</div>
+          <div class="line"><span class="math">M = Mₒ × Mₑ</span></div>
+          <div class="line"><span class="math">M ≈ (L/fₒ) × (D/fₑ)</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 5: Compound Microscope</div>
+          <p>A compound microscope has objective focal length 4 mm and eyepiece focal length 2 cm. Tube length is 16 cm. Find the total magnification for relaxed eye.</p>
+          <p><strong>Convert:</strong> <span class="math">4 mm = 0.4 cm</span></p>
+          <p><span class="math">Mₒ = L/fₒ = 16/0.4 = 40×</span></p>
+          <p><span class="math">Mₑ = D/fₑ = 25/2 = 12.5×</span></p>
+          <p><span class="math">M = 40 × 12.5 = 500×</span></p>
+          <div class="answer">Answer: 500×</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ The Astronomical Telescope</h2>
+
+        <h3>Construction</h3>
+        <p>An astronomical telescope uses two convex lenses on the same axis:</p>
+        <ul>
+          <li><strong>Objective:</strong> large diameter, long focal length</li>
+          <li><strong>Eyepiece:</strong> short focal length</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Astronomical telescope</div>
+          <svg viewBox="0 0 340 210" aria-label="Telescope diagram">
+            <line x1="25" y1="105" x2="315" y2="105" class="axis"/>
+            <line x1="90" y1="40" x2="90" y2="170" class="obj"/>
+            <line x1="250" y1="55" x2="250" y2="155" class="obj"/>
+            <line x1="170" y1="140" x2="170" y2="70" class="tick"/>
+            <text x="60" y="32" class="label">Objective</text>
+            <text x="227" y="48" class="label">Eyepiece</text>
+            <text x="144" y="160" class="label">Image at focal plane</text>
+          </svg>
+          <div class="diagram-caption">The objective forms a real image, and the eyepiece magnifies it for the eye.</div>
+        </div>
+
+        <h3>Image formation</h3>
+        <ul>
+          <li>Objective forms a real, inverted image at its focal plane</li>
+          <li>Eyepiece magnifies this image</li>
+          <li>Final image is virtual, inverted, and usually at infinity for relaxed eye</li>
+        </ul>
+
+        <div class="formula-box">
+          <div class="title">Telescope formulas</div>
+          <div class="line"><span class="math">M = fₒ/fₑ</span></div>
+          <div class="line"><span class="math">L = fₒ + fₑ</span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 6: Astronomical Telescope</div>
+          <p>A telescope has objective focal length 100 cm and eyepiece focal length 5 cm. Find the magnifying power and tube length.</p>
+          <p><span class="math">M = 100/5 = 20×</span></p>
+          <p><span class="math">L = 100 + 5 = 105 cm</span></p>
+          <div class="answer">Answer: 20× and 105 cm</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ The Human Eye</h2>
+
+        <h3>Structure and function</h3>
+        <ul>
+          <li><strong>Cornea:</strong> transparent front part</li>
+          <li><strong>Aqueous humor:</strong> fluid between cornea and lens</li>
+          <li><strong>Iris:</strong> controls pupil size</li>
+          <li><strong>Lens:</strong> fine-tunes focus</li>
+          <li><strong>Ciliary muscles:</strong> change lens shape</li>
+          <li><strong>Retina:</strong> light-sensitive screen</li>
+          <li><strong>Optic nerve:</strong> carries signals to the brain</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Human eye structure</div>
+          <svg viewBox="0 0 340 210" aria-label="Human eye diagram">
+            <ellipse cx="170" cy="105" rx="120" ry="70" class="obj"/>
+            <circle cx="92" cy="105" r="18" class="darkfill"/>
+            <ellipse cx="118" cy="105" rx="18" ry="28" class="cool"/>
+            <line x1="260" y1="55" x2="260" y2="155" class="tick"/>
+            <text x="58" y="82" class="label">Cornea</text>
+            <text x="108" y="68" class="label">Lens</text>
+            <text x="245" y="47" class="label">Retina</text>
+            <text x="250" y="178" class="label">Optic nerve</text>
+          </svg>
+          <div class="diagram-caption">The eye focuses light on the retina, where the image is formed.</div>
+        </div>
+
+        <h3>Accommodation</h3>
+        <p>Accommodation is the ability of the eye lens to change shape so that objects at different distances can be focused clearly on the retina.</p>
+
+        <ul>
+          <li><strong>Near object:</strong> lens becomes thicker, focal length decreases</li>
+          <li><strong>Distant object:</strong> lens becomes thinner, focal length increases</li>
+        </ul>
+
+        <h3>Far point and near point</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Term</th>
+              <th>Meaning</th>
+              <th>Normal Value</th>
+            </tr>
+            <tr><td>Far point</td><td>Farthest point seen clearly</td><td>Infinity</td></tr>
+            <tr><td>Near point</td><td>Closest point seen clearly</td><td>25 cm</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <h3>Eye defects and corrections</h3>
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Defect</th>
+              <th>Cause</th>
+              <th>Correction</th>
+            </tr>
+            <tr><td>Myopia</td><td>Eyeball too long or lens too strong</td><td>Concave lens</td></tr>
+            <tr><td>Hypermetropia</td><td>Eyeball too short or lens too weak</td><td>Convex lens</td></tr>
+            <tr><td>Presbyopia</td><td>Loss of accommodation with age</td><td>Convex lens</td></tr>
+            <tr><td>Astigmatism</td><td>Uneven cornea/lens curvature</td><td>Cylindrical lens</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="example-box">
+          <div class="title">Calculation 7: Correcting Myopia</div>
+          <p>A short-sighted person cannot see clearly beyond 2 m. Find the power of lens needed.</p>
+          <p>The correcting lens must form a virtual image of a distant object at 2 m.</p>
+          <p><span class="math">f = -2 m</span></p>
+          <p><span class="math">P = 1/f = -0.5 D</span></p>
+          <div class="answer">Answer: -0.5 D</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 8: Correcting Hypermetropia</div>
+          <p>A long-sighted person has near point at 50 cm. Find the power of lens needed to read at 25 cm.</p>
+          <p>The lens should make an object at 25 cm appear at 50 cm.</p>
+          <p><span class="math">1/f = 1/0.25 + 1/(-0.5) = 4 - 2 = 2</span></p>
+          <p><span class="math">f = 0.5 m</span></p>
+          <p><span class="math">P = +2 D</span></p>
+          <div class="answer">Answer: +2 D</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Summary Table: Optical Instruments</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Instrument</th>
+              <th>Lens Type</th>
+              <th>Image Nature</th>
+              <th>Key Formula</th>
+            </tr>
+            <tr><td>Camera</td><td>Single convex</td><td>Real, inverted, diminished</td><td><span class="math">1/f = 1/u + 1/v</span></td></tr>
+            <tr><td>Projector</td><td>Single convex</td><td>Real, inverted, magnified</td><td><span class="math">m = v/u</span></td></tr>
+            <tr><td>Simple microscope</td><td>Single convex</td><td>Virtual, erect, magnified</td><td><span class="math">M = D/f</span> or <span class="math">1 + D/f</span></td></tr>
+            <tr><td>Compound microscope</td><td>Two convex lenses</td><td>Virtual, inverted, highly magnified</td><td><span class="math">M = (L/fₒ)(D/fₑ)</span></td></tr>
+            <tr><td>Telescope</td><td>Two convex lenses</td><td>Virtual, inverted</td><td><span class="math">M = fₒ/fₑ</span></td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ JAMB Exam Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>High-score reminders</h4>
+          <ul>
+            <li>Camera and projector both use a convex lens, but object positions differ</li>
+            <li>Simple microscope uses <span class="math">M = D/f</span></li>
+            <li>Telescope uses <span class="math">M = fₒ/fₑ</span></li>
+            <li>Myopia is corrected with a concave lens</li>
+            <li>Hypermetropia is corrected with a convex lens</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>⚠️ Common mistakes</strong>
+          <p>Do not confuse linear magnification with angular magnification, and remember that an astronomical telescope forms an inverted final image.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ Final Check</h2>
+        <ul>
+          <li>Know the principle of each instrument</li>
+          <li>Memorize the main formulas</li>
+          <li>Understand near point and far point</li>
+          <li>Know which lenses correct eye defects</li>
+          <li>Convert units carefully before calculating power</li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Optical Instruments. This chapter brings together lens formula, magnification, image formation, and eye correction in one very exam-friendly topic.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise camera, projector, microscope, telescope, eye defects, near point, far point, and magnification formulas.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

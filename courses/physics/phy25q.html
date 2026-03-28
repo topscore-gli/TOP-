@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Refraction of Light</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Refraction of Light at Plane and Curved Surfaces<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Refraction of Light</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3000,PASS:60}; // 50 minutes for 50 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Refraction at Plane Surfaces",
+  20:"B: Refraction at Curved Surfaces - Lenses",
+  40:"C: Mixed Concepts & Applications"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Physics Refraction of Light Questions
+const QUIZ_DATA=[
+  // Section A: Refraction at Plane Surfaces (1-20)
+  {q:"The bending of light as it passes from air to water is known as:",o:["Reflection","Refraction","Diffraction","Dispersion"],a:1,e:"Refraction is the bending of light when it passes from one medium to another of different optical density."},
+  {q:"Which of the following does NOT affect the amount of bending when light passes from air to glass?",o:["Angle of incidence","Wavelength of light","Thickness of the glass","Refractive index of glass"],a:2,e:"Thickness of glass affects lateral displacement, not the angle of bending (refraction). The bending depends on angle of incidence, wavelength, and refractive index."},
+  {q:"The speed of light in a certain medium is 2.25 × 10⁸ m/s. Calculate the refractive index of the medium. (c = 3.0 × 10⁸ m/s)",o:["1.20","1.25","1.30","1.33"],a:3,e:"n = c/v = (3.0 × 10⁸)/(2.25 × 10⁸) = 1.33"},
+  {q:"A swimming pool appears to be 1.5 m deep when viewed from above. If the refractive index of water is 4/3, the real depth is:",o:["1.125 m","2.0 m","2.25 m","3.0 m"],a:1,e:"n = real depth/apparent depth → 4/3 = real depth/1.5 → real depth = 2.0 m"},
+  {q:"Light travels from water (n = 4/3) to air. The critical angle is:",o:["41.8°","48.6°","53.1°","62.5°"],a:1,e:"sin θ_c = n₂/n₁ = 1/(4/3) = 3/4 = 0.75 → θ_c = 48.6°"},
+  {q:"Total internal reflection occurs when light travels from:",o:["Air to water","Water to glass","Glass to air","Air to glass"],a:2,e:"Total internal reflection only occurs when light travels from a denser medium (higher n) to a rarer medium (lower n)."},
+  {q:"A ray of light strikes a glass block at an angle of incidence of 50°. If the refractive index of glass is 1.5, the angle of refraction is:",o:["28.1°","30.7°","33.3°","35.2°"],a:1,e:"n = sin i/sin r → 1.5 = sin 50°/sin r → sin r = 0.766/1.5 = 0.511 → r = 30.7°"},
+  {q:"The phenomenon responsible for the twinkling of stars is:",o:["Reflection","Refraction","Diffraction","Interference"],a:1,e:"Starlight undergoes continuous refraction as it passes through layers of atmosphere with varying densities, causing apparent position shifts (twinkling)."},
+  {q:"A fish in water appears to be at a depth of 2.0 m when viewed from directly above. If the refractive index of water is 1.33, the actual depth is approximately:",o:["1.5 m","2.0 m","2.67 m","3.0 m"],a:2,e:"Real depth = n × apparent depth = 1.33 × 2.0 = 2.67 m"},
+  {q:"The critical angle for a medium is 42°. Its refractive index is:",o:["1.33","1.41","1.49","1.50"],a:2,e:"n = 1/sin θ_c = 1/sin 42° = 1/0.669 = 1.49"},
+  {q:"A glass prism produces a spectrum of white light due to:",o:["Reflection","Refraction","Dispersion","Interference"],a:2,e:"Dispersion is the separation of white light into its constituent colors due to different refractive indices for different wavelengths."},
+  {q:"Light travels from medium X to medium Y with an angle of incidence of 40° and angle of refraction of 50°. Which statement is correct?",o:["X is denser than Y","Y is denser than X","Both have same density","Light speed is same in both"],a:0,e:"Since r > i, light bends away from normal, meaning it travels from denser to rarer medium. Therefore X is denser than Y."},
+  {q:"The refractive index of diamond is 2.42. Its critical angle is approximately:",o:["22°","24°","26°","28°"],a:1,e:"sin θ_c = 1/2.42 = 0.413 → θ_c = 24.4° ≈ 24°"},
+  {q:"A rectangular glass block is 6 cm thick. A ray of light enters at 45° and emerges with a lateral displacement. If refractive index is 1.5, the angle of refraction inside the glass is:",o:["26.2°","28.1°","30.0°","32.5°"],a:1,e:"1.5 = sin 45°/sin r → sin r = 0.707/1.5 = 0.471 → r = 28.1°"},
+  {q:"Which phenomenon is applied in the working of optical fibers?",o:["Refraction","Total internal reflection","Diffraction","Interference"],a:1,e:"Optical fibers use total internal reflection to transmit light signals over long distances with minimal loss."},
+  {q:"A coin placed at the bottom of a beaker filled with water appears raised due to:",o:["Reflection of light","Refraction of light","Diffraction of light","Dispersion of light"],a:1,e:"Light from the coin refracts away from normal as it exits water, making the coin appear closer (raised) than it actually is."},
+  {q:"If the speed of light in medium A is 2.0 × 10⁸ m/s and in medium B is 2.5 × 10⁸ m/s, the refractive index of A relative to B is:",o:["0.80","1.20","1.25","1.50"],a:2,e:"ⁿB_A = v_B/v_A = (2.5 × 10⁸)/(2.0 × 10⁸) = 1.25"},
+  {q:"The angle of deviation produced by a small angle prism is independent of:",o:["Angle of prism","Refractive index","Angle of incidence (for small angles)","Wavelength of light"],a:2,e:"For small angle prisms, deviation d = (n-1)A, which is independent of angle of incidence (provided it's small)."},
+  {q:"A light ray passes from air through a parallel-sided glass slab and emerges into air. The emergent ray is:",o:["Parallel to incident ray but displaced","At greater angle to normal","At smaller angle to normal","Perpendicular to incident ray"],a:0,e:"In a parallel-sided slab, the emergent ray is parallel to the incident ray but laterally displaced due to refraction at both surfaces."},
+  {q:"The minimum angle of incidence for total internal reflection to occur when light travels from glass (n=1.5) to air is:",o:["33.7°","41.8°","48.2°","56.3°"],a:1,e:"sin θ_c = 1/1.5 = 0.667 → θ_c = 41.8°"},
+  
+  // Section B: Refraction at Curved Surfaces - Lenses (21-40)
+  {q:"A convex lens is also known as a:",o:["Diverging lens","Converging lens","Cylindrical lens","Plano-concave lens"],a:1,e:"Convex lenses are thicker at the center and cause parallel rays to converge, hence called converging lenses."},
+  {q:"The focal length of a lens is the distance from the:",o:["Object to the image","Optical center to the object","Optical center to the principal focus","Principal focus to the image"],a:2,e:"Focal length is the distance from the optical center of the lens to the principal focus where parallel rays converge."},
+  {q:"An object is placed 20 cm from a convex lens of focal length 15 cm. The image distance is:",o:["40 cm","50 cm","60 cm","80 cm"],a:2,e:"1/v = 1/f - 1/u = 1/15 - 1/20 = (4-3)/60 = 1/60 → v = 60 cm"},
+  {q:"A concave lens has a focal length of 20 cm. Its power is:",o:["-5.0 D","-0.05 D","+5.0 D","+0.05 D"],a:0,e:"P = 1/f = 1/(-0.20) = -5.0 D (concave lenses have negative focal length and power)"},
+  {q:"An object placed 30 cm from a lens produces a real image 60 cm from the lens. The focal length is:",o:["15 cm","20 cm","25 cm","45 cm"],a:1,e:"1/f = 1/30 + 1/60 = (2+1)/60 = 3/60 = 1/20 → f = 20 cm"},
+  {q:"The linear magnification produced by a lens is 2. If the object distance is 10 cm, the image distance is:",o:["5 cm","10 cm","20 cm","40 cm"],a:2,e:"m = v/u → 2 = v/10 → v = 20 cm"},
+  {q:"A convex lens of focal length 10 cm forms a virtual image of an object placed at:",o:["5 cm from lens","15 cm from lens","20 cm from lens","25 cm from lens"],a:0,e:"Virtual images from convex lenses occur when object is placed between F and optical center (i.e., less than 10 cm)."},
+  {q:"Two thin lenses of focal lengths 10 cm and 20 cm are placed in contact. The combined focal length is:",o:["6.67 cm","15.0 cm","30.0 cm","200 cm"],a:0,e:"1/F = 1/10 + 1/20 = (2+1)/20 = 3/20 → F = 20/3 = 6.67 cm"},
+  {q:"A lens forms an erect image twice the size of the object. If the image is 30 cm from the lens, the object distance is:",o:["15 cm","30 cm","60 cm","90 cm"],a:0,e:"Erect image means virtual image with positive magnification. m = 2 = v/u = 30/u → u = 15 cm"},
+  {q:"The power of a lens is +2.5 D. Its focal length is:",o:["25 cm","40 cm","50 cm","250 cm"],a:1,e:"f = 1/P = 1/2.5 = 0.40 m = 40 cm"},
+  {q:"A concave lens always forms an image that is:",o:["Real and inverted","Real and erect","Virtual and inverted","Virtual and erect"],a:3,e:"Concave (diverging) lenses always produce virtual, erect, and diminished images regardless of object position."},
+  {q:"An object is placed at the center of curvature of a convex lens of focal length f. The image is formed at:",o:["f","2f","3f","Infinity"],a:1,e:"When u = 2f, then 1/v = 1/f - 1/2f = 1/2f → v = 2f. Image is at 2f on the other side."},
+  {q:"A lens with power -4.0 D is a:",o:["Convex lens with f = 25 cm","Concave lens with f = 25 cm","Convex lens with f = 40 cm","Concave lens with f = 40 cm"],a:1,e:"Negative power indicates concave lens. f = 1/(-4.0) = -0.25 m = -25 cm (negative confirms concave)."},
+  {q:"The magnification of a lens is -3. This indicates that the image is:",o:["Real and diminished","Real and magnified","Virtual and diminished","Virtual and magnified"],a:1,e:"Negative magnification indicates real, inverted image. Magnitude > 1 indicates magnification (enlarged)."},
+  {q:"An object 2 cm tall is placed 15 cm from a convex lens of focal length 10 cm. The height of the image is:",o:["2 cm","3 cm","4 cm","6 cm"],a:2,e:"1/v = 1/10 - 1/15 = 1/30 → v = 30 cm. m = v/u = 30/15 = 2. Image height = 2 × 2 = 4 cm"},
+  {q:"A convex lens forms an image of the same size as the object when the object is placed at:",o:["F","2F","Between F and 2F","Beyond 2F"],a:1,e:"When object is at 2F (center of curvature), image is also at 2F on the other side, same size but inverted."},
+  {q:"Two lenses of powers +5 D and -3 D are combined. The power of the combination is:",o:["-15 D","+2 D","+8 D","+15 D"],a:1,e:"P = P₁ + P₂ = +5 + (-3) = +2 D"},
+  {q:"A real image formed by a convex lens is always:",o:["Erect and magnified","Erect and diminished","Inverted and magnified","Inverted (magnified or diminished)"],a:3,e:"Real images formed by convex lenses are always inverted. They can be magnified (when object is between F and 2F) or diminished (when object is beyond 2F)."},
+  {q:"The distance between an object and its real image formed by a convex lens is minimum when:",o:["u = f","u = 2f","u = 3f","u = 4f"],a:1,e:"Minimum distance between object and real image is 4f, which occurs when object is at 2f (image is also at 2f)."},
+  {q:"A lens forms a virtual image at 20 cm when an object is placed at 10 cm. The focal length is:",o:["6.67 cm","10 cm","20 cm","30 cm"],a:2,e:"For virtual image, v is negative: 1/f = 1/10 + 1/(-20) = (2-1)/20 = 1/20 → f = 20 cm"},
+  
+  // Section C: Mixed Concepts & Applications (41-50)
+  {q:"A microscope uses which combination of lenses?",o:["Two convex lenses","Two concave lenses","One convex and one concave","Two plane mirrors"],a:0,e:"Compound microscopes use two convex lenses - the objective (forms real, magnified image) and eyepiece (acts as magnifier)."},
+  {q:"The defect of vision corrected by a concave lens is:",o:["Long sightedness","Short sightedness","Astigmatism","Presbyopia"],a:1,e:"Short sightedness (myopia) is corrected by concave lenses which diverge light before it enters the eye, shifting focus back to retina."},
+  {q:"A person cannot see objects beyond 2 m clearly. The power of lens needed to correct this defect is:",o:["-0.5 D","+0.5 D","-2.0 D","+2.0 D"],a:0,e:"Far point is at 2 m instead of infinity. Focal length of correcting lens = -2 m (diverging). Power = 1/(-2) = -0.5 D"},
+  {q:"The rainbow is formed due to:",o:["Refraction only","Reflection only","Refraction and reflection","Refraction, reflection and dispersion"],a:3,e:"Rainbows involve refraction and dispersion when light enters water droplets, internal reflection, and refraction when exiting."},
+  {q:"A camera lens of focal length 50 mm is focused on an object 1 m away. The distance from lens to film is approximately:",o:["47.6 mm","50.0 mm","52.6 mm","55.0 mm"],a:2,e:"1/v = 1/50 - 1/1000 = (20-1)/1000 = 19/1000 → v = 1000/19 = 52.6 mm"},
+  {q:"An astronomical telescope in normal adjustment has objective focal length 100 cm and eyepiece focal length 5 cm. The angular magnification is:",o:["5","20","95","105"],a:1,e:"Magnification = f_o/f_e = 100/5 = 20"},
+  {q:"The distance between objective and eyepiece in Q46 when in normal adjustment is:",o:["95 cm","100 cm","105 cm","500 cm"],a:2,e:"In normal adjustment, separation = f_o + f_e = 100 + 5 = 105 cm"},
+  {q:"A projector lens forms an image on a screen 4 m from the lens. If the slide is placed 20 cm from the lens, the magnification is:",o:["5","10","20","25"],a:2,e:"m = v/u = 400/20 = 20 (convert 4 m to 400 cm)"},
+  {q:"Which of the following CANNOT produce a real image?",o:["Convex lens","Concave mirror","Concave lens","Convex mirror"],a:2,e:"Concave lenses always produce virtual images. Concave mirrors, convex mirrors, and convex lenses can produce real images under certain conditions."},
+  {q:"A lens has magnification -0.5 when an object is placed 30 cm from it. The lens is:",o:["Convex with f = 10 cm","Convex with f = 15 cm","Concave with f = 10 cm","Concave with f = 15 cm"],a:0,e:"m = -0.5 = v/30 → v = -15 cm (negative m means inverted/real, so v = +15 cm). 1/f = 1/30 + 1/15 = (1+2)/30 = 3/30 = 1/10 → f = 10 cm. Positive f = convex lens."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('sound_wave_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('sound_wave_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('sound_wave_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,20,40,50];
+  const sectionNames=["A: Refraction at Plane Surfaces","B: Refraction at Curved Surfaces - Lenses","C: Mixed Concepts & Applications"];
+  
+  for(let s=0;s<3;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('sound_wave_quiz_auth');
+  sessionStorage.removeItem('sound_wave_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('sound_wave_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('sound_wave_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

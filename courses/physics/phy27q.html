@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Dispersion of Light and Colours</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Dispersion of Light and Colours (Chapter 27)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Dispersion of Light and Colours</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3000,PASS:60}; // 50 minutes for 50 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Dispersion Fundamentals",
+  10:"B: Rainbows & Atmospheric Phenomena",
+  20:"C: Colour Theory & Mixing",
+  30:"D: Prism & Spectrometer",
+  40:"E: Advanced Concepts"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Physics Dispersion of Light and Colours Questions
+const QUIZ_DATA=[
+  // Section A: Dispersion Fundamentals (1-10)
+  {q:"The phenomenon of white light splitting into its constituent colours when passed through a prism is called:",o:["Reflection","Refraction","Dispersion","Interference","Diffraction"],a:2,e:"Dispersion is the separation of white light into its component colours due to different wavelengths refracting at slightly different angles in a medium."},
+  {q:"Which colour of light deviates least when passing through a glass prism?",o:["Violet","Blue","Green","Yellow","Red"],a:4,e:"Red light has the longest wavelength and lowest refractive index in glass, causing it to bend (deviate) the least."},
+  {q:"The colour of light with the highest frequency in the visible spectrum is:",o:["Red","Orange","Yellow","Blue","Violet"],a:4,e:"Violet light has the shortest wavelength (approximately 400 nm) and therefore the highest frequency (c = fλ)."},
+  {q:"When white light passes through a prism, the colour that emerges closest to the base of the prism is:",o:["Red","Green","Yellow","Blue","Violet"],a:4,e:"Violet light bends most due to its highest refractive index, so it deviates most toward the base of the prism."},
+  {q:"The rainbow is formed due to:",o:["Refraction only","Reflection only","Dispersion and internal reflection","Interference","Diffraction"],a:2,e:"Rainbows form when sunlight undergoes refraction, dispersion, and internal reflection within water droplets in the atmosphere."},
+  {q:"Which of the following is NOT a primary colour of light?",o:["Red","Green","Blue","Yellow","None of the above"],a:3,e:"Primary colours of light are red, green, and blue (RGB). Yellow is a secondary colour formed by mixing red and green light."},
+  {q:"The combination of all primary colours of light in equal intensities produces:",o:["Black","White","Magenta","Cyan","Yellow"],a:1,e:"Additive colour mixing of red, green, and blue light in equal proportions produces white light."},
+  {q:"Cyan is produced by mixing:",o:["Red and Blue","Red and Green","Blue and Green","Red, Green and Blue","Yellow and Blue"],a:2,e:"Cyan is a secondary colour produced by adding blue and green light (subtractive primary for pigments)."},
+  {q:"A pure spectral colour is one that:",o:["Can be further dispersed","Cannot be further dispersed","Is white","Is black","Has been filtered"],a:1,e:"Spectral colours (monochromatic light) consist of a single wavelength and cannot be dispersed further by a prism."},
+  {q:"The refractive index of glass is highest for:",o:["Red light","Yellow light","Green light","Blue light","Violet light"],a:4,e:"Refractive index increases with decreasing wavelength; violet light (shortest λ) experiences the highest refractive index."},
+  
+  // Section B: Rainbows & Atmospheric Phenomena (11-20)
+  {q:"In a primary rainbow, the colour at the top of the arc is:",o:["Violet","Blue","Green","Yellow","Red"],a:4,e:"In a primary rainbow (one reflection), red appears at the top (outer edge) with 42° deviation, violet at the bottom."},
+  {q:"The angular width of a primary rainbow is approximately:",o:["1°","2°","5°","42°","52°"],a:1,e:"The primary rainbow spans about 2° from red (42°) to violet (40°) deviation angles."},
+  {q:"A secondary rainbow appears:",o:["Brighter than primary","Outside the primary rainbow","Inside the primary rainbow","With colours in same order","Only at noon"],a:1,e:"Secondary rainbows form from two internal reflections, appear outside (larger radius, 50-53°), and have reversed colour order."},
+  {q:"The colour order in a secondary rainbow from top to bottom is:",o:["Red, Orange, Yellow, Green, Blue, Indigo, Violet","Violet, Indigo, Blue, Green, Yellow, Orange, Red","Red, Green, Blue","White to black","Random"],a:1,e:"Secondary rainbow colours are reversed because the second reflection inverts the dispersion order."},
+  {q:"Which phenomenon explains why the sky appears blue?",o:["Refraction","Reflection","Rayleigh scattering","Dispersion","Interference"],a:2,e:"Shorter blue wavelengths are scattered more strongly by air molecules (scattering ∝ 1/λ⁴), making the sky appear blue."},
+  {q:"The sun appears red at sunset because:",o:["Red light travels faster","Red light is scattered least","Blue light is absorbed","The sun cools down","Refraction increases"],a:1,e:"At sunset, light travels through more atmosphere; blue light is scattered away, leaving predominantly red/orange light."},
+  {q:"Chromatic aberration in lenses is caused by:",o:["Spherical shape","Dispersion of light","Reflection","Diffraction","Polarization"],a:1,e:"Different colours focus at different points due to varying refractive indices, causing coloured fringes in images."},
+  {q:"To minimize chromatic aberration, achromatic doublets combine:",o:["Two convex lenses","Two concave lenses","Crown glass and flint glass lenses","Mirrors and lenses","Polarizing filters"],a:2,e:"Crown glass (converging) and flint glass (diverging) with different dispersions cancel out chromatic aberration."},
+  {q:"The dispersive power of a medium is given by:",o:["(μᵥ - μᵣ)/(μ - 1)","(μᵥ + μᵣ)/2","μᵥ/μᵣ","(μᵥ - μᵣ)","1/(μ - 1)"],a:0,e:"Dispersive power ω = (μᵥ - μᵣ)/(μ - 1), where μᵥ and μᵣ are refractive indices for violet and red, μ is mean refractive index."},
+  {q:"If the refractive indices for violet and red light in glass are 1.532 and 1.514 respectively, the dispersive power is approximately:",o:["0.018","0.034","0.052","1.523","0.018/0.523"],a:1,e:"Mean μ = (1.532 + 1.514)/2 = 1.523; ω = (1.532 - 1.514)/(1.523 - 1) = 0.018/0.523 ≈ 0.034."},
+  
+  // Section C: Colour Theory & Mixing (21-30)
+  {q:"Newton's colour disc demonstrates that:",o:["Colours can be separated","White light is composed of colours","Rotating colours produce white","Prisms create colours","Colours have different speeds"],a:2,e:"When Newton's disc (with spectral colours) spins rapidly, persistence of vision blends colours to produce white/gray."},
+  {q:"Magenta light is produced by mixing:",o:["Red and Green","Red and Blue","Green and Blue","Red, Green and Blue","Yellow and Red"],a:1,e:"Magenta is a secondary colour produced by additive mixing of red and blue light."},
+  {q:"In subtractive colour mixing, yellow pigment appears yellow because it:",o:["Reflects yellow and absorbs others","Absorbs yellow and reflects others","Emits yellow light","Refracts yellow light","Scatters yellow light"],a:0,e:"Pigments work by subtraction; yellow pigment absorbs blue and reflects red + green (which appear yellow)."},
+  {q:"When blue light shines on a red object, the object appears:",o:["Blue","Red","Magenta","Black","White"],a:3,e:"Red objects absorb blue light; with no red light to reflect, the object appears black (no light reflected)."},
+  {q:"The critical angle for a medium is smallest for:",o:["Red light","Green light","Blue light","Yellow light","Violet light"],a:4,e:"sin C = 1/μ; since μ is highest for violet, critical angle C is smallest for violet light."},
+  {q:"Which statement about light dispersion is CORRECT?",o:["All colours travel at same speed in vacuum","Red light travels slowest in glass","Violet light has longest wavelength","Dispersion does not occur in water","Prisms create new colours"],a:0,e:"In vacuum, all electromagnetic waves travel at c ≈ 3×10⁸ m/s regardless of wavelength; dispersion only occurs in media."},
+  {q:"The angle of deviation for light passing through a prism is minimum when:",o:["Angle of incidence is 0°","Angle of incidence equals angle of emergence","Angle of prism is 60°","Light is violet","Light is red"],a:1,e:"Minimum deviation occurs when light passes symmetrically through the prism (i = e, r₁ = r₂)."},
+  {q:"For a prism with small refracting angle A, the deviation d is given by:",o:["d = A(μ - 1)","d = A/(μ - 1)","d = (μ - 1)/A","d = μA","d = A/μ"],a:0,e:"For thin prisms, deviation d = (μ - 1)A, where μ is refractive index and A is refracting angle."},
+  {q:"If a prism of angle 6° produces minimum deviation of 3° for yellow light, its refractive index is:",o:["1.0","1.25","1.5","1.75","2.0"],a:2,e:"Using d = (μ - 1)A; 3 = (μ - 1)×6; μ - 1 = 0.5; μ = 1.5."},
+  {q:"The colour of light with wavelength approximately 700 nm is:",o:["Violet","Blue","Green","Yellow","Red"],a:4,e:"Red light has the longest visible wavelengths, approximately 620-750 nm (700 nm is characteristic red)."},
+  
+  // Section D: Prism & Spectrometer (31-40)
+  {q:"In a spectrometer, the collimator is used to:",o:["Disperse light","Produce parallel rays","Focus light on the eye","Rotate the prism","Measure angles"],a:1,e:"The collimator consists of a slit and lens at focal length to produce a parallel beam of light."},
+  {q:"Pure spectral colours are also called:",o:["Composite colours","Monochromatic colours","Complementary colours","Primary colours","Secondary colours"],a:1,e:"Monochromatic light consists of a single wavelength and cannot be dispersed further."},
+  {q:"Complementary colours are pairs that produce:",o:["Black when added","White when added","Red when mixed","Dark shadows","Interference patterns"],a:1,e:"Complementary colours (e.g., red + cyan, blue + yellow, green + magenta) add to produce white light."},
+  {q:"Which is complementary to blue light?",o:["Red","Green","Cyan","Yellow","Magenta"],a:3,e:"Yellow is complementary to blue; blue + yellow light = white light (blue + red + green)."},
+  {q:"A green object viewed in red light appears:",o:["Green","Red","Yellow","Black","White"],a:3,e:"Green objects absorb red light and reflect green; with only red light available, no light is reflected."},
+  {q:"The formation of a rainbow requires the sun to be:",o:["Directly overhead","Behind the observer","In front of the observer","Below the horizon","At any position"],a:1,e:"The sun must be behind the observer so that sunlight can enter water droplets, refract, reflect, and return to the observer's eyes."},
+  {q:"Alexander's dark band is the region:",o:["Inside the primary rainbow","Between primary and secondary rainbows","Outside the secondary rainbow","At the centre of a rainbow","Where no rain falls"],a:1,e:"This dark region (about 8° wide) receives no light from primary or secondary rainbow angles."},
+  {q:"Supernumerary bows are caused by:",o:["Double reflection","Interference of light waves","Diffraction at droplet edges","Polarization","Multiple droplets"],a:1,e:"These faint pink and green bands inside the primary rainbow result from interference between waves taking slightly different paths."},
+  {q:"The refractive index of a medium depends on:",o:["Intensity of light","Wavelength of light","Temperature only","Pressure only","Amplitude of light"],a:1,e:"Refractive index varies with wavelength (dispersion), causing different colours to refract at different angles."},
+  {q:"Anomalous dispersion occurs:",o:["In all prisms","Near absorption bands","Only in mirrors","In vacuum","At high temperatures"],a:1,e:"Near absorption frequencies, refractive index decreases with decreasing wavelength (opposite to normal dispersion)."},
+  
+  // Section E: Advanced Concepts (41-50)
+  {q:"A prism with refracting angle 60° has refractive index 1.5 for sodium light. The minimum deviation is approximately:",o:["30°","37°","45°","60°","90°"],a:1,e:"Using μ = sin[(A+d)/2]/sin(A/2); 1.5 = sin[(60+d)/2]/sin(30); sin[(60+d)/2] = 0.75; (60+d)/2 ≈ 48.6°; d ≈ 37.2°."},
+  {q:"The spectrum produced by a prism is:",o:["Pure spectrum","Impure spectrum","Continuous spectrum","Line spectrum","Band spectrum"],a:1,e:"Unless using a narrow slit and collimated light, a prism produces overlapping colours (impure spectrum); spectrometers produce pure spectra."},
+  {q:"Fraunhofer lines in the solar spectrum are:",o:["Emission lines","Absorption lines","Caused by Earth's atmosphere","Artificial colours","Continuous bands"],a:1,e:"These dark lines result from absorption of specific wavelengths by cooler gases in the sun's outer atmosphere."},
+  {q:"A glass prism deviates light least when:",o:["Angle of incidence is maximum","Angle of incidence is minimum","Light passes symmetrically","Prism angle is 90°","Light is violet"],a:2,e:"Minimum deviation occurs when the light ray passes through the prism symmetrically (equal angles of incidence and emergence)."},
+  {q:"The speed of violet light in glass compared to red light is:",o:["Greater","Less","Equal","Zero","Infinite"],a:1,e:"v = c/μ; since μᵥ > μᵣ, violet light travels slower in glass than red light."},
+  {q:"Which colour combination produces white light?",o:["Red + Yellow","Blue + Green","Red + Cyan","Green + Yellow","Blue + Red"],a:2,e:"Cyan is blue + green; red + cyan = red + blue + green = white (all three primaries)."},
+  {q:"The angle between the incident ray and emergent ray in a prism is called:",o:["Refracting angle","Angle of deviation","Critical angle","Glancing angle","Angle of incidence"],a:1,e:"The angle of deviation is the angle between the direction of incident ray and emergent ray."},
+  {q:"A substance appears coloured in white light because it:",o:["Reflects all colours equally","Absorbs certain wavelengths and reflects others","Refracts all colours","Emits coloured light","Polarizes light"],a:1,e:"Selective absorption of certain wavelengths and reflection of others gives objects their colour."},
+  {q:"In a direct vision spectroscope, prisms are arranged to:",o:["Increase dispersion","Produce deviation without dispersion","Produce dispersion without deviation","Reflect light","Polarize light"],a:2,e:"Crown and flint glass prisms arranged oppositely cancel deviation while adding dispersions."},
+  {q:"The wavelength range of visible light is approximately:",o:["10 nm to 100 nm","100 nm to 400 nm","400 nm to 700 nm","700 nm to 1000 nm","1000 nm to 2000 nm"],a:2,e:"Visible spectrum spans approximately 400 nm (violet) to 700 nm (red), with all colours in between."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('sound_wave_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('sound_wave_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('sound_wave_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,20,30,40,50];
+  const sectionNames=["A: Dispersion Fundamentals","B: Rainbows & Atmospheric Phenomena","C: Colour Theory & Mixing","D: Prism & Spectrometer","E: Advanced Concepts"];
+  
+  for(let s=0;s<5;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('sound_wave_quiz_auth');
+  sessionStorage.removeItem('sound_wave_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('sound_wave_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('sound_wave_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

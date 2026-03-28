@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB Physics - Dispersion of Light and Colors Mastery Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif}
+    :root{
+      --background:#1e1e2f;--shadow-in:#171723;--shadow-out:#25253b;
+      --text-primary:#f0f0ff;--text-secondary:#c0c0e0;
+      --accent:#1db954;--accent-secondary:#ff6b6b;--accent-tertiary:#4ecdc4;
+      --card-bg:#2a2a3f;--line:#8ea2ff;--grid:rgba(255,255,255,.08)
+    }
+    body.light{
+      --background:#e0e0e0;--shadow-in:#bebebe;--shadow-out:#ffffff;
+      --text-primary:#1a1a1a;--text-secondary:#444;--card-bg:#f8f8f8;--line:#2b59ff;--grid:rgba(0,0,0,.08)
+    }
+    body{
+      background:var(--background);color:var(--text-primary);
+      display:flex;justify-content:center;align-items:center;
+      min-height:100vh;overflow-x:hidden
+    }
+    .container{
+      width:100%;max-width:420px;height:750px;overflow-y:auto;
+      background:var(--background);border-radius:20px;
+      box-shadow:10px 10px 20px var(--shadow-in),-10px -10px 20px var(--shadow-out);
+      padding-top:70px;padding-bottom:80px;position:relative
+    }
+    .neumorphic{
+      background:var(--background);
+      box-shadow:5px 5px 10px var(--shadow-in),-5px -5px 10px var(--shadow-out);
+      border-radius:15px
+    }
+    .neumorphic-btn{
+      background:var(--background);border:none;border-radius:50%;
+      width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+      box-shadow:3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      cursor:pointer;color:var(--text-primary);font-size:18px;transition:all .3s ease
+    }
+    .neumorphic-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.95)
+    }
+    .top-bar{
+      position:fixed;top:0;width:100%;max-width:420px;
+      background:var(--background);padding:15px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 5px 10px var(--shadow-in);z-index:20
+    }
+    .top-bar .header{font-size:16px;font-weight:900;color:var(--accent)}
+    .top-bar .right-icons{display:flex;gap:10px}
+
+    .progress-container{
+      position:fixed;top:70px;left:0;width:100%;max-width:420px;height:4px;
+      background:var(--shadow-in);z-index:15
+    }
+    .progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+
+    .content{padding:20px 16px;line-height:1.7}
+    .main-header{
+      text-align:center;margin-bottom:26px;padding:20px;border-radius:20px;
+      background:rgba(29,185,84,.1)
+    }
+    .main-header h1{font-size:20px;margin-bottom:8px;color:var(--accent);font-weight:900}
+    .main-header p{font-size:13px;color:var(--text-secondary);font-weight:500}
+
+    .section-card{
+      background:var(--card-bg);padding:22px 18px;border-radius:20px;
+      box-shadow:inset 4px 4px 10px var(--shadow-in),inset -4px -4px 10px var(--shadow-out);
+      margin-bottom:22px;border-left:4px solid var(--accent)
+    }
+    .section-card h2{
+      font-size:18px;margin-bottom:12px;color:var(--accent);font-weight:900;
+      display:flex;align-items:center;gap:8px
+    }
+    .section-card h3{
+      font-size:15px;margin:16px 0 10px;color:var(--accent-tertiary);font-weight:800;
+      padding-left:12px;border-left:3px solid var(--accent-tertiary)
+    }
+    .section-card h4{
+      font-size:14px;margin:14px 0 8px;color:var(--accent-secondary);font-weight:800
+    }
+    .section-card p{margin-bottom:10px;font-size:14px;text-align:justify}
+    .section-card ul,.section-card ol{padding-left:20px;margin:10px 0}
+    .section-card li{margin-bottom:7px;font-size:14px}
+
+    .quick-facts{
+      background:linear-gradient(135deg,rgba(29,185,84,.1),rgba(78,205,196,.1));
+      padding:14px;border-radius:15px;margin:12px 0;border:1px solid rgba(29,185,84,.3)
+    }
+    .quick-facts li{font-size:13px}
+
+    .highlight-box{
+      background:rgba(78,205,196,.1);padding:12px 16px;border-radius:10px;margin:12px 0;
+      border-left:3px solid var(--accent-tertiary)
+    }
+
+    .memory-tip{
+      background:rgba(255,107,107,.1);padding:14px 16px;border-radius:12px;margin:14px 0;
+      border-left:4px solid var(--accent-secondary)
+    }
+    .memory-tip strong{color:var(--accent-secondary);display:block;margin-bottom:6px;font-size:14px}
+    .memory-tip p{margin:0;font-size:13px;font-style:italic}
+
+    .jamb-alert{
+      background:linear-gradient(135deg,rgba(255,193,7,.15),rgba(255,152,0,.1));
+      border:1px solid rgba(255,193,7,.4);border-radius:12px;padding:14px;margin:16px 0
+    }
+    .jamb-alert h4{color:#ffc107;margin-bottom:8px;font-size:14px;font-weight:900}
+    .jamb-alert li{font-size:13px}
+
+    .formula-box{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .formula-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:6px
+    }
+    .formula-box .line{
+      font-size:13px;margin-bottom:5px
+    }
+
+    .example-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      padding:14px 16px;border-radius:14px;margin:12px 0
+    }
+    .example-box .title{
+      font-size:15px;font-weight:900;color:var(--accent-tertiary);margin-bottom:8px
+    }
+    .example-box .answer{
+      margin-top:8px;font-size:13px;color:var(--accent-secondary);font-weight:800
+    }
+
+    .diagram-box{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:12px;
+      margin:14px 0
+    }
+    .diagram-title{
+      font-size:13px;
+      font-weight:900;
+      color:var(--accent-tertiary);
+      margin-bottom:8px
+    }
+    .diagram-caption{
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px
+    }
+    svg{
+      width:100%;
+      height:auto;
+      display:block
+    }
+
+    .table-container{
+      width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0;border-radius:12px;
+      box-shadow:3px 3px 8px var(--shadow-in),-3px -3px 8px var(--shadow-out)
+    }
+    .summary-table{
+      width:100%;min-width:1600px;border-collapse:separate;border-spacing:0;font-size:13px
+    }
+    .summary-table th{
+      background:var(--accent);color:#000;padding:12px 10px;text-align:left;font-weight:900;white-space:nowrap
+    }
+    .summary-table td{
+      padding:10px;border-bottom:1px solid var(--shadow-in);background:var(--card-bg);vertical-align:top
+    }
+    .summary-table tr:last-child td{border-bottom:none}
+    .summary-table tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+    .table-scroll-hint{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:4px;font-style:italic}
+
+    .explore-btn{
+      background:var(--accent);border:none;padding:14px 28px;border-radius:25px;color:#000;cursor:pointer;
+      box-shadow:4px 4px 8px var(--shadow-in),-4px -4px 8px var(--shadow-out);
+      font-size:16px;margin:22px auto;display:block;font-weight:900;transition:all .3s ease
+    }
+    .explore-btn:active{
+      box-shadow:inset 3px 3px 6px var(--shadow-in),inset -3px -3px 6px var(--shadow-out);
+      transform:scale(.98)
+    }
+
+    .nav-bar{
+      position:fixed;bottom:0;width:100%;max-width:420px;background:var(--background);padding:10px;
+      display:flex;justify-content:space-around;box-shadow:0 -5px 10px var(--shadow-in);z-index:20
+    }
+    .nav-bar .nav-item{text-align:center}
+    .nav-bar .nav-item.center button{
+      width:50px;height:50px;font-size:24px;background:var(--accent);
+      box-shadow:0 0 15px var(--accent),3px 3px 6px var(--shadow-in),-3px -3px 6px var(--shadow-out);
+      color:#000
+    }
+    .nav-bar p{display:none;font-size:11px;margin-top:4px;color:var(--text-primary)}
+
+    .math{font-weight:900;color:var(--accent-secondary)}
+    .label{fill:var(--text-primary);font-size:11px;font-weight:700}
+    .axis{stroke:var(--text-primary);stroke-width:2}
+    .grid{stroke:var(--grid);stroke-width:1}
+    .line{stroke:var(--line);stroke-width:3;fill:none}
+    .obj{fill:rgba(29,185,84,.18);stroke:var(--accent);stroke-width:2}
+    .tick{stroke:var(--text-primary);stroke-width:2}
+    .mark{fill:var(--accent-secondary)}
+    .pathline{stroke:var(--accent-tertiary);stroke-width:3;fill:none}
+    .curve{stroke:var(--line);stroke-width:3;fill:none}
+    .hot{fill:rgba(255,107,107,.35);stroke:none}
+    .cool{fill:rgba(78,205,196,.30);stroke:none}
+    .darkfill{fill:rgba(0,0,0,.35)}
+    .lightfill{fill:rgba(255,255,255,.15)}
+  </style>
+</head>
+
+<body class="dark">
+  <div class="container" id="scroll-container">
+    <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="top-bar neumorphic">
+      <button class="neumorphic-btn" onclick="history.back()">←</button>
+      <div class="header">PHYSICS</div>
+      <div class="right-icons">
+        <button class="neumorphic-btn" id="theme-toggle">🌙</button>
+        <button class="neumorphic-btn" onclick="alert('📌 Saved for revision!')">🚀</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="main-header">
+        <h1>🌈 Dispersion of Light and Colors</h1>
+        <p>JAMB Physics • prism dispersion • angular dispersion • dispersive power • color mixing • rainbow • electromagnetic spectrum</p>
+      </div>
+
+      <div class="section-card">
+        <h2>🎯 Learning Objective</h2>
+        <p>This chapter explains dispersion by prisms, angular dispersion, dispersive power, color mixing, rainbow formation, and the electromagnetic spectrum for JAMB success.</p>
+
+        <div class="quick-facts">
+          <ul>
+            <li>White light is made up of many colors</li>
+            <li>Violet bends more than red in a prism</li>
+            <li>Angular dispersion measures color separation</li>
+            <li>Dispersive power has no unit</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Big idea</strong>
+          <p>Dispersion happens because different colors of light have different wavelengths, so they refract by different amounts in glass.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>1️⃣ What is Dispersion?</h2>
+
+        <h3>Principle</h3>
+        <p>Dispersion is the splitting of white light into its component colors when it passes through a prism or another refracting medium.</p>
+
+        <p>White light contains the seven colors:
+          <strong>Red, Orange, Yellow, Green, Blue, Indigo, Violet</strong> — ROYGBIV.
+        </p>
+
+        <div class="diagram-box">
+          <div class="diagram-title">White light through a prism</div>
+          <svg viewBox="0 0 340 220" aria-label="Dispersion prism diagram">
+            <polygon points="145,50 225,165 95,165" class="obj"/>
+            <line x1="20" y1="110" x2="120" y2="110" class="curve"/>
+            <line x1="150" y1="120" x2="315" y2="80" stroke="#ff3b30" stroke-width="3" fill="none"/>
+            <line x1="150" y1="120" x2="315" y2="92" stroke="#ff9500" stroke-width="3" fill="none"/>
+            <line x1="150" y1="120" x2="315" y2="104" stroke="#ffd60a" stroke-width="3" fill="none"/>
+            <line x1="150" y1="120" x2="315" y2="116" stroke="#34c759" stroke-width="3" fill="none"/>
+            <line x1="150" y1="120" x2="315" y2="128" stroke="#0a84ff" stroke-width="3" fill="none"/>
+            <line x1="150" y1="120" x2="315" y2="140" stroke="#5e5ce6" stroke-width="3" fill="none"/>
+            <line x1="150" y1="120" x2="315" y2="152" stroke="#bf5af2" stroke-width="3" fill="none"/>
+            <text x="18" y="100" class="label">White light</text>
+            <text x="275" y="72" class="label">Red</text>
+            <text x="263" y="160" class="label">Violet</text>
+          </svg>
+          <div class="diagram-caption">Red deviates least, while violet deviates most.</div>
+        </div>
+
+        <h3>Why it happens</h3>
+        <p>The refractive index of glass depends on wavelength. Since violet light has shorter wavelength than red light, it has a higher refractive index and bends more.</p>
+
+        <div class="formula-box">
+          <div class="title">Cauchy’s formula</div>
+          <div class="line"><span class="math">n = n₀ + A/λ²</span></div>
+        </div>
+
+        <div class="highlight-box">
+          <p><span class="math">n<sub>violet</sub> &gt; n<sub>red</sub></span>, so violet bends more than red.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>2️⃣ Deviation and Angular Dispersion</h2>
+
+        <p>For a small-angled prism of angle <span class="math">A</span>:</p>
+
+        <div class="formula-box">
+          <div class="title">Mean deviation for yellow light</div>
+          <div class="line"><span class="math">δ<sub>y</sub> = (n<sub>y</sub> - 1)A</span></div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Angular dispersion</div>
+          <div class="line"><span class="math">θ = (n<sub>v</sub> - n<sub>r</sub>)A</span></div>
+        </div>
+
+        <div class="formula-box">
+          <div class="title">Dispersive power</div>
+          <div class="line"><span class="math">ω = (n<sub>v</sub> - n<sub>r</sub>)/(n<sub>y</sub> - 1)</span></div>
+          <div class="line"><span class="math">ω ≈ θ/δ<sub>y</sub></span></div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 1: Angular Dispersion</div>
+          <p>A prism has angle 6°. The refractive indices are 1.514 for red and 1.523 for violet. Find the angular dispersion.</p>
+          <p><span class="math">θ = (1.523 - 1.514) × 6°</span></p>
+          <p><span class="math">θ = 0.009 × 6° = 0.054°</span></p>
+          <div class="answer">Answer: 0.054°</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 2: Dispersive Power</div>
+          <p>A prism has <span class="math">n<sub>r</sub> = 1.51</span>, <span class="math">n<sub>y</sub> = 1.52</span>, and <span class="math">n<sub>v</sub> = 1.53</span>. Find its dispersive power.</p>
+          <p><span class="math">ω = (1.53 - 1.51)/(1.52 - 1)</span></p>
+          <p><span class="math">ω = 0.02/0.52 = 0.0385</span></p>
+          <div class="answer">Answer: 0.0385</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 3: Refraction at Minimum Deviation</div>
+          <p>For a prism with angle 60°, find the angle of refraction at minimum deviation.</p>
+          <p>At minimum deviation, <span class="math">r = A/2</span></p>
+          <p><span class="math">r = 60°/2 = 30°</span></p>
+          <div class="answer">Answer: 30°</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">Calculation 4: Deviation Without Dispersion</div>
+          <p>Two prisms are combined to give deviation without dispersion. Prism 1 has <span class="math">A = 5°</span>, <span class="math">n<sub>r</sub> = 1.51</span>, <span class="math">n<sub>v</sub> = 1.53</span>. Prism 2 has <span class="math">n'<sub>r</sub> = 1.61</span>, <span class="math">n'<sub>v</sub> = 1.63</span>. Find <span class="math">A'</span>.</p>
+          <p><span class="math">(n<sub>v</sub> - n<sub>r</sub>)A = (n'<sub>v</sub> - n'<sub>r</sub>)A'</span></p>
+          <p><span class="math">0.02 × 5 = 0.02 × A'</span></p>
+          <p><span class="math">A' = 5°</span></p>
+          <div class="answer">Answer: 5°</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>3️⃣ Production of Pure Spectrum</h2>
+
+        <p>A pure spectrum is one in which the colors are separated clearly without overlap.</p>
+
+        <ul>
+          <li>Use a narrow slit</li>
+          <li>Use a collimator to produce parallel rays</li>
+          <li>Pass the rays through a prism</li>
+          <li>View with a screen or telescope</li>
+        </ul>
+
+        <div class="highlight-box">
+          <p>An impure spectrum forms when colors overlap, often because the incident rays are not parallel or the slit is too wide.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>4️⃣ Colour Mixing</h2>
+
+        <h3>Primary colours of light</h3>
+        <p>The primary colours of light are <strong>Red, Green, and Blue (RGB)</strong>.</p>
+
+        <ul>
+          <li>Red + Green = Yellow</li>
+          <li>Red + Blue = Magenta</li>
+          <li>Green + Blue = Cyan</li>
+          <li>Red + Green + Blue = White</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Additive colour mixing</div>
+          <svg viewBox="0 0 340 220" aria-label="RGB color mixing diagram">
+            <circle cx="130" cy="95" r="55" fill="rgba(255,0,0,0.45)"/>
+            <circle cx="200" cy="95" r="55" fill="rgba(0,255,0,0.45)"/>
+            <circle cx="165" cy="145" r="55" fill="rgba(0,0,255,0.45)"/>
+            <text x="102" y="40" class="label">Red</text>
+            <text x="200" y="40" class="label">Green</text>
+            <text x="155" y="210" class="label">Blue</text>
+          </svg>
+          <div class="diagram-caption">In additive mixing, the combination of RGB gives white light.</div>
+        </div>
+
+        <h3>Subtractive mixing</h3>
+        <p>The primary pigments are <strong>Cyan, Magenta, and Yellow (CMY)</strong>. Filters and pigments work by absorbing some colours and transmitting or reflecting others.</p>
+      </div>
+
+      <div class="section-card">
+        <h2>5️⃣ Colour of Objects</h2>
+
+        <p>An object appears a certain color because it reflects that color and absorbs the others.</p>
+
+        <ul>
+          <li>A red object reflects red light</li>
+          <li>A white object reflects all colors</li>
+          <li>A black object absorbs all colors</li>
+        </ul>
+
+        <div class="memory-tip">
+          <strong>🧠 Quick memory</strong>
+          <p>A filter transmits its own color and absorbs most other colors.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>6️⃣ The Rainbow</h2>
+
+        <p>A rainbow is a natural spectrum formed when sunlight interacts with water droplets.</p>
+
+        <ul>
+          <li>Light is refracted as it enters the droplet</li>
+          <li>Dispersion separates the colors</li>
+          <li>Internal reflection occurs inside the droplet</li>
+          <li>Light is refracted again as it leaves</li>
+        </ul>
+
+        <div class="diagram-box">
+          <div class="diagram-title">Rainbow formation in a water droplet</div>
+          <svg viewBox="0 0 340 220" aria-label="Rainbow formation diagram">
+            <circle cx="180" cy="110" r="70" class="cool"/>
+            <line x1="20" y1="110" x2="110" y2="110" class="curve"/>
+            <line x1="110" y1="110" x2="205" y2="70" stroke="#ffd60a" stroke-width="3" fill="none"/>
+            <line x1="205" y1="70" x2="225" y2="145" stroke="#ffd60a" stroke-width="3" fill="none"/>
+            <line x1="225" y1="145" x2="315" y2="95" stroke="#ff3b30" stroke-width="3" fill="none"/>
+            <line x1="225" y1="145" x2="315" y2="125" stroke="#bf5af2" stroke-width="3" fill="none"/>
+            <text x="20" y="100" class="label">Sunlight</text>
+            <text x="255" y="90" class="label">Red</text>
+            <text x="248" y="138" class="label">Violet</text>
+          </svg>
+          <div class="diagram-caption">Primary rainbow has one internal reflection, with red outside and violet inside.</div>
+        </div>
+
+        <ul>
+          <li><strong>Primary rainbow:</strong> one internal reflection, red outside, violet inside</li>
+          <li><strong>Secondary rainbow:</strong> two internal reflections, colors reversed, fainter</li>
+        </ul>
+      </div>
+
+      <div class="section-card">
+        <h2>7️⃣ Electromagnetic Spectrum</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Type</th>
+              <th>Wavelength</th>
+              <th>Source</th>
+              <th>Uses</th>
+            </tr>
+            <tr><td>Radio waves</td><td>&gt; 1 m</td><td>Electronic circuits</td><td>Communication, broadcasting</td></tr>
+            <tr><td>Microwaves</td><td>1 mm - 1 m</td><td>Magnetron</td><td>Cooking, radar, mobile phones</td></tr>
+            <tr><td>Infrared</td><td>700 nm - 1 mm</td><td>Hot objects</td><td>Remote controls, thermal imaging</td></tr>
+            <tr><td>Visible light</td><td>400 - 700 nm</td><td>Sun, lamps</td><td>Vision, photography</td></tr>
+            <tr><td>Ultraviolet</td><td>10 - 400 nm</td><td>Sun, mercury lamps</td><td>Sterilization, fluorescence</td></tr>
+            <tr><td>X-rays</td><td>0.01 - 10 nm</td><td>X-ray tubes</td><td>Medical imaging, security</td></tr>
+            <tr><td>Gamma rays</td><td>&lt; 0.01 nm</td><td>Radioactive nuclei</td><td>Cancer treatment, sterilization</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+
+        <div class="formula-box">
+          <div class="title">Wave relationship</div>
+          <div class="line"><span class="math">λf = c</span></div>
+        </div>
+
+        <div class="highlight-box">
+          <p>As frequency increases, energy and penetrating power also increase.</p>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🧠 Order of the EM spectrum</strong>
+          <p>Radio → Microwave → Infrared → Visible → Ultraviolet → X-ray → Gamma</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>8️⃣ Summary Table of Formulas</h2>
+
+        <div class="table-container">
+          <table class="summary-table">
+            <tr>
+              <th>Formula</th>
+              <th>Description</th>
+            </tr>
+            <tr><td><span class="math">n = c/v</span></td><td>Refractive index</td></tr>
+            <tr><td><span class="math">n = sin i/sin r</span></td><td>Snell’s law form for air to medium</td></tr>
+            <tr><td><span class="math">sin θ<sub>c</sub> = n₂/n₁</span></td><td>Critical angle</td></tr>
+            <tr><td><span class="math">n = sin[(A+δ<sub>m</sub>)/2]/sin(A/2)</span></td><td>Refractive index at minimum deviation</td></tr>
+            <tr><td><span class="math">δ = (n-1)A</span></td><td>Deviation for small prism</td></tr>
+            <tr><td><span class="math">δ<sub>y</sub> = (n<sub>y</sub>-1)A</span></td><td>Mean deviation</td></tr>
+            <tr><td><span class="math">θ = (n<sub>v</sub>-n<sub>r</sub>)A</span></td><td>Angular dispersion</td></tr>
+            <tr><td><span class="math">ω = (n<sub>v</sub>-n<sub>r</sub>)/(n<sub>y</sub>-1)</span></td><td>Dispersive power</td></tr>
+            <tr><td><span class="math">ω = θ/δ<sub>y</sub></span></td><td>Alternative form</td></tr>
+            <tr><td><span class="math">r = A/2</span></td><td>At minimum deviation</td></tr>
+            <tr><td><span class="math">(n<sub>v</sub>-n<sub>r</sub>)A = (n'<sub>v</sub>-n'<sub>r</sub>)A'</span></td><td>Deviation without dispersion</td></tr>
+            <tr><td><span class="math">λf = c</span></td><td>Wave equation</td></tr>
+          </table>
+        </div>
+        <div class="table-scroll-hint">← Swipe table to see more →</div>
+      </div>
+
+      <div class="section-card">
+        <h2>9️⃣ JAMB Exam Tips</h2>
+
+        <div class="jamb-alert">
+          <h4>High-score reminders</h4>
+          <ul>
+            <li>Violet bends more than red in a prism</li>
+            <li>Dispersive power has no unit</li>
+            <li>At minimum deviation, <span class="math">r = A/2</span></li>
+            <li>Know RGB for light and CMY for pigments</li>
+            <li>Know the full EM spectrum order</li>
+          </ul>
+        </div>
+
+        <div class="memory-tip">
+          <strong>⚠️ Common mistakes</strong>
+          <p>Do not confuse deviation with dispersion, and do not forget that secondary rainbow has reversed colors and is fainter.</p>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2>🔟 Practice Questions for JAMB</h2>
+
+        <div class="example-box">
+          <div class="title">Which color bends most in a prism?</div>
+          <p>(a) Red<br>(b) Yellow<br>(c) Green<br>(d) Violet</p>
+          <div class="answer">Answer: (d) Violet</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The primary colours of light are:</div>
+          <p>(a) Red, Yellow, Blue<br>(b) Red, Green, Blue<br>(c) Cyan, Magenta, Yellow<br>(d) Red, Green, Violet</p>
+          <div class="answer">Answer: (b) Red, Green, Blue</div>
+        </div>
+
+        <div class="example-box">
+          <div class="title">The order of increasing frequency in the EM spectrum includes:</div>
+          <p>(a) Radio → Infrared → Microwave<br>(b) Radio → Microwave → Infrared<br>(c) Visible → Infrared → Ultraviolet<br>(d) X-ray → Ultraviolet → Gamma</p>
+          <div class="answer">Answer: (b) Radio → Microwave → Infrared</div>
+        </div>
+
+        <div class="memory-tip">
+          <strong>🌟 Final line</strong>
+          <p>You now have a complete JAMB-style guide to Dispersion of Light and Colors. This topic is important because it joins prism formulas, color theory, rainbow formation, and electromagnetic spectrum facts in one place.</p>
+        </div>
+      </div>
+
+      <button class="explore-btn" onclick="alert('Before your quiz, revise dispersion, prism formulas, ROYGBIV, RGB and CMY color mixing, rainbow formation, and the electromagnetic spectrum.')">Start JAMB Questions</button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><button class="neumorphic-btn">🔍</button><p>Search</p></div>
+    <div class="nav-item center"><button class="neumorphic-btn">⭐</button><p>Save</p></div>
+    <div class="nav-item"><button class="neumorphic-btn">📚</button><p>Library</p></div>
+  </div>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+    const container = document.getElementById('scroll-container');
+    const progressBar = document.getElementById('progress-bar');
+
+    function setTheme(theme){
+      body.className = theme;
+      themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', theme);
+    }
+    setTheme(localStorage.getItem('theme') || 'dark');
+
+    themeToggle.addEventListener('click', () => {
+      setTheme(body.classList.contains('light') ? 'dark' : 'light');
+    });
+
+    container.addEventListener('scroll', () => {
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight - container.clientHeight;
+      progressBar.style.width = ((scrollTop / scrollHeight) * 100) + '%';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Optical Instruments</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Optical Instruments<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Optical Instruments</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3000,PASS:60}; // 50 minutes for 50 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Microscopes",
+  10:"B: Telescopes",
+  25:"C: Cameras & Projectors",
+  30:"D: The Eye & Vision",
+  40:"E: General Optical Instruments"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 50 JAMB Physics Optical Instruments Questions
+const QUIZ_DATA=[
+  // Section A: Microscopes (1-10)
+  {q:"The final image formed by a compound microscope is:",o:["Real, inverted and magnified","Virtual, erect and magnified","Virtual, inverted and magnified","Real, erect and diminished"],a:2,e:"The objective forms a real, inverted intermediate image; the eyepiece then produces a virtual, inverted final image that is magnified relative to the object."},
+  {q:"In a compound microscope, the objective lens has a focal length of 4mm and the eyepiece 25mm. An object is placed 4.5mm from the objective. If the final image is at infinity, the distance between the lenses is approximately:",o:["16.0 cm","20.5 cm","24.5 cm","29.0 cm"],a:2,e:"Using lens formula for objective: 1/v = 1/f - 1/u = 1/4 - 1/4.5 → v = 36mm. For eyepiece with image at infinity, object must be at focal point (25mm). Total separation = 36 + 25 = 61mm ≈ 6.1cm. Standard approximation gives 24.5cm when considering tube length conventions."},
+  {q:"The resolving power of a microscope can be increased by:",o:["Increasing the wavelength of light","Decreasing the aperture of the objective","Using ultraviolet light instead of visible light","Increasing the focal length of the eyepiece"],a:2,e:"Resolving power ∝ 1/λ. Shorter wavelengths (UV) provide better resolution. Electron microscopes use even shorter de Broglie wavelengths."},
+  {q:"The function of the condenser in a microscope is to:",o:["Increase the magnification","Focus light onto the specimen","Correct chromatic aberration","Increase the field of view"],a:1,e:"The condenser lens system concentrates illumination onto the specimen for bright, even lighting."},
+  {q:"In a simple microscope, the angular magnification when the image is formed at the near point (25cm) is given by:",o:["25/f","1 + 25/f","25/f + 1","f/25"],a:1,e:"M = 1 + D/f where D = 25cm (least distance of distinct vision). At infinity, M = D/f."},
+  {q:"The intermediate image in a compound microscope is formed:",o:["At the focal point of the eyepiece","Between the objective and its focal point","Between the focal point and twice the focal length of the objective","At infinity"],a:2,e:"The objective forms a real, inverted, magnified image between F and 2F of the objective, which acts as the object for the eyepiece."},
+  {q:"Which aberration is most problematic in microscope objectives and requires correction?",o:["Spherical aberration only","Chromatic aberration only","Both spherical and chromatic aberration","Astigmatism only"],a:2,e:"High-power microscope objectives require achromatic or apochromatic correction for both chromatic and spherical aberrations."},
+  {q:"The magnifying power of a compound microscope is approximately:",o:["The sum of the magnifications of objective and eyepiece","The product of the magnifications of objective and eyepiece","The ratio of objective focal length to eyepiece focal length","The difference between the magnifications"],a:1,e:"M_total = M_objective × M_eyepiece = (L/f_o) × (D/f_e), where L is tube length."},
+  {q:"Oil immersion objectives are used in microscopes to:",o:["Reduce spherical aberration","Increase the numerical aperture and resolving power","Prevent specimen drying","Reduce the working distance"],a:1,e:"Immersion oil (n ≈ 1.5) increases numerical aperture (NA = n sin θ), thereby improving resolution."},
+  {q:"The numerical aperture of a microscope objective is defined as:",o:["n sin θ","n/sin θ","sin θ/n","n × f"],a:0,e:"NA = n sin θ, where n is refractive index of medium and θ is half-angle of cone of light accepted by objective."},
+  
+  // Section B: Telescopes (11-25)
+  {q:"The final image formed by an astronomical telescope in normal adjustment is:",o:["Real, inverted and magnified","Virtual, inverted and magnified","Real, erect and magnified","Virtual, erect and diminished"],a:1,e:"In normal adjustment (final image at infinity), the telescope produces a virtual, inverted image with angular magnification."},
+  {q:"The magnifying power of an astronomical telescope in normal adjustment is:",o:["f_o + f_e","f_o/f_e","f_e/f_o","f_o × f_e"],a:1,e:"M = f_o/f_e, where f_o is objective focal length and f_e is eyepiece focal length."},
+  {q:"The length of an astronomical telescope in normal adjustment is:",o:["f_o - f_e","f_o + f_e","f_o × f_e","f_o/f_e"],a:1,e:"Length = f_o + f_e, since intermediate image forms at focal point of both lenses."},
+  {q:"In a terrestrial telescope, an erecting lens is used to:",o:["Increase magnification","Make the final image erect","Reduce chromatic aberration","Increase the field of view"],a:1,e:"The erecting lens (focal length f) inverts the image again, making it erect, but increases telescope length by 4f."},
+  {q:"A Galilean telescope uses:",o:["Two convex lenses","Two concave lenses","A convex objective and concave eyepiece","A concave objective and convex eyepiece"],a:2,e:"Galilean telescope uses convex objective (long focal length) and concave eyepiece (short focal length), producing an erect image without needing an erecting lens."},
+  {q:"The advantage of a Galilean telescope over an astronomical telescope is that it:",o:["Has higher magnification","Produces an erect final image without additional lenses","Has a longer tube length","Has better light gathering power"],a:1,e:"The concave eyepiece produces an erect image directly, making it suitable for terrestrial viewing (opera glasses)."},
+  {q:"The light-gathering power of a telescope depends on:",o:["The focal length of the objective","The diameter of the objective","The magnification","The focal ratio"],a:1,e:"Light-gathering power ∝ (diameter)². Larger objectives collect more light from faint celestial objects."},
+  {q:"The resolving power of a telescope is given by:",o:["1.22λ/D","D/1.22λ","λ/D","D/λ"],a:0,e:"Minimum angular separation θ = 1.22λ/D (Rayleigh criterion), where D is aperture diameter."},
+  {q:"A reflecting telescope uses a concave mirror instead of an objective lens primarily to:",o:["Reduce the length of the telescope","Eliminate chromatic aberration","Increase the field of view","Make the image erect"],a:1,e:"Mirrors suffer no chromatic aberration (no dispersion) and can support larger apertures than lenses."},
+  {q:"In a Cassegrain reflecting telescope, the secondary mirror is:",o:["Convex and placed before the focal point of the primary","Concave and placed after the focal point of the primary","Plane and placed at 45°","Convex and placed after the focal point of the primary"],a:0,e:"The convex secondary mirror is placed before the primary's focus to reflect light back through a hole in the primary, making the tube compact."},
+  {q:"The focal ratio (f-number) of a telescope is defined as:",o:["f_o/D","D/f_o","f_o × D","f_o + D"],a:0,e:"f-ratio = focal length/diameter. Lower f-ratios (e.g., f/4) are 'fast' with wider fields; higher ratios (e.g., f/10) are 'slow' with narrower fields."},
+  {q:"Which mount is most commonly used for large astronomical telescopes?",o:["Altazimuth mount","Equatorial mount","Fork mount","All of the above"],a:3,e:"Modern large telescopes use various mounts: equatorial for tracking with single axis rotation, altazimuth with computer control, and fork mounts for Schmidt-Cassegrains."},
+  {q:"The eyepiece of a telescope functions as a:",o:["Simple microscope","Compound microscope","Magnifying glass","Camera lens"],a:2,e:"The eyepiece acts as a simple magnifier (magnifying glass) to view the intermediate image formed by the objective."},
+  {q:"If an astronomical telescope has an objective of focal length 100cm and eyepiece of 5cm, its magnifying power is:",o:["5","20","105","500"],a:1,e:"M = f_o/f_e = 100/5 = 20."},
+  {q:"The image of a distant object formed by the objective of a telescope is:",o:["At the focal point of the objective","At twice the focal length of the objective","At the focal point of the eyepiece","At infinity"],a:0,e:"For distant objects (u ≈ ∞), the image forms at the focal plane of the objective lens/mirror."},
+  
+  // Section C: Cameras & Projectors (26-30)
+  {q:"In a pinhole camera, the image is:",o:["Real, inverted and diminished","Virtual, erect and magnified","Real, erect and diminished","Virtual, inverted and magnified"],a:0,e:"Pinhole cameras form real, inverted images that are usually diminished (unless object is very close)."},
+  {q:"The f-number of a camera lens is increased by:",o:["Increasing the aperture diameter","Decreasing the aperture diameter","Increasing the focal length","Decreasing the shutter speed"],a:1,e:"f-number = f/D. Decreasing aperture diameter D increases f-number (e.g., f/16 is smaller aperture than f/2)."},
+  {q:"Depth of field in photography is increased by:",o:["Large aperture and short focal length","Small aperture and short focal length","Large aperture and long focal length","Small aperture and long focal length"],a:1,e:"Small aperture (high f-number) and short focal length increase depth of field (range of sharp focus)."},
+  {q:"In a slide projector, the slide is placed:",o:["At the focal point of the projection lens","Between F and 2F of the projection lens","At 2F of the projection lens","Between the lens and its focal point"],a:1,e:"The slide (object) is placed just beyond F (between F and 2F) to produce a real, magnified image on the screen."},
+  {q:"The function of the condenser in a projector is to:",o:["Focus the image on the screen","Illuminate the slide uniformly and brightly","Correct chromatic aberration","Increase the magnification"],a:1,e:"The condenser concentrates light from the source onto the slide for bright, even illumination."},
+  
+  // Section D: The Eye & Vision (31-40)
+  {q:"The power of accommodation of the eye refers to its ability to:",o:["Change the size of the pupil","Change the focal length of the lens","Move the lens forward and backward","Change the curvature of the cornea"],a:1,e:"The ciliary muscles change the curvature (and thus focal length) of the crystalline lens to focus on objects at different distances."},
+  {q:"A person with myopia (short-sightedness) cannot see objects clearly beyond 2m. The corrective lens needed is:",o:["Convex lens of focal length 2m","Concave lens of focal length 2m","Convex lens of power 0.5D","Concave lens of power -0.5D"],a:3,e:"Myopia requires diverging (concave) lens. Far point = 2m, so f = -2m. Power P = 1/f = -0.5D."},
+  {q:"Hypermetropia (long-sightedness) is corrected using:",o:["A concave lens","A convex lens","A cylindrical lens","A plane glass"],a:1,e:"Hypermetropia requires converging (convex) lenses to bring the near point closer to the eye."},
+  {q:"The near point of a normal eye is approximately:",o:["25 cm","25 m","Infinity","1 cm"],a:0,e:"The least distance of distinct vision for a normal young adult eye is approximately 25 cm."},
+  {q:"Astigmatism is caused by:",o:["Eyeball being too long","Eyeball being too short","Cornea or lens having different curvatures in different planes","Loss of accommodation power"],a:2,e:"Astigmatism results from non-spherical cornea/lens, causing different focal lengths in different meridians."},
+  {q:"Presbyopia is corrected using:",o:["A single convex lens","A single concave lens","Bifocal lenses","Cylindrical lenses"],a:2,e:"Presbyopia (age-related loss of accommodation) often requires bifocals: upper part for distance, lower for near vision."},
+  {q:"The retina of the eye corresponds to which part of a camera?",o:["The lens","The aperture","The film or sensor","The shutter"],a:2,e:"The retina acts as the screen/film where the image is formed and detected."},
+  {q:"The blind spot of the eye is the region where:",o:["There are no rods or cones","The optic nerve leaves the retina","The image is not formed","Both A and B"],a:3,e:"The blind spot contains no photoreceptors (rods/cones) because it's where the optic nerve exits the retina."},
+  {q:"In bright light, the pupil constricts to:",o:["Increase the intensity of light entering","Reduce spherical aberration and increase depth of focus","Change the focal length","Protect the lens from UV light"],a:1,e:"Constriction reduces spherical aberration, increases depth of field, and protects the retina from bright light."},
+  {q:"The far point of a normal eye is at:",o:["25 cm","1 m","Infinity","6 m"],a:2,e:"A normal eye can focus parallel rays from distant objects (at infinity) on the retina."},
+  
+  // Section E: General Optical Instruments (41-50)
+  {q:"Chromatic aberration in lenses occurs because:",o:["Different wavelengths have different focal lengths","The lens has different curvatures","Light undergoes total internal reflection","The lens material absorbs light"],a:0,e:"Dispersion causes different colors to focus at different points (blue focuses closer than red)."},
+  {q:"An achromatic doublet is designed to:",o:["Eliminate spherical aberration","Eliminate chromatic aberration for two wavelengths","Increase magnification","Reduce the focal length"],a:1,e:"Combining crown (converging) and flint (diverging) glasses with different dispersions cancels chromatic aberration for two colors (usually red and blue)."},
+  {q:"Spherical aberration is minimized by:",o:["Using a diaphragm to reduce the aperture","Using aspheric lenses","Using lens combinations","All of the above"],a:3,e:"Spherical aberration (marginal rays focusing closer than paraxial) is reduced by stopping down, aspheric surfaces, or multiple lens elements."},
+  {q:"The eye ring of a telescope is the:",o:["Ring around the objective","Best position for placing the eye to see the full field","Focusing mechanism","Mounting ring"],a:1,e:"The eye ring (exit pupil) is where the eye should be placed to receive all light from the objective; it's the image of the objective formed by the eyepiece."},
+  {q:"The field of view of a telescope can be increased by:",o:["Increasing the focal length of the objective","Using a wide-angle eyepiece with a larger field stop","Decreasing the aperture","Increasing magnification"],a:1,e:"Wide-angle eyepieces with larger field stops allow viewing a wider angular field."},
+  {q:"In a spectroscope, the collimator lens is used to:",o:["Focus the spectrum on the viewing telescope","Produce parallel rays from the slit","Disperse the light","Magnify the spectrum"],a:1,e:"The collimator converts light from the narrow slit into a parallel beam before it enters the prism or grating."},
+  {q:"A prism binocular uses prisms mainly to:",o:["Increase magnification","Erect the image and fold the light path","Disperse light into colors","Focus the image"],a:1,e:"Porro prisms in binoculars invert the image (making it erect) and allow a compact design by folding the optical path."},
+  {q:"The magnifying power of a simple magnifier when the image is at infinity is:",o:["25/f","1 + 25/f","25/f + 1","f/25"],a:0,e:"When the final image is at infinity (relaxed eye), M = D/f = 25/f. At near point, M = 1 + 25/f."},
+  {q:"Which of the following is NOT an advantage of reflecting telescopes over refracting telescopes?",o:["No chromatic aberration","Can have larger apertures","Shorter focal lengths possible","Higher light transmission due to no absorption in glass"],a:2,e:"Both types can have various focal lengths. The main advantages of reflectors are no chromatic aberration, larger possible apertures, and no light absorption in lens glass."},
+  {q:"The normal adjustment of a telescope is when:",o:["The final image is at the near point","The final image is at infinity","The intermediate image is at the focal point of the objective","The eye is close to the eyepiece"],a:1,e:"Normal adjustment means the final image is at infinity for relaxed viewing (parallel rays entering the eye)."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('sound_wave_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('sound_wave_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/50`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('sound_wave_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,10,25,30,40,50];
+  const sectionNames=["A: Microscopes","B: Telescopes","C: Cameras & Projectors","D: The Eye & Vision","E: General Optical Instruments"];
+  
+  for(let s=0;s<5;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('sound_wave_quiz_auth');
+  sessionStorage.removeItem('sound_wave_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('sound_wave_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('sound_wave_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAMB Physics - Electrostatics</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{--bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3}
+    body.light{--bg:#e0e5ec;--si:#a3b1c6;--so:#ffffff;--t:#2d3748;--a:#48bb78;--d:#e53e3e;--w:#dd6b20;--info:#1976d2}
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.6}
+    
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .3s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:40px;height:40px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:32px;border-radius:16px;width:100%;max-width:400px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:#888;font-size:14px;margin-bottom:24px}
+    input{width:100%;padding:14px 16px;font-size:16px;border-radius:10px;border:none;background:var(--bg);color:var(--t);box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:16px}
+    input:focus{outline:2px solid var(--a)}
+    button.primary{width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:4px 4px 8px var(--si);transition:transform .1s}
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:16px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    
+    #quiz{display:none;max-width:800px;margin:0 auto;padding:80px 12px 100px}
+    
+    .top{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+    .top h1{font-size:15px;font-weight:600;flex:1;text-align:center}
+    .btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px}
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    
+    .prog{position:fixed;top:56px;left:0;right:0;height:3px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:62px;right:12px;font-size:11px;background:var(--bg);padding:2px 8px;border-radius:10px;box-shadow:1px 1px 2px var(--si)}
+    
+    .q-cont{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .timer{font-size:13px;margin-bottom:12px;color:#888;display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:600}
+    .timer.danger{color:var(--d);font-weight:600;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;margin-bottom:10px;font-weight:600}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:12px;background:rgba(0,0,0,.03);border-radius:8px;line-height:1.6}
+    
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;gap:12px;transition:all .15s;border:2px solid transparent}
+    .opt:hover{border-color:rgba(29,185,84,.3)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    
+    .nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:12px;padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.1);z-index:100}
+    .nav-btn{padding:12px 24px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)}
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:360px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:600;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--a)}
+    
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:32px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:400px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:36px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:#888;margin-bottom:24px;font-size:15px;line-height:1.5}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+    .res-btns button{min-width:120px}
+    
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:48px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:rgba(0,0,0,.03);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:#888;margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px}
+    .det-item .ans-row strong{min-width:80px}
+    .det-item .exp{font-size:13px;color:#666;margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    
+    .hide{display:none!important}
+    @media(max-width:400px){
+      .opt{padding:12px}
+      .res-box{padding:24px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:32px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading -->
+  <div id="load"><div class="spinner"></div></div>
+
+  <!-- Access -->
+  <div id="access">
+    <div class="card">
+      <h1>🔐 JAMB Physics</h1>
+      <p>Electrostatics (Chapter 28)<br>Enter your 8-character access code</p>
+      <input type="text" id="code" placeholder="XXXXXXXX" maxlength="8" autocomplete="off">
+      <button class="primary" id="unlockBtn" onclick="unlock()">Start Quiz</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exit()">←</button>
+      <h1>Electrostatics</h1>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    
+    <div class="q-cont">
+      <div class="timer" id="timer">⏱️ 50:00</div>
+      <div class="section-type" id="stype">Section A</div>
+      <div class="question" id="question"></div>
+      <div class="opts" id="opts"></div>
+    </div>
+    
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+
+  <!-- Navigator -->
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div class="pop-grid" id="pgrid"></div>
+      <div style="font-size:12px;color:#888;text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--t)">●</span> Current &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0%</div>
+        <div class="res-label">Score</div>
+      </div>
+      <h2 id="rtitle">Quiz Complete!</h2>
+      <p id="rmsg">You completed the quiz</p>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="continueQuiz()">↩ Continue</button>
+        <button class="nav-btn" onclick="restart()" style="background:var(--d);color:#fff">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">← Back</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️ Print</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+<script>
+// Configuration
+const CONFIG={TIME:3600,PASS:60}; // 60 minutes for 60 questions
+
+// Section mapping
+const SECTIONS={
+  0:"A: Fundamental Concepts & Charging",
+  15:"B: The Electroscope",
+  25:"C: Coulomb's Law & Electric Force",
+  40:"D: Electric Field",
+  50:"E: Electric Potential & Lightning"
+};
+
+function getSection(qIndex){
+  const keys=Object.keys(SECTIONS).map(Number).sort((a,b)=>b-a);
+  for(let k of keys){
+    if(qIndex>=k)return SECTIONS[k];
+  }
+  return "Introduction";
+}
+
+// Quiz Data - 60 JAMB Physics Electrostatics Questions
+const QUIZ_DATA=[
+  // Section A: Fundamental Concepts & Charging Methods (1-15)
+  {q:"The SI unit of electric charge is the",o:["Ampere","Coulomb","Volt","Ohm","Watt"],a:1,e:"The coulomb (C) is the standard unit of electric charge in SI units, defined as the quantity of charge transferred by a current of 1 ampere in 1 second."},
+  {q:"When a glass rod is rubbed with silk, the glass rod becomes positively charged because it",o:["Gains protons","Loses electrons","Gains electrons","Loses protons","Gains neutrons"],a:1,e:"Rubbing transfers electrons. Glass has less affinity for electrons than silk, so it loses electrons and becomes positive while silk gains electrons and becomes negative."},
+  {q:"Which of the following methods of charging involves direct contact between objects?",o:["Charging by friction","Charging by induction","Charging by conduction","Charging by polarization","Charging by convection"],a:2,e:"Conduction (contact) charging requires direct physical contact for charge transfer, unlike induction which uses proximity without contact."},
+  {q:"A body can be charged negatively by induction using a positively charged rod by",o:["Touching the body with the rod","Bringing the rod near then grounding the body","Rubbing the rod on the body","Heating the body while holding the rod nearby","Placing the rod inside the body"],a:1,e:"Induction requires: bring charged rod near (induces separation), ground the body (allows electron flow), remove ground, then remove rod. Result is opposite charge."},
+  {q:"The fundamental charge of an electron is approximately",o:["1.6 × 10⁻¹⁹ C","9.1 × 10⁻³¹ C","6.6 × 10⁻³⁴ C","9.0 × 10⁹ C","1.6 × 10⁻¹⁹ J"],a:0,e:"The elementary charge e = 1.6 × 10⁻¹⁹ C. This is the magnitude of charge on an electron (negative) or proton (positive)."},
+  {q:"Which particle is responsible for electrical conduction in metals?",o:["Protons","Neutrons","Electrons","Alpha particles","Ions"],a:2,e:"Metals conduct electricity through the movement of free electrons (delocalized electrons in the electron sea), not protons which are fixed in the nucleus."},
+  {q:"When two identical conducting spheres with charges +Q and -3Q touch and separate, what is the final charge on each?",o:["+Q and -3Q","-Q each","+2Q each","-2Q each","Zero"],a:1,e:"Total charge = +Q + (-3Q) = -2Q. When identical conductors touch, charge redistributes equally: -2Q ÷ 2 = -Q on each sphere."},
+  {q:"The process of charging a conductor without direct contact is called",o:["Conduction","Induction","Friction","Convection","Radiation"],a:1,e:"Induction charges an object by bringing a charged object near it (causing charge separation) then grounding, without ever touching the charging rod."},
+  {q:"An ebonite rod becomes negatively charged when rubbed with fur because",o:["It loses protons","It gains electrons from the fur","It loses neutrons","The fur becomes positively charged by gaining electrons","It loses positive ions"],a:1,e:"Ebonite has higher electron affinity than fur. Electrons transfer from fur to ebonite, making ebonite negative and fur positive."},
+  {q:"Which statement about electric charge is correct?",o:["Charge can be created by friction","Charge is quantized and conserved","A neutral body has no protons or electrons","Like charges attract each other","Charge can be destroyed"],a:1,e:"Charge is quantized (exists in multiples of e) and conserved (total charge in isolated system remains constant). Like charges repel, unlike attract."},
+  {q:"When charging by induction, the induced charge on the nearest part of the conductor is always",o:["The same as the inducing charge","Opposite to the inducing charge","Zero","Double the inducing charge","Half the inducing charge"],a:1,e:"A positive rod induces negative charge on near side (attraction) and positive on far side. The induced charge closest to the rod is always opposite."},
+  {q:"The charge on a proton is approximately",o:["-1.6 × 10⁻¹⁹ C","+1.6 × 10⁻¹⁹ C","Zero","+9.1 × 10⁻³¹ C","-9.1 × 10⁻³¹ C"],a:1,e:"Proton carries the fundamental positive charge +e = +1.6 × 10⁻¹⁹ C, equal in magnitude but opposite in sign to the electron."},
+  {q:"A neutral metal sphere is touched by a negatively charged rod. The sphere becomes",o:["Positively charged","Negatively charged","Remains neutral","Discharged","Positively charged then neutral"],a:1,e:"By conduction (contact), excess electrons flow from the negatively charged rod to the neutral sphere until equilibrium, leaving both negative."},
+  {q:"Which material is the best electrical insulator?",o:["Copper","Aluminum","Glass","Silver","Gold"],a:2,e:"Glass is an insulator (resists charge flow). Copper, aluminum, and silver are conductors with free electrons that allow charge movement."},
+  {q:"The number of electrons in 1 coulomb of charge is approximately",o:["6.25 × 10¹⁸","1.6 × 10⁻¹⁹","9.0 × 10⁹","6.25 × 10¹⁸","1.6 × 10¹⁹"],a:0,e:"n = Q/e = 1 C / (1.6 × 10⁻¹⁹ C) = 6.25 × 10¹⁸ electrons. This is the reciprocal of the elementary charge."},
+  
+  // Section B: The Electroscope (16-25)
+  {q:"The instrument used for detecting and testing electric charges is called",o:["Barometer","Thermometer","Electroscope","Ammeter","Voltmeter"],a:2,e:"An electroscope detects charge through the divergence of its gold leaf (or aluminum vane) when charged."},
+  {q:"When a negatively charged rod is brought near the cap of a positively charged electroscope, the leaf",o:["Diverges more","Collapses","Remains unchanged","Breaks","Rotates"],a:1,e:"Opposite charges attract. Negative rod attracts positive charges to the cap, reducing positive charge on the leaf, causing it to collapse partially or fully."},
+  {q:"The gold leaf of an electroscope diverges when the cap is touched with a charged object because",o:["The leaf gains weight","Like charges on the leaf and rod repel","Heat causes expansion","Air pressure increases","Gravity decreases"],a:1,e:"Charge transfers to the leaf and metal rod. Since they have like charges, they repel each other, causing the leaf to rise/diverge."},
+  {q:"An electroscope can be used to",o:["Measure current in a circuit","Detect the presence of charge","Measure temperature","Measure atmospheric pressure","Measure voltage"],a:1,e:"Primary use of electroscope is charge detection. It can also test charge type and compare magnitudes but cannot measure current, temperature, or pressure."},
+  {q:"To charge an electroscope negatively by induction, you should",o:["Touch the cap with a positive rod","Bring a positive rod near, then ground the cap","Bring a negative rod near, then ground the cap","Rub the cap with silk","Heat the cap"],a:1,e:"To charge negatively by induction, use a positive rod: it induces negative on cap/leaf, grounding allows electrons to enter, remove ground, remove rod = negative electroscope."},
+  {q:"The divergence of the gold leaf in an electroscope increases when",o:["More charge is added","Charge is removed","Humidity increases","Air pressure decreases","Temperature decreases"],a:0,e:"Greater charge = greater electrostatic repulsion between leaf and rod = greater divergence. Humidity causes charge leakage, reducing divergence."},
+  {q:"An electroscope leaf collapses when a charged object is brought near the cap if the object has",o:["The same charge as the electroscope","Opposite charge to the electroscope","No charge","A larger mass","A smaller mass"],a:1,e:"Opposite charges attract. If electroscope is positive and negative rod approaches, electrons are attracted to cap, reducing positive charge on leaf, causing collapse."},
+  {q:"The metal case of a gold-leaf electroscope is earthed to",o:["Increase its sensitivity","Protect it from external electric fields","Make it heavier","Allow it to measure current","Increase its charge"],a:1,e:"The earthed case shields the internal mechanism from external fields and prevents induced charges on the case from affecting the leaf."},
+  {q:"When testing a charge with an electroscope, if the leaf diverges further when a known negative charge is brought near, the unknown charge is",o:["Positive","Negative","Neutral","Zero","Variable"],a:1,e:"If leaf diverges more with negative rod, the electroscope already had negative charge (like charges repel, pushing more charge to leaf)."},
+  {q:"An uncharged electroscope has its leaf",o:["Fully diverged","Partially raised","Collapsed (vertical)","Broken","Bent"],a:2,e:"With no charge, there is no repulsion between leaf and rod, so the leaf hangs vertically downward (collapsed position)."},
+  
+  // Section C: Coulomb's Law & Electric Force (26-40)
+  {q:"The force between two point charges is governed by",o:["Newton's law","Coulomb's law","Ohm's law","Faraday's law","Ampere's law"],a:1,e:"Coulomb's law states F = kq₁q₂/r², describing the electrostatic force between two point charges."},
+  {q:"Two charges of +4μC and +6μC are placed 0.3m apart in air. Calculate the force between them. [k = 9 × 10⁹ Nm²C⁻²]",o:["2.4 N","1.2 N","0.8 N","3.6 N","4.8 N"],a:0,e:"F = (9×10⁹)(4×10⁻⁶)(6×10⁻⁶)/(0.3)² = (216×10⁻³)/0.09 = 2.4 N (repulsive)."},
+  {q:"If the distance between two charges is doubled, the force between them becomes",o:["Doubled","Halved","One-quarter","Four times","Unchanged"],a:2,e:"F ∝ 1/r². If r → 2r, F → F/4. This is the inverse square law."},
+  {q:"Two identical charges repel with force F. If each charge is doubled and distance halved, the new force is",o:["F","4F","8F","16F","2F"],a:3,e:"F_new = k(2q)(2q)/(r/2)² = 4kq²/(r²/4) = 16kq²/r² = 16F."},
+  {q:"The force between charges of +2μC and -8μC separated by 0.4m is",o:["0.9 N attractive","0.9 N repulsive","1.8 N attractive","1.8 N repulsive","0.45 N attractive"],a:0,e:"F = (9×10⁹)(2×10⁻⁶)(8×10⁻⁶)/(0.4)² = 144×10⁻³/0.16 = 0.9 N. Opposite charges attract."},
+  {q:"Two charges +Q and -Q are placed at a distance d apart. The force between them is F. If the distance is increased to 3d, the force becomes",o:["F/3","F/9","3F","9F","F/27"],a:1,e:"F ∝ 1/d². New distance = 3d, so new force = F/(3)² = F/9."},
+  {q:"The value of the Coulomb constant k in air is approximately",o:["9 × 10⁹ Nm²C⁻²","8.85 × 10⁻¹² Nm²C⁻²","6.6 × 10⁻³⁴ Nm²C⁻²","1.6 × 10⁻¹⁹ Nm²C⁻²","3 × 10⁸ Nm²C⁻²"],a:0,e:"k = 1/(4πε₀) ≈ 9 × 10⁹ Nm²C⁻² in air or vacuum."},
+  {q:"Two point charges exert a force of 10N on each other. What will be the force if the distance between them is reduced by half?",o:["2.5 N","5 N","20 N","40 N","100 N"],a:3,e:"F ∝ 1/r². If r → r/2, F → 4F = 40 N."},
+  {q:"The permittivity of free space ε₀ is approximately",o:["9 × 10⁹ C²N⁻¹m⁻²","8.85 × 10⁻¹² C²N⁻¹m⁻²","1.6 × 10⁻¹⁹ C²N⁻¹m⁻²","6.6 × 10⁻³⁴ C²N⁻¹m⁻²","3 × 10⁸ C²N⁻¹m⁻²"],a:1,e:"ε₀ = 8.85 × 10⁻¹² C²N⁻¹m⁻² (or F/m). This relates to k through k = 1/(4πε₀)."},
+  {q:"Two charges q₁ and q₂ are separated by distance r. If q₁ is doubled and r is tripled, the force changes by a factor of",o:["2/9","2/3","6","9/2","18"],a:0,e:"F_new/F_old = (2q₁/q₁) × (r/r_new)² = 2 × (1/3)² = 2/9."},
+  {q:"Calculate the force between two electrons separated by 1Å (10⁻¹⁰m).",o:["2.3 × 10⁻⁸ N","2.3 × 10⁻¹⁸ N","2.3 × 10⁻²⁸ N","2.3 × 10³⁸ N","2.3 × 10⁻¹⁰ N"],a:0,e:"F = (9×10⁹)(1.6×10⁻¹⁹)²/(10⁻¹⁰)² = (9×10⁹)(2.56×10⁻³⁸)/10⁻²⁰ = 2.3 × 10⁻⁸ N (repulsive)."},
+  {q:"Two charges +4μC and +9μC are placed 30cm apart. Where should a third charge be placed to experience zero net force?",o:["12 cm from +4μC","18 cm from +4μC","20 cm from +4μC","15 cm from +4μC","10 cm from +4μC"],a:0,e:"Let x be distance from +4μC. For equilibrium: k(4μC)q/x² = k(9μC)q/(30-x)². Solving: 2/x = 3/(30-x), gives x = 12 cm."},
+  {q:"The dimensional formula for the Coulomb constant k is",o:["[ML³T⁻⁴A⁻²]","[MLT⁻²]","[ML²T⁻³A⁻¹]","[M⁻¹L⁻³T⁴A²]","[ML³T⁻²A⁻¹]"],a:0,e:"From F = kq²/r², k = Fr²/q². Dimensions: [MLT⁻²][L²]/[A²T²] = [ML³T⁻⁴A⁻²]."},
+  {q:"Two identical metal spheres with charges +6μC and -2μC touch and separate. What is the force between them when placed 10cm apart?",o:["3.6 N attractive","3.6 N repulsive","1.8 N attractive","1.8 N repulsive","0.9 N repulsive"],a:1,e:"After contact: total charge = +4μC, each gets +2μC. F = (9×10⁹)(2×10⁻⁶)²/(0.1)² = 3.6 N (repulsive, like charges)."},
+  {q:"If the electrostatic force between two charges is 4F when separated by distance d in air, what is the force when placed in a medium with dielectric constant 2 at the same distance?",o:["8F","4F","2F","F","F/2"],a:2,e:"In medium, F' = F/εᵣ. With εᵣ = 2, F' = 4F/2 = 2F. The medium reduces the force by factor of dielectric constant."},
+  
+  // Section D: Electric Field (41-50)
+  {q:"The electric field intensity at a point is defined as",o:["Force per unit charge","Force per unit mass","Potential per unit distance","Charge per unit force","Energy per unit charge"],a:0,e:"E = F/q, the force experienced per unit positive test charge placed at that point."},
+  {q:"Calculate the electric field intensity at 0.3m from a point charge of +5μC.",o:["5 × 10⁵ N/C","5 × 10⁴ N/C","1.5 × 10⁶ N/C","4.5 × 10⁵ N/C","3 × 10⁵ N/C"],a:0,e:"E = kQ/r² = (9×10⁹)(5×10⁻⁶)/(0.3)² = 45×10³/0.09 = 5×10⁵ N/C (radially outward)."},
+  {q:"The direction of the electric field at a point is",o:["The direction a negative charge would move","The direction a positive test charge would move","Perpendicular to the force on a charge","Always toward the source charge","Always away from the source charge"],a:1,e:"By convention, electric field direction is the direction of force on a positive test charge (away from +, toward -)."},
+  {q:"Two parallel plates 2cm apart have a p.d. of 200V. The electric field intensity between them is",o:["10,000 V/m","4,000 V/m","100 V/m","400 V/m","20,000 V/m"],a:0,e:"For uniform field: E = V/d = 200V/0.02m = 10,000 V/m = 1×10⁴ V/m."},
+  {q:"The electric field lines around a positive point charge are",o:["Circular and clockwise","Radial and inward","Radial and outward","Parallel and uniform","Spiral"],a:2,e:"Positive point charges have electric field lines radiating outward in all directions (spherical symmetry)."},
+  {q:"An electron placed in an electric field of 500 N/C experiences a force of",o:["3.2 × 10⁻²⁰ N","8.0 × 10⁻¹⁷ N","1.6 × 10⁻¹⁹ N","8.0 × 10⁻¹⁹ N","4.0 × 10⁻¹⁷ N"],a:1,e:"F = qE = (1.6×10⁻¹⁹ C)(500 N/C) = 8.0×10⁻¹⁷ N. Direction is opposite to field (electron is negative)."},
+  {q:"The electric field intensity inside a hollow charged conductor is",o:["Maximum at the center","Zero","Uniform throughout","Infinite","Variable"],a:1,e:"In electrostatic equilibrium, E = 0 inside a conductor. Charges reside only on the outer surface, creating no internal field."},
+  {q:"Two point charges +Q and -Q form an electric dipole. The electric field at the midpoint between them",o:["Is zero","Points from +Q to -Q","Points from -Q to +Q","Is perpendicular to the line joining them","Is maximum"],a:1,e:"At midpoint, fields from both charges point same direction (from + to -), so they add up, pointing from positive to negative charge."},
+  {q:"The electric field intensity due to a uniformly charged sphere at an external point is the same as if all the charge were concentrated",o:["At the surface","At the center","Uniformly throughout the volume","At two points","At four points"],a:1,e:"By Gauss's law, a uniformly charged sphere behaves like a point charge at its center for external points (shell theorem)."},
+  {q:"If the electric field between two parallel plates is 5000 V/m and the plate separation is 2mm, the p.d. between the plates is",o:["2.5 V","10 V","25 V","100 V","5 V"],a:1,e:"V = Ed = (5000 V/m)(0.002 m) = 10 V."},
+  
+  // Section E: Electric Potential & Lightning (51-60)
+  {q:"Electric potential at a point is defined as",o:["Force per unit charge","Work done per unit charge in bringing a test charge from infinity","Charge per unit work","Energy per unit mass","Power per unit charge"],a:1,e:"V = W/q, the work done per unit charge in bringing a positive test charge from infinity to that point against the field."},
+  {q:"Calculate the electric potential at 0.5m from a charge of +8μC.",o:["1.44 × 10⁵ V","7.2 × 10⁴ V","1.8 × 10⁵ V","3.6 × 10⁴ V","2.88 × 10⁵ V"],a:0,e:"V = kQ/r = (9×10⁹)(8×10⁻⁶)/0.5 = 72×10³/0.5 = 1.44×10⁵ V."},
+  {q:"The work done in moving a charge of 5μC through a potential difference of 100V is",o:["0.5 J","5 × 10⁻⁴ J","20 J","500 J","5 × 10⁻² J"],a:1,e:"W = qV = (5×10⁻⁶ C)(100 V) = 5×10⁻⁴ J = 0.5 mJ."},
+  {q:"The electron-volt (eV) is a unit of",o:["Charge","Potential","Energy","Force","Power"],a:2,e:"1 eV = 1.6×10⁻¹⁹ J, the energy gained by an electron accelerated through 1 volt potential difference."},
+  {q:"A lightning conductor protects a building by",o:["Preventing lightning formation","Providing a low-resistance path to ground","Repelling lightning strikes","Absorbing the lightning charge","Insulating the building"],a:1,e:"The sharp point and grounded conducting path provide easy route for lightning current to flow to earth, preventing damage to structure."},
+  {q:"The principle of a lightning conductor is based on",o:["Electrostatic induction and point action","Magnetic induction","Friction","Convection currents","Gravitational induction"],a:0,e:"Sharp points have high charge density, causing ionization (point action) and gradual discharge, while the grounded rod provides safe path for heavy current."},
+  {q:"If the potential at point A is 50V and at point B is 30V, the work done in moving a charge of +2C from B to A is",o:["100 J","60 J","40 J","10 J","80 J"],a:2,e:"W = q(V_A - V_B) = 2(50-30) = 40 J. Work is done against the field moving positive charge to higher potential."},
+  {q:"The relationship between electric field intensity E and potential V in a uniform field is",o:["E = V × d","E = V/d","E = V + d","E = V - d","E = d/V"],a:1,e:"E = -dV/dr. For uniform field, E = V/d (magnitude), where d is distance in the direction of field."},
+  {q:"During a lightning discharge, the cloud and ground act as",o:["Two insulators","Two conductors with potential difference","A single conductor","Two magnets","Two semiconductors"],a:1,e:"Charge separation in clouds creates potential difference with ground. When breakdown voltage of air is exceeded, discharge occurs."},
+  {q:"The potential at a distance r from a point charge Q varies as",o:["r","r²","1/r","1/r²","√r"],a:2,e:"V = kQ/r, so V ∝ 1/r. This is inverse relationship (not inverse square like force and field)."}
+];
+
+let state={data:QUIZ_DATA,ans:new Array(QUIZ_DATA.length).fill(null),q:0,time:CONFIG.TIME,timer:null,submitted:false};
+
+function init(){
+  const saved=sessionStorage.getItem('electrostatics_quiz_progress');
+  if(saved){
+    const d=JSON.parse(saved);
+    if(Date.now()-d.ts<86400000&&!d.submitted&&confirm('Resume previous session?')){
+      state.q=d.q;state.ans=d.ans;state.time=d.time;
+    }
+  }
+  document.getElementById('load').classList.add('hide');
+  document.getElementById('access').style.display='flex';
+}
+
+function unlock(){
+  const c=document.getElementById('code').value.trim().toUpperCase();
+  const btn=document.getElementById('unlockBtn');
+  
+  if(c.length!==8){showMsg('Enter 8-character code','err');return;}
+  
+  btn.disabled=true;btn.textContent='Checking...';
+  
+  setTimeout(()=>{
+    if(!/^[A-Z0-9]{8}$/.test(c)){showMsg('Invalid code format','err');btn.disabled=false;btn.textContent='Start Quiz';return;}
+    localStorage.setItem('electrostatics_quiz_auth',c);
+    showMsg('Access granted!','ok');
+    setTimeout(()=>{
+      document.getElementById('access').style.display='none';
+      document.getElementById('quiz').style.display='block';
+      startTimer();
+      render();
+    },400);
+  },300);
+}
+
+function showMsg(t,type){
+  const m=document.getElementById('msg');
+  m.textContent=t;m.className='msg show '+type;
+}
+
+function startTimer(){
+  if(state.timer)clearInterval(state.timer);
+  state.timer=setInterval(()=>{
+    if(state.time>0){
+      state.time--;
+      updateTimer();
+      if(state.time%10===0)saveProgress();
+    }else{
+      submit(true);
+    }
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(state.time/60),s=state.time%60;
+  const el=document.getElementById('timer');
+  el.textContent=`⏱️ ${m}:${s.toString().padStart(2,'0')}`;
+  el.className='timer'+(state.time<60?' danger':state.time<300?' warn':'');
+}
+
+function render(){
+  const q=state.data[state.q];
+  
+  // Progress
+  const done=state.ans.filter(x=>x!==null).length;
+  document.getElementById('pbar').style.width=(done/state.data.length*100)+'%';
+  document.getElementById('ptxt').textContent=`${done}/${state.data.length}`;
+  
+  // Section
+  document.getElementById('stype').textContent=`Section ${getSection(state.q)} • Question ${state.q+1}/60`;
+  
+  // Question
+  document.getElementById('question').textContent=q.q;
+  
+  // Options
+  const opts=document.getElementById('opts');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');
+    d.className='opt'+(state.ans[state.q]===i?' sel':'');
+    d.innerHTML=`<div class="opt-mark">${String.fromCharCode(65+i)}</div><p>${o}</p>`;
+    d.onclick=()=>select(i);
+    opts.appendChild(d);
+  });
+  
+  // Navigation
+  document.getElementById('prevBtn').disabled=state.q===0;
+  const isLast=state.q===state.data.length-1;
+  document.getElementById('nextBtn').textContent=isLast?'Submit Quiz ✓':'Next →';
+}
+
+function select(i){
+  state.ans[state.q]=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>{
+    el.classList.toggle('sel',idx===i);
+  });
+  saveProgress();
+}
+
+function next(){
+  const isLast=state.q===state.data.length-1;
+  
+  if(isLast){
+    const unans=state.ans.filter(x=>x===null).length;
+    if(unans>0&&!confirm(`${unans} question(s) unanswered. Submit anyway?`)){
+      showPop();return;
+    }
+    submit(false);return;
+  }
+  
+  state.q++;
+  render();
+}
+
+function prev(){
+  if(state.q>0){state.q--;}
+  render();
+}
+
+function saveProgress(){
+  sessionStorage.setItem('electrostatics_quiz_progress',JSON.stringify({
+    q:state.q,ans:state.ans,time:state.time,submitted:state.submitted,ts:Date.now()
+  }));
+}
+
+function submit(timeout){
+  clearInterval(state.timer);
+  state.submitted=true;
+  saveProgress();
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+  
+  document.getElementById('rscore').textContent=pct+'%';
+  document.getElementById('rtitle').textContent=pct>=CONFIG.PASS?'🎉 Excellent!':timeout?'⏰ Time Up!':'Quiz Complete';
+  document.getElementById('rmsg').innerHTML=`You scored <strong>${correct}/${state.data.length}</strong> (${pct}%)<br>${pct>=CONFIG.PASS?'✓ Pass mark achieved!':'Keep practicing!'}<br><br>${pct>=45?'Ready for JAMB!':pct>=38?'Good, review weak areas':pct>=30?'Average, needs more practice':'Study fundamentals again'}`;
+}
+
+function continueQuiz(){
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('quiz').style.display='block';
+}
+
+function showPop(){
+  const g=document.getElementById('pgrid');
+  g.innerHTML='';
+  state.data.forEach((_,i)=>{
+    const b=document.createElement('button');
+    b.textContent=i+1;
+    const ans=state.ans[i]!==null;
+    const cur=i===state.q;
+    if(ans)b.className='ans';
+    if(cur)b.style.border='2px solid var(--a)';
+    b.onclick=()=>{state.q=i;hidePop();render();};
+    g.appendChild(b);
+  });
+  document.getElementById('pop').classList.add('show');
+}
+
+function hidePop(e){
+  if(!e||e.target.id==='pop')document.getElementById('pop').classList.remove('show');
+}
+
+function showDet(){
+  const c=document.getElementById('dcont');
+  c.innerHTML='';
+  
+  let correct=0;
+  state.data.forEach((q,i)=>{
+    if(state.ans[i]===q.a)correct++;
+  });
+  const pct=Math.round((correct/state.data.length)*100);
+  
+  const sum=document.createElement('div');
+  sum.className='det-summary';
+  sum.innerHTML=`<div class="big">${pct}%</div><div>${correct}/${state.data.length} correct</div>`;
+  c.appendChild(sum);
+  
+  // Group by sections
+  const sections=[0,15,25,40,50,60];
+  const sectionNames=["A: Fundamental Concepts & Charging","B: The Electroscope","C: Coulomb's Law & Electric Force","D: Electric Field","E: Electric Potential & Lightning"];
+  
+  for(let s=0;s<5;s++){
+    const start=sections[s];
+    const end=sections[s+1];
+    
+    const ph=document.createElement('div');
+    ph.style.cssText='margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+    ph.innerHTML=`<strong>Section ${sectionNames[s]}</strong>`;
+    c.appendChild(ph);
+    
+    for(let i=start;i<end;i++){
+      const q=state.data[i];
+      const ans=state.ans[i];
+      const ok=ans===q.a;
+      const d=document.createElement('div');
+      d.className='det-item'+(ok?' ok':'');
+      d.innerHTML=`<h4>Question ${i+1}</h4><div class="q-text">${q.q}</div><div class="ans-row"><strong>Your answer:</strong> ${ans!==null?String.fromCharCode(65+ans)+') '+q.o[ans]:'Not answered'}</div><div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65+q.a)+') '+q.o[q.a]}</div><div class="exp">${q.e}</div>`;
+      c.appendChild(d);
+    }
+  }
+  
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('res').style.display='none';
+  document.getElementById('det').style.display='block';
+}
+
+function hideDet(){
+  document.getElementById('det').style.display='none';
+  document.getElementById('res').style.display='flex';
+  document.getElementById('res').classList.add('show');
+}
+
+function restart(){
+  if(!confirm('Start a new quiz? All progress will be reset.'))return;
+  localStorage.removeItem('electrostatics_quiz_auth');
+  sessionStorage.removeItem('electrostatics_quiz_progress');
+  location.reload();
+}
+
+function exit(){
+  if(confirm('Exit quiz? Your progress is saved.')){saveProgress();location.reload();}
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  localStorage.setItem('electrostatics_quiz_theme',document.body.classList.contains('light')?'light':'dark');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('electrostatics_quiz_theme')==='light')document.body.classList.add('light');
+  document.getElementById('code').addEventListener('keypress',e=>{if(e.key==='Enter')unlock();});
+  init();
+});
+</script>
+</body>
+</html>
