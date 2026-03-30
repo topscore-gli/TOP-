@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>TopScore - Ace Your JAMB 2026 Exam</title>
+  
+  <!-- PWA Meta Tags -->
+  <meta name="description" content="TopScore - Your ultimate JAMB 2026 exam preparation companion. Practice with mock exams, daily quizzes, and likely questions." />
+  <meta name="theme-color" content="#1db954" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="TopScore" />
+  
+  <!-- Favicon & Icons -->
+  <link rel="icon" type="image/png" href="./img/logo.png" />
+  <link rel="apple-touch-icon" href="./img/logo.png" />
+  <link rel="manifest" href="./manifest.json" />
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://topscore.com" />
+  <meta property="og:title" content="TopScore - Ace Your JAMB 2026 Exam" />
+  <meta property="og:description" content="Practice with mock exams, daily quizzes, and likely JAMB 2026 questions. Your path to success starts here!" />
+  <meta property="og:image" content="./img/topscore.png" />
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://topscore.com" />
+  <meta property="twitter:title" content="TopScore - Ace Your JAMB 2026 Exam" />
+  <meta property="twitter:description" content="Practice with mock exams, daily quizzes, and likely JAMB 2026 questions." />
+  <meta property="twitter:image" content="./img/topscore.png" />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #1db954;
+      --primary-dark: #169c45;
+      --primary-light: #2bc55e;
+      --accent: #ff6b35;
+      --accent-glow: rgba(255, 107, 53, 0.3);
+      --bg-dark: #0a0a0f;
+      --bg-card: #12121a;
+      --bg-elevated: #1a1a25;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --text-muted: #6a6a7a;
+      --success: #00d084;
+      --warning: #ffb800;
+      --danger: #ff4757;
+      --gradient-1: linear-gradient(135deg, #1db954 0%, #00d084 100%);
+      --gradient-2: linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%);
+      --gradient-3: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+      --shadow-glow: 0 0 40px rgba(29, 185, 84, 0.3);
+      --radius-sm: 12px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-xl: 32px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Animated Background */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .bg-animation::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(29, 185, 84, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(102, 126, 234, 0.08) 0%, transparent 40%);
+      animation: bgPulse 15s ease-in-out infinite;
+    }
+
+    @keyframes bgPulse {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.1) rotate(5deg); }
+    }
+
+    /* Floating Particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: float 20s infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.3; }
+      90% { opacity: 0.3; }
+      100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 16px 24px;
+      background: rgba(10, 10, 15, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .nav.scrolled {
+      padding: 12px 24px;
+      background: rgba(10, 10, 15, 0.95);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--gradient-1);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: var(--shadow-glow);
+      animation: logoPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes logoPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(29, 185, 84, 0.4); }
+      50% { box-shadow: 0 0 40px rgba(29, 185, 84, 0.6); }
+    }
+
+    .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text span {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      padding: 12px 24px;
+      background: var(--gradient-1);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(29, 185, 84, 0.4);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 24px 80px;
+      position: relative;
+    }
+
+    .hero-container {
+      max-width: 1200px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-content {
+      animation: fadeInUp 1s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(29, 185, 84, 0.1);
+      border: 1px solid rgba(29, 185, 84, 0.3);
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 24px;
+      animation: badgePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes badgePulse {
+      0%, 100% { border-color: rgba(29, 185, 84, 0.3); }
+      50% { border-color: rgba(29, 185, 84, 0.6); }
+    }
+
+    .hero-badge::before {
+      content: '🔥';
+    }
+
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      letter-spacing: -2px;
+    }
+
+    .hero-title .highlight {
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+    }
+
+    .hero-title .highlight::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background: var(--gradient-2);
+      opacity: 0.3;
+      border-radius: 4px;
+    }
+
+    .hero-subtitle {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      max-width: 500px;
+      line-height: 1.7;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .stat {
+      text-align: left;
+    }
+
+    .stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-value::after {
+      content: '+';
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 16px 32px;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--gradient-1);
+      color: white;
+      box-shadow: 0 4px 20px rgba(29, 185, 84, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(29, 185, 84, 0.4);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-primary);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      background: rgba(29, 185, 84, 0.1);
+    }
+
+    /* Hero Phone Mockup */
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      animation: floatPhone 6s ease-in-out infinite;
+    }
+
+    @keyframes floatPhone {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-20px) rotate(2deg); }
+    }
+
+    .phone-mockup {
+      width: 300px;
+      height: 600px;
+      background: var(--bg-card);
+      border-radius: 40px;
+      padding: 12px;
+      box-shadow: 
+        0 50px 100px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: var(--bg-elevated);
+      border-radius: 32px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 28px;
+      background: var(--bg-card);
+      border-radius: 0 0 20px 20px;
+      z-index: 10;
+    }
+
+    .phone-content {
+      padding: 40px 20px 20px;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .phone-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .phone-welcome {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .phone-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .phone-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .phone-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .phone-categories {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .phone-cat {
+      text-align: center;
+    }
+
+    .phone-cat-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--gradient-1);
+      border-radius: 50%;
+      margin: 0 auto 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .phone-cat-label {
+      font-size: 10px;
+      color: var(--text-secondary);
+    }
+
+    .phone-slider {
+      height: 120px;
+      background: var(--gradient-3);
+      border-radius: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone-slider::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .phone-slider-text {
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 1;
+    }
+
+    .glow-orb {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(29, 185, 84, 0.3) 0%, transparent 70%);
+      border-radius: 50%;
+      filter: blur(60px);
+      animation: orbFloat 8s ease-in-out infinite;
+    }
+
+    .glow-orb:nth-child(1) {
+      top: -200px;
+      right: -200px;
+      animation-delay: 0s;
+    }
+
+    .glow-orb:nth-child(2) {
+      bottom: -200px;
+      left: -200px;
+      background: radial-gradient(circle, rgba(255, 107, 53, 0.2) 0%, transparent 70%);
+      animation-delay: -4s;
+    }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(30px, -30px) scale(1.1); }
+    }
+
+    /* Features Section */
+    .features {
+      padding: 100px 24px;
+      position: relative;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 60px;
+    }
+
+    .section-label {
+      display: inline-block;
+      padding: 8px 16px;
+      background: rgba(29, 185, 84, 0.1);
+      border: 1px solid rgba(29, 185, 84, 0.2);
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .section-subtitle {
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .features-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-1);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(29, 185, 84, 0.2);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .feature-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--bg-elevated);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover .feature-icon {
+      background: var(--gradient-1);
+      transform: scale(1.1);
+    }
+
+    .feature-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .feature-desc {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* Subjects Section */
+    .subjects {
+      padding: 100px 24px;
+      background: var(--bg-card);
+      position: relative;
+    }
+
+    .subjects-grid {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+    }
+
+    .subject-card {
+      background: var(--bg-elevated);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-lg);
+      padding: 28px 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .subject-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      border-color: var(--primary);
+      box-shadow: 0 10px 30px rgba(29, 185, 84, 0.2);
+    }
+
+    .subject-icon {
+      width: 70px;
+      height: 70px;
+      background: var(--bg-dark);
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .subject-card:hover .subject-icon {
+      border-color: var(--primary);
+      box-shadow: 0 0 20px rgba(29, 185, 84, 0.3);
+    }
+
+    .subject-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .subject-count {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Mock Exam CTA Section */
+    .mock-cta {
+      padding: 120px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mock-cta-bg {
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse at center, rgba(29, 185, 84, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at top right, rgba(255, 107, 53, 0.1) 0%, transparent 40%);
+    }
+
+    .mock-cta-container {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mock-cta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: var(--gradient-2);
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 32px;
+      animation: badgeShake 2s ease-in-out infinite;
+    }
+
+    @keyframes badgeShake {
+      0%, 100% { transform: rotate(-3deg); }
+      50% { transform: rotate(3deg); }
+    }
+
+    .mock-cta-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.1;
+    }
+
+    .mock-cta-title .urgent {
+      color: var(--accent);
+      position: relative;
+      display: inline-block;
+    }
+
+    .mock-cta-title .urgent::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 2px;
+      animation: underlinePulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes underlinePulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .mock-cta-desc {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .countdown-item {
+      background: var(--bg-elevated);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      padding: 20px 28px;
+      min-width: 90px;
+    }
+
+    .countdown-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary);
+      display: block;
+    }
+
+    .countdown-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Testimonials */
+    .testimonials {
+      padding: 100px 24px;
+    }
+
+    .testimonials-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+    }
+
+    .testimonial-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      position: relative;
+    }
+
+    .testimonial-card::before {
+      content: '"';
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      font-size: 80px;
+      color: rgba(29, 185, 84, 0.1);
+      font-family: serif;
+      line-height: 1;
+    }
+
+    .testimonial-stars {
+      color: var(--warning);
+      font-size: 18px;
+      margin-bottom: 16px;
+      letter-spacing: 2px;
+    }
+
+    .testimonial-text {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testimonial-avatar {
+      width: 48px;
+      height: 48px;
+      background: var(--gradient-1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .testimonial-info h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .testimonial-info p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Install Section */
+    .install-section {
+      padding: 100px 24px;
+      background: var(--bg-card);
+      position: relative;
+    }
+
+    .install-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .install-content h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .install-content p {
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      line-height: 1.8;
+    }
+
+    .install-benefits {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+    }
+
+    .benefit-check {
+      width: 24px;
+      height: 24px;
+      background: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .install-visual {
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+
+    .install-phone {
+      width: 280px;
+      height: 560px;
+      background: var(--bg-dark);
+      border-radius: 36px;
+      padding: 10px;
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .install-screen {
+      width: 100%;
+      height: 100%;
+      background: var(--bg-elevated);
+      border-radius: 28px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .install-app-icon {
+      width: 100px;
+      height: 100px;
+      background: var(--gradient-1);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(29, 185, 84, 0.4);
+      animation: appIconFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes appIconFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .install-app-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .install-app-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 60px 24px 30px;
+      background: var(--bg-dark);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+
+    .footer-brand p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.8;
+      margin-top: 20px;
+    }
+
+    .footer-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .footer-copyright {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 16px;
+    }
+
+    .social-link {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-elevated);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .social-link:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    /* Install Banner (Fixed) */
+    .install-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(150%);
+      background: var(--bg-elevated);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-width: 90%;
+      width: auto;
+    }
+
+    .install-banner.active {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .install-banner-icon {
+      width: 52px;
+      height: 52px;
+      background: var(--gradient-1);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .install-banner-text {
+      flex: 1;
+    }
+
+    .install-banner-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .install-banner-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .install-banner-btn {
+      padding: 12px 24px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+    }
+
+    .install-banner-btn:hover {
+      background: var(--primary-light);
+      transform: scale(1.05);
+    }
+
+    .install-banner-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+      transition: color 0.3s ease;
+    }
+
+    .install-banner-close:hover {
+      color: var(--text-primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .hero-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .hero-content {
+        order: 2;
+      }
+
+      .hero-visual {
+        order: 1;
+      }
+
+      .hero-stats {
+        justify-content: center;
+      }
+
+      .hero-buttons {
+        justify-content: center;
+      }
+
+      .hero-subtitle {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .phone-mockup {
+        width: 260px;
+        height: 520px;
+      }
+
+      .install-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .install-benefits {
+        align-items: center;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding: 100px 20px 60px;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .subjects-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .countdown {
+        gap: 12px;
+      }
+
+      .countdown-item {
+        padding: 16px 20px;
+        min-width: 70px;
+      }
+
+      .countdown-value {
+        font-size: 28px;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .install-banner {
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .install-banner-text {
+        width: 100%;
+        margin: 8px 0;
+      }
+    }
+
+    /* Loading Animation */
+    .page-loader {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .page-loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader {
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(29, 185, 84, 0.2);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Page Loader -->
+  <div class="page-loader" id="pageLoader">
+    <div class="loader"></div>
+  </div>
+
+  <!-- Background Animation -->
+  <div class="bg-animation"></div>
+  <div class="particles" id="particles"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <div class="logo-icon">🎯</div>
+        <div class="logo-text">Top<span>Score</span></div>
+      </a>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#subjects" class="nav-link">Subjects</a>
+        <a href="#mock" class="nav-link">Mock Exam</a>
+        <a href="#testimonials" class="nav-link">Reviews</a>
+        <a href="./main.html" class="nav-cta">Launch App 🚀</a>
+      </div>
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-badge">JAMB 2026 is here!</div>
+        <h1 class="hero-title">
+          Ace Your <span class="highlight">JAMB 2026</span> Exam with Confidence
+        </h1>
+        <p class="hero-subtitle">
+          Practice with likely questions, take mock exams, and track your progress. 
+          Join thousands of students preparing for success.
+        </p>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-value">50K</div>
+            <div class="stat-label">Active Students</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">10K</div>
+            <div class="stat-label">Practice Questions</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">95%</div>
+            <div class="stat-label">Success Rate</div>
+          </div>
+        </div>
+        <div class="hero-buttons">
+          <a href="./main.html" class="btn btn-primary">
+            Start Practicing Now →
+          </a>
+          <a href="#features" class="btn btn-secondary">
+            Learn More
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="phone-mockup">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-content">
+              <div class="phone-header">
+                <div>
+                  <div class="phone-welcome">Welcome To</div>
+                  <div class="phone-title">TopScore</div>
+                </div>
+                <span>🌙</span>
+              </div>
+              <div class="phone-slider">
+                <div class="phone-slider-text">Boost your exam confidence 🚀</div>
+              </div>
+              <div class="phone-card">
+                <div class="phone-card-title">Categories</div>
+                <div class="phone-categories">
+                  <div class="phone-cat">
+                    <div class="phone-cat-icon">📊</div>
+                    <div class="phone-cat-label">Daily Quiz</div>
+                  </div>
+                  <div class="phone-cat">
+                    <div class="phone-cat-icon">🧬</div>
+                    <div class="phone-cat-label">Biology</div>
+                  </div>
+                  <div class="phone-cat">
+                    <div class="phone-cat-icon">⚛️</div>
+                    <div class="phone-cat-label">Physics</div>
+                  </div>
+                  <div class="phone-cat">
+                    <div class="phone-cat-icon">📐</div>
+                    <div class="phone-cat-label">Maths</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="section-header">
+      <div class="section-label">Why Choose Us</div>
+      <h2 class="section-title">Everything You Need to Succeed</h2>
+      <p class="section-subtitle">
+        Comprehensive tools and resources designed to help you achieve your best JAMB score yet.
+      </p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📚</div>
+        <h3 class="feature-title">Daily Quizzes</h3>
+        <p class="feature-desc">Practice every day with curated questions across all JAMB subjects. Track your streak and build consistent study habits.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3 class="feature-title">Mock Exams</h3>
+        <p class="feature-desc">Simulate the real JAMB experience with timed mock exams. Get instant results and detailed performance analysis.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3 class="feature-title">Progress Tracking</h3>
+        <p class="feature-desc">Monitor your improvement with detailed analytics. Identify weak areas and focus your study time effectively.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💡</div>
+        <h3 class="feature-title">Detailed Explanations</h3>
+        <p class="feature-desc">Every answer comes with a comprehensive explanation. Learn from your mistakes and understand the concepts.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏆</div>
+        <h3 class="feature-title">Likely Questions</h3>
+        <p class="feature-desc">Access our database of likely 2026 JAMB questions based on past trends and expert predictions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-title">Offline Access</h3>
+        <p class="feature-desc">Study anywhere, anytime. Install the app and access your saved content even without internet.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Subjects Section -->
+  <section class="subjects" id="subjects">
+    <div class="section-header">
+      <div class="section-label">Subjects</div>
+      <h2 class="section-title">Master Every Subject</h2>
+      <p class="section-subtitle">
+        Comprehensive coverage of all JAMB subjects with topic-by-topic breakdowns.
+      </p>
+    </div>
+    <div class="subjects-grid">
+      <a href="./courses/biology/B.html" class="subject-card">
+        <div class="subject-icon">🧬</div>
+        <div class="subject-name">Biology</div>
+        <div class="subject-count">2,400+ questions</div>
+      </a>
+      <a href="./courses/physics/P.html" class="subject-card">
+        <div class="subject-icon">⚛️</div>
+        <div class="subject-name">Physics</div>
+        <div class="subject-count">1,800+ questions</div>
+      </a>
+      <a href="./courses/Chemistry/C.html" class="subject-card">
+        <div class="subject-icon">🧪</div>
+        <div class="subject-name">Chemistry</div>
+        <div class="subject-count">2,100+ questions</div>
+      </a>
+      <a href="./courses/math/MS.html" class="subject-card">
+        <div class="subject-icon">📐</div>
+        <div class="subject-name">Mathematics</div>
+        <div class="subject-count">2,600+ questions</div>
+      </a>
+      <a href="./courses/english/ES.html" class="subject-card">
+        <div class="subject-icon">📖</div>
+        <div class="subject-name">English</div>
+        <div class="subject-count">1,500+ questions</div>
+      </a>
+      <a href="./jambmain.html" class="subject-card">
+        <div class="subject-icon">🎯</div>
+        <div class="subject-name">JAMB Mock</div>
+        <div class="subject-count">Full exams</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Mock Exam CTA -->
+  <section class="mock-cta" id="mock">
+    <div class="mock-cta-bg"></div>
+    <div class="mock-cta-container">
+      <div class="mock-cta-badge">🚨 Limited Time Offer</div>
+      <h2 class="mock-cta-title">
+        2026 JAMB Mock Exams Are <span class="urgent">Now Live!</span>
+      </h2>
+      <p class="mock-cta-desc">
+        Don't wait until it's too late. Take our comprehensive mock exams designed 
+        to mirror the actual JAMB 2026 experience. Get your scores instantly!
+      </p>
+      <div class="countdown" id="countdown">
+        <div class="countdown-item">
+          <span class="countdown-value" id="days">15</span>
+          <span class="countdown-label">Days</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="hours">08</span>
+          <span class="countdown-label">Hours</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="minutes">42</span>
+          <span class="countdown-label">Minutes</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="seconds">15</span>
+          <span class="countdown-label">Seconds</span>
+        </div>
+      </div>
+      <a href="./jambmain.html" class="btn btn-primary" style="font-size: 18px; padding: 18px 40px;">
+        Start Mock Exam Now 🚀
+      </a>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials" id="testimonials">
+    <div class="section-header">
+      <div class="section-label">Testimonials</div>
+      <h2 class="section-title">What Students Say</h2>
+      <p class="section-subtitle">
+        Join thousands of successful students who prepared with TopScore.
+      </p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">
+          "TopScore helped me score 320 in JAMB 2025! The mock exams were incredibly similar to the real thing. 
+          I knew exactly what to expect on exam day."
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">👨‍🎓</div>
+          <div class="testimonial-info">
+            <h4>Chukwuemeka O.</h4>
+            <p>University of Lagos</p>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">
+          "The daily quizzes kept me consistent. I studied for just 30 minutes every day for 3 months 
+          and scored 298. Best investment in my future!"
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">👩‍🎓</div>
+          <div class="testimonial-info">
+            <h4>Amina Ibrahim</h4>
+            <p>ABU Zaria</p>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">
+          "The detailed explanations after each question helped me understand my mistakes. 
+          I improved from 180 to 305 in just 6 weeks!"
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">👨‍🎓</div>
+          <div class="testimonial-info">
+            <h4>Oluwaseun A.</h4>
+            <p>University of Ibadan</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Install Section -->
+  <section class="install-section" id="install">
+    <div class="install-container">
+      <div class="install-content">
+        <div class="section-label">Get The App</div>
+        <h2>Install TopScore on Your Phone</h2>
+        <p>
+          Get instant access to all features, offline mode, and push notifications 
+          for daily reminders. Study on the go, anytime, anywhere.
+        </p>
+        <div class="install-benefits">
+          <div class="benefit-item">
+            <div class="benefit-check">✓</div>
+            <span>Works offline - no internet needed</span>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-check">✓</div>
+            <span>Quick access from home screen</span>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-check">✓</div>
+            <span>Daily study reminders</span>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-check">✓</div>
+            <span>Faster loading times</span>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="installBtn" onclick="installApp()">
+          📲 Install App Now
+        </button>
+      </div>
+      <div class="install-visual">
+        <div class="install-phone">
+          <div class="install-screen">
+            <div class="install-app-icon">🎯</div>
+            <div class="install-app-name">TopScore</div>
+            <div class="install-app-desc">Tap to open</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo">
+            <div class="logo-icon">🎯</div>
+            <div class="logo-text">Top<span>Score</span></div>
+          </a>
+          <p>
+            Your ultimate companion for JAMB 2026 success. 
+            Practice smart, score high, secure your future.
+          </p>
+        </div>
+        <div>
+          <h4 class="footer-title">Quick Links</h4>
+          <div class="footer-links">
+            <a href="./main.html">Launch App</a>
+            <a href="./jambmain.html">Mock Exams</a>
+            <a href="./quiz.html">Daily Quiz</a>
+            <a href="#features">Features</a>
+          </div>
+        </div>
+        <div>
+          <h4 class="footer-title">Subjects</h4>
+          <div class="footer-links">
+            <a href="./courses/biology/B.html">Biology</a>
+            <a href="./courses/physics/P.html">Physics</a>
+            <a href="./courses/Chemistry/C.html">Chemistry</a>
+            <a href="./courses/math/MS.html">Mathematics</a>
+          </div>
+        </div>
+        <div>
+          <h4 class="footer-title">Support</h4>
+          <div class="footer-links">
+            <a href="./chat.html">Help Center</a>
+            <a href="./library.html">Resources</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Privacy Policy</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copyright">© 2026 TopScore. All rights reserved. Made with 💚 for JAMB candidates.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link">📘</a>
+          <a href="#" class="social-link">🐦</a>
+          <a href="#" class="social-link">📸</a>
+          <a href="#" class="social-link">💬</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Install Banner -->
+  <div class="install-banner" id="installBanner">
+    <div class="install-banner-icon">🎯</div>
+    <div class="install-banner-text">
+      <div class="install-banner-title">Install TopScore</div>
+      <div class="install-banner-desc">Add to Home Screen for the best experience</div>
+    </div>
+    <button class="install-banner-btn" onclick="installApp()">Install</button>
+    <button class="install-banner-close" onclick="dismissInstallBanner()">✕</button>
+  </div>
+
+  <script>
+    // Hide page loader
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('pageLoader').classList.add('hidden');
+      }, 500);
+    });
+
+    // Create floating particles
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 20; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 20 + 's';
+      particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+      particlesContainer.appendChild(particle);
+    }
+
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Countdown Timer
+    function updateCountdown() {
+      const examDate = new Date('2026-04-15T08:00:00').getTime();
+      const now = new Date().getTime();
+      const distance = examDate - now;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById('days').textContent = String(days).padStart(2, '0');
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // Install App Logic
+    let deferredPrompt = null;
+    let isAppInstalled = false;
+
+    // Check if already installed
+    function checkIfInstalled() {
+      if (window.matchMedia('(display-mode: standalone)').matches || 
+          window.navigator.standalone === true ||
+          localStorage.getItem('appInstalled') === 'true') {
+        isAppInstalled = true;
+        hideInstallUI();
+        return true;
+      }
+      return false;
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (!checkIfInstalled()) {
+        setTimeout(() => {
+          document.getElementById('installBanner').classList.add('active');
+        }, 5000);
+      }
+    });
+
+    window.addEventListener('appinstalled', () => {
+      isAppInstalled = true;
+      localStorage.setItem('appInstalled', 'true');
+      hideInstallUI();
+      deferredPrompt = null;
+    });
+
+    function installApp() {
+      if (!deferredPrompt) {
+        if (isIOS()) {
+          alert('To install on iOS: Tap the share button in Safari, then "Add to Home Screen"');
+        } else if (isAppInstalled) {
+          alert('TopScore is already installed!');
+        } else {
+          window.location.href = './main.html';
+        }
+        return;
+      }
+
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choice) => {
+        if (choice.outcome === 'accepted') {
+          isAppInstalled = true;
+          hideInstallUI();
+        }
+        deferredPrompt = null;
+      });
+    }
+
+    function dismissInstallBanner() {
+      document.getElementById('installBanner').classList.remove('active');
+      localStorage.setItem('installBannerDismissed', 'true');
+    }
+
+    function hideInstallUI() {
+      document.getElementById('installBanner').classList.remove('active');
+      document.getElementById('installBtn').style.display = 'none';
+    }
+
+    function isIOS() {
+      return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    }
+
+    // Check on load
+    checkIfInstalled();
+
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      alert('Mobile menu - redirecting to app...');
+      window.location.href = './main.html';
+    }
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
