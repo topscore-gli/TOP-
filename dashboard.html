@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TopScore Mobile App</title>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
   <style>
     * {
       margin: 0;
@@ -386,6 +389,179 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Popup Styles */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .popup-overlay.active {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .popup-modal {
+      background: var(--surface);
+      border-radius: 24px;
+      padding: 24px;
+      max-width: 360px;
+      width: 100%;
+      position: relative;
+      box-shadow: 8px 8px 16px var(--shadow-in), -8px -8px 16px var(--shadow-out);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 50%;
+      background: var(--background);
+      color: var(--text);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 3px 3px 6px var(--shadow-in), -3px -3px 6px var(--shadow-out);
+      transition: transform 0.2s ease;
+    }
+
+    .popup-close:hover {
+      transform: scale(1.1);
+    }
+
+    .popup-close:active {
+      transform: scale(0.95);
+      box-shadow: inset 2px 2px 4px var(--shadow-in), inset -2px -2px 4px var(--shadow-out);
+    }
+
+    .popup-icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out);
+    }
+
+    .popup-title {
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .popup-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .popup-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: none;
+      border-radius: 12px;
+      background: var(--background);
+      color: var(--text);
+      font-size: 14px;
+      margin-bottom: 16px;
+      box-shadow: inset 3px 3px 6px var(--shadow-in), inset -3px -3px 6px var(--shadow-out);
+    }
+
+    .popup-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .popup-input:focus {
+      outline: 2px solid var(--accent);
+    }
+
+    .popup-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out);
+      transition: transform 0.2s ease;
+    }
+
+    .popup-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .popup-btn:active {
+      transform: scale(0.98);
+      box-shadow: inset 3px 3px 6px rgba(0,0,0,0.2);
+    }
+
+    .share-preview {
+      width: 100%;
+      height: 140px;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 4px 4px 8px var(--shadow-in), -4px -4px 8px var(--shadow-out);
+    }
+
+    .share-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .share-stats {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 16px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
     @media (max-width: 420px) {
       body {
         padding: 0;
@@ -400,6 +576,42 @@
   </style>
 </head>
 <body class="dark">
+  <!-- Subscribe Popup (Shows once on first visit) -->
+  <div class="popup-overlay" id="subscribePopup">
+    <div class="popup-modal">
+      <button class="popup-close" onclick="closeSubscribePopup()">❌</button>
+      <div class="popup-icon">📧</div>
+      <h3 class="popup-title">Subscribe to TopScore</h3>
+      <p class="popup-text">Get exclusive access to receive News on 2026 JAMB Examination directly in your mail. Stay updated with exam dates, syllabus changes, and important announcements!</p>
+      <input type="email" class="popup-input" id="subscribeEmail" placeholder="Enter your email address..." />
+      <button class="popup-btn" onclick="handleSubscribe()">Subscribe Now</button>
+    </div>
+  </div>
+
+  <!-- Share Popup (Shows every 5 minutes) -->
+  <div class="popup-overlay" id="sharePopup">
+    <div class="popup-modal">
+      <button class="popup-close" onclick="closeSharePopup()">❌</button>
+      <div class="popup-icon">🎁</div>
+      <h3 class="popup-title">Unlock Premium Content</h3>
+      <div class="share-preview">
+        <img src="./img/topscore.png" alt="TopScore Preview" />
+      </div>
+      <p class="popup-text">Share to 4 groups and 4 friends to get access to likely 2026 JAMB questions with correct answers and detailed explanations!</p>
+      <div class="share-stats">
+        <div class="stat-item">
+          <div class="stat-number">4</div>
+          <div class="stat-label">Groups</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">4</div>
+          <div class="stat-label">Friends</div>
+        </div>
+      </div>
+      <button class="popup-btn" onclick="handleShare()">📤 Share Now</button>
+    </div>
+  </div>
+
   <div class="app-shell">
     <div class="app-scroll">
       <header class="top-bar">
@@ -586,6 +798,21 @@
   </div>
 
   <script>
+    // Firebase Configuration - Replace with your actual Firebase config
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
     const slides = document.getElementById('slides');
@@ -594,6 +821,11 @@
     const viewAllBtn = document.getElementById('view-all');
     const dropdown = document.getElementById('dropdown');
     const navItems = document.querySelectorAll('.nav-item');
+
+    // Popup Elements
+    const subscribePopup = document.getElementById('subscribePopup');
+    const sharePopup = document.getElementById('sharePopup');
+    const subscribeEmail = document.getElementById('subscribeEmail');
 
     function setTheme(theme) {
       body.className = theme;
@@ -632,6 +864,133 @@
         navItems.forEach(nav => nav.classList.remove('active'));
         item.classList.add('active');
       });
+    });
+
+    // ==================== SUBSCRIBE POPUP FUNCTIONS ====================
+    
+    function showSubscribePopup() {
+      subscribePopup.classList.add('active');
+    }
+
+    function closeSubscribePopup() {
+      subscribePopup.classList.remove('active');
+    }
+
+    function handleSubscribe() {
+      const email = subscribeEmail.value.trim();
+      
+      if (!email) {
+        alert('Please enter your email address');
+        return;
+      }
+      
+      if (!isValidEmail(email)) {
+        alert('Please enter a valid email address');
+        return;
+      }
+
+      // Save to Firebase
+      const subscriberRef = database.ref('subscribers/' + Date.now());
+      subscriberRef.set({
+        email: email,
+        timestamp: new Date().toISOString(),
+        subscribed: true
+      }).then(() => {
+        // Mark as subscribed in localStorage so popup won't show again
+        localStorage.setItem('hasSubscribed', 'true');
+        localStorage.setItem('subscribedEmail', email);
+        
+        alert('Thank you for subscribing! You will receive JAMB 2026 updates in your mail.');
+        closeSubscribePopup();
+      }).catch((error) => {
+        console.error('Error saving subscription:', error);
+        alert('There was an error subscribing. Please try again.');
+      });
+    }
+
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    // ==================== SHARE POPUP FUNCTIONS ====================
+    
+    function showSharePopup() {
+      sharePopup.classList.add('active');
+    }
+
+    function closeSharePopup() {
+      sharePopup.classList.remove('active');
+    }
+
+    function handleShare() {
+      const shareData = {
+        title: 'TopScore - Ace Your JAMB 2026 Exam',
+        text: 'Get access to likely 2026 JAMB questions with correct answers and explanations! Join TopScore now.',
+        url: window.location.origin,
+      };
+
+      // Check if Web Share API is supported
+      if (navigator.share) {
+        navigator.share(shareData)
+          .then(() => {
+            console.log('Shared successfully');
+            closeSharePopup();
+          })
+          .catch((error) => {
+            console.log('Error sharing:', error);
+            fallbackShare();
+          });
+      } else {
+        fallbackShare();
+      }
+    }
+
+    function fallbackShare() {
+      // Fallback: Copy link to clipboard
+      const shareUrl = window.location.origin;
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        alert('Link copied to clipboard! Share it with 4 groups and 4 friends to unlock premium content.');
+        closeSharePopup();
+      }).catch(() => {
+        // Final fallback: show prompt
+        prompt('Copy this link and share with friends:', shareUrl);
+      });
+    }
+
+    // ==================== POPUP INITIALIZATION ====================
+    
+    // Check if user has already subscribed
+    function initPopups() {
+      const hasSubscribed = localStorage.getItem('hasSubscribed');
+      
+      // Show subscribe popup after 1 second if not subscribed
+      if (!hasSubscribed) {
+        setTimeout(() => {
+          showSubscribePopup();
+        }, 1000);
+      }
+
+      // Show share popup every 5 minutes (300000 ms)
+      setInterval(() => {
+        showSharePopup();
+      }, 300000);
+    }
+
+    // Initialize popups when page loads
+    document.addEventListener('DOMContentLoaded', initPopups);
+
+    // Close popups when clicking outside
+    subscribePopup.addEventListener('click', (e) => {
+      if (e.target === subscribePopup) {
+        closeSubscribePopup();
+      }
+    });
+
+    sharePopup.addEventListener('click', (e) => {
+      if (e.target === sharePopup) {
+        closeSharePopup();
+      }
     });
   </script>
 </body>
