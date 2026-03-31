@@ -1,5 +1,4 @@
-Yes — I’ll paste the full HTML code for you now.Yes — the full HTML is quite long, so the cleanest way is to paste it in parts so nothing gets cut off.
-Here’s Part 1 of the full HTML code:
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -249,3 +248,128 @@ Here’s Part 1 of the full HTML code:
       </div>
     </div>
   </div>
+  
+
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0</div>
+        <div class="res-label">Total Score</div>
+      </div>
+      <h2 id="rtitle">Examination Submitted</h2>
+      <p id="rmsg">Your subject scores are shown below.</p>
+      <table class="score-table" id="scoreTable"></table>
+      <div class="res-btns">
+        <button class="primary" id="showDetBtn">📊 View Details</button>
+        <button class="nav-btn" id="restartBtn">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" id="hideDetBtn">←</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" id="printBtn">🖨️</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    const $ = (id) => document.getElementById(id);
+    const saveProgressDebounced = debounce(saveProgress, 250);
+    const firebaseConfig = {
+      apiKey: "AIzaSyDwsKVFStDaZ05JNWdpMxcP1uD_nhDmv3g",
+      authDomain: "topscore-5e3b3.firebaseapp.com",
+      databaseURL: "https://topscore-5e3b3-default-rtdb.firebaseio.com",
+      projectId: "topscore-5e3b3",
+      storageBucket: "topscore-5e3b3.firebasestorage.app",
+      messagingSenderId: "729977741765",
+      appId: "1:729977741765:web:e56fc72a3915ca65f12bac"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const CONFIG = {
+      TIME: 7200,
+      START_HOUR: 12,
+      END_HOUR: 14,
+      EXAM_ID: "jamb-pro-cbt-2026",
+      COMPREHENSION_COUNT: 15,
+      SHUFFLE_SEED_PREFIX: "jamb2026_",
+      SAVE_KEY: "jamb_exam_progress_v3",
+      AUTH_KEY: "jamb_exam_auth",
+      SAVE_INTERVAL_SECONDS: 30
+    };
+    const SUBJECT_META = {
+      english: { label: "English", size: 60, hasCalc: false },
+      mathematics: { label: "Mathematics", size: 40, hasCalc: true },
+      biology: { label: "Biology", size: 40, hasCalc: false },
+      chemistry: { label: "Chemistry", size: 40, hasCalc: true },
+      physics: { label: "Physics", size: 40, hasCalc: true }
+    };
+    function makeQuestion(q, o, a, e, img = null, optImgs = null) {
+      return { q, o, a, e, img, optImgs };
+    }
+    const ENGLISH_BASE = [
+      makeQuestion("Comprehension Q1: According to the passage, what was the main reason for the character's decision?", ["Fear of failure", "Desire for success", "Family pressure", "Financial gain"], 1, "The passage explicitly states the character was driven by desire for success."),
+      makeQuestion("Comprehension Q2: The phrase 'cold feet' in paragraph 2 means...", ["Feeling cold", "Becoming nervous", "Losing interest", "Getting angry"], 1, "Idiom 'cold feet' means nervousness about proceeding."),
+      makeQuestion("Comprehension Q3: The author's tone in describing the village can be described as...", ["Critical", "Nostalgic", "Indifferent", "Hostile"], 1, "The descriptive language shows fond remembrance."),
+      makeQuestion("Comprehension Q4: What literary device is used in 'the trees whispered secrets'?", ["Simile", "Metaphor", "Personification", "Hyperbole"], 2, "Giving human qualities to trees is personification."),
+      makeQuestion("Comprehension Q5: The passage suggests that the protagonist's mother was...", ["Strict but caring", "Neglectful", "Overbearing", "Indifferent"], 0, "Evidence shows she enforced rules but showed love through actions."),
+      makeQuestion("Comprehension Q6: The word 'abundant' in line 12 is closest in meaning to...", ["Scarce", "Plentiful", "Hidden", "Expensive"], 1, "Abundant means existing in large quantities."),
+      makeQuestion("Comprehension Q7: What can be inferred about the setting of the story?", ["Urban city", "Rural village", "Industrial town", "Coastal area"], 1, "References to farms and traditional life indicate a rural village."),
+      makeQuestion("Comprehension Q8: The relationship between Ade and Bola is best described as...", ["Rivalry", "Friendship", "Sibling rivalry", "Mentorship"], 1, "Their interactions show mutual support typical of friendship."),
+      makeQuestion("Comprehension Q9: The climax of the passage occurs when...", ["The storm hits", "The decision is made", "The truth is revealed", "The journey begins"], 2, "The revelation scene creates the highest tension point."),
+      makeQuestion("Comprehension Q10: Which of the following best summarizes the passage?", ["A journey of self-discovery", "A political struggle", "A romantic tale", "A historical account"], 0, "The narrative arc follows the protagonist's personal growth."),
+      makeQuestion("Comprehension Q11: The phrase 'weighed heavily on his conscience' implies...", ["Physical weight", "Guilt", "Responsibility", "Fatigue"], 1, "It is a metaphorical expression indicating guilt."),
+      makeQuestion("Comprehension Q12: The author's purpose in writing this passage is primarily to...", ["Entertain", "Persuade", "Inform", "Criticize"], 0, "The narrative structure and descriptive elements aim to entertain."),
+      makeQuestion("Comprehension Q13: What does the description of the weather in paragraph 3 foreshadow?", ["Good fortune", "Upcoming conflict", "Peaceful resolution", "Character death"], 1, "Dark clouds gathering typically foreshadow trouble."),
+      makeQuestion("Comprehension Q14: The character's final action demonstrates...", ["Cowardice", "Bravery", "Wisdom", "Foolishness"], 1, "Facing fears despite risks shows bravery."),
+      makeQuestion("Comprehension Q15: The theme of the passage centers on...", ["Technology vs tradition", "Man vs nature", "Self-discovery", "Political freedom"], 2, "The protagonist's internal journey is central."),
+      makeQuestion("Choose the option nearest in meaning to the underlined word: The principal commended the diligent student.",["lazy","hardworking","careless","rude"],1,"Diligent means hardworking."),
+      makeQuestion("Choose the correct spelling.",["Accomodation","Accommodation","Acommodation","Acomodation"],1,"The correct spelling is Accommodation."),
+      makeQuestion("Select the option that best completes the sentence: Neither the teacher nor the students ___ present.",["was","were","is","be"],1,"The verb agrees with the nearer subject: students were."),
+      makeQuestion("Choose the antonym of 'ancient'.",["modern","old","primitive","aged"],0,"Ancient is opposite of modern."),
+      makeQuestion("Identify the grammatically correct sentence.",["He doesn't knows me.","He don't know me.","He doesn't know me.","He not know me."],2,"'He doesn't know me' is correct."),
+      makeQuestion("Choose the correct interpretation of the idiom: 'To hit the nail on the head'",["To make a mistake","To say exactly the right thing","To become angry","To work hard"],1,"It means to state something exactly right."),
+      makeQuestion("Choose the word that best completes the sentence: The committee has submitted ___ report.",["it's","its","it is","it has"],1,"'Its' is the possessive form."),
+      makeQuestion("From the words lettered A to D, choose the one with the same vowel sound as the underlined letters in 'seat'.",["said","set","beat","debt"],2,"'Seat' and 'beat' share the /i:/ sound."),
+      makeQuestion("Choose the most appropriate summary of this proverb: A stitch in time saves nine.",["Tailoring is important","Quick action prevents bigger problems","Nine is a lucky number","Time is money"],1,"The proverb means timely action prevents greater difficulty."),
+      makeQuestion("Select the correct option: If she had studied, she ___ the exam.",["passes","would pass","would have passed","will pass"],2,"Third conditional takes 'would have passed'."),
+      makeQuestion("Choose the punctuation mark needed: What a beautiful day___",[".","!","?",","],1,"An exclamation mark fits an exclamatory sentence."),
+      makeQuestion("Choose the option nearest in meaning to: The witness's statement was ambiguous.",["clear","uncertain","brief","honest"],1,"Ambiguous means unclear or uncertain."),
+      makeQuestion("Pick the correctly spelt word.",["Definately","Definitely","Definetely","Definatly"],1,"The correct spelling is Definitely."),
+      makeQuestion("Choose the correct form: She prefers tea ___ coffee.",["than","to","from","with"],1,"The expression is 'prefers ... to ...'."),
+      makeQuestion("Identify the sentence with correct concord.",["The news are good.","The news is good.","The news were good.","The news have been good."],1,"'News' takes a singular verb here."),
+      makeQuestion("Choose the antonym of 'expand'.",["stretch","enlarge","contract","increase"],2,"Expand is opposite of contract."),
+      makeQuestion("Choose the word that best fills the gap: The police have been trying to ___ the mystery.",["solve","dissolve","answer","reply"],0,"A mystery is solved."),
+      makeQuestion("Select the idiomatic meaning of 'once in a blue moon'.",["twice a year","very rarely","every evening","unexpectedly"],1,"It means very rarely."),
+      makeQuestion("Choose the word with the same consonant sound as the underlined letter in 'judge'.",["gate","jar","cold","goal"],1,"'Judge' and 'jar' begin with /dʒ/."),
+      makeQuestion("Complete the sentence: Hardly had he arrived ___ the rain started.",["than","when","that","then"],1,"The pattern is 'Hardly had ... when ...'."),
+      makeQuestion("Choose the correct stress pattern for 'photography'.",["pho-TO-gra-phy","PHO-to-gra-phy","pho-to-GRA-phy","pho-to-gra-PHY"],1,"Stress falls on the second syllable."),
+      makeQuestion("Select the word that rhymes with 'weight'.",["wait","wet","what","wit"],0,"'Weight' and 'wait' are homophones."),
+      makeQuestion("Choose the correct passive form: The chef cooked the meal.",["The meal is cooked by the chef","The meal was cooked by the chef","The meal has been cooked by the chef","The meal had been cooked by the chef"],1,"Simple past passive: was + past participle."),
+      makeQuestion("Identify the figure of speech: 'He is as brave as a lion.'",["Metaphor","Simile","Personification","Hyperbole"],1,"Explicit comparison using 'as' makes it a simile."),
+      makeQuestion("Choose the word class of 'quickly' in 'He ran quickly'.",["Adjective","Adverb","Verb","Noun"],1,"'Quickly' modifies the verb 'ran'."),
+      makeQuestion("Select the correct question tag: She is coming tomorrow, ___?",["is she","isn't she","does she","doesn't she"],1,"Positive statement takes a negative tag."),
+      makeQuestion("Choose the meaning of the phrasal verb 'give up'.",["Surrender","Continue","Accelerate","Postpone"],0,"'Give up' means to stop trying or surrender."),
+      makeQuestion("Identify the error: 'Each of the boys are here.'",["Each","of","the boys","are"],3,"'Each' takes a singular verb: 'is here'."),
+      makeQuestion("Choose the correct order of adjectives: She bought ___ dress.",["a beautiful red silk","a red beautiful silk","a silk red beautiful","red a beautiful silk"],0,"Opinion → color → material is the standard order."),
+      makeQuestion("Select the appropriate word: The ___ of the stolen property was arrested.",["receiver","recipient","beneficiary","heir"],0,"Receiver handles stolen goods."),
+      makeQuestion("Choose the synonym of 'prudent'.",["Reckless","Careful","Extravagant","Hasty"],1,"Prudent means careful and wise."),
+      makeQuestion("Complete with the right preposition: The book consists ___ ten chapters.",["of","with","in","from"],0,"'Consists of' is the correct collocation."),
+      makeQuestion("Identify the type of clause: 'When the rain stopped, we went out.'",["Noun clause","Adjectival clause","Adverbial clause","Main clause"],2,"It indicates time, so it is an adverbial clause."),
+      makeQuestion("Choose the correct indirect speech: He said, 'I am tired.'",["He said that he is tired","He said that he was tired","He said that I am tired","He says that he was tired"],1,"Backshift of tense in reported speech."),
+      makeQuestion("Select the appropriate conjunction: ___ it rained, we stayed home.",["Because","Although","Unless","Until"],0,"Causal relationship requires 'Because'."),
+      makeQuestion("Choose the word opposite in meaning to 'transparent'.",["Clear","Opaque","Visible","Bright"],1,"Transparent is opposite of opaque."),
+      makeQuestion("Identify the sentence type: 'What a wonderful performance!'",["Declarative","Interrogative","Imperative","Exclamatory"],3,"The sentence is exclamatory."),
+      makeQuestion("Choose the correct plural form: 'child'",["childs","children","childes","childen"],1,"Irregular plural: children."),
+      makeQuestion("Select the word with the correct spelling.",["Ocurrence","Occurrence","Occurence","Ocurence"],1,"The correct spelling is Occurrence."),
+      makeQuestion("Choose the appropriate modal: You ___ obey traffic rules.",["can","may","must","might"],2,"Obligation requires 'must'."),
+      makeQuestion("Identify the antecedent of the pronoun: 'The students finished their work.'",["finished","students","work","their"],1,"'Their' refers to 'students'."),
+      makeQuestion("Choose the correct form: If I ___ you, I would accept.",["am","was","were","be"],2,"Subjunctive mood uses 'were'."),
+      makeQuestion("Select the meaning of 'cut corners'.",["Take shortcuts","Be thorough","Spend more","Work carefully"],0,"It means to do something cheaply or quickly."),
+      makeQuestion("Choose the correct article: ___ European visited us.",["A","An","The","No article"],0,"'European' begins with the consonant sound /j/."),
+      makeQuestion("Identify the voice: 'The letter was written by John.'",["Active","Passive","Reflexive","Reciprocal"],1,"It is in the passive voice."),
+      makeQuestion("Choose the word that best completes: The ___ of the mountain was breathtaking.",["high","height","tall","taller"],1,"The noun form required is 'height'.")
+    ];
