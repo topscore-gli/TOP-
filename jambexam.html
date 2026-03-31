@@ -545,3 +545,590 @@
       makeQuestion("Calculate the total capacitance when two 6μF capacitors are connected in series.",["3μF","6μF","12μF","36μF"],0,"1/C = 1/6 + 1/6 = 1/3, so C = 3μF."),
       makeQuestion("The wave pattern shown in the diagram above illustrates:",["Diffraction","Interference","Reflection","Refraction"],1,"The pattern shown is interference.","https://placeholder.com/interference.png")
     ];
+
+    class SeededRandom {
+      constructor(seed) {
+        this.seed = this.hashString(seed);
+      }
+      hashString(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+          hash = ((hash << 5) - hash) + str.charCodeAt(i);
+          hash |= 0;
+        }
+        return Math.abs(hash);
+      }
+      next() {
+        this.seed = (this.seed  9301 + 49297) % 233280;
+        return this.seed / 233280;
+      }
+      shuffleArray(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(this.next()  (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+    }
+    function expandQuestionsSmart(baseArray, target, subject, seed) {
+      const rng = new SeededRandom(seed + '_' + subject);
+      const working = [...baseArray];
+      while (working.length < target) {
+        const base = baseArray[working.length % baseArray.length];
+        working.push({ ...base, o: [...base.o] });
+      }
+      if (subject === 'english' && working.length >= CONFIG.COMPREHENSION_COUNT) {
+        const comprehension = working.slice(0, CONFIG.COMPREHENSION_COUNT);
+        const general = working.slice(CONFIG.COMPREHENSION_COUNT);
+        const shuffledGeneral = rng.shuffleArray(general);
+        return [...comprehension, ...shuffledGeneral].slice(0, target).map((q, idx) => ({ ...q, originalIndex: idx }));
+      }
+      return rng.shuffleArray(working).slice(0, target).map((q, idx) => ({ ...q, originalIndex: idx }));
+    }
+    function debounce(fn, delay = 300) {
+      let t;
+      return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn(...args), delay);
+      };
+    }
+    function getDeviceToken() {
+      let token = localStorage.getItem('topscore_device_token');
+      if (!token) {
+        token = crypto.randomUUID ? crypto.randomUUID() : 'dev-' + Math.random().toString(36).slice(2) + Date.now();
+        localStorage.setItem('topscore_device_token', token);
+      }
+      return token;
+    }
+    async function checkAccessCode(accessCode, deviceToken) {
+      const cleanCode = accessCode.trim().toUpperCase();
+      const codeRef = ref(db, quiz_access_codes/${cleanCode});
+      const snap = await get(codeRef);
+      if (!snap.exists()) {
+        return { ok: false, message: 'Invalid access code.' };
+      }
+      const data = snap.val();
+      const allowedQuizIds = [CONFIG.EXAM_ID, 'jamb-pro-cbt-2026'];
+      if (data.quizId && !allowedQuizIds.includes(data.quizId)) {
+        return { ok: false, message: 'This code does not match this exam.' };
+      }
+      if (data.status === 'revoked') {
+        return { ok: false, message: 'This code has been revoked.' };
+      }
+      if (data.expiresAt && new Date(data.expiresAt) < new Date()) {
+        return { ok: false, message: 'This code has expired.' };
+      }
+      if (data.status === 'unused' || !data.status) {
+        await update(codeRef, {
+          status: 'active',
+          deviceToken,
+          activatedAt: new Date().toISOString(),
+          lastSeenAt: new Date().toISOString(),
+          quizId: CONFIG.EXAM_ID
+        });
+        return { ok: true, message: 'Access granted. Device linked.' };
+      }
+      if (data.status === 'active' && data.deviceToken === deviceToken) {
+        await update(codeRef, {
+          lastSeenAt: new Date().toISOString(),
+          quizId: CONFIG.EXAM_ID
+        });
+        return { ok: true, message: 'Welcome back.' };
+      }
+      return { ok: false, message: 'This code is already active on another device.' };
+    }
+    function inEntryWindow() {
+      const now = new Date();
+      const start = new Date(now);
+      const end = new Date(now);
+      start.setHours(CONFIG.START_HOUR, 0, 0, 0);
+      end.setHours(CONFIG.END_HOUR, 0, 0, 0);
+      return now >= start && now <= end;
+    }
+    let state = {
+      candidate: '',
+      code: '',
+      elective: 'mathematics',
+      subjects: {},
+      order: [],
+      currentSubject: 'english',
+      currentIndex: 0,
+      time: CONFIG.TIME,
+      timer: null,
+      submitted: false,
+      enteredDuringWindow: false,
+      shuffleSeed: ''
+    };
+    function showMsg(text, type) {
+      const m = $('msg');
+      m.textContent = text;
+      m.className = 'msg show ' + type;
+    }
+    function buildSubjects() {
+      state.shuffleSeed = CONFIG.SHUFFLE_SEED_PREFIX + state.code + '_' + state.candidate.replace(/s/g, '');
+      state.order = ['english', state.elective, 'chemistry', 'physics'];
+      state.subjects = {
+        english: { data: expandQuestionsSmart(ENGLISH_BASE, 60, 'english', state.shuffleSeed), ans: new Array(60).fill(null) },
+        [state.elective]: { data: expandQuestionsSmart(state.elective === 'mathematics' ? MATH_BASE : BIO_BASE, 40, state.elective, state.shuffleSeed), ans: new Array(40).fill(null) },
+        chemistry: { data: expandQuestionsSmart(CHEM_BASE, 40, 'chemistry', state.shuffleSeed), ans: new Array(40).fill(null) },
+        physics: { data: expandQuestionsSmart(PHYS_BASE, 40, 'physics', state.shuffleSeed), ans: new Array(40).fill(null) }
+      };
+    }
+    const totalQuestions = () => state.order.reduce((n, s) => n + state.subjects[s].data.length, 0);
+    const totalAnswered = () => state.order.reduce((n, s) => n + state.subjects[s].ans.filter(v => v !== null).length, 0);
+    const currentPack = () => state.subjects[state.currentSubject];
+    function renderSubjectBar() {
+      const bar = $('subjectBar');
+      bar.innerHTML = '';
+      state.order.forEach(sub => {
+        const answered = state.subjects[sub].ans.filter(x => x !== null).length;
+        const total = state.subjects[sub].data.length;
+        const b = document.createElement('button');
+        b.className = 'subject-btn' + (state.currentSubject === sub ? ' active' : '');
+        b.innerHTML = ${SUBJECT_META[sub].label}<span class="mini">${answered}/${total}</span>;
+        b.addEventListener('click', () => switchSubject(sub));
+        bar.appendChild(b);
+      });
+    }
+    function switchSubject(sub) {
+      state.currentSubject = sub;
+      if (state.currentIndex >= state.subjects[sub].data.length) state.currentIndex = 0;
+      render();
+      saveProgressDebounced();
+    }
+    function updateTimer() {
+      const h = Math.floor(state.time / 3600);
+      const m = Math.floor((state.time % 3600) / 60);
+      const s = state.time % 60;
+      const el = $('timer');
+      el.textContent = ⏱️ ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')};
+      let cls = 'timer';
+      if (state.time < 300) cls += ' warn';
+      if (state.time < 60) cls += ' danger';
+      el.className = cls;
+    }
+    function startTimer() {
+      if (state.timer) clearInterval(state.timer);
+      updateTimer();
+      state.timer = setInterval(() => {
+        if (state.time > 0) {
+          state.time--;
+          updateTimer();
+          if (state.time % CONFIG.SAVE_INTERVAL_SECONDS === 0) saveProgress();
+        } else {
+          submit(true);
+        }
+      }, 1000);
+    }
+    function render() {
+      renderSubjectBar();
+      const pack = currentPack();
+      const q = pack.data[state.currentIndex];
+      const done = totalAnswered();
+      const total = totalQuestions();
+      const meta = SUBJECT_META[state.currentSubject];
+      $('pbar').style.width = (done / total * 100) + '%';
+      $('ptxt').textContent = ${done}/${total};
+      let sectionText = ${meta.label} • Question ${state.currentIndex + 1}/${pack.data.length};
+      if (state.currentSubject === 'english' && state.currentIndex < CONFIG.COMPREHENSION_COUNT) {
+        sectionText += ' (Comprehension)';
+      }
+      $('stype').textContent = sectionText;
+      $('question').textContent = q.q;
+      const qImg = $('qImage');
+      if (q.img) {
+        qImg.src = q.img;
+        qImg.style.display = 'block';
+        qImg.onerror = () => { qImg.style.display = 'none'; };
+      } else {
+        qImg.removeAttribute('src');
+        qImg.style.display = 'none';
+      }
+      const opts = $('opts');
+      opts.innerHTML = '';
+      q.o.forEach((o, i) => {
+        const d = document.createElement('div');
+        d.className = 'opt' + (pack.ans[state.currentIndex] === i ? ' sel' : '');
+        const mark = document.createElement('div');
+        mark.className = 'opt-mark';
+        mark.textContent = String.fromCharCode(65 + i);
+        const p = document.createElement('p');
+        p.textContent = o;
+        d.append(mark, p);
+        if (q.optImgs && q.optImgs[i]) {
+          const img = document.createElement('img');
+          img.src = q.optImgs[i];
+          img.className = 'opt-image';
+          img.loading = 'lazy';
+          img.onerror = () => { img.style.display = 'none'; };
+          d.appendChild(img);
+        }
+        d.addEventListener('click', () => select(i));
+        opts.appendChild(d);
+      });
+      $('prevBtn').disabled = state.currentIndex === 0;
+      const isLast = state.currentIndex === pack.data.length - 1;
+      const isLastSubject = state.order.indexOf(state.currentSubject) === state.order.length - 1;
+      $('nextBtn').textContent = isLast && !isLastSubject ? 'Next Subject →' : (isLast ? 'Review →' : 'Next →');
+      $('calcBtn').style.display = meta.hasCalc ? 'flex' : 'none';
+    }
+    function select(i) {
+      currentPack().ans[state.currentIndex] = i;
+      render();
+      saveProgressDebounced();
+    }
+    function next() {
+      const pack = currentPack();
+      if (state.currentIndex < pack.data.length - 1) {
+        state.currentIndex++;
+        render();
+        saveProgressDebounced();
+        return;
+      }
+      const pos = state.order.indexOf(state.currentSubject);
+      if (pos < state.order.length - 1) {
+        state.currentSubject = state.order[pos + 1];
+        state.currentIndex = 0;
+        render();
+        saveProgressDebounced();
+        return;
+      }
+      const unans = totalQuestions() - totalAnswered();
+      if (unans > 0 && !confirm(${unans} question(s) unanswered. Submit anyway?)) {
+        showPop();
+        return;
+      }
+      submit(false);
+    }
+    function prev() {
+      if (state.currentIndex > 0) {
+        state.currentIndex--;
+        render();
+        saveProgressDebounced();
+      }
+    }
+    function showPop() {
+      const wrap = $('pgridWrap');
+      wrap.innerHTML = '';
+      state.order.forEach(sub => {
+        const block = document.createElement('div');
+        block.className = 'sub-block';
+        const label = document.createElement('div');
+        label.className = 'sub-label';
+        label.textContent = SUBJECT_META[sub].label;
+        block.appendChild(label);
+        const grid = document.createElement('div');
+        grid.className = 'pop-grid';
+        state.subjects[sub].data.forEach((q, i) => {
+          const b = document.createElement('button');
+          b.textContent = i + 1;
+          if (state.subjects[sub].ans[i] !== null) b.classList.add('ans');
+          if (sub === state.currentSubject && i === state.currentIndex) b.classList.add('cur');
+          if (sub === 'english' && i < CONFIG.COMPREHENSION_COUNT) {
+            b.classList.add('comp');
+            b.title = 'Comprehension';
+          }
+          b.addEventListener('click', () => {
+            state.currentSubject = sub;
+            state.currentIndex = i;
+            hidePop();
+            render();
+            saveProgressDebounced();
+          });
+          grid.appendChild(b);
+        });
+        block.appendChild(grid);
+        wrap.appendChild(block);
+      });
+      $('pop').classList.add('show');
+    }
+    function hidePop(e) {
+      if (!e || e.target.id === 'pop') $('pop').classList.remove('show');
+    }
+    function computeScores() {
+      const rows = [];
+      let totalCorrect = 0;
+      let totalCount = 0;
+      state.order.forEach(sub => {
+        const pack = state.subjects[sub];
+        let correct = 0;
+        pack.data.forEach((q, i) => {
+          if (pack.ans[i] === q.a) correct++;
+        });
+        rows.push({ subject: SUBJECT_META[sub].label, correct, total: pack.data.length });
+        totalCorrect += correct;
+        totalCount += pack.data.length;
+      });
+      return { rows, totalCorrect, totalCount };
+    }
+    function saveProgress() {
+      sessionStorage.setItem(CONFIG.SAVE_KEY, JSON.stringify({
+        candidate: state.candidate,
+        code: state.code,
+        elective: state.elective,
+        subjects: state.subjects,
+        order: state.order,
+        currentSubject: state.currentSubject,
+        currentIndex: state.currentIndex,
+        time: state.time,
+        submitted: state.submitted,
+        enteredDuringWindow: state.enteredDuringWindow,
+        shuffleSeed: state.shuffleSeed,
+        ts: Date.now()
+      }));
+    }
+    function submit(timeout = false) {
+      if (state.submitted) return;
+      clearInterval(state.timer);
+      state.submitted = true;
+      saveProgress();
+      const scores = computeScores();
+      $('quiz').style.display = 'none';
+      $('res').style.display = 'flex';
+      $('res').classList.add('show');
+      $('rscore').textContent = String(scores.totalCorrect);
+      $('rtitle').textContent = timeout ? '⏰ Time Up!' : 'Examination Submitted';
+      $('rmsg').innerHTML = <strong>${state.candidate}</strong><br>Subject scores and total score are shown below.;
+      const table = $('scoreTable');
+      table.innerHTML = '';
+      scores.rows.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = <td>${r.subject}</td><td>${r.correct}/${r.total}</td>;
+        table.appendChild(tr);
+      });
+      const tr = document.createElement('tr');
+      tr.className = 'total';
+      tr.innerHTML = <td>Total Score</td><td>${scores.totalCorrect}/${scores.totalCount}</td>;
+      table.appendChild(tr);
+    }
+    function showDet() {
+      const c = $('dcont');
+      c.innerHTML = '';
+      const scores = computeScores();
+      const sum = document.createElement('div');
+      sum.className = 'det-summary';
+      sum.innerHTML = <div class="big">${scores.totalCorrect}/${scores.totalCount}</div><div>${state.candidate} • Detailed Review</div>;
+      c.appendChild(sum);
+      state.order.forEach(sub => {
+        const head = document.createElement('div');
+        head.style.cssText = 'margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+        head.innerHTML = <strong>${SUBJECT_META[sub].label}</strong>;
+        c.appendChild(head);
+        state.subjects[sub].data.forEach((q, i) => {
+          const ans = state.subjects[sub].ans[i];
+          const ok = ans === q.a;
+          const d = document.createElement('div');
+          d.className = 'det-item' + (ok ? ' ok' : '');
+          const imgHtml = q.img ? <img src="${q.img}" class="q-img" onerror="this.style.display='none'"> : '';
+          d.innerHTML = 
+            <h4>${SUBJECT_META[sub].label} • Question ${i + 1}${sub === 'english' && i < CONFIG.COMPREHENSION_COUNT ? ' (Comprehension)' : ''}</h4>
+            <div class="q-text">${q.q}</div>
+            ${imgHtml}
+            <div class="ans-row"><strong>Your answer:</strong> ${ans !== null ? String.fromCharCode(65 + ans) + ') ' + q.o[ans] : 'Not answered'}</div>
+            <div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65 + q.a) + ') ' + q.o[q.a]}</div>
+            <div class="exp">${q.e}</div>
+          ;
+          c.appendChild(d);
+        });
+      });
+      $('res').classList.remove('show');
+      $('res').style.display = 'none';
+      $('det').style.display = 'block';
+    }
+    function hideDet() {
+      $('det').style.display = 'none';
+      $('res').style.display = 'flex';
+      $('res').classList.add('show');
+    }
+    function toggleTheme() {
+      document.body.classList.toggle('light');
+      localStorage.setItem('jamb_exam_theme', document.body.classList.contains('light') ? 'light' : 'dark');
+    }
+    function restart() {
+      if (!confirm('Start a new examination? All progress will be cleared.')) return;
+      sessionStorage.removeItem(CONFIG.SAVE_KEY);
+      localStorage.removeItem(CONFIG.AUTH_KEY);
+      location.reload();
+    }
+    function exitExam() {
+      if (confirm('Exit exam? Your progress will be saved.')) {
+        saveProgress();
+        location.reload();
+      }
+    }
+    async function startExam() {
+      buildSubjects();
+      state.currentSubject = 'english';
+      state.currentIndex = 0;
+      state.time = CONFIG.TIME;
+      state.submitted = false;
+      state.enteredDuringWindow = true;
+      $('access').style.display = 'none';
+      $('quiz').style.display = 'block';
+      $('examTitle').textContent = JAMB CBT EXAMINATION • ${state.candidate};
+      startTimer();
+      render();
+      saveProgress();
+    }
+    async function unlockAndStart() {
+      const name = $('candidateName').value.trim();
+      const code = $('code').value.trim().toUpperCase();
+      const elective = $('elective').value;
+      const btn = $('unlockBtn');
+      if (!name) {
+        showMsg('Enter candidate name', 'err');
+        return;
+      }
+      if (code.length !== 8 || !/^[A-Z0-9]{8}$/.test(code)) {
+        showMsg('Enter a valid 8-character access code', 'err');
+        return;
+      }
+      if (!inEntryWindow()) {
+        showMsg('Exam entry is only allowed between 12:00 PM and 2:00 PM.', 'err');
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = 'Checking...';
+      try {
+        const result = await checkAccessCode(code, getDeviceToken());
+        if (!result.ok) {
+          showMsg(result.message || 'Access denied.', 'err');
+          return;
+        }
+        state.candidate = name;
+        state.code = code;
+        state.elective = elective;
+        localStorage.setItem(CONFIG.AUTH_KEY, code);
+        showMsg(result.message || 'Access granted.', 'ok');
+        setTimeout(startExam, 250);
+      } catch (err) {
+        showMsg('Network error. Please try again.', 'err');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Start Examination';
+      }
+    }
+    async function tryAutoAccess() {
+      const savedCode = localStorage.getItem(CONFIG.AUTH_KEY);
+      const saved = sessionStorage.getItem(CONFIG.SAVE_KEY);
+      if (!savedCode || !saved) return false;
+      try {
+        const result = await checkAccessCode(savedCode, getDeviceToken());
+        if (!result.ok) return false;
+        const d = JSON.parse(saved);
+        if (d.submitted) return false;
+        state = { ...state, ...d };
+        $('access').style.display = 'none';
+        $('quiz').style.display = 'block';
+        $('examTitle').textContent = JAMB CBT EXAMINATION • ${state.candidate};
+        startTimer();
+        render();
+        return true;
+      } catch {
+        return false;
+      }
+    }
+    let calcExpression = '0';
+    let calcNewNumber = true;
+    function toggleCalc(e) {
+      if (e && e.target && e.target !== e.currentTarget && !e.target.dataset.calc) return;
+      const overlay = $('calcOverlay');
+      if (overlay.classList.contains('show')) {
+        overlay.classList.remove('show');
+      } else if (SUBJECT_META[state.currentSubject]?.hasCalc) {
+        overlay.classList.add('show');
+      }
+    }
+    function calcInput(val) {
+      const display = $('calcDisplay');
+      if (calcNewNumber && !isNaN(val)) {
+        calcExpression = val === '.' ? '0.' : val;
+        calcNewNumber = false;
+      } else {
+        if (calcExpression === '0' && val !== '.') calcExpression = val;
+        else calcExpression += val;
+      }
+      display.value = calcExpression;
+    }
+    function calcClear() {
+      calcExpression = '0';
+      calcNewNumber = true;
+      $('calcDisplay').value = '0';
+    }
+    function calcBack() {
+      if (calcExpression.length > 1) calcExpression = calcExpression.slice(0, -1);
+      else {
+        calcExpression = '0';
+        calcNewNumber = true;
+      }
+      $('calcDisplay').value = calcExpression;
+    }
+    function calcEqual() {
+      try {
+        const safeExpr = calcExpression.replace(/[^0-9+-*/.()]/g, '');
+        if (!safeExpr) return;
+        const result = Function("use strict"; return (${safeExpr}))();
+        const formatted = Number.isFinite(result) ? parseFloat(Number(result).toFixed(8)) : 'Error';
+        calcExpression = String(formatted);
+        calcNewNumber = true;
+        $('calcDisplay').value = calcExpression;
+      } catch {
+        $('calcDisplay').value = 'Error';
+        calcExpression = '0';
+        calcNewNumber = true;
+      }
+    }
+    function initCalcButtons() {
+      document.querySelectorAll('[data-calc]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const action = btn.dataset.calc;
+          if (action === 'clear') return calcClear();
+          if (action === 'back') return calcBack();
+          if (action === 'equal') return calcEqual();
+          calcInput(action);
+        });
+      });
+    }
+    function initEvents() {
+      $('unlockBtn').addEventListener('click', unlockAndStart);
+      $('prevBtn').addEventListener('click', prev);
+      $('nextBtn').addEventListener('click', next);
+      $('navPopBtn').addEventListener('click', showPop);
+      $('submitBtn').addEventListener('click', () => submit(false));
+      $('exitBtn').addEventListener('click', exitExam);
+      $('themeBtn').addEventListener('click', toggleTheme);
+      $('calcBtn').addEventListener('click', toggleCalc);
+      $('calcOverlay').addEventListener('click', toggleCalc);
+      $('closePopBtn').addEventListener('click', () => hidePop());
+      $('pop').addEventListener('click', hidePop);
+      $('showDetBtn').addEventListener('click', showDet);
+      $('restartBtn').addEventListener('click', restart);
+      $('hideDetBtn').addEventListener('click', hideDet);
+      $('printBtn').addEventListener('click', () => window.print());
+      $('code').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') unlockAndStart();
+      });
+      document.addEventListener('keydown', (e) => {
+        const calcOverlay = $('calcOverlay');
+        if (!calcOverlay.classList.contains('show')) return;
+        const key = e.key;
+        if (/[0-9.]/.test(key)) calcInput(key);
+        if (['+', '-', '*', '/'].includes(key)) calcInput(key);
+        if (key === 'Enter' || key === '=') { e.preventDefault(); calcEqual(); }
+        if (key === 'Escape') calcClear();
+        if (key === 'Backspace') calcBack();
+      });
+    }
+    async function init() {
+      if (localStorage.getItem('jamb_exam_theme') === 'light') document.body.classList.add('light');
+      initCalcButtons();
+      initEvents();
+      const auto = await tryAutoAccess();
+      $('load').classList.add('hide');
+      if (!auto) $('access').style.display = 'flex';
+    }
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
