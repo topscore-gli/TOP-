@@ -595,3 +595,787 @@
       makeQuestion("The splitting of white light into colours is called:",["reflection","dispersion","refraction","diffusion"],1,"Splitting white light is dispersion."),
       // Additional 20 with images
       makeQuestion("Calculate the resistance in the circuit shown above (V=12V, I=3A).",["3Ω","4Ω","9Ω","36Ω"],1,"R = V
+            makeQuestion("Calculate the resistance in the circuit shown above (V=12V, I=3A).",["3Ω","4Ω","9Ω","36Ω"],1,"R = V/I = 12/3 = 4Ω.", "https://placeholder.com/circuit.png"),
+      makeQuestion("Find the work done when a force of 10N moves an object through 5m in the direction of the force.",["2J","15J","50J","100J"],2,"Work = Force × distance = 10 × 5 = 50J.", null),
+      makeQuestion("The diagram above shows a lever system. Calculate the mechanical advantage if load = 40N and effort = 10N.",["2","4","8","16"],1,"M.A = Load/Effort = 40/10 = 4.", "https://placeholder.com/lever.png"),
+      makeQuestion("Using the graph above, find the total distance traveled in the first 10 seconds.",["20m","40m","60m","80m"],2,"Area under velocity-time graph = distance.", "https://placeholder.com/vtgraph.png"),
+      makeQuestion("Calculate the heat energy required to raise the temperature of 2kg of water by 10°C (specific heat capacity = 4200 J/kg°C).",["8400J","42000J","84000J","420000J"],2,"Q = mcΔθ = 2 × 4200 × 10 = 84000J.", null),
+      makeQuestion("The ray diagram above shows that when light passes from air to glass, it:",["Speeds up","Slows down","Bends away from normal","Does not refract"],1,"Light slows down when entering denser medium.", "https://placeholder.com/refraction.png"),
+      makeQuestion("Find the power dissipated in a 5Ω resistor carrying 2A current.",["10W","20W","40W","100W"],1,"P = I²R = 4 × 5 = 20W.", null),
+      makeQuestion("The transformer shown above has 100 turns in the primary and 500 turns in the secondary. If input voltage is 240V, output voltage is:",["48V","120V","600V","1200V"],2,"Vs/Vp = Ns/Np → Vs = 240 × 500/100 = 1200V.", "https://placeholder.com/transformer.png"),
+      makeQuestion("Calculate the wavelength of a wave with frequency 50Hz and speed 340m/s.",["6.8m","17m","6.8m/s","17m/s"],0,"λ = v/f = 340/50 = 6.8m.", null),
+      makeQuestion("The electric field pattern shown in the diagram above represents:",["Single positive charge","Single negative charge","Two like charges","Two opposite charges"],3,"Lines from positive to negative indicate opposite charges.", "https://placeholder.com/field.png"),
+      makeQuestion("A car of mass 1000kg accelerates from rest to 20m/s in 10s. Calculate the force exerted.",["500N","1000N","2000N","5000N"],2,"F = ma = 1000 × (20/10) = 2000N.", null),
+      makeQuestion("The pendulum bob in the diagram above has maximum potential energy at position:",["A","B","C","D"],0,"Maximum height at A gives maximum potential energy.", "https://placeholder.com/pendulum.png"),
+      makeQuestion("Calculate the refractive index when light passes from air to medium where angle of incidence is 45° and angle of refraction is 30°.",["1.22","1.41","1.73","2.00"],1,"n = sin i / sin r = sin45°/sin30° = 0.707/0.5 = 1.41.", null),
+      makeQuestion("The logic gate shown in the diagram above outputs 1 when:",["Both inputs are 0","Either input is 1","Both inputs are 1","Either input is 0"],2,"AND gate requires both inputs to be 1 for output 1.", "https://placeholder.com/logic.png"),
+      makeQuestion("Find the efficiency of a machine that requires 500J input to produce 400J useful output.",["20%","40%","80%","125%"],2,"Efficiency = (output/input) × 100% = 80%.", null),
+      makeQuestion("The nuclear reaction shown above represents:",["Nuclear fission","Nuclear fusion","Radioactive decay","Chain reaction"],0,"Splitting of heavy nucleus into lighter ones is fission.", "https://placeholder.com/fission.png"),
+      makeQuestion("Calculate the pressure at a depth of 10m in water (density = 1000kg/m³, g = 10m/s²).",["1000Pa","10000Pa","100000Pa","1000000Pa"],2,"P = ρgh = 1000 × 10 × 10 = 100000Pa.", null),
+      makeQuestion("The lens formula 1/f = 1/u + 1/v is shown in the diagram. If u = 15cm and f = 10cm, find v.",["6cm","20cm","30cm","60cm"],2,"1/v = 1/10 - 1/15 = 1/30 → v = 30cm.", "https://placeholder.com/lens.png"),
+      makeQuestion("Calculate the total capacitance when two 6μF capacitors are connected in series.",["3μF","6μF","12μF","36μF"],0,"1/C = 1/6 + 1/6 = 1/3 → C = 3μF.", null),
+      makeQuestion("The wave pattern shown in the diagram above illustrates:",["Diffraction","Interference","Reflection","Refraction"],1,"Constructive and destructive interference pattern shown.", "https://placeholder.com/interference.png")
+    ];
+
+    // ============================================
+    // SHUFFLING SYSTEM (Deterministic per-user)
+    // ============================================
+
+    // Seeded random number generator for reproducible shuffling
+    class SeededRandom {
+      constructor(seed) {
+        this.seed = this.hashString(seed);
+      }
+      
+      hashString(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+          const char = str.charCodeAt(i);
+          hash = ((hash << 5) - hash) + char;
+          hash = hash & hash;
+        }
+        return Math.abs(hash);
+      }
+      
+      // Linear congruential generator
+      next() {
+        this.seed = (this.seed * 9301 + 49297) % 233280;
+        return this.seed / 233280;
+      }
+      
+      // Fisher-Yates shuffle with seed
+      shuffleArray(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(this.next() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+    }
+
+    // Smart question expansion with comprehension protection
+    function expandQuestionsSmart(baseArray, target, subject, seed) {
+      const rng = new SeededRandom(seed + "_" + subject);
+      let working = [...baseArray];
+      
+      // Ensure we have enough questions
+      while (working.length < target) {
+        const base = baseArray[working.length % baseArray.length];
+        working.push({...base, q: base.q, o: [...base.o]});
+      }
+      
+      // ENGLISH SPECIAL HANDLING: Keep comprehension questions (1-15) fixed
+      if (subject === 'english' && working.length >= CONFIG.COMPREHENSION_COUNT) {
+        const comprehension = working.slice(0, CONFIG.COMPREHENSION_COUNT); // Fixed order
+        const general = working.slice(CONFIG.COMPREHENSION_COUNT); // Shuffle these
+        
+        // Shuffle only the general questions (16 onwards)
+        const shuffledGeneral = rng.shuffleArray(general);
+        
+        // Reassemble: comprehension stays 1-15, shuffled follow
+        const result = [...comprehension, ...shuffledGeneral];
+        return result.slice(0, target).map((q, idx) => ({...q, originalIndex: idx}));
+      }
+      
+      // OTHER SUBJECTS: Full shuffle
+      const shuffled = rng.shuffleArray(working);
+      return shuffled.slice(0, target).map((q, idx) => ({...q, originalIndex: idx}));
+    }
+
+    // ============================================
+    // CALCULATOR SYSTEM
+    // ============================================
+
+    let calcDisplay = '0';
+    let calcExpression = '';
+    let calcNewNumber = true;
+
+    function toggleCalc(e) {
+      if (e && e.target !== e.currentTarget) return;
+      const overlay = document.getElementById('calcOverlay');
+      const btn = document.getElementById('calcBtn');
+      
+      if (overlay.classList.contains('show')) {
+        overlay.classList.remove('show');
+      } else {
+        // Only show for calc-enabled subjects
+        if (SUBJECT_META[state.currentSubject].hasCalc) {
+          overlay.classList.add('show');
+        }
+      }
+    }
+
+    function calcInput(val) {
+      const display = document.getElementById('calcDisplay');
+      
+      if (calcNewNumber && !isNaN(val)) {
+        calcExpression = val === '.' ? '0.' : val;
+        calcNewNumber = false;
+      } else {
+        if (calcExpression === '0' && val !== '.') {
+          calcExpression = val;
+        } else {
+          calcExpression += val;
+        }
+      }
+      
+      display.value = calcExpression;
+    }
+
+    function calcClear() {
+      calcExpression = '0';
+      calcNewNumber = true;
+      document.getElementById('calcDisplay').value = '0';
+    }
+
+    function calcBack() {
+      if (calcExpression.length > 1) {
+        calcExpression = calcExpression.slice(0, -1);
+      } else {
+        calcExpression = '0';
+        calcNewNumber = true;
+      }
+      document.getElementById('calcDisplay').value = calcExpression;
+    }
+
+    function calcEqual() {
+      try {
+        // Safe evaluation - only allow math operators and numbers
+        const safeExpr = calcExpression.replace(/[^0-9+\-*/.()]/g, '');
+        if (!safeExpr) return;
+        
+        const result = Function('"use strict"; return (' + safeExpr + ')')();
+        
+        // Format result
+        let formatted = parseFloat(result.toFixed(8));
+        if (!isFinite(formatted) || isNaN(formatted)) {
+          formatted = 'Error';
+        }
+        
+        calcExpression = String(formatted);
+        calcNewNumber = true;
+        document.getElementById('calcDisplay').value = calcExpression;
+      } catch (e) {
+        document.getElementById('calcDisplay').value = 'Error';
+        calcExpression = '0';
+        calcNewNumber = true;
+      }
+    }
+
+    // Keyboard support for calculator
+    document.addEventListener('keydown', (e) => {
+      const calcOverlay = document.getElementById('calcOverlay');
+      if (!calcOverlay.classList.contains('show')) return;
+      
+      const key = e.key;
+      if (/[0-9.]/.test(key)) calcInput(key);
+      if (['+', '-', '*', '/'].includes(key)) calcInput(key);
+      if (key === 'Enter' || key === '=') { e.preventDefault(); calcEqual(); }
+      if (key === 'Escape') calcClear();
+      if (key === 'Backspace') calcBack();
+    });
+
+    // ============================================
+    // EXAM SYSTEM FUNCTIONS
+    // ============================================
+
+    function getDeviceToken() {
+      let token = localStorage.getItem('topscore_device_token');
+      if (!token) {
+        token = crypto.randomUUID ? crypto.randomUUID() : 'dev-' + Math.random().toString(36).slice(2) + Date.now();
+        localStorage.setItem('topscore_device_token', token);
+      }
+      return token;
+    }
+
+    async function checkAccessCode(accessCode, deviceToken) {
+      const cleanCode = accessCode.trim().toUpperCase();
+      const codeRef = ref(db, `quiz_access_codes/${cleanCode}`);
+      const snap = await get(codeRef);
+
+      if (!snap.exists()) {
+        return { ok: false, status: 'invalid_code', message: 'Invalid access code.' };
+      }
+
+      const data = snap.val();
+
+      const allowedQuizIds = [CONFIG.EXAM_ID, "jamb-pro-cbt-2026"];
+      if (data.quizId && !allowedQuizIds.includes(data.quizId)) {
+        return { ok: false, status: 'wrong_quiz', message: 'This code does not match this exam.' };
+      }
+
+      if (data.status === 'revoked') {
+        return { ok: false, status: 'revoked', message: 'This code has been revoked.' };
+      }
+
+      if (data.expiresAt && new Date(data.expiresAt) < new Date()) {
+        return { ok: false, status: 'expired', message: 'This code has expired.' };
+      }
+
+      if (data.status === 'unused' || !data.status) {
+        await update(codeRef, {
+          status: 'active',
+          deviceToken: deviceToken,
+          activatedAt: new Date().toISOString(),
+          lastSeenAt: new Date().toISOString(),
+          quizId: CONFIG.EXAM_ID
+        });
+        return { ok: true, status: 'activated', message: 'Access granted. Device linked.' };
+      }
+
+      if (data.status === 'active' && data.deviceToken === deviceToken) {
+        await update(codeRef, {
+          lastSeenAt: new Date().toISOString(),
+          quizId: CONFIG.EXAM_ID
+        });
+        return { ok: true, status: 'recognized', message: 'Welcome back.' };
+      }
+
+      return {
+        ok: false,
+        status: 'locked_to_other_device',
+        message: 'This code is already active on another device.'
+      };
+    }
+
+    function inEntryWindow() {
+      const now = new Date();
+      const start = new Date(now);
+      start.setHours(CONFIG.START_HOUR, 0, 0, 0);
+      const end = new Date(now);
+      end.setHours(CONFIG.END_HOUR, 0, 0, 0);
+      return now >= start && now <= end;
+    }
+
+    // ============================================
+    // STATE MANAGEMENT
+    // ============================================
+
+    let state = {
+      candidate: '',
+      code: '',
+      elective: 'mathematics',
+      subjects: {},
+      order: [],
+      currentSubject: 'english',
+      currentIndex: 0,
+      time: CONFIG.TIME,
+      timer: null,
+      submitted: false,
+      enteredDuringWindow: false,
+      shuffleSeed: '' // Unique per candidate for consistent shuffling
+    };
+
+    function showMsg(t, type) {
+      const m = document.getElementById('msg');
+      m.textContent = t;
+      m.className = 'msg show ' + type;
+    }
+
+    function buildSubjects() {
+      // Create deterministic seed from candidate code
+      state.shuffleSeed = CONFIG.SHUFFLE_SEED_PREFIX + state.code + "_" + state.candidate.replace(/\s/g, '');
+      
+      state.order = ['english', state.elective, 'chemistry', 'physics'];
+      state.subjects = {
+        english: {
+          data: expandQuestionsSmart(ENGLISH_BASE, 60, 'english', state.shuffleSeed),
+          ans: new Array(60).fill(null)
+        },
+        [state.elective]: {
+          data: expandQuestionsSmart(state.elective === 'mathematics' ? MATH_BASE : BIO_BASE, 40, state.elective, state.shuffleSeed),
+          ans: new Array(40).fill(null)
+        },
+        chemistry: {
+          data: expandQuestionsSmart(CHEM_BASE, 40, 'chemistry', state.shuffleSeed),
+          ans: new Array(40).fill(null)
+        },
+        physics: {
+          data: expandQuestionsSmart(PHYS_BASE, 40, 'physics', state.shuffleSeed),
+          ans: new Array(40).fill(null)
+        }
+      };
+    }
+
+    function totalQuestions() { 
+      return state.order.reduce((n, s) => n + state.subjects[s].data.length, 0); 
+    }
+    
+    function totalAnswered() { 
+      return state.order.reduce((n, s) => n + state.subjects[s].ans.filter(v => v !== null).length, 0); 
+    }
+    
+    function currentPack() { 
+      return state.subjects[state.currentSubject]; 
+    }
+
+    function renderSubjectBar() {
+      const bar = document.getElementById('subjectBar');
+      bar.innerHTML = '';
+      state.order.forEach(sub => {
+        const answered = state.subjects[sub].ans.filter(x => x !== null).length;
+        const total = state.subjects[sub].data.length;
+        const b = document.createElement('button');
+        b.className = 'subject-btn' + (state.currentSubject === sub ? ' active' : '');
+        b.innerHTML = `${SUBJECT_META[sub].label}<span class="mini">${answered}/${total}</span>`;
+        b.onclick = () => switchSubject(sub);
+        bar.appendChild(b);
+      });
+    }
+
+    function switchSubject(sub) {
+      state.currentSubject = sub;
+      if (state.currentIndex >= state.subjects[sub].data.length) state.currentIndex = 0;
+      render();
+    }
+
+    function updateTimer() {
+      const h = Math.floor(state.time / 3600);
+      const m = Math.floor((state.time % 3600) / 60);
+      const s = state.time % 60;
+      const el = document.getElementById('timer');
+      el.textContent = `⏱️ ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      let cls = 'timer';
+      if (state.time < 300) cls += ' warn';
+      if (state.time < 60) cls += ' danger';
+      el.className = cls;
+    }
+
+    function startTimer() {
+      if (state.timer) clearInterval(state.timer);
+      state.timer = setInterval(() => {
+        if (state.time > 0) {
+          state.time--;
+          updateTimer();
+          if (state.time % 10 === 0) saveProgress();
+        } else {
+          submit(true);
+        }
+      }, 1000);
+      updateTimer();
+    }
+
+    function render() {
+      renderSubjectBar();
+      const pack = currentPack();
+      const q = pack.data[state.currentIndex];
+      const done = totalAnswered();
+      const total = totalQuestions();
+      const meta = SUBJECT_META[state.currentSubject];
+
+      // Update progress
+      document.getElementById('pbar').style.width = (done / total * 100) + '%';
+      document.getElementById('ptxt').textContent = `${done}/${total}`;
+      
+      // Subject indicator with comprehension marker for English
+      let sectionText = `${meta.label} • Question ${state.currentIndex + 1}/${pack.data.length}`;
+      if (state.currentSubject === 'english' && state.currentIndex < CONFIG.COMPREHENSION_COUNT) {
+        sectionText += ' (Comprehension)';
+      }
+      document.getElementById('stype').textContent = sectionText;
+      
+      // Question text
+      document.getElementById('question').textContent = q.q;
+      
+      // Question image
+      const qImg = document.getElementById('qImage');
+      if (q.img) {
+        qImg.src = q.img;
+        qImg.style.display = 'block';
+        qImg.onerror = () => { qImg.style.display = 'none'; }; // Hide if image fails
+      } else {
+        qImg.style.display = 'none';
+      }
+      
+      // Options
+      const opts = document.getElementById('opts');
+      opts.innerHTML = '';
+      q.o.forEach((o, i) => {
+        const d = document.createElement('div');
+        d.className = 'opt' + (pack.ans[state.currentIndex] === i ? ' sel' : '');
+        
+        let optContent = `<div class="opt-mark">${String.fromCharCode(65 + i)}</div><p>${o}</p>`;
+        
+        // Option image if provided
+        if (q.optImgs && q.optImgs[i]) {
+          optContent += `<img src="${q.optImgs[i]}" class="opt-image" onerror="this.style.display='none'" />`;
+        }
+        
+        d.innerHTML = optContent;
+        d.onclick = () => select(i);
+        opts.appendChild(d);
+      });
+
+      // Navigation buttons
+      document.getElementById('prevBtn').disabled = state.currentIndex === 0;
+      const isLast = state.currentIndex === pack.data.length - 1;
+      const isLastSubject = state.order.indexOf(state.currentSubject) === state.order.length - 1;
+      document.getElementById('nextBtn').textContent = isLast && !isLastSubject ? 'Next Subject →' : (isLast ? 'Review →' : 'Next →');
+      
+      // Calculator button visibility
+      const calcBtn = document.getElementById('calcBtn');
+      calcBtn.style.display = meta.hasCalc ? 'flex' : 'none';
+
+      saveProgress();
+    }
+
+    function select(i) {
+      currentPack().ans[state.currentIndex] = i;
+      document.querySelectorAll('.opt').forEach((el, idx) => {
+        el.classList.toggle('sel', idx === i);
+      });
+      renderSubjectBar();
+      saveProgress();
+    }
+
+    function next() {
+      const pack = currentPack();
+      if (state.currentIndex < pack.data.length - 1) {
+        state.currentIndex++;
+        render();
+        return;
+      }
+
+      const pos = state.order.indexOf(state.currentSubject);
+      if (pos < state.order.length - 1) {
+        state.currentSubject = state.order[pos + 1];
+        state.currentIndex = 0;
+        render();
+        return;
+      }
+
+      const unans = totalQuestions() - totalAnswered();
+      if (unans > 0 && !confirm(`${unans} question(s) unanswered. Submit anyway?`)) {
+        showPop();
+        return;
+      }
+      submit(false);
+    }
+
+    function prev() {
+      if (state.currentIndex > 0) state.currentIndex--;
+      render();
+    }
+
+    function showPop() {
+      const wrap = document.getElementById('pgridWrap');
+      wrap.innerHTML = '';
+
+      state.order.forEach(sub => {
+        const block = document.createElement('div');
+        block.className = 'sub-block';
+
+        const label = document.createElement('div');
+        label.className = 'sub-label';
+        label.textContent = SUBJECT_META[sub].label;
+        block.appendChild(label);
+
+        const grid = document.createElement('div');
+        grid.className = 'pop-grid';
+
+        state.subjects[sub].data.forEach((q, i) => {
+          const b = document.createElement('button');
+          b.textContent = i + 1;
+          
+          // Styling based on state
+          if (state.subjects[sub].ans[i] !== null) b.classList.add('ans');
+          if (sub === state.currentSubject && i === state.currentIndex) b.classList.add('cur');
+          
+          // Mark comprehension questions for English
+          if (sub === 'english' && i < CONFIG.COMPREHENSION_COUNT) {
+            b.classList.add('comp');
+            b.title = 'Comprehension';
+          }
+          
+          b.onclick = () => {
+            state.currentSubject = sub;
+            state.currentIndex = i;
+            hidePop();
+            render();
+          };
+          grid.appendChild(b);
+        });
+
+        block.appendChild(grid);
+        wrap.appendChild(block);
+      });
+
+      document.getElementById('pop').classList.add('show');
+    }
+
+    function hidePop(e) {
+      if (!e || e.target.id === 'pop') {
+        document.getElementById('pop').classList.remove('show');
+      }
+    }
+
+    function computeScores() {
+      const rows = [];
+      let totalCorrect = 0;
+      let totalCount = 0;
+
+      state.order.forEach(sub => {
+        const pack = state.subjects[sub];
+        let correct = 0;
+        pack.data.forEach((q, i) => {
+          if (pack.ans[i] === q.a) correct++;
+        });
+        rows.push({ subject: SUBJECT_META[sub].label, correct, total: pack.data.length });
+        totalCorrect += correct;
+        totalCount += pack.data.length;
+      });
+
+      return { rows, totalCorrect, totalCount };
+    }
+
+    function saveProgress() {
+      sessionStorage.setItem('jamb_exam_progress_v2', JSON.stringify({
+        candidate: state.candidate,
+        code: state.code,
+        elective: state.elective,
+        subjects: state.subjects,
+        order: state.order,
+        currentSubject: state.currentSubject,
+        currentIndex: state.currentIndex,
+        time: state.time,
+        submitted: state.submitted,
+        enteredDuringWindow: state.enteredDuringWindow,
+        shuffleSeed: state.shuffleSeed,
+        ts: Date.now()
+      }));
+    }
+
+    function submit(timeout) {
+      if (state.submitted) return;
+      clearInterval(state.timer);
+      state.submitted = true;
+      saveProgress();
+
+      const scores = computeScores();
+
+      document.getElementById('quiz').style.display = 'none';
+      document.getElementById('res').style.display = 'flex';
+      document.getElementById('res').classList.add('show');
+      document.getElementById('rscore').textContent = `${scores.totalCorrect}`;
+      document.getElementById('rtitle').textContent = timeout ? '⏰ Time Up!' : 'Examination Submitted';
+      document.getElementById('rmsg').innerHTML = `<strong>${state.candidate}</strong><br>Subject scores and total score are shown below.`;
+
+      const table = document.getElementById('scoreTable');
+      table.innerHTML = '';
+      scores.rows.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.subject}</td><td>${r.correct}/${r.total}</td>`;
+        table.appendChild(tr);
+      });
+
+      const tr = document.createElement('tr');
+      tr.className = 'total';
+      tr.innerHTML = `<td>Total Score</td><td>${scores.totalCorrect}/${scores.totalCount}</td>`;
+      table.appendChild(tr);
+    }
+
+    function showDet() {
+      const c = document.getElementById('dcont');
+      c.innerHTML = '';
+      const scores = computeScores();
+
+      const sum = document.createElement('div');
+      sum.className = 'det-summary';
+      sum.innerHTML = `<div class="big">${scores.totalCorrect}/${scores.totalCount}</div><div>${state.candidate} • Detailed Review</div>`;
+      c.appendChild(sum);
+
+      state.order.forEach(sub => {
+        const head = document.createElement('div');
+        head.style.cssText = 'margin:20px 0 12px;padding:12px;background:var(--a);color:#fff;border-radius:8px;font-size:14px';
+        head.innerHTML = `<strong>${SUBJECT_META[sub].label}</strong>`;
+        c.appendChild(head);
+
+        state.subjects[sub].data.forEach((q, i) => {
+          const ans = state.subjects[sub].ans[i];
+          const ok = ans === q.a;
+          const d = document.createElement('div');
+          d.className = 'det-item' + (ok ? ' ok' : '');
+          
+          let imgHtml = '';
+          if (q.img) {
+            imgHtml = `<img src="${q.img}" class="q-img" onerror="this.style.display='none'" />`;
+          }
+          
+          d.innerHTML = `
+            <h4>${SUBJECT_META[sub].label} • Question ${i + 1}${sub === 'english' && i < CONFIG.COMPREHENSION_COUNT ? ' (Comprehension)' : ''}</h4>
+            <div class="q-text">${q.q}</div>
+            ${imgHtml}
+            <div class="ans-row"><strong>Your answer:</strong> ${ans !== null ? String.fromCharCode(65 + ans) + ') ' + q.o[ans] : 'Not answered'}</div>
+            <div class="ans-row"><strong>Correct:</strong> ${String.fromCharCode(65 + q.a) + ') ' + q.o[q.a]}</div>
+            <div class="exp">${q.e}</div>
+          `;
+          c.appendChild(d);
+        });
+      });
+
+      document.getElementById('res').classList.remove('show');
+      document.getElementById('res').style.display = 'none';
+      document.getElementById('det').style.display = 'block';
+    }
+
+    function hideDet() {
+      document.getElementById('det').style.display = 'none';
+      document.getElementById('res').style.display = 'flex';
+      document.getElementById('res').classList.add('show');
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle('light');
+      localStorage.setItem('jamb_exam_theme', document.body.classList.contains('light') ? 'light' : 'dark');
+    }
+
+    function restart() {
+      if (!confirm('Start a new examination? All progress will be cleared.')) return;
+      sessionStorage.removeItem('jamb_exam_progress_v2');
+      localStorage.removeItem('jamb_exam_auth');
+      location.reload();
+    }
+
+    function exitExam() {
+      if (confirm('Exit exam? Your progress will be saved.')) {
+        saveProgress();
+        location.reload();
+      }
+    }
+
+    async function startExam() {
+      buildSubjects();
+      state.currentSubject = 'english';
+      state.currentIndex = 0;
+      state.time = CONFIG.TIME;
+      state.submitted = false;
+      state.enteredDuringWindow = true;
+
+      document.getElementById('access').style.display = 'none';
+      document.getElementById('quiz').style.display = 'block';
+      document.getElementById('examTitle').textContent = `JAMB CBT EXAMINATION • ${state.candidate}`;
+      startTimer();
+      render();
+      saveProgress();
+    }
+
+    async function unlockAndStart() {
+      const name = document.getElementById('candidateName').value.trim();
+      const code = document.getElementById('code').value.trim().toUpperCase();
+      const elective = document.getElementById('elective').value;
+      const btn = document.getElementById('unlockBtn');
+
+      if (!name) {
+        showMsg('Enter candidate name', 'err');
+        return;
+      }
+
+      if (code.length !== 8 || !/^[A-Z0-9]{8}$/.test(code)) {
+        showMsg('Enter a valid 8-character access code', 'err');
+        return;
+      }
+
+      if (!inEntryWindow()) {
+        showMsg('Exam entry is only allowed between 12:00 PM and 2:00 PM.', 'err');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Checking...';
+
+      try {
+        const result = await checkAccessCode(code, getDeviceToken());
+
+        if (!result.ok) {
+          showMsg(result.message || 'Access denied.', 'err');
+          return;
+        }
+
+        state.candidate = name;
+        state.code = code;
+        state.elective = elective;
+        localStorage.setItem('jamb_exam_auth', code);
+
+        showMsg(result.message || 'Access granted.', 'ok');
+        setTimeout(() => startExam(), 300);
+
+      } catch (err) {
+        showMsg('Network error. Please try again.', 'err');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Start Examination';
+      }
+    }
+
+    async function tryAutoAccess() {
+      const savedCode = localStorage.getItem('jamb_exam_auth');
+      const saved = sessionStorage.getItem('jamb_exam_progress_v2');
+      if (!savedCode || !saved) return false;
+
+      try {
+        const data = await checkAccessCode(savedCode, getDeviceToken());
+        if (!data.ok) return false;
+
+        const d = JSON.parse(saved);
+        if (d.submitted) return false;
+
+        state.candidate = d.candidate;
+        state.code = d.code;
+        state.elective = d.elective;
+        state.subjects = d.subjects;
+        state.order = d.order;
+        state.currentSubject = d.currentSubject;
+        state.currentIndex = d.currentIndex;
+        state.time = d.time;
+        state.submitted = d.submitted;
+        state.enteredDuringWindow = d.enteredDuringWindow;
+        state.shuffleSeed = d.shuffleSeed;
+
+        document.getElementById('access').style.display = 'none';
+        document.getElementById('quiz').style.display = 'block';
+        document.getElementById('examTitle').textContent = `JAMB CBT EXAMINATION • ${state.candidate}`;
+        startTimer();
+        render();
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    async function init() {
+      const auto = await tryAutoAccess();
+      document.getElementById('load').classList.add('hide');
+      if (!auto) {
+        document.getElementById('access').style.display = 'flex';
+      }
+    }
+
+    // Global exports for HTML onclick handlers
+    window.prev = prev;
+    window.next = next;
+    window.showPop = showPop;
+    window.hidePop = hidePop;
+    window.showDet = showDet;
+    window.hideDet = hideDet;
+    window.restart = restart;
+    window.toggleTheme = toggleTheme;
+    window.exitExam = exitExam;
+    window.submit = submit;
+    window.unlockAndStart = unlockAndStart;
+    window.toggleCalc = toggleCalc;
+    window.calcInput = calcInput;
+    window.calcClear = calcClear;
+    window.calcBack = calcBack;
+    window.calcEqual = calcEqual;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('jamb_exam_theme') === 'light') document.body.classList.add('light');
+      document.getElementById('code').addEventListener('keypress', e => {
+        if (e.key === 'Enter') unlockAndStart();
+      });
+      init();
+    });
+  </script>
+</body>
+</html>
