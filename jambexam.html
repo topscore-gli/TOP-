@@ -1,0 +1,251 @@
+Yes — I’ll paste the full HTML code for you now.Yes — the full HTML is quite long, so the cleanest way is to paste it in parts so nothing gets cut off.
+Here’s Part 1 of the full HTML code:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1e1e2f" />
+  <title>JAMB CBT Examination Pro+</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{
+      --bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3;
+      --sub:#9aa0a6;--panel:rgba(255,255,255,.03);--border:rgba(255,255,255,.06);--calc:#2d2d44
+    }
+    body.light{
+      --bg:#e0e5ec;--si:#b8c2d1;--so:#ffffff;--t:#213547;--a:#2faa60;--d:#e53935;--w:#f57c00;--info:#1976d2;
+      --sub:#5f6b7a;--panel:rgba(255,255,255,.35);--border:rgba(0,0,0,.06);--calc:#d1d9e6
+    }
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.55}
+    img{max-width:100%;display:block}
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .25s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:42px;height:42px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:28px;border-radius:18px;width:100%;max-width:460px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:var(--sub);font-size:14px;margin-bottom:18px}
+    .meta-note{font-size:13px;background:rgba(33,150,243,.1);padding:12px;border-radius:10px;margin-bottom:16px;color:var(--info)}
+    input,select{
+      width:100%;padding:14px 16px;font-size:15px;border-radius:10px;border:none;background:var(--bg);color:var(--t);
+      box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:14px
+    }
+    input:focus,select:focus{outline:2px solid var(--a)}
+    button.primary{
+      width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;
+      box-shadow:4px 4px 8px var(--si);transition:transform .1s
+    }
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:14px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+    #quiz{display:none;max-width:1080px;margin:0 auto;padding:128px 12px 112px}
+    .top{
+      position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;
+      padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.12)
+    }
+    .top h1{font-size:15px;font-weight:700;flex:1;text-align:center;padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .btn{
+      width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;
+      box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px
+    }
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .btn.calc-btn{background:var(--w);color:#fff;font-size:14px;font-weight:700}
+    .prog{position:fixed;top:56px;left:0;right:0;height:4px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:64px;right:12px;font-size:11px;background:var(--bg);padding:3px 8px;border-radius:12px;box-shadow:1px 1px 2px var(--si);z-index:99}
+    .subject-bar{
+      position:fixed;top:74px;left:0;right:0;background:var(--bg);z-index:98;padding:8px 10px 10px;display:flex;gap:8px;overflow-x:auto;
+      box-shadow:0 2px 6px rgba(0,0,0,.08)
+    }
+    .subject-btn{
+      border:none;padding:10px 14px;border-radius:12px;background:var(--bg);color:var(--t);font-size:13px;font-weight:700;cursor:pointer;
+      white-space:nowrap;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)
+    }
+    .subject-btn.active{background:var(--a);color:#fff}
+    .subject-btn .mini{display:block;font-size:10px;font-weight:500;opacity:.9}
+    .q-cont{background:var(--bg);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .exam-meta{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .timer{font-size:13px;color:var(--sub);display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:700}
+    .timer.danger{color:var(--d);font-weight:700;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;font-weight:700}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:14px;background:var(--panel);border:1px solid var(--border);border-radius:10px;line-height:1.65}
+    .question-image{width:100%;max-width:400px;margin:12px auto;display:block;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{
+      padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);
+      display:flex;align-items:flex-start;gap:12px;transition:all .15s;border:2px solid transparent
+    }
+    .opt:hover{border-color:rgba(29,185,84,.28)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    .opt-image{max-width:80px;max-height:80px;border-radius:6px;margin-left:auto;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+    .nav{
+      position:fixed;bottom:0;left:0;right:0;height:72px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:10px;
+      padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.12);z-index:100
+    }
+    .nav-btn{
+      padding:12px 18px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:700;cursor:pointer;
+      box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)
+    }
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-btn.danger{background:var(--d);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+    .calc-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:400;align-items:center;justify-content:center;padding:20px}
+    .calc-overlay.show{display:flex}
+    .calc-modal{background:var(--calc);border-radius:20px;padding:20px;width:100%;max-width:320px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    .calc-display{width:100%;padding:16px;font-size:24px;text-align:right;background:var(--bg);border-radius:12px;margin-bottom:16px;color:var(--t);border:none;box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so)}
+    .calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .calc-btn{padding:16px;border:none;border-radius:10px;background:var(--bg);color:var(--t);font-size:16px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);transition:all .1s}
+    .calc-btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .calc-btn.op{background:var(--info);color:#fff}
+    .calc-btn.eq{background:var(--a);color:#fff}
+    .calc-btn.clear{background:var(--d);color:#fff}
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:460px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:700;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--info)}
+    .pop-grid button.comp{background:var(--w);color:#fff}
+    .sub-block{margin-bottom:18px}
+    .sub-label{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--a)}
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:28px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:760px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:34px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:var(--sub);margin-bottom:20px;font-size:15px;line-height:1.5}
+    .score-table{width:100%;border-collapse:separate;border-spacing:0 10px;margin:16px 0 6px}
+    .score-table td{padding:12px 14px;background:var(--panel);font-size:14px}
+    .score-table td:first-child{border-radius:10px 0 0 10px;text-align:left;font-weight:700}
+    .score-table td:last-child{border-radius:0 10px 10px 0;text-align:right}
+    .score-table tr.total td{background:rgba(29,185,84,.12);font-weight:800}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:42px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:var(--panel);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:var(--sub);margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .q-img{width:100%;max-width:300px;margin:8px auto;display:block;border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px;flex-wrap:wrap}
+    .det-item .ans-row strong{min-width:90px}
+    .det-item .exp{font-size:13px;color:var(--sub);margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+    @media(max-width:560px){
+      #quiz{padding-top:132px}
+      .opt{padding:12px}
+      .res-box{padding:22px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:30px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+      .subject-btn{font-size:12px;padding:8px 10px}
+      .nav{gap:8px}
+      .nav-btn{padding:10px 14px}
+      .calc-modal{max-width:280px}
+      .calc-btn{padding:14px;font-size:14px}
+    }
+  </style>
+</head>
+<body>
+  <div id="load"><div class="spinner"></div></div>
+  <div id="access">
+    <div class="card">
+      <h1>📝 JAMB CBT PRO</h1>
+      <p>Enter your access code, choose your elective subject, then begin your CBT exam.</p>
+      <div class="meta-note">Exam entry window: 12:00 PM to 2:00 PM. Calculator available for Chemistry, Mathematics & Physics. Images supported for all subjects.</div>
+      <input type="text" id="candidateName" placeholder="Enter candidate name" />
+      <input type="text" id="code" placeholder="Enter 8-character access code" maxlength="8" autocomplete="off" />
+      <select id="elective">
+        <option value="mathematics">Mathematics</option>
+        <option value="biology">Biology</option>
+      </select>
+      <button class="primary" id="unlockBtn">Start Examination</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" id="exitBtn">←</button>
+      <h1 id="examTitle">JAMB CBT EXAMINATION</h1>
+      <button class="btn calc-btn" id="calcBtn" style="display:none" title="Calculator">🧮</button>
+      <button class="btn" id="themeBtn">🌙</button>
+    </div>
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    <div class="subject-bar" id="subjectBar"></div>
+    <div class="q-cont">
+      <div class="exam-meta">
+        <div class="timer" id="timer">⏱️ 02:00:00</div>
+        <div class="section-type" id="stype">English • Question 1/60</div>
+      </div>
+      <div class="question" id="question"></div>
+      <img id="qImage" class="question-image" style="display:none" alt="Question diagram" loading="lazy" />
+      <div class="opts" id="opts"></div>
+    </div>
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn">← Prev</button>
+      <button class="nav-center" id="navPopBtn">📋</button>
+      <button class="nav-btn primary" id="nextBtn">Next →</button>
+      <button class="nav-btn danger" id="submitBtn">Submit</button>
+    </div>
+  </div>
+  <div class="calc-overlay" id="calcOverlay">
+    <div class="calc-modal">
+      <input type="text" class="calc-display" id="calcDisplay" readonly value="0" />
+      <div class="calc-grid">
+        <button class="calc-btn clear" data-calc="clear">C</button>
+        <button class="calc-btn" data-calc="(">(</button>
+        <button class="calc-btn" data-calc=")">)</button>
+        <button class="calc-btn op" data-calc="/">÷</button>
+        <button class="calc-btn" data-calc="7">7</button>
+        <button class="calc-btn" data-calc="8">8</button>
+        <button class="calc-btn" data-calc="9">9</button>
+        <button class="calc-btn op" data-calc="*">×</button>
+        <button class="calc-btn" data-calc="4">4</button>
+        <button class="calc-btn" data-calc="5">5</button>
+        <button class="calc-btn" data-calc="6">6</button>
+        <button class="calc-btn op" data-calc="-">−</button>
+        <button class="calc-btn" data-calc="1">1</button>
+        <button class="calc-btn" data-calc="2">2</button>
+        <button class="calc-btn" data-calc="3">3</button>
+        <button class="calc-btn op" data-calc="+">+</button>
+        <button class="calc-btn" data-calc="0">0</button>
+        <button class="calc-btn" data-calc=".">.</button>
+        <button class="calc-btn" data-calc="back">⌫</button>
+        <button class="calc-btn eq" data-calc="equal">=</button>
+      </div>
+    </div>
+  </div>
+  <div class="pop" id="pop">
+    <div class="pop-box">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" id="closePopBtn">✕</button>
+      </div>
+      <div id="pgridWrap"></div>
+      <div style="font-size:12px;color:var(--sub);text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered  
+        <span style="color:var(--info)">●</span> Current  
+        <span style="color:var(--w)">●</span> Comprehension  
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
