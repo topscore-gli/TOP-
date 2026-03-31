@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JAMB CBT Examination Pro</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif}
+    :root{
+      --bg:#1e1e2f;--si:#171723;--so:#25253b;--t:#fff;--a:#1db954;--d:#ff4d4d;--w:#ff9800;--info:#2196f3;
+      --sub:#9aa0a6;--panel:rgba(255,255,255,.03);--border:rgba(255,255,255,.06);--calc:#2d2d44
+    }
+    body.light{
+      --bg:#e0e5ec;--si:#b8c2d1;--so:#ffffff;--t:#213547;--a:#2faa60;--d:#e53935;--w:#f57c00;--info:#1976d2;
+      --sub:#5f6b7a;--panel:rgba(255,255,255,.35);--border:rgba(0,0,0,.06);--calc:#d1d9e6
+    }
+    body{background:var(--bg);color:var(--t);min-height:100vh;line-height:1.55}
+    #load{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity .25s}
+    #load.hide{opacity:0;pointer-events:none}
+    .spinner{width:42px;height:42px;border:3px solid var(--si);border-top-color:var(--a);border-radius:50%;animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    #access{display:none;min-height:100vh;padding:20px;align-items:center;justify-content:center}
+    .card{background:var(--bg);padding:28px;border-radius:18px;width:100%;max-width:460px;box-shadow:8px 8px 16px var(--si),-8px -8px 16px var(--so)}
+    .card h1{color:var(--a);margin-bottom:8px;font-size:24px}
+    .card p{color:var(--sub);font-size:14px;margin-bottom:18px}
+    .meta-note{font-size:13px;background:rgba(33,150,243,.1);padding:12px;border-radius:10px;margin-bottom:16px;color:var(--info)}
+    input,select{
+      width:100%;padding:14px 16px;font-size:15px;border-radius:10px;border:none;background:var(--bg);color:var(--t);
+      box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so);margin-bottom:14px
+    }
+    input:focus,select:focus{outline:2px solid var(--a)}
+    button.primary{
+      width:100%;padding:14px;background:var(--a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;
+      box-shadow:4px 4px 8px var(--si);transition:transform .1s
+    }
+    button.primary:active{transform:scale(.98)}
+    button.primary:disabled{opacity:.6;cursor:not-allowed}
+    .msg{margin-top:14px;padding:10px;border-radius:8px;font-size:13px;display:none}
+    .msg.show{display:block}
+    .msg.err{background:rgba(255,77,77,.1);color:var(--d)}
+    .msg.ok{background:rgba(29,185,84,.1);color:var(--a)}
+
+    #quiz{display:none;max-width:1080px;margin:0 auto;padding:128px 12px 112px}
+    .top{
+      position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;justify-content:space-between;
+      padding:0 12px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.12)
+    }
+    .top h1{font-size:15px;font-weight:700;flex:1;text-align:center;padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .btn{
+      width:36px;height:36px;border-radius:50%;background:var(--bg);border:none;color:var(--t);cursor:pointer;
+      box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);display:flex;align-items:center;justify-content:center;font-size:16px
+    }
+    .btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .btn.calc-btn{background:var(--w);color:#fff;font-size:14px;font-weight:700}
+
+    .prog{position:fixed;top:56px;left:0;right:0;height:4px;background:var(--si);z-index:99}
+    .prog-bar{height:100%;background:var(--a);width:0%;transition:width .2s}
+    .prog-text{position:fixed;top:64px;right:12px;font-size:11px;background:var(--bg);padding:3px 8px;border-radius:12px;box-shadow:1px 1px 2px var(--si);z-index:99}
+
+    .subject-bar{
+      position:fixed;top:74px;left:0;right:0;background:var(--bg);z-index:98;padding:8px 10px 10px;display:flex;gap:8px;overflow-x:auto;
+      box-shadow:0 2px 6px rgba(0,0,0,.08)
+    }
+    .subject-btn{
+      border:none;padding:10px 14px;border-radius:12px;background:var(--bg);color:var(--t);font-size:13px;font-weight:700;cursor:pointer;
+      white-space:nowrap;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)
+    }
+    .subject-btn.active{background:var(--a);color:#fff}
+    .subject-btn .mini{display:block;font-size:10px;font-weight:500;opacity:.9}
+
+    .q-cont{background:var(--bg);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so)}
+    .exam-meta{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .timer{font-size:13px;color:var(--sub);display:flex;align-items:center;gap:6px}
+    .timer.warn{color:var(--w);font-weight:700}
+    .timer.danger{color:var(--d);font-weight:700;animation:pulse 1s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+    .section-type{display:inline-block;padding:4px 12px;background:var(--a);color:#fff;font-size:11px;border-radius:20px;font-weight:700}
+    .question{font-size:15px;font-weight:600;margin-bottom:14px;padding:14px;background:var(--panel);border:1px solid var(--border);border-radius:10px;line-height:1.65}
+    .question-image{width:100%;max-width:400px;margin:12px auto;display:block;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+    .opts{display:flex;flex-direction:column;gap:10px}
+    .opt{
+      padding:14px 16px;background:var(--bg);border-radius:10px;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);
+      display:flex;align-items:flex-start;gap:12px;transition:all .15s;border:2px solid transparent
+    }
+    .opt:hover{border-color:rgba(29,185,84,.28)}
+    .opt.sel{border-color:var(--a);background:rgba(29,185,84,.05);box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .opt-mark{width:26px;height:26px;border-radius:50%;background:var(--si);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px}
+    .opt.sel .opt-mark{background:var(--a);color:#fff}
+    .opt p{font-size:14px;flex:1}
+    .opt-image{max-width:80px;max-height:80px;border-radius:6px;margin-left:auto;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+
+    .nav{
+      position:fixed;bottom:0;left:0;right:0;height:72px;background:var(--bg);display:flex;align-items:center;justify-content:center;gap:10px;
+      padding:0 12px;box-shadow:0 -2px 8px rgba(0,0,0,.12);z-index:100
+    }
+    .nav-btn{
+      padding:12px 18px;border-radius:8px;border:none;background:var(--bg);color:var(--t);font-size:14px;font-weight:700;cursor:pointer;
+      box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so)
+    }
+    .nav-btn:disabled{opacity:.4;cursor:not-allowed}
+    .nav-btn.primary{background:var(--a);color:#fff}
+    .nav-btn.danger{background:var(--d);color:#fff}
+    .nav-center{width:48px;height:48px;border-radius:50%;background:var(--a);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 12px rgba(29,185,84,.3)}
+
+    /* Calculator Styles */
+    .calc-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:400;align-items:center;justify-content:center;padding:20px}
+    .calc-overlay.show{display:flex}
+    .calc-modal{background:var(--calc);border-radius:20px;padding:20px;width:100%;max-width:320px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    .calc-display{width:100%;padding:16px;font-size:24px;text-align:right;background:var(--bg);border-radius:12px;margin-bottom:16px;color:var(--t);border:none;box-shadow:inset 3px 3px 6px var(--si),inset -3px -3px 6px var(--so)}
+    .calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .calc-btn{padding:16px;border:none;border-radius:10px;background:var(--bg);color:var(--t);font-size:16px;font-weight:600;cursor:pointer;box-shadow:3px 3px 6px var(--si),-3px -3px 6px var(--so);transition:all .1s}
+    .calc-btn:active{box-shadow:inset 2px 2px 4px var(--si),inset -2px -2px 4px var(--so)}
+    .calc-btn.op{background:var(--info);color:#fff}
+    .calc-btn.eq{background:var(--a);color:#fff}
+    .calc-btn.clear{background:var(--d);color:#fff}
+    .calc-close{position:absolute;top:10px;right:10px;background:var(--d);color:#fff;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px}
+
+    .pop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .pop.show{display:flex}
+    .pop-box{background:var(--bg);border-radius:16px;padding:20px;width:100%;max-width:460px;max-height:80vh;overflow-y:auto}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .pop h3{font-size:16px}
+    .pop-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+    .pop-grid button{aspect-ratio:1;border:none;border-radius:8px;background:var(--bg);color:var(--t);font-size:12px;font-weight:700;cursor:pointer;box-shadow:2px 2px 4px var(--si),-2px -2px 4px var(--so)}
+    .pop-grid button.ans{background:var(--a);color:#fff}
+    .pop-grid button.cur{border:2px solid var(--info)}
+    .pop-grid button.comp{background:var(--w);color:#fff}
+    .sub-block{margin-bottom:18px}
+    .sub-label{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--a)}
+
+    .res{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;overflow-y:auto}
+    .res.show{display:flex}
+    .res-box{background:var(--bg);padding:28px;border-radius:24px;box-shadow:8px 8px 16px var(--si),-8px -8px 12px var(--so);max-width:760px;width:100%}
+    .res-circle{width:140px;height:140px;border-radius:50%;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:6px 6px 12px var(--si),-6px -6px 12px var(--so)}
+    .res-score{font-size:34px;font-weight:800;color:var(--a)}
+    .res-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--sub);margin-top:4px}
+    .res h2{font-size:24px;margin-bottom:8px}
+    .res p{color:var(--sub);margin-bottom:20px;font-size:15px;line-height:1.5}
+    .score-table{width:100%;border-collapse:separate;border-spacing:0 10px;margin:16px 0 6px}
+    .score-table td{padding:12px 14px;background:var(--panel);font-size:14px}
+    .score-table td:first-child{border-radius:10px 0 0 10px;text-align:left;font-weight:700}
+    .score-table td:last-child{border-radius:0 10px 10px 0;text-align:right}
+    .score-table tr.total td{background:rgba(29,185,84,.12);font-weight:800}
+    .res-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+
+    .det{display:none;position:fixed;inset:0;background:var(--bg);z-index:250;overflow-y:auto;padding:80px 16px 24px}
+    .det-head{position:fixed;top:0;left:0;right:0;height:56px;background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:251}
+    .det h3{flex:1;font-size:16px}
+    .det-summary{background:var(--bg);padding:20px;border-radius:16px;margin-bottom:20px;box-shadow:4px 4px 8px var(--si),-4px -4px 8px var(--so);text-align:center}
+    .det-summary .big{font-size:42px;font-weight:800;color:var(--a)}
+    .det-item{margin-bottom:16px;padding:16px;background:var(--panel);border-radius:12px;border-left:4px solid var(--d)}
+    .det-item.ok{border-left-color:var(--a)}
+    .det-item h4{font-size:13px;color:var(--sub);margin-bottom:8px}
+    .det-item .q-text{font-size:15px;font-weight:600;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+    .det-item .q-img{width:100%;max-width:300px;margin:8px auto;display:block;border-radius:8px}
+    .det-item .ans-row{display:flex;gap:16px;margin-bottom:6px;font-size:14px;flex-wrap:wrap}
+    .det-item .ans-row strong{min-width:90px}
+    .det-item .exp{font-size:13px;color:var(--sub);margin-top:10px;padding:12px;background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 4px var(--si);line-height:1.6}
+
+    @media(max-width:560px){
+      #quiz{padding-top:132px}
+      .opt{padding:12px}
+      .res-box{padding:22px}
+      .res-circle{width:120px;height:120px}
+      .res-score{font-size:30px}
+      .pop-grid{grid-template-columns:repeat(5,1fr)}
+      .subject-btn{font-size:12px;padding:8px 10px}
+      .nav{gap:8px}
+      .nav-btn{padding:10px 14px}
+      .calc-modal{max-width:280px}
+      .calc-btn{padding:14px;font-size:14px}
+    }
+  </style>
+</head>
+<body>
+  <div id="load"><div class="spinner"></div></div>
+
+  <div id="access">
+    <div class="card">
+      <h1>📝 JAMB CBT PRO</h1>
+      <p>Enter your access code, choose your elective (Mathematics or Biology), then begin your CBT exam.</p>
+      <div class="meta-note">Exam entry window: 12:00 PM to 2:00 PM. Calculator available for Chemistry, Mathematics & Physics. Images supported for all subjects.</div>
+      <input type="text" id="candidateName" placeholder="Enter candidate name" />
+      <input type="text" id="code" placeholder="Enter 8-character access code" maxlength="8" autocomplete="off" />
+      <select id="elective">
+        <option value="mathematics">Mathematics</option>
+        <option value="biology">Biology</option>
+      </select>
+      <button class="primary" id="unlockBtn" onclick="unlockAndStart()">Start Examination</button>
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <div id="quiz">
+    <div class="top">
+      <button class="btn" onclick="exitExam()">←</button>
+      <h1 id="examTitle">JAMB CBT EXAMINATION</h1>
+      <button class="btn calc-btn" id="calcBtn" onclick="toggleCalc()" style="display:none" title="Calculator">🧮</button>
+      <button class="btn" onclick="toggleTheme()">🌙</button>
+    </div>
+    <div class="prog"><div class="prog-bar" id="pbar"></div></div>
+    <div class="prog-text" id="ptxt">0/0</div>
+    <div class="subject-bar" id="subjectBar"></div>
+
+    <div class="q-cont">
+      <div class="exam-meta">
+        <div class="timer" id="timer">⏱️ 02:00:00</div>
+        <div class="section-type" id="stype">English • Question 1/60</div>
+      </div>
+      <div class="question" id="question"></div>
+      <img id="qImage" class="question-image" style="display:none" alt="Question diagram" />
+      <div class="opts" id="opts"></div>
+    </div>
+
+    <div class="nav">
+      <button class="nav-btn" id="prevBtn" onclick="prev()">← Prev</button>
+      <button class="nav-center" onclick="showPop()">📋</button>
+      <button class="nav-btn primary" id="nextBtn" onclick="next()">Next →</button>
+      <button class="nav-btn danger" onclick="submit(false)">Submit</button>
+    </div>
+  </div>
+
+  <!-- Calculator Modal -->
+  <div class="calc-overlay" id="calcOverlay" onclick="toggleCalc(event)">
+    <div class="calc-modal" onclick="event.stopPropagation()">
+      <input type="text" class="calc-display" id="calcDisplay" readonly value="0" />
+      <div class="calc-grid">
+        <button class="calc-btn clear" onclick="calcClear()">C</button>
+        <button class="calc-btn" onclick="calcInput('(')">(</button>
+        <button class="calc-btn" onclick="calcInput(')')">)</button>
+        <button class="calc-btn op" onclick="calcInput('/')">÷</button>
+        
+        <button class="calc-btn" onclick="calcInput('7')">7</button>
+        <button class="calc-btn" onclick="calcInput('8')">8</button>
+        <button class="calc-btn" onclick="calcInput('9')">9</button>
+        <button class="calc-btn op" onclick="calcInput('*')">×</button>
+        
+        <button class="calc-btn" onclick="calcInput('4')">4</button>
+        <button class="calc-btn" onclick="calcInput('5')">5</button>
+        <button class="calc-btn" onclick="calcInput('6')">6</button>
+        <button class="calc-btn op" onclick="calcInput('-')">−</button>
+        
+        <button class="calc-btn" onclick="calcInput('1')">1</button>
+        <button class="calc-btn" onclick="calcInput('2')">2</button>
+        <button class="calc-btn" onclick="calcInput('3')">3</button>
+        <button class="calc-btn op" onclick="calcInput('+')">+</button>
+        
+        <button class="calc-btn" onclick="calcInput('0')">0</button>
+        <button class="calc-btn" onclick="calcInput('.')">.</button>
+        <button class="calc-btn" onclick="calcBack()">⌫</button>
+        <button class="calc-btn eq" onclick="calcEqual()">=</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pop" id="pop" onclick="hidePop(event)">
+    <div class="pop-box" onclick="event.stopPropagation()">
+      <div class="pop-head">
+        <h3>Question Navigator</h3>
+        <button class="btn" onclick="hidePop()">✕</button>
+      </div>
+      <div id="pgridWrap"></div>
+      <div style="font-size:12px;color:var(--sub);text-align:center;margin-top:8px">
+        <span style="color:var(--a)">●</span> Answered &nbsp;
+        <span style="color:var(--info)">●</span> Current &nbsp;
+        <span style="color:var(--w)">●</span> Comprehension &nbsp;
+        <span style="color:#666">●</span> Unanswered
+      </div>
+    </div>
+  </div>
+
+  <div class="res" id="res">
+    <div class="res-box">
+      <div class="res-circle">
+        <div class="res-score" id="rscore">0</div>
+        <div class="res-label">Total Score</div>
+      </div>
+      <h2 id="rtitle">Examination Submitted</h2>
+      <p id="rmsg">Your subject scores are shown below.</p>
+      <table class="score-table" id="scoreTable"></table>
+      <div class="res-btns">
+        <button class="primary" onclick="showDet()">📊 View Details</button>
+        <button class="nav-btn" onclick="restart()">🔄 Restart</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="det" id="det">
+    <div class="det-head">
+      <button class="btn" onclick="hideDet()">←</button>
+      <h3>Detailed Results</h3>
+      <button class="btn" onclick="window.print()">🖨️</button>
+    </div>
+    <div id="dcont"></div>
+  </div>
+
+  <!-- Load Firebase with defer -->
+  <script type="module">
+    // Dynamic import for Firebase - loads only when needed
+    let firebaseApp = null;
+    let firebaseDb = null;
+    let firebaseModules = null;
+
+    async function initializeFirebase() {
+      if (firebaseModules) return firebaseModules;
+      
+      const [{ initializeApp }, { getDatabase, ref, get, update }] = await Promise.all([
+        import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"),
+        import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js")
+      ]);
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyDwsKVFStDaZ05JNWdpMxcP1uD_nhDmv3g",
+        authDomain: "topscore-5e3b3.firebaseapp.com",
+        databaseURL: "https://topscore-5e3b3-default-rtdb.firebaseio.com",
+        projectId: "topscore-5e3b3",
+        storageBucket: "topscore-5e3b3.firebasestorage.app",
+        messagingSenderId: "729977741765",
+        appId: "1:729977741765:web:e56fc72a3915ca65f12bac"
+      };
+
+      firebaseApp = initializeApp(firebaseConfig);
+      firebaseDb = getDatabase(firebaseApp);
+      firebaseModules = { ref, get, update };
+      
+      return firebaseModules;
+    }
+
+    const CONFIG = {
+      TIME: 7200,
+      START_HOUR: 12,
+      END_HOUR: 14,
+      EXAM_ID: "jamb-pro-cbt-2026",
+      COMPREHENSION_COUNT: 15,
+      SHUFFLE_SEED_PREFIX: "jamb2026_"
+    };
+
+    const SUBJECT_META = {
+      english: { label: "English", size: 60, hasCalc: false, hasComprehension: true },
+      mathematics: { label: "Mathematics", size: 40, hasCalc: true, hasComprehension: false },
+      biology: { label: "Biology", size: 40, hasCalc: false, hasComprehension: false },
+      chemistry: { label: "Chemistry", size: 40, hasCalc: true, hasComprehension: false },
+      physics: { label: "Physics", size: 40, hasCalc: true, hasComprehension: false }
+    };
+
+    function makeQuestion(q, o, a, e, img = null, optImgs = null) { 
+      return { q, o, a, e, img, optImgs }; 
+    }
+
+    // LAZY LOADED QUESTION BANKS - Only process when needed
+    const QuestionBanks = {
+      getEnglish() {
+        return [
+          makeQuestion("Comprehension Q1: According to the passage, what was the main reason for the character's decision?", 
+            ["Fear of failure", "Desire for success", "Family pressure", "Financial gain"], 1, 
+            "The passage explicitly states the character was driven by desire for success.", null, null),
+          makeQuestion("Comprehension Q2: The phrase 'cold feet' in paragraph 2 means...", 
+            ["Feeling cold", "Becoming nervous", "Losing interest", "Getting angry"], 1, 
+            "Idiom 'cold feet' means nervousness about proceeding.", null, null),
+          makeQuestion("Comprehension Q3: The author's tone in describing the village can be described as...", 
+            ["Critical", "Nostalgic", "Indifferent", "Hostile"], 1, 
+            "The descriptive language shows fond remembrance.", null, null),
+          makeQuestion("Comprehension Q4: What literary device is used in 'the trees whispered secrets'?", 
+            ["Simile", "Metaphor", "Personification", "Hyperbole"], 2, 
+            "Giving human qualities (whispering) to trees is personification.", null, null),
+          makeQuestion("Comprehension Q5: The passage suggests that the protagonist's mother was...", 
+            ["Strict but caring", "Neglectful", "Overbearing", "Indifferent"], 0, 
+            "Evidence shows she enforced rules but showed love through actions.", null, null),
+          makeQuestion("Comprehension Q6: The word 'abundant' in line 12 is closest in meaning to...", 
+            ["Scarce", "Plentiful", "Hidden", "Expensive"], 1, 
+            "Abundant means existing in large quantities.", null, null),
+          makeQuestion("Comprehension Q7: What can be inferred about the setting of the story?", 
+            ["Urban city", "Rural village", "Industrial town", "Coastal area"], 1, 
+            "References to farms, traditional life indicate rural village.", null, null),
+          makeQuestion("Comprehension Q8: The relationship between Ade and Bola is best described as...", 
+            ["Rivalry", "Friendship", "Sibling rivalry", "Mentorship"], 1, 
+            "Their interactions throughout show mutual support typical of friendship.", null, null),
+          makeQuestion("Comprehension Q9: The climax of the passage occurs when...", 
+            ["The storm hits", "The decision is made", "The truth is revealed", "The journey begins"], 2, 
+            "The revelation scene creates the highest tension point.", null, null),
+          makeQuestion("Comprehension Q10: Which of the following best summarizes the passage?", 
+            ["A journey of self-discovery", "A political struggle", "A romantic tale", "A historical account"], 0, 
+            "The narrative arc follows protagonist's personal growth.", null, null),
+          makeQuestion("Comprehension Q11: The phrase 'weighed heavily on his conscience' implies...", 
+            ["Physical weight", "Guilt", "Responsibility", "Fatigue"], 1, 
+            "Metaphorical expression indicating guilt.", null, null),
+          makeQuestion("Comprehension Q12: The author's purpose in writing this passage is primarily to...", 
+            ["Entertain", "Persuade", "Inform", "Criticize"], 0, 
+            "The narrative structure and descriptive elements aim to entertain.", null, null),
+          makeQuestion("Comprehension Q13: What does the description of the weather in paragraph 3 foreshadow?", 
+            ["Good fortune", "Upcoming conflict", "Peaceful resolution", "Character death"], 1, 
+            "Dark clouds gathering typically foreshadow trouble.", null, null),
+          makeQuestion("Comprehension Q14: The character's final action demonstrates...", 
+            ["Cowardice", "Bravery", "Wisdom", "Foolishness"], 1, 
+            "Facing fears despite risks shows bravery.", null, null),
+          makeQuestion("Comprehension Q15: The theme of the passage centers on...", 
+            ["Technology vs tradition", "Man vs nature", "Self-discovery", "Political freedom"], 2, 
+            "The protagonist's internal journey is central.", null, null),
+          makeQuestion("Choose the option nearest in meaning to the underlined word: The principal commended the diligent student.",["lazy","hardworking","careless","rude"],1,"Diligent means hardworking."),
+          makeQuestion("Choose the correct spelling.",["Accomodation","Accommodation","Acommodation","Acomodation"],1,"The correct spelling is Accommodation."),
+          makeQuestion("Select the option that best completes the sentence: Neither the teacher nor the students ___ present.",["was","were","is","be"],1,"The verb agrees with the nearer subject: students were."),
+          makeQuestion("Choose the antonym of 'ancient'.",["modern","old","primitive","aged"],0,"Ancient is opposite of modern."),
+          makeQuestion("Identify the grammatically correct sentence.",["He doesn't knows me.","He don't know me.","He doesn't know me.","He not know me."],2,"'He doesn't know me' is correct."),
+          makeQuestion("Choose the correct interpretation of the idiom: 'To hit the nail on the head'",["To make a mistake","To say exactly the right thing","To become angry","To work hard"],1,"It means to state something exactly right."),
+          makeQuestion("Choose the word that best completes the sentence: The committee has submitted ___ report.",["it's","its","it is","it has"],1,"'Its' is the possessive form."),
+          makeQuestion("From the words lettered A to D, choose the one with the same vowel sound as the underlined letters in 'seat'.",["said","set","beat","debt"],2,"'Seat' and 'beat' share the /i:/ sound."),
+          makeQuestion("Choose the most appropriate summary of this proverb: A stitch in time saves nine.",["Tailoring is important","Quick action prevents bigger problems","Nine is a lucky number","Time is money"],1,"The proverb means timely action prevents greater difficulty."),
+          makeQuestion("Select the correct option: If she had studied, she ___ the exam.",["passes","would pass","would have passed","will pass"],2,"Third conditional takes 'would have passed'."),
+          makeQuestion("Choose the punctuation mark needed: What a beautiful day___",[".","!","?",","],1,"An exclamation mark fits an exclamatory sentence."),
+          makeQuestion("Choose the option nearest in meaning to: The witness's statement was ambiguous.",["clear","uncertain","brief","honest"],1,"Ambiguous means unclear or uncertain."),
+          makeQuestion("Pick the correctly spelt word.",["Definately","Definitely","Definetely","Definatly"],1,"The correct spelling is Definitely."),
+          makeQuestion("Choose the correct form: She prefers tea ___ coffee.",["than","to","from","with"],1,"The expression is 'prefers ... to ...'."),
+          makeQuestion("Identify the sentence with correct concord.",["The news are good.","The news is good.","The news were good.","The news have been good."],1,"'News' takes a singular verb here."),
+          makeQuestion("Choose the antonym of 'expand'.",["stretch","enlarge","contract","increase"],2,"Expand is opposite of contract."),
+          makeQuestion("Choose the word that best fills the gap: The police have been trying to ___ the mystery.",["solve","dissolve","answer","reply"],0,"A mystery is solved."),
+          makeQuestion("Select the idiomatic meaning of 'once in a blue moon'.",["twice a year","very rarely","every evening","unexpectedly"],1,"It means very rarely."),
+          makeQuestion("Choose the word with the same consonant sound as the underlined letter in 'judge'.",["gate","jar","cold","goal"],1,"'Judge' and 'jar' begin with /dʒ/."),
+          makeQuestion("Complete the sentence: Hardly had he arrived ___ the rain started.",["than","when","that","then"],1,"The pattern is 'Hardly had ... when ...'."),
+          makeQuestion("Choose the correct stress pattern for 'photography'.",["pho-TO-gra-phy","PHO-to-gra-phy","pho-to-GRA-phy","pho-to-gra-PHY"],1,"Stress falls on the second syllable: PHO-to-gra-phy."),
+          makeQuestion("Select the word that rhymes with 'weight'.",["wait","wet","what","wit"],0,"'Weight' and 'wait' are homophones."),
+          makeQuestion("Choose the correct passive form: The chef cooked the meal.",["The meal is cooked by the chef","The meal was cooked by the chef","The meal has been cooked by the chef","The meal had been cooked by the chef"],1,"Simple past passive: was + past participle."),
+          makeQuestion("Identify the figure of speech: 'He is as brave as a lion.'",["Metaphor","Simile","Personification","Hyperbole"],1,"Explicit comparison using 'as' makes it a simile."),
+          makeQuestion("Choose the word class of 'quickly' in 'He ran quickly'.",["Adjective","Adverb","Verb","Noun"],1,"'Quickly' modifies the verb 'ran' - it's an adverb."),
+          makeQuestion("Select the correct question tag: She is coming tomorrow, ___?",["is she","isn't she","does she","doesn't she"],1,"Positive statement takes negative tag with same auxiliary."),
+          makeQuestion("Choose the meaning of the phrasal verb 'give up'.",["Surrender","Continue","Accelerate","Postpone"],0,"'Give up' means to stop trying/surrender."),
+          makeQuestion("Identify the error: 'Each of the boys are here.'",["Each","of","the boys","are"],3,"'Each' takes singular verb: 'is here'."),
+          makeQuestion("Choose the correct order of adjectives: She bought ___ dress.",["a beautiful red silk","a red beautiful silk","a silk red beautiful","red a beautiful silk"],0,"Opinion → color → material is the standard order."),
+          makeQuestion("Select the appropriate word: The ___ of the stolen property was arrested.",["receiver","recipient","beneficiary","heir"],0,"Receiver handles stolen goods (fencing)."),
+          makeQuestion("Choose the synonym of 'prudent'.",["Reckless","Careful","Extravagant","Hasty"],1,"Prudent means careful, wise in decisions."),
+          makeQuestion("Complete with the right preposition: The book consists ___ ten chapters.",["of","with","in","from"],0,"'Consists of' is the correct collocation."),
+          makeQuestion("Identify the type of clause: 'When the rain stopped, we went out.'",["Noun clause","Adjectival clause","Adverbial clause","Main clause"],2,"It modifies the verb, indicating time - adverbial."),
+          makeQuestion("Choose the correct indirect speech: He said, 'I am tired.'",["He said that he is tired","He said that he was tired","He said that I am tired","He says that he was tired"],1,"Backshift of tense in reported speech."),
+          makeQuestion("Select the appropriate conjunction: ___ it rained, we stayed home.",["Because","Although","Unless","Until"],0,"Causal relationship requires 'because'."),
+          makeQuestion("Choose the word opposite in meaning to 'transparent'.",["Clear","Opaque","Visible","Bright"],1,"Transparent allows light through; opaque blocks it."),
+          makeQuestion("Identify the sentence type: 'What a wonderful performance!'",["Declarative","Interrogative","Imperative","Exclamatory"],3,"Exclamation mark and 'what' indicate exclamatory."),
+          makeQuestion("Choose the correct plural form: 'child'",["childs","children","childes","childen"],1,"Irregular plural: children."),
+          makeQuestion("Select the word with the correct spelling.",["Ocurrence","Occurrence","Occurence","Ocurence"],1,"Double 'c' and double 'r': Occurrence."),
+          makeQuestion("Choose the appropriate modal: You ___ obey traffic rules.",["can","may","must","might"],2,"Obligation requires strong modal 'must'."),
+          makeQuestion("Identify the antecedent of the pronoun: 'The students finished their work.'",["finished","students","work","their"],1,"'Their' refers back to 'students'."),
+          makeQuestion("Choose the correct form: If I ___ you, I would accept.",["am","was","were","be"],2,"Subjunctive mood uses 'were' for hypothetical."),
+          makeQuestion("Select the meaning of 'cut corners'.",["Take shortcuts","Be thorough","Spend more","Work carefully"],0,"Idiom means doing something cheaply or quickly."),
+          makeQuestion("Choose the correct article: ___ European visited us.",["A","An","The","No article"],0,"'European' begins with consonant sound /j/."),
+          makeQuestion("Identify the voice: 'The letter was written by John.'",["Active","Passive","Reflexive","Reciprocal"],1,"Object becomes subject with 'was written' - passive."),
+          makeQuestion("Choose the word that best completes: The ___ of the mountain was breathtaking.",["high","height","tall","taller"],1,"Noun form required: height.")
+        ];
+      },
+      
+      getMath() {
+        return [
+          makeQuestion("Solve: 3x + 9 = 24",["3","4","5","6"],2,"3x = 15, so x = 5."),
+          makeQuestion("Find the value of 7² - 5².",["12","24","49","74"],1,"49 - 25 = 24."),
+          makeQuestion("Evaluate: 2/5 + 1/10",["3/10","1/2","4/15","3/5"],1,"4/10 + 1/10 = 5/10 = 1/2."),
+          makeQuestion("The mean of 4, 6, 8, 12 is:",["7.5","8","9","10"],0,"Mean = 30/4 = 7.5."),
+          makeQuestion("What is 25% of 480?",["100","110","120","140"],2,"25% of 480 = 120."),
+          makeQuestion("If y = 2x + 3 and x = 5, find y.",["10","11","12","13"],3,"2(5)+3 = 13."),
+          makeQuestion("Simplify: 3a + 2a - a",["4a","5a","6a","7a"],0,"3a + 2a - a = 4a."),
+          makeQuestion("Find the HCF of 12 and 18.",["3","6","9","12"],1,"The HCF is 6."),
+          makeQuestion("The value of √144 is:",["10","11","12","14"],2,"√144 = 12."),
+          makeQuestion("If 5 pens cost ₦250, one pen costs:",["₦30","₦40","₦50","₦60"],2,"250 ÷ 5 = 50."),
+          makeQuestion("Expand: (x + 3)(x + 2)",["x² + 5x + 6","x² + 6x + 5","x² + 3x + 2","x² + x + 6"],0,"FOIL gives x² + 5x + 6."),
+          makeQuestion("What is the area of a rectangle of length 8 cm and width 5 cm?",["13 cm²","26 cm²","40 cm²","80 cm²"],2,"Area = l × b = 40 cm²."),
+          makeQuestion("Solve: 2x = 18",["7","8","9","10"],2,"x = 9."),
+          makeQuestion("The angles in a triangle add up to:",["90°","180°","270°","360°"],1,"Sum of angles in a triangle is 180°."),
+          makeQuestion("Convert 0.75 to a percentage.",["7.5%","75%","750%","0.75%"],1,"0.75 × 100 = 75%."),
+          makeQuestion("If a:b = 2:3 and a = 10, then b =",["12","13","14","15"],3,"2k=10 => k=5, so b=15."),
+          makeQuestion("Find the perimeter of a square of side 6 cm.",["12 cm","18 cm","24 cm","36 cm"],2,"Perimeter = 4 × 6 = 24 cm."),
+          makeQuestion("What is the median of 2, 4, 6, 8, 10?",["4","5","6","7"],2,"The middle value is 6."),
+          makeQuestion("Simplify: 5³",["15","25","125","625"],2,"5 × 5 × 5 = 125."),
+          makeQuestion("A line with zero gradient is:",["vertical","horizontal","slanting","curved"],1,"Zero gradient means horizontal line."),
+          makeQuestion("In the diagram above, find the value of x if the triangle is isosceles.",["30°","45°","60°","90°"],1,"Base angles of isosceles triangle are equal.", "https://placeholder.com/triangle.png"),
+          makeQuestion("The pie chart above shows the distribution of 360 students. How many study Physics if the sector angle is 60°?",["30","60","90","120"],1,"60/360 × 360 = 60 students.", "https://placeholder.com/piechart.png"),
+          makeQuestion("From the graph above, find the gradient of line AB.",["1","2","3","4"],0,"Rise over run = 1.", "https://placeholder.com/graph.png"),
+          makeQuestion("Calculate the volume of the cylinder shown above (r=7cm, h=10cm, π=22/7).",["1540 cm³","3080 cm³","770 cm³","220 cm³"],0,"V = πr²h = 22/7 × 49 × 10 = 1540.", "https://placeholder.com/cylinder.png"),
+          makeQuestion("Find the area of the shaded region in the diagram above (square side 14cm, semicircle diameter 14cm).",["196 cm²","154 cm²","42 cm²","98 cm²"],2,"Area of square minus area of semicircle.", "https://placeholder.com/shaded.png"),
+          makeQuestion("Using the trigonometric ratios in the right triangle above, find sin θ.",["3/5","4/5","3/4","5/3"],0,"Opposite/hypotenuse = 3/5.", "https://placeholder.com/trig.png"),
+          makeQuestion("The bar chart above shows sales for 5 days. What is the mean daily sales?",["50","60","70","80"],1,"Total sales ÷ 5 days = 60.", "https://placeholder.com/barchart.png"),
+          makeQuestion("Find the value of x in the equation shown in the diagram: 2x + 30 = 180.",["60°","75°","90°","105°"],1,"2x = 150, x = 75.", "https://placeholder.com/angle.png"),
+          makeQuestion("Calculate the surface area of the cube with side 5cm shown above.",["25 cm²","100 cm²","125 cm²","150 cm²"],3,"6 × side² = 6 × 25 = 150 cm².", "https://placeholder.com/cube.png"),
+          makeQuestion("From the Venn diagram above, find n(A ∩ B).",["5","10","15","20"],0,"Intersection contains 5 elements.", "https://placeholder.com/venn.png"),
+          makeQuestion("Find the distance between points P(2,3) and Q(5,7) using the distance formula.",["3","4","5","6"],2,"√[(5-2)² + (7-3)²] = √25 = 5.", null),
+          makeQuestion("Solve the simultaneous equations: 2x + y = 7, x - y = -1",["x=2,y=3","x=3,y=2","x=1,y=5","x=4,y=-1"],0,"Adding equations: 3x=6, x=2, substitute to get y=3.", null),
+          makeQuestion("Find the nth term of the sequence: 2, 5, 8, 11, ...",["3n-1","3n+1","2n+1","n+3"],0,"Common difference is 3, first term 2: 3n-1.", null),
+          makeQuestion("Calculate the simple interest on ₦5000 for 3 years at 4% per annum.",["₦200","₦400","₦600","₦800"],2,"SI = PRT/100 = 5000×4×3/100 = 600.", null),
+          makeQuestion("Factorize completely: x² - 5x + 6",["(x-2)(x-3)","(x+2)(x+3)","(x-1)(x-6)","(x+1)(x-6)"],0,"Find two numbers that multiply to 6 and add to -5.", null),
+          makeQuestion("Find the equation of the line passing through (2,3) with gradient 2.",["y=2x-1","y=2x+1","y=x+2","y=2x-3"],0,"y-3=2(x-2) → y=2x-1.", null),
+          makeQuestion("Calculate the probability of throwing a 6 on a fair die.",["1/6","1/3","1/2","2/3"],0,"One favorable outcome out of six possible.", null),
+          makeQuestion("Find the LCM of 8, 12 and 20.",["40","60","80","120"],1,"Prime factors: 8=2³, 12=2²×3, 20=2²×5. LCM=2³×3×5=120.", null),
+          makeQuestion("Solve the inequality: 3x - 6 < 9",["x < 5","x > 5","x < 3","x > 3"],0,"3x < 15, therefore x < 5.", null),
+          makeQuestion("Find the coordinates of the midpoint of A(2,4) and B(6,8).",["(3,4)","(4,6)","(5,6)","(4,5)"],1,"Midpoint = [(2+6)/2, (4+8)/2] = (4,6).", null)
+        ];
+      },
+      
+      getBio() {
+        return [
+          makeQuestion("The basic unit of life is the:",["tissue","organ","cell","nucleus"],2,"Cell is the basic unit of life."),
+          makeQuestion("Photosynthesis occurs mainly in the:",["root hair","chloroplast","xylem","phloem"],1,"Chloroplast contains chlorophyll."),
+          makeQuestion("Which of these is a vertebrate?",["Earthworm","Cockroach","Lizard","Snail"],2,"Lizard has a backbone."),
+          makeQuestion("The organ that pumps blood round the body is the:",["liver","heart","lung","kidney"],1,"The heart pumps blood."),
+          makeQuestion("The green pigment in plants is:",["haemoglobin","chlorophyll","plasma","melanin"],1,"Chlorophyll gives plants their green colour."),
+          makeQuestion("Respiration releases:",["energy","sugar","chlorophyll","oxygen only"],0,"Respiration releases energy."),
+          makeQuestion("The process by which plants lose water is called:",["translocation","transpiration","respiration","digestion"],1,"Plants lose water mainly through transpiration."),
+          makeQuestion("The main site of absorption of digested food in humans is the:",["stomach","small intestine","large intestine","oesophagus"],1,"Small intestine absorbs nutrients."),
+          makeQuestion("An example of a mammal is:",["toad","whale","tilapia","lizard"],1,"Whale is a mammal."),
+          makeQuestion("The blood cells responsible for defence are:",["red blood cells","white blood cells","platelets","plasma"],1,"White blood cells defend the body."),
+          makeQuestion("Pollination is the transfer of pollen grains from:",["ovary to stigma","anther to stigma","stigma to ovary","petal to sepal"],1,"Pollination is from anther to stigma."),
+          makeQuestion("The human skeleton performs all except:",["support","protection","movement","digestion"],3,"The skeleton does not digest food."),
+          makeQuestion("The simplest form of food produced in photosynthesis is:",["protein","starch","glucose","fat"],2,"Glucose is produced first."),
+          makeQuestion("Which of these organisms is unicellular?",["Amoeba","Hydra","Moss","Earthworm"],0,"Amoeba is a one-celled organism."),
+          makeQuestion("The breathing organs of fish are:",["lungs","gills","spiracles","skin"],1,"Fish respire with gills."),
+          makeQuestion("The fusion of male and female gametes is called:",["pollination","fertilization","budding","germination"],1,"That process is fertilization."),
+          makeQuestion("A balanced diet must contain:",["carbohydrates only","proteins only","all essential nutrients","vitamins only"],2,"Balanced diet contains all essential nutrients."),
+          makeQuestion("The opening and closing of stomata are controlled by:",["palisade cells","guard cells","xylem cells","root hairs"],1,"Guard cells regulate stomata."),
+          makeQuestion("The part of the eye that controls the amount of light entering is the:",["retina","iris","cornea","optic nerve"],1,"The iris controls pupil size."),
+          makeQuestion("Variation among offspring is important because it:",["stops reproduction","causes extinction","aids survival and adaptation","prevents growth"],2,"Variation aids survival."),
+          makeQuestion("Identify the labeled part X in the diagram of the human heart above.",["Aorta","Vena cava","Pulmonary artery","Septum"],0,"X points to the aorta carrying oxygenated blood.", "https://placeholder.com/heart.png"),
+          makeQuestion("The diagram above shows a food web. Which organism is the primary consumer?",["Grass","Grasshopper","Frog","Snake"],1,"Grasshopper eats producers (plants).", "https://placeholder.com/foodweb.png"),
+          makeQuestion("Identify the stage of mitosis shown in the cell diagram above.",["Prophase","Metaphase","Anaphase","Telophase"],2,"Chromosomes moving to opposite poles indicates anaphase.", "https://placeholder.com/mitosis.png"),
+          makeQuestion("The structure labeled Y in the leaf cross-section above is:",["Cuticle","Epidermis","Stoma","Mesophyll"],2,"Y shows the stoma (pore) for gas exchange.", "https://placeholder.com/leaf.png"),
+          makeQuestion("Identify the type of joint shown in the diagram above.",["Hinge joint","Ball and socket","Pivot joint","Gliding joint"],1,"The shoulder/hip joint structure shows ball and socket.", "https://placeholder.com/joint.png"),
+          makeQuestion("The diagram above illustrates the carbon cycle. Process Z represents:",["Photosynthesis","Respiration","Combustion","Decomposition"],0,"Z shows CO2 being taken in by plants.", "https://placeholder.com/carboncycle.png"),
+          makeQuestion("Identify the blood vessel labeled P in the diagram of the kidney nephron above.",["Renal artery","Renal vein","Afferent arteriole","Efferent arteriole"],2,"P brings blood into the glomerulus.", "https://placeholder.com/nephron.png"),
+          makeQuestion("The ecological pyramid above shows:",["Pyramid of numbers","Pyramid of biomass","Pyramid of energy","All of the above"],1,"Biomass decreases at each trophic level as shown.", "https://placeholder.com/pyramid.png"),
+          makeQuestion("Identify the part of the brain labeled Q in the diagram above responsible for balance.",["Cerebrum","Cerebellum","Medulla","Hypothalamus"],1,"The cerebellum coordinates balance and posture.", "https://placeholder.com/brain.png"),
+          makeQuestion("The diagram above shows a reflex arc. Structure R represents the:",["Receptor","Sensory neurone","Relay neurone","Motor neurone"],2,"R is in the spinal cord connecting sensory to motor.", "https://placeholder.com/reflex.png"),
+          makeQuestion("Identify the labeled part S in the diagram of the flower above (male reproductive part).",["Stigma","Style","Ovary","Anther"],3,"S is the anther which produces pollen grains.", "https://placeholder.com/flower.png"),
+          makeQuestion("The graph above shows enzyme activity vs temperature. Point T represents:",["Optimum temperature","Denaturation point","Freezing point","Room temperature"],0,"T is the peak where enzyme works best.", "https://placeholder.com/enzyme.png"),
+          makeQuestion("Identify the adaptation shown in the diagram of the xylem vessel above.",["Thick walls","Narrow lumen","No cross walls","All of the above"],2,"Lack of end walls allows continuous water flow.", "https://placeholder.com/xylem.png"),
+          makeQuestion("The diagram above illustrates natural selection. Generation 3 shows:",["Increased variation","Stabilizing selection","Directional selection","Disruptive selection"],2,"The population shifts toward one extreme phenotype.", "https://placeholder.com/selection.png"),
+          makeQuestion("Identify the labeled part in the alimentary canal diagram above where protein digestion begins.",["Mouth","Stomach","Duodenum","Ileum"],1,"Pepsin in stomach starts protein digestion.", "https://placeholder.com/alimentary.png"),
+          makeQuestion("The Punnett square above shows a cross between Aa and Aa. The ratio is:",["1:2:1","3:1","1:1","9:3:3:1"],1,"3 dominant : 1 recessive phenotype ratio.", "https://placeholder.com/punnett.png"),
+          makeQuestion("Identify the stage of meiosis shown in the diagram above.",["Prophase I","Metaphase I","Anaphase I","Telophase I"],0,"Homologous chromosomes pairing indicates Prophase I.", "https://placeholder.com/meiosis.png"),
+          makeQuestion("The diagram above shows the structure of DNA. Structure U represents:",["Phosphate group","Deoxyribose sugar","Nitrogenous base","Hydrogen bond"],2,"U shows the nitrogenous base (A,T,G,C).", "https://placeholder.com/dna.png"),
+          makeQuestion("Identify the type of nutrition shown in the diagram above.",["Autotrophic","Heterotrophic","Saprophytic","Parasitic"],3,"The organism feeds on living host - parasitic.", "https://placeholder.com/parasite.png"),
+          makeQuestion("The diagram above shows the nitrogen cycle. Process V is:",["Nitrification","Denitrification","Nitrogen fixation","Ammonification"],2,"V shows bacteria converting N2 to ammonia.", "https://placeholder.com/nitrogen.png")
+        ];
+      },
+      
+      getChemistry() {
+        return [
+          makeQuestion("The atomic number of an element is the number of:",["neutrons","protons","nucleons","shells"],1,"Atomic number equals number of protons."),
+          makeQuestion("Water is composed of:",["hydrogen and oxygen","oxygen and nitrogen","hydrogen and chlorine","sodium and oxygen"],0,"Water is H2O."),
+          makeQuestion("An acid turns blue litmus:",["green","red","white","black"],1,"Acids turn blue litmus red."),
+          makeQuestion("NaCl is the formula for:",["sodium hydroxide","sodium chloride","nitric acid","calcium carbonate"],1,"NaCl is sodium chloride."),
+          makeQuestion("A neutral solution has pH of:",["1","7","10","14"],1,"Neutral pH is 7."),
+          makeQuestion("The gas used to fill balloons is:",["oxygen","helium","chlorine","hydrogen"],1,"Helium is commonly used."),
+          makeQuestion("The smallest particle of an element that takes part in a reaction is the:",["molecule","atom","ion","cell"],1,"The atom is the basic particle of an element."),
+          makeQuestion("A base that dissolves in water is called:",["alkali","salt","acid","oxide"],0,"A soluble base is an alkali."),
+          makeQuestion("Which of these is a physical change?",["burning wood","rusting iron","melting ice","cooking food"],2,"Melting ice is reversible and physical."),
+          makeQuestion("The common salt used in food is:",["KCl","NaCl","CaCO3","NaOH"],1,"Table salt is NaCl."),
+          makeQuestion("The chemical symbol for gold is:",["Ag","Gd","Au","Go"],2,"Gold is Au."),
+          makeQuestion("A substance made of two or more elements chemically combined is a:",["mixture","compound","metal","solution"],1,"Such a substance is a compound."),
+          makeQuestion("The process of separating insoluble solid from liquid is:",["distillation","filtration","sublimation","evaporation"],1,"Filtration separates insoluble solids from liquids."),
+          makeQuestion("The valency of oxygen is:",["1","2","3","4"],1,"Oxygen commonly has valency 2."),
+          makeQuestion("Air is best described as a:",["compound","mixture","solution of solids","pure substance"],1,"Air is a mixture of gases."),
+          makeQuestion("The particle with a negative charge is the:",["proton","electron","neutron","nucleus"],1,"Electrons are negatively charged."),
+          makeQuestion("A catalyst works by:",["increasing the mass of products","slowing all reactions","changing reaction pathway and lowering activation energy","being used up completely"],2,"Catalysts lower activation energy and are not used up."),
+          makeQuestion("Which of these is an indicator?",["litmus","sodium chloride","sand","ethanol"],0,"Litmus is an indicator."),
+          makeQuestion("The periodic table is arranged according to increasing:",["mass number","atomic number","valency only","density"],1,"Modern periodic table is arranged by atomic number."),
+          makeQuestion("The gas produced when dilute acid reacts with a metal is:",["oxygen","nitrogen","hydrogen","chlorine"],2,"Acid + metal gives salt and hydrogen."),
+          makeQuestion("Calculate the molar mass of the compound shown in the diagram above (C6H12O6).",["120 g/mol","150 g/mol","180 g/mol","200 g/mol"],2,"C=12×6, H=1×12, O=16×6. Total = 180.", "https://placeholder.com/glucose.png"),
+          makeQuestion("The apparatus setup above is used for:",["Filtration","Distillation","Titration","Crystallization"],1,"The condenser and flask indicate distillation setup.", "https://placeholder.com/distillation.png"),
+          makeQuestion("Using the periodic table excerpt above, identify element X with atomic number 17.",["Sulfur","Chlorine","Argon","Potassium"],1,"Atomic number 17 is Chlorine (Cl).", "https://placeholder.com/periodic.png"),
+          makeQuestion("Calculate the concentration in g/dm³ of a solution containing 5g in 250cm³.",["2","5","20","50"],2,"5g ÷ 0.25dm³ = 20 g/dm³.", "https://placeholder.com/concentration.png"),
+          makeQuestion("The electron configuration shown in the diagram above represents:",["Sodium","Magnesium","Aluminum","Silicon"],1,"2,8,2 configuration is Magnesium (12 electrons).", "https://placeholder.com/electron.png"),
+          makeQuestion("Balance the equation shown above: __Fe + __O₂ → __Fe₂O₃",["2,3,2","4,3,2","2,1,1","1,1,1"],0,"4Fe + 3O₂ → 2Fe₂O₃ is the balanced equation.", "https://placeholder.com/balance.png"),
+          makeQuestion("The graph above shows the solubility curve of salt X. At 40°C, the solubility is:",["20g/100g water","40g/100g water","60g/100g water","80g/100g water"],2,"Read across from 40°C on x-axis to curve then down.", "https://placeholder.com/solubility.png"),
+          makeQuestion("Identify the type of bond shown in the diagram above between atoms A and B.",["Ionic","Covalent","Metallic","Hydrogen"],1,"Sharing of electron pair indicates covalent bond.", "https://placeholder.com/bond.png"),
+          makeQuestion("Calculate the volume of gas produced at STP when 2 moles of H₂ react (molar volume = 22.4 dm³/mol).",["11.2 dm³","22.4 dm³","44.8 dm³","67.2 dm³"],2,"2 moles × 22.4 dm³/mol = 44.8 dm³.", "https://placeholder.com/gasvol.png"),
+          makeQuestion("The energy level diagram above shows a reaction that is:",["Exothermic","Endothermic","Catalyzed","Reversible"],0,"Products lower than reactants indicates energy release.", "https://placeholder.com/energy.png"),
+          makeQuestion("Identify the functional group circled in the organic compound above.",["Alcohol","Aldehyde","Ketone","Carboxylic acid"],0,"-OH group indicates alcohol functional group.", "https://placeholder.com/functional.png"),
+          makeQuestion("The titration curve above shows the equivalence point at approximately:",["pH 3","pH 7","pH 9","pH 12"],1,"Strong acid-strong base titration has equivalence at pH 7.", "https://placeholder.com/titration.png"),
+          makeQuestion("Calculate the relative molecular mass of CaCO₃ (Ca=40, C=12, O=16).",["50","68","100","112"],2,"40 + 12 + (16×3) = 100.", null),
+          makeQuestion("The electrolysis setup above shows the product at the cathode is:",["Oxygen","Hydrogen","Chlorine","Copper"],3,"Cu²⁺ ions gain electrons at cathode to form copper metal.", "https://placeholder.com/electrolysis.png"),
+          makeQuestion("Identify the isotope shown in the notation ¹⁴₆C above.",["Carbon-12","Carbon-14","Oxygen-14","Nitrogen-14"],1,"Mass number 14, atomic number 6 is Carbon-14.", "https://placeholder.com/isotope.png"),
+          makeQuestion("The reaction rate graph above shows the effect of:",["Temperature","Concentration","Catalyst","Surface area"],2,"The curve with catalyst reaches completion faster at same temp.", "https://placeholder.com/rate.png"),
+          makeQuestion("Calculate the number of moles in 80g of NaOH (Na=23, O=16, H=1).",["1","2","3","4"],1,"RMM = 40, moles = 80/40 = 2.", null),
+          makeQuestion("The flame test color shown in the diagram above indicates the presence of:",["Sodium","Potassium","Calcium","Copper"],3,"Blue-green flame is characteristic of copper compounds.", "https://placeholder.com/flame.png"),
+          makeQuestion("Identify the separation technique shown in the apparatus above.",["Chromatography","Fractional distillation","Separating funnel","Evaporation"],1,"The fractionating column indicates fractional distillation.", "https://placeholder.com/fractional.png"),
+          makeQuestion("Calculate the pH of a solution with [H⁺] = 1 × 10⁻⁴ mol/dm³.",["4","10","-4","14"],0,"pH = -log[H⁺] = -log(10⁻⁴) = 4.", null)
+        ];
+      },
+      
+      getPhysics() {
+        return [
+          makeQuestion("The SI unit of force is:",["Joule","Newton","Pascal","Watt"],1,"Force is measured in Newtons."),
+          makeQuestion("Speed is defined as:",["distance/time","displacement/time","force × distance","mass/time"],0,"Speed = distance divided by time."),
+          makeQuestion("A body remains at rest due to:",["momentum","power","inertia","acceleration"],2,"That is inertia."),
+          makeQuestion("Acceleration due to gravity is approximately:",["1 m/s²","5 m/s²","10 m/s²","20 m/s²"],2,"Near earth it is about 10 m/s²."),
+          makeQuestion("The instrument used to measure electric current is:",["voltmeter","ammeter","thermometer","barometer"],1,"Ammeter measures current."),
+          makeQuestion("Energy possessed due to motion is:",["potential energy","chemical energy","kinetic energy","heat energy"],2,"Motion energy is kinetic energy."),
+          makeQuestion("The unit of power is:",["joule","newton","watt","pascal"],2,"Power is measured in watts."),
+          makeQuestion("The mirror used as a rear-view mirror in vehicles is:",["plane mirror","concave mirror","convex mirror","prism"],2,"Convex mirrors provide a wider field of view."),
+          makeQuestion("The boiling point of pure water at standard pressure is:",["0°C","50°C","100°C","212°C only"],2,"Standard boiling point is 100°C."),
+          makeQuestion("Which of these is a vector quantity?",["speed","mass","velocity","temperature"],2,"Velocity has magnitude and direction."),
+          makeQuestion("The device that converts electrical energy to mechanical energy is:",["generator","motor","transformer","battery"],1,"Electric motors do this conversion."),
+          makeQuestion("A fuse is used in circuits to:",["increase current","store charge","protect against excess current","measure voltage"],2,"It protects the circuit."),
+          makeQuestion("The image formed by a plane mirror is:",["real and inverted","virtual and erect","real and enlarged","virtual and inverted"],1,"Plane mirror forms virtual erect image."),
+          makeQuestion("Pressure is defined as:",["force × area","force/area","mass × acceleration","work/time"],1,"Pressure = force per unit area."),
+          makeQuestion("The frequency of AC mains in Nigeria is approximately:",["25 Hz","50 Hz","100 Hz","220 Hz"],1,"Standard mains frequency is 50 Hz."),
+          makeQuestion("Sound cannot travel through:",["water","air","steel","vacuum"],3,"Sound needs a material medium."),
+          makeQuestion("The slope of a velocity-time graph gives:",["speed","distance","acceleration","displacement"],2,"Slope of v-t graph is acceleration."),
+          makeQuestion("The energy stored in a stretched rubber band is:",["kinetic","light","elastic potential","electrical"],2,"That is elastic potential energy."),
+          makeQuestion("A body floating in water displaces water equal to its:",["volume only","weight","density","shape"],1,"By Archimedes' principle, displaced fluid weight equals body's weight."),
+          makeQuestion("The splitting of white light into colours is called:",["reflection","dispersion","refraction","diffusion"],1,"Splitting white light is dispersion."),
+          makeQuestion("Calculate the resistance in the circuit shown above (V=12V, I=3A).",["3Ω","4Ω","9Ω","36Ω"],1,"R = V/I = 12/3 = 4Ω.", "https://placeholder.com/circuit.png"),
+          makeQuestion("Find the work done when a force of 10N moves an object through 5m in the direction of the force.",["2J","15J","50J","100J"],2,"
