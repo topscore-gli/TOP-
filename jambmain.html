@@ -782,7 +782,7 @@
       <div class="header">JAMB Mock</div>
       <div class="right-icons">
         <button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">🌙</button>
-      <button class="icon-btn" aria-label="Toggle theme">🚀</button>
+        <button class="icon-btn" aria-label="Rocket">🚀</button>
       </div>
     </header>
 
@@ -888,7 +888,7 @@
               <div class="exam-info">
                 <h3>Noon Mock Exam</h3>
                 <div class="exam-time">
-                  <span>🕛</span>
+                  <span>🕚</span>
                   <span>12:00 PM - 2:00 PM</span>
                 </div>
                 <span class="exam-duration">
@@ -912,7 +912,7 @@
               <div class="exam-info">
                 <h3>Afternoon Mock Exam</h3>
                 <div class="exam-time">
-                  <span>🕒</span>
+                  <span>🕑</span>
                   <span>3:00 PM - 5:00 PM</span>
                 </div>
                 <span class="exam-duration">
@@ -961,7 +961,6 @@
       </div>
     </main>
 
-
     <nav class="bottom-nav" aria-label="Main navigation">
       <div class="nav-item">
         <button class="icon-btn" aria-label="Chat" onclick="window.location.href='chat.html'">💬</button>
@@ -994,6 +993,34 @@
     // EXAM DATE: April 16, 2026 (confirmed JAMB UTME date)
     const EXAM_DATE = new Date('2026-04-16T00:00:00');
     const START_DATE = new Date('2026-01-26T00:00:00'); // Registration start
+
+    // Exam Configuration with Redirect URLs
+    const EXAM_CONFIG = {
+      morning: { 
+        start: 9 * 60,      // 9:00 AM
+        end: 11 * 60,       // 10:00 AM
+        name: 'Morning', 
+        startTime: '9:00 AM',
+        endTime: '11:00 AM',
+        url: 'jambexam1.html'
+      },
+      noon: { 
+        start: 12 * 60,     // 11:00 AM
+        end: 14 * 60,       // 1:00 PM
+        name: 'Noon', 
+        startTime: '12:00 PM',
+        endTime: '2:00 PM',
+        url: 'jambexam2.html'
+      },
+      afternoon: { 
+        start: 15 * 60,     // 2:00 PM
+        end: 17 * 60,       // 4:00 PM
+        name: 'Afternoon', 
+        startTime: '3:00 PM',
+        endTime: '5:00 PM',
+        url: 'jambexam3.html'
+      }
+    };
 
     // Theme toggle
     const themeToggle = document.getElementById('theme-toggle');
@@ -1064,16 +1091,11 @@
       const currentMinute = now.getMinutes();
       const currentTime = currentHour * 60 + currentMinute;
 
-      const sessions = [
-        { id: 'morning', start: 9 * 60, end: 11 * 60, name: 'Morning' },
-        { id: 'noon', start: 12 * 60, end: 14 * 60, name: 'Noon' },
-        { id: 'afternoon', start: 15 * 60, end: 17 * 60, name: 'Afternoon' }
-      ];
-
-      sessions.forEach(session => {
-        const card = document.getElementById(session.id + '-card');
-        const badge = document.getElementById(session.id + '-badge');
-        const btn = document.getElementById(session.id + '-btn');
+      Object.keys(EXAM_CONFIG).forEach(sessionKey => {
+        const session = EXAM_CONFIG[sessionKey];
+        const card = document.getElementById(sessionKey + '-card');
+        const badge = document.getElementById(sessionKey + '-badge');
+        const btn = document.getElementById(sessionKey + '-btn');
 
         // Reset classes
         card.classList.remove('active', 'ended', 'upcoming');
@@ -1110,27 +1132,21 @@
     updateExamStatuses();
     setInterval(updateExamStatuses, 60000);
 
-    // ACCESS EXAM WITH TIME VALIDATION
-    function accessExam(session) {
+    // ACCESS EXAM WITH TIME VALIDATION AND REDIRECT
+    function accessExam(sessionKey) {
       const now = new Date();
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
       const currentTime = currentHour * 60 + currentMinute;
 
-      const sessions = {
-        morning: { start: 9 * 60, end: 11 * 60, name: 'Morning', startTime: '9:00 AM' },
-        noon: { start: 12 * 60, end: 14 * 60, name: 'Noon', startTime: '12:00 PM' },
-        afternoon: { start: 15 * 60, end: 17 * 60, name: 'Afternoon', startTime: '3:00 PM' }
-      };
-
-      const exam = sessions[session];
+      const exam = EXAM_CONFIG[sessionKey];
 
       if (currentTime >= exam.end) {
         // Exam has ended
         showModal(
           'error',
           'Exam Ended',
-          'This exam has ended. Please try another available session or check back tomorrow.',
+          `The ${exam.name} Mock Exam ended at ${exam.endTime}. Please try another available session or check back tomorrow.`,
           '✕'
         );
       } else if (currentTime < exam.start) {
@@ -1154,8 +1170,8 @@
           '⏰'
         );
       } else {
-        // Access granted
-        window.location.href = `exam-${session}.html`;
+        // Access granted - Redirect to specific exam page
+        window.location.href = exam.url;
       }
     }
 
